@@ -104,13 +104,24 @@ void gImage::Draw(int nX, int nY)
 	RECT	rcDest = {nX, nY, nX + m_nWidth, nY + m_nHeight};
 	RECT	rcSour = {0, 0, m_nWidth, m_nHeight};
 
+	if(rcDest.left < 0)							rcDest.left	= 0;
+	if(rcDest.top < 0)							rcDest.top	= 0;
+	if(rcDest.left + m_nWidth > WNDSIZEW)		rcDest.right = WNDSIZEW;
+	if(rcDest.top + m_nHeight > WNDSIZEH)		rcDest.bottom = WNDSIZEH;
+
 	gMainWin::GetIF()->m_lpDDBack->Blt(&rcDest, m_lpDDSur, &rcSour, DDBLT_WAIT | DDBLT_KEYSRC, NULL);
 }
 
 void gImage::Draw(RECT rcDest, RECT rcSour)
 {
+	if(rcDest.left < 0)				rcDest.left	= 0;
+	if(rcDest.top < 0)				rcDest.top	= 0;
+	if(rcDest.right > WNDSIZEW)		rcDest.right = WNDSIZEW;
+	if(rcDest.bottom > WNDSIZEH)	rcDest.bottom = WNDSIZEH;
+	
 	gMainWin::GetIF()->m_lpDDBack->Blt(&rcDest, m_lpDDSur, &rcSour, DDBLT_WAIT | DDBLT_KEYSRC, NULL);
 }
+
 
 void gImage::Release()
 {
