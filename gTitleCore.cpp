@@ -74,6 +74,7 @@ void gTitleCore::OnLButtonDown()
 	switch((eTITLE_BTN)i)
 	{
 	case ETB_START:
+		gMainWin::GetIF()->m_eCoreMode = EMC_GAME;
 		break;
 	case ETB_EXIT:
 		gMainWin::GetIF()->Exit();

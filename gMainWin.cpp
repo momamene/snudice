@@ -1,6 +1,7 @@
 #include "gMainWin.h"
 #include "const.h"
 #include "gTitleCore.h"
+#include "gGameCore.h"
 #include "gMouse.h"
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -201,6 +202,9 @@ void gMainWin::MainLoop()
 	{
 	case EMC_TITLE:
 		gTitleCore::GetIF()->MainLoop();
+		break;
+	case EMC_GAME:
+		gGameCore::GetIF()->MainLoop();
 		break;
 	}
 	// backbuffer 에 그려진 것들을 출력
