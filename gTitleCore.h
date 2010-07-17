@@ -17,6 +17,12 @@ enum eTITLE_BTN
 	ETB_END,
 };
 
+enum eTITLEMODE
+{
+	ETM_TITLE,
+	ETM_CHARSEL,
+};
+
 class gImage;
 class gTitleCore : public gCoreIF
 {
@@ -28,6 +34,8 @@ public:
 public:
 	gImage		m_ImgTitle;
 	gImgButton	m_ImgBtn[ETB_END];
+
+	eTITLEMODE	m_eMode;
 
 	bool		SetUp();
 	void		MainLoop();

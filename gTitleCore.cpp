@@ -42,6 +42,8 @@ bool gTitleCore::SetUp()
 	if(FAILED(m_ImgBtn[ETB_EXIT].SetUp(TBT_EXIT_IMG, TBT_EXIT_VERTICAL, rcBtn)))
 		return false;
 
+	m_eMode = ETM_TITLE;
+
 
 	return true;
 }
@@ -53,10 +55,19 @@ void gTitleCore::MainLoop()
 
 void gTitleCore::Draw()
 {
-	m_ImgTitle.Draw(0, 0);
-	
-	for(int i = 0; i < ETB_END; i++)
-		m_ImgBtn[i].Draw();
+	int			i;
+
+	switch(m_eMode)
+	{
+	case ETM_TITLE:
+		m_ImgTitle.Draw(0, 0);
+		
+		for(i = 0; i < ETB_END; i++)
+			m_ImgBtn[i].Draw();
+		break;
+	case ETM_CHARSEL:
+		break;
+	}
 }
 
 //------------------------------------------------------------------------------------
@@ -65,21 +76,32 @@ void gTitleCore::Draw()
 void gTitleCore::OnLButtonDown()
 {
 	gMouse *mouse = gMouse::GetIF();
+	int		i;
 
-	for(int i = 0; i < ETB_END; i++)
+	switch(m_eMode)
 	{
-		if(m_ImgBtn[i].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+	case ETM_TITLE:
+		for(i = 0; i < ETB_END; i++)
+		{
+			if(m_ImgBtn[i].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+				break;
+		}
+		
+		switch((eTITLE_BTN)i)
+		{
+		case ETB_START:
+			gMainWin::GetIF()->m_eCoreMode = EMC_GAME;
 			break;
-	}
-	switch((eTITLE_BTN)i)
-	{
-	case ETB_START:
-		gMainWin::GetIF()->m_eCoreMode = EMC_GAME;
+		case ETB_EXIT:
+			gMainWin::GetIF()->Exit();
+			break;
+		}
 		break;
-	case ETB_EXIT:
-		gMainWin::GetIF()->Exit();
+	case ETM_CHARSEL:
+
 		break;
 	}
+
 
 }
 
@@ -91,14 +113,23 @@ void gTitleCore::OnLButtonUp()
 void gTitleCore::OnMouseMove()
 {
 	gMouse *mouse = gMouse::GetIF();
-	
-	for(int i = 0; i < ETB_END; i++)
+	int		i;
+
+	switch(m_eMode)
 	{
-		if(m_ImgBtn[i].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
-			m_ImgBtn[i].m_eBtnMode = EBM_HOVER;
-		else
-			m_ImgBtn[i].m_eBtnMode = EBM_NONE;
+	case ETM_TITLE:
+		for(i = 0; i < ETB_END; i++)
+		{
+			if(m_ImgBtn[i].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+				m_ImgBtn[i].m_eBtnMode = EBM_HOVER;
+			else
+				m_ImgBtn[i].m_eBtnMode = EBM_NONE;
+		}
+		break;
+	case ETM_CHARSEL:
+		break;
 	}
+	
 }
 
 void gTitleCore::OnRButtonDown()
