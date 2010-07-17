@@ -23,17 +23,20 @@ gGameCore::~gGameCore()
 
 bool gGameCore::SetUp()
 {
+	tileContainer::GetIF()->Setup();
+	tileContainer::GetIF()->Load();
+	//MainLoop();
 	return true;
 }
 
 void gGameCore::MainLoop()
 {
-
+	Draw();
 }
 
 void gGameCore::Draw()
 {
-
+	tileContainer::GetIF()->Draw();
 }
 
 void gGameCore::OnLButtonDown()

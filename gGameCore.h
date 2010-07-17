@@ -7,6 +7,7 @@
 //------------------------------------------------------------------------------------
 #pragma once
 #include "gCoreIF.h"
+#include "tileContainer.h"
 
 enum eGAMEMODE
 {

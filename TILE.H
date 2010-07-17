@@ -1,7 +1,8 @@
+#pragma once
 #include <windows.h> // 중복 include (first case) 성공?
 
 enum ETILETYPE {
-	TY_NONE,
+	TY_NONE=0,
 		TY_CLASS,
 		TY_ITEM,
 		TY_STAMINA,
