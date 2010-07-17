@@ -91,6 +91,14 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
+SOURCE=.\gChar.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\gCharManager.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\gGameCore.cpp
 # End Source File
 # Begin Source File
@@ -117,14 +125,6 @@ SOURCE=.\gTitleCore.cpp
 
 SOURCE=.\main.cpp
 # End Source File
-# Begin Source File
-
-SOURCE=.\TILE.CPP
-# End Source File
-# Begin Source File
-
-SOURCE=.\tileContainer.cpp
-# End Source File
 # End Group
 # Begin Group "Header Files"
 
@@ -132,6 +132,14 @@ SOURCE=.\tileContainer.cpp
 # Begin Source File
 
 SOURCE=.\const.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\gChar.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\gCharManager.h
 # End Source File
 # Begin Source File
 
@@ -160,14 +168,6 @@ SOURCE=.\gMouse.h
 # Begin Source File
 
 SOURCE=.\gTitleCore.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\TILE.H
-# End Source File
-# Begin Source File
-
-SOURCE=.\tileContainer.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"

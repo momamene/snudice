@@ -3,12 +3,13 @@
 //
 //	2010. 07. 16	CoderK
 //
-//	타이틀 모드
+//	타이틀 모드 -> 캐릭터 선택
 //------------------------------------------------------------------------------------
 #pragma once
 #include "gImage.h"
 #include "gCoreIF.h"
 #include "gImgButton.h"
+#include "const.h"
 
 enum eTITLE_BTN
 {
@@ -32,8 +33,14 @@ public:
 	gTitleCore();
 	virtual ~gTitleCore();
 public:
+	// title
 	gImage		m_ImgTitle;
 	gImgButton	m_ImgBtn[ETB_END];
+
+	// sell
+	gImage		m_ImgSel;
+	gImgButton	m_ImgID[CHARNUM];
+	int			m_nSel;		// 선택된넘
 
 	eTITLEMODE	m_eMode;
 

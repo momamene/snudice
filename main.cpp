@@ -5,10 +5,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 {
 	if(FAILED(gMainWin::GetIF()->SetUp(hInstance, lpszCmdParam, nCmdShow)))
 		return 0;
-	
+
 	int	retValue;
 	retValue = gMainWin::GetIF()->Run();
 	gMainWin::GetIF()->Release();
-	
+
 	return retValue;
 }

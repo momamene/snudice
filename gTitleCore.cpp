@@ -2,6 +2,7 @@
 #include "gTitleCore.h"
 #include "gMainWin.h"
 #include "gMouse.h"
+#include "gCharManager.h"
 
 //------------------------------------------------------------------------------------
 //	Constructor	/	Destructor
@@ -26,6 +27,7 @@ gTitleCore *gTitleCore::GetIF()
 
 bool gTitleCore::SetUp()
 {
+	// title setup
 	// title img
 	if(FAILED(m_ImgTitle.Load(TITLE_IMG_TITLE)))
 		return false;
@@ -44,6 +46,67 @@ bool gTitleCore::SetUp()
 
 	m_eMode = ETM_TITLE;
 
+	// charsel setup
+	// sel img
+	if(FAILED(m_ImgSel.Load(CHARSELBGFILE)))
+		return false;
+
+	// charid(button)
+
+	// 언어계열 7넘
+	SetRect(&rcBtn, IDCARDX1, IDCARDY1,
+			IDCARDX1 + CHARIDCARDW, IDCARDY1 + CHARIDCARDH);
+	m_ImgID[0].SetUp(IDCARDIMG1, true, rcBtn);
+	SetRect(&rcBtn, IDCARDX2, IDCARDY2,
+		IDCARDX2 + CHARIDCARDW, IDCARDY2 + CHARIDCARDH);
+	m_ImgID[1].SetUp(IDCARDIMG2, true, rcBtn);
+	SetRect(&rcBtn, IDCARDX3, IDCARDY3,
+		IDCARDX3 + CHARIDCARDW, IDCARDY3 + CHARIDCARDH);
+	m_ImgID[2].SetUp(IDCARDIMG3, true, rcBtn);
+	SetRect(&rcBtn, IDCARDX4, IDCARDY4,
+		IDCARDX4 + CHARIDCARDW, IDCARDY4 + CHARIDCARDH);
+	m_ImgID[3].SetUp(IDCARDIMG4, true, rcBtn);
+	SetRect(&rcBtn, IDCARDX5, IDCARDY5,
+		IDCARDX5 + CHARIDCARDW, IDCARDY5 + CHARIDCARDH);
+	m_ImgID[4].SetUp(IDCARDIMG5, true, rcBtn);
+	SetRect(&rcBtn, IDCARDX6, IDCARDY6,
+		IDCARDX6 + CHARIDCARDW, IDCARDY6 + CHARIDCARDH);
+	m_ImgID[5].SetUp(IDCARDIMG6, true, rcBtn);
+	SetRect(&rcBtn, IDCARDX7, IDCARDY7,
+		IDCARDX7 + CHARIDCARDW, IDCARDY7 + CHARIDCARDH);
+	m_ImgID[6].SetUp(IDCARDIMG7, true, rcBtn);
+	// 수리계열 7넘
+	SetRect(&rcBtn, IDCARDX8, IDCARDY8,
+		IDCARDX8 + CHARIDCARDW, IDCARDY8 + CHARIDCARDH);
+	m_ImgID[7].SetUp(IDCARDIMG8, true, rcBtn);
+	SetRect(&rcBtn, IDCARDX9, IDCARDY9,
+		IDCARDX9 + CHARIDCARDW, IDCARDY9 + CHARIDCARDH);
+	m_ImgID[8].SetUp(IDCARDIMG9, true, rcBtn);
+	SetRect(&rcBtn, IDCARDX10, IDCARDY10,
+		IDCARDX10 + CHARIDCARDW, IDCARDY10 + CHARIDCARDH);
+	m_ImgID[9].SetUp(IDCARDIMG10, true, rcBtn);
+	SetRect(&rcBtn, IDCARDX11, IDCARDY11,
+		IDCARDX11 + CHARIDCARDW, IDCARDY11 + CHARIDCARDH);
+	m_ImgID[10].SetUp(IDCARDIMG11, true, rcBtn);
+	SetRect(&rcBtn, IDCARDX12, IDCARDY12,
+		IDCARDX12 + CHARIDCARDW, IDCARDY12 + CHARIDCARDH);
+	m_ImgID[11].SetUp(IDCARDIMG12, true, rcBtn);
+	SetRect(&rcBtn, IDCARDX13, IDCARDY13,
+		IDCARDX13 + CHARIDCARDW, IDCARDY13 + CHARIDCARDH);
+	m_ImgID[12].SetUp(IDCARDIMG13, true, rcBtn);
+	SetRect(&rcBtn, IDCARDX14, IDCARDY14,
+		IDCARDX14 + CHARIDCARDW, IDCARDY14 + CHARIDCARDH);
+	m_ImgID[13].SetUp(IDCARDIMG14, true, rcBtn);
+
+	// 예능계열 2넘
+	SetRect(&rcBtn, IDCARDX15, IDCARDY15,
+		IDCARDX15 + CHARIDCARDW, IDCARDY15 + CHARIDCARDH);
+	m_ImgID[14].SetUp(IDCARDIMG15, true, rcBtn);
+	SetRect(&rcBtn, IDCARDX16, IDCARDY16,
+		IDCARDX16 + CHARIDCARDW, IDCARDY16 + CHARIDCARDH);
+	m_ImgID[15].SetUp(IDCARDIMG16, true, rcBtn);
+
+	m_nSel = 0;
 
 	return true;
 }
@@ -66,7 +129,25 @@ void gTitleCore::Draw()
 			m_ImgBtn[i].Draw();
 		break;
 	case ETM_CHARSEL:
-		break;
+		{
+			HDC			hdc;
+			RECT		rcCharIllu = { SELCHARIMGX, SELCHARIMGY,
+							SELCHARIMGX + SELCHARIMGW, SELCHARIMGY + SELCHARIMGH };
+
+			m_ImgSel.Draw(0, 0);
+
+			for(i = 0; i < CHARNUM; i++)
+				m_ImgID[i].Draw();
+
+			gCharManager::GetIF()->m_Chars[m_nSel].DrawIllu(rcCharIllu);
+			/*
+			gMainWin::GetIF()->m_lpDDBack->GetDC(&hdc);
+			TextOut(hdc, 100, 100, "aaaaaaaa", 8);
+			gMainWin::GetIF()->m_lpDDBack->ReleaseDC(hdc);
+			*/
+
+			break;
+		}
 	}
 }
 
@@ -90,7 +171,7 @@ void gTitleCore::OnLButtonDown()
 		switch((eTITLE_BTN)i)
 		{
 		case ETB_START:
-			gMainWin::GetIF()->m_eCoreMode = EMC_GAME;
+			m_eMode = ETM_CHARSEL;
 			break;
 		case ETB_EXIT:
 			gMainWin::GetIF()->Exit();
@@ -127,6 +208,16 @@ void gTitleCore::OnMouseMove()
 		}
 		break;
 	case ETM_CHARSEL:
+		for(i = 0; i < CHARNUM; i++)
+		{
+			if(m_ImgID[i].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+			{
+				m_ImgID[i].m_eBtnMode = EBM_HOVER;
+				m_nSel = i;
+			}
+			else
+				m_ImgID[i].m_eBtnMode = EBM_NONE;
+		}
 		break;
 	}
 	

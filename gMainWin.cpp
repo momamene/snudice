@@ -3,6 +3,7 @@
 #include "gTitleCore.h"
 #include "gGameCore.h"
 #include "gMouse.h"
+#include "gCharManager.h"
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
@@ -143,6 +144,7 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 		return false;
 	}
 #endif
+
 	// End Direct X Set up
 
 	// SetUp TitleCore 
@@ -151,10 +153,11 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 		MessageBox(m_hWnd, "TitleCore : Setup 실패", "Error", MB_OK);
 		return false;
 	}
-	// SetUp GameCore
-	if(FAILED(gGameCore::GetIF()->SetUp()))
+
+	// SetUp CharManager
+	if(FAILED(gCharManager::GetIF()->SetUp()))
 	{
-		MessageBox(m_hWnd, "GameCore : Setup 실패", "Error", MB_OK);
+		MessageBox(m_hWnd, "CharManager : Setup 실패", "Error", MB_OK);
 		return false;
 	}
 
