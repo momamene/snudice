@@ -125,6 +125,14 @@ SOURCE=.\gTitleCore.cpp
 
 SOURCE=.\main.cpp
 # End Source File
+# Begin Source File
+
+SOURCE=.\TILE.CPP
+# End Source File
+# Begin Source File
+
+SOURCE=.\tileContainer.cpp
+# End Source File
 # End Group
 # Begin Group "Header Files"
 
@@ -168,6 +176,14 @@ SOURCE=.\gMouse.h
 # Begin Source File
 
 SOURCE=.\gTitleCore.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TILE.H
+# End Source File
+# Begin Source File
+
+SOURCE=.\tileContainer.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"
