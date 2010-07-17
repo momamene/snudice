@@ -1,6 +1,7 @@
 #include "gMouse.h"
 #include "gMainWin.h"
 #include "gTitleCore.h"
+#include "gGameCore.h"
 
 //------------------------------------------------------------------------------------
 //	Constructor	/	Destructor
@@ -67,6 +68,9 @@ void gMouse::OnMouseMove()
 	{
 	case EMC_TITLE:
 		gTitleCore::GetIF()->OnMouseMove();
+		break;
+	case EMC_GAME:
+		gGameCore::GetIF()->OnMouseMove();
 		break;
 	}
 }

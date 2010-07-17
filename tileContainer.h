@@ -20,6 +20,7 @@ public:
 	HANDLE	hFile;
 	DWORD	dw;
 	gImage	gimage[5];
+	gImage	m_wallpaper;
 
 	int		count;
 	TILE	bmpKindSavor[MAXSAVOR_N];
@@ -31,9 +32,9 @@ public:
 	void	LoadFileToBKS();
 	void	LoadBKSToTM();
 	void	Load();
-	TILE	GetTileFromIJ(int i, int j);
-	TILE	GetPrevTileFromIJ(int i, int j);
-	TILE	GetNextTileFromIJ(int i, int j);
+//	TILE	GetTileFromIJ(int i, int j);
+//	TILE	GetPrevTileFromIJ(int i, int j);
+//	TILE	GetNextTileFromIJ(int i, int j);
 	void	Draw();
 };
 

@@ -7,6 +7,7 @@
 //------------------------------------------------------------------------------------
 #pragma once
 #include "gCoreIF.h"
+#include "tileContainer.h"
 
 enum eGAMEMODE
 {
@@ -20,6 +21,12 @@ public:
 
 	gGameCore();
 	virtual ~gGameCore();
+	int m_xPos;
+	int m_yPos;
+
+
+
+
 public:
 	eGAMEMODE	m_eMode;
 

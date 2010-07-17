@@ -9,7 +9,7 @@
 #include <windows.h>
 #include <ddraw.h>
 
-#define FULLSCREEN		//	define 풀었다 해제하면서 fullscreen 체크
+//#define FULLSCREEN		//	define 풀었다 해제하면서 fullscreen 체크
 
 enum eMAINCORE
 {

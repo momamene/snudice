@@ -92,3 +92,7 @@
 // Char
 #define IMGILLUSTW			500
 #define IMGILLUSTH			800
+
+// gMouse.h - sangwoo
+#define MINMOVE 20
+

@@ -1,5 +1,7 @@
 #include "tileContainer.h"
 #include "TILE.h"
+#include "gGameCore.h"
+#include "const.h"
 
 static tileContainer s_tileContainer; // 2
 
@@ -19,6 +21,8 @@ void tileContainer::Setup(){
 	gimage[2].Load("stamina.img");
 	gimage[3].Load("bus.img");
 	gimage[4].Load("maingate.img");
+	m_wallpaper.Load(TITLE_IMG_TITLE);
+	Load();
 }
 
 void tileContainer::LoadFileToBKS(){
@@ -49,6 +53,7 @@ void tileContainer::Load(){
 	LoadFileToBKS();
 	LoadBKSToTM();
 }
+/*
 TILE tileContainer::GetTileFromIJ(int i, int j){
 	return tileMap[i*LINEY+j];
 }
@@ -62,43 +67,29 @@ TILE tileContainer::GetNextTileFromIJ(int i,int j){
 	int y = tileMap[i*LINEY+j].nextTile.y; 
 	return GetTileFromIJ(x,y);
 }
-
+*/
 void tileContainer::Draw(){
-//	int k;
-	//gimage[0].Draw(0,0);
-	//gimage[1].Draw(LEFTX+MIDDLEX,HALFY);
-	//gimage[2].Draw(0,FULLY);
-	//gimage[4].Draw(1,1);
-	//gimage[0].Draw(3,4);
-	
-	//char buf[10];
-	for(int i = 0 ; i < LINEX ; i++) { // 현재 오류입니다. 왜일까? (25,2)에서는 오류. 이것은 설마 맵툴 비동기화?
+	gGameCore *gameCore = gGameCore::GetIF();
+	m_wallpaper.Draw(0,0);
+	for(int i = 0 ; i < LINEX ; i++) { 
 		for(int j = 0 ; j < LINEY ; j++) {
-			//k = tileMap[i*LINEX+j].tileType;
-
-			//if(k==TY_NONE) continue;
-			
-			//wsprintf(buf,"%d %d",i,j);
-			//for (int k = TY_CLASS; k < TY_MAINGATE + 1 ; k++){
-			//	if(tileMap[i*LINEX+j].tileType==k) {
 				if(tileMap[i*LINEY+j].tileType==TY_NONE)continue;	
 				if(i%2==0){
-					if(tileMap[i*LINEY+j].tileType==TY_CLASS) gimage[0].Draw(WIDEX*i/2,FULLY*j);
-					if(tileMap[i*LINEY+j].tileType==TY_ITEM) gimage[1].Draw(WIDEX*i/2,FULLY*j);
-					if(tileMap[i*LINEY+j].tileType==TY_STAMINA) gimage[2].Draw(WIDEX*i/2,FULLY*j);
-					if(tileMap[i*LINEY+j].tileType==TY_BUS) gimage[3].Draw(WIDEX*i/2,FULLY*j);
-					if(tileMap[i*LINEY+j].tileType==TY_MAINGATE) gimage[4].Draw(WIDEX*i/2,FULLY*j);
+					for(int k = 0 ; k < 5 ; k++)
+					if(tileMap[i*LINEY+j].tileType==TY_CLASS+k) gimage[k].Draw(-gameCore->m_xPos+WIDEX*i/2,-gameCore->m_yPos+FULLY*j);
+					//if(tileMap[i*LINEY+j].tileType==TY_ITEM) gimage[1].Draw(WIDEX*i/2,FULLY*j);
+					//if(tileMap[i*LINEY+j].tileType==TY_STAMINA) gimage[2].Draw(WIDEX*i/2,FULLY*j);
+					//if(tileMap[i*LINEY+j].tileType==TY_BUS) gimage[3].Draw(WIDEX*i/2,FULLY*j);
+					//if(tileMap[i*LINEY+j].tileType==TY_MAINGATE) gimage[4].Draw(WIDEX*i/2,FULLY*j);
 				}
 				else{
-					if(tileMap[i*LINEY+j].tileType==TY_CLASS) gimage[0].Draw(LEFTX+MIDDLEX+WIDEX*(i-1)/2,HALFY+FULLY*j);
-					if(tileMap[i*LINEY+j].tileType==TY_ITEM) gimage[1].Draw(LEFTX+MIDDLEX+WIDEX*(i-1)/2,HALFY+FULLY*j);
-					if(tileMap[i*LINEY+j].tileType==TY_STAMINA) gimage[2].Draw(LEFTX+MIDDLEX+WIDEX*(i-1)/2,HALFY+FULLY*j);
-					if(tileMap[i*LINEY+j].tileType==TY_BUS) gimage[3].Draw(LEFTX+MIDDLEX+WIDEX*(i-1)/2,HALFY+FULLY*j);
-					if(tileMap[i*LINEY+j].tileType==TY_MAINGATE) gimage[4].Draw(LEFTX+MIDDLEX+WIDEX*(i-1)/2,HALFY+FULLY*j);
+					for(int k = 0 ; k < 5; k++)
+					if(tileMap[i*LINEY+j].tileType==TY_CLASS+k) gimage[k].Draw(-gameCore->m_xPos+LEFTX+MIDDLEX+WIDEX*(i-1)/2,-gameCore->m_yPos+HALFY+FULLY*j);
+					//if(tileMap[i*LINEY+j].tileType==TY_ITEM) gimage[1].Draw(LEFTX+MIDDLEX+WIDEX*(i-1)/2,HALFY+FULLY*j);
+					//if(tileMap[i*LINEY+j].tileType==TY_STAMINA) gimage[2].Draw(LEFTX+MIDDLEX+WIDEX*(i-1)/2,HALFY+FULLY*j);
+					//if(tileMap[i*LINEY+j].tileType==TY_BUS) gimage[3].Draw(LEFTX+MIDDLEX+WIDEX*(i-1)/2,HALFY+FULLY*j);
+					//if(tileMap[i*LINEY+j].tileType==TY_MAINGATE) gimage[4].Draw(LEFTX+MIDDLEX+WIDEX*(i-1)/2,HALFY+FULLY*j);
 				}
-			//		else		gimage[k-1].Draw(LEFTX+MIDDLEX+WIDEX*(i-1)/2,HALFY+FULLY*j);
-			//	}
-			//}
 		}
 	}
 	
