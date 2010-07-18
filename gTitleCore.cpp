@@ -148,6 +148,13 @@ void gTitleCore::Draw()
 			gUtil::BeginText();
 			wsprintf(szBuf, "이름 : %s", charac.m_Data.szName);
 			gUtil::Text(CHARINFOX, CHARINFOY, szBuf);
+
+			if(charac.m_Data.eSex == ESEX_MALE)
+				wsprintf(szBuf, "성별 : ♂");
+			else
+				wsprintf(szBuf, "성별 : ♀");
+			gUtil::Text(CHARINFOX + 150, CHARINFOY, szBuf);
+
 			wsprintf(szBuf, "소속 : %s", charac.m_Data.szColleage);
 			gUtil::Text(CHARINFOX, CHARINFOY + 20, szBuf);
 			wsprintf(szBuf, "언어 : %d", charac.m_Data.nLang);
