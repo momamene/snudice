@@ -85,8 +85,9 @@
 #define SELCHARIMGW			400
 #define SELCHARIMGH			240
 #define SELCHARIMGX			430
-#define SELCHARIMGY			50
-
+#define SELCHARIMGY			30
+#define CHARINFOX			420
+#define CHARINFOY			270
 
 // CharManager
 // Char

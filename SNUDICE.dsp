@@ -123,6 +123,10 @@ SOURCE=.\gTitleCore.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\gUtil.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\main.cpp
 # End Source File
 # Begin Source File
@@ -176,6 +180,10 @@ SOURCE=.\gMouse.h
 # Begin Source File
 
 SOURCE=.\gTitleCore.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\gUtil.h
 # End Source File
 # Begin Source File
 

@@ -3,6 +3,7 @@
 #include "gMainWin.h"
 #include "gMouse.h"
 #include "gCharManager.h"
+#include "gUtil.h"
 
 //------------------------------------------------------------------------------------
 //	Constructor	/	Destructor
@@ -130,21 +131,41 @@ void gTitleCore::Draw()
 		break;
 	case ETM_CHARSEL:
 		{
-			HDC			hdc;
-			RECT		rcCharIllu = { SELCHARIMGX, SELCHARIMGY,
-							SELCHARIMGX + SELCHARIMGW, SELCHARIMGY + SELCHARIMGH };
-
 			m_ImgSel.Draw(0, 0);
 
 			for(i = 0; i < CHARNUM; i++)
 				m_ImgID[i].Draw();
 
-			gCharManager::GetIF()->m_Chars[m_nSel].DrawIllu(rcCharIllu);
-			/*
-			gMainWin::GetIF()->m_lpDDBack->GetDC(&hdc);
-			TextOut(hdc, 100, 100, "aaaaaaaa", 8);
-			gMainWin::GetIF()->m_lpDDBack->ReleaseDC(hdc);
-			*/
+			RECT		rcCharIllu = { SELCHARIMGX, SELCHARIMGY,
+				SELCHARIMGX + SELCHARIMGW, SELCHARIMGY + SELCHARIMGH };
+
+			gChar	charac = gCharManager::GetIF()->m_Chars[m_nSel];
+			charac.DrawIllu(rcCharIllu);
+
+			HDC			hdc;
+			char		szBuf[128];
+
+			gUtil::BeginText();
+			wsprintf(szBuf, "이름 : %s", charac.m_Data.szName);
+			gUtil::Text(CHARINFOX, CHARINFOY, szBuf);
+			wsprintf(szBuf, "소속 : %s", charac.m_Data.szColleage);
+			gUtil::Text(CHARINFOX, CHARINFOY + 20, szBuf);
+			wsprintf(szBuf, "언어 : %d", charac.m_Data.nLang);
+			gUtil::Text(CHARINFOX, CHARINFOY + 40, szBuf);
+			wsprintf(szBuf, "수리 : %d", charac.m_Data.nMath);
+			gUtil::Text(CHARINFOX, CHARINFOY + 60, szBuf);
+			wsprintf(szBuf, "예능 : %d", charac.m_Data.nArt);
+			gUtil::Text(CHARINFOX, CHARINFOY + 80, szBuf);
+			wsprintf(szBuf, "체력 : %d", charac.m_Data.nStamina);
+			gUtil::Text(CHARINFOX, CHARINFOY + 100, szBuf);
+			wsprintf(szBuf, "이동 : %d", charac.m_Data.nMove);
+			gUtil::Text(CHARINFOX, CHARINFOY + 120, szBuf);
+
+			gUtil::Text(CHARINFOX, CHARINFOY + 140, charac.m_Data.szComment);
+
+
+
+			gUtil::EndText();
 
 			break;
 		}
