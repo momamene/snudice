@@ -161,6 +161,13 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 		return false;
 	}
 
+	// SetUp GameCore
+	if(FAILED(gGameCore::GetIF()->SetUp()))
+	{
+		MessageBox(m_hWnd, "GameCore : Setup ½ÇÆÐ", "Error", MB_OK);
+		return false;
+	}
+
 	ShowWindow(m_hWnd, nCmdShow);
 
 	return true;

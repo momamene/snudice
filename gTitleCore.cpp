@@ -179,6 +179,9 @@ void gTitleCore::OnLButtonDown()
 		}
 		break;
 	case ETM_CHARSEL:
+		for(i = 0; i < CHARNUM; i++)
+			if(m_ImgID[i].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+				gMainWin::GetIF()->m_eCoreMode = EMC_GAME;
 
 		break;
 	}

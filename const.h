@@ -94,5 +94,5 @@
 #define IMGILLUSTH			800
 
 // gMouse.h - sangwoo
-#define MINMOVE 20
+#define MINMOVE				20
 
