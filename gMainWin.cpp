@@ -4,6 +4,7 @@
 #include "gGameCore.h"
 #include "gMouse.h"
 #include "gCharManager.h"
+#include "gInterface.h"
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
@@ -165,6 +166,13 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 	if(FAILED(gGameCore::GetIF()->SetUp()))
 	{
 		MessageBox(m_hWnd, "GameCore : Setup 실패", "Error", MB_OK);
+		return false;
+	}
+
+	// SetUp Interface
+	if(FAILED(gInterface::GetIF()->SetUp()))
+	{
+		MessageBox(m_hWnd, "Interface : Setup 실패", "Error", MB_OK);
 		return false;
 	}
 

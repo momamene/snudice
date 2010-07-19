@@ -2,6 +2,7 @@
 #include "gMouse.h"
 #include "const.h"
 #include "gMainWin.h" // 라고 쓰고 키보드라고 읽는다.
+#include "gInterface.h"
 
 
 //------------------------------------------------------------------------------------
@@ -84,25 +85,25 @@ void gGameCore::MainLoop() // MainLoop 내부를 함수들로 다시 깔끔하게 만들 필요가
 void gGameCore::Draw()
 {
 	tileContainer::GetIF()->Draw();
+	gInterface::GetIF()->Draw();
 }
 
 void gGameCore::OnLButtonDown()
 {
-	
+	gInterface::GetIF()->OnLButtonDown();
 }
 
 void gGameCore::OnLButtonUp()
 {
-	
+	gInterface::GetIF()->OnLButtonUp();
 }
 
 void gGameCore::OnMouseMove()
 {
-	
-	
+	gInterface::GetIF()->OnMouseMove();
 }
 
 void gGameCore::OnRButtonDown()
 {
-	
+	gInterface::GetIF()->OnRButtonDown();	
 }

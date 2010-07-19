@@ -97,3 +97,18 @@
 // gMouse.h - sangwoo
 #define MINMOVE				20
 
+// Interface
+#define IF_IMG_MENUBACK		".\\Data\\Interface\\menu_back.img"
+#define	IF_POS_MENUBACKX	20
+#define IF_POS_MENUBACKY	0
+#define IF_POS_MENUBTNW		49		//수강, 아이템, 시스템
+#define IF_POS_MENUBTNH		49
+#define IF_IMG_SUGANG		".\\Data\\Interface\\menu_btn_sugang.img"
+#define IF_POS_SUGANGX		IF_POS_MENUBACKX + 276
+#define IF_POS_SUGANGY		IF_POS_MENUBACKY + 19
+#define IF_IMG_ITEM			".\\Data\\Interface\\menu_btn_item.img"
+#define IF_POS_ITEMX		IF_POS_MENUBACKX + 331
+#define IF_POS_ITEMY		IF_POS_MENUBACKY + 5
+#define IF_IMG_SYSTEM		".\\Data\\Interface\\menu_btn_system.img"
+#define IF_POS_SYSTEMX		IF_POS_MENUBACKX + 387
+#define	IF_POS_SYSTEMY		IF_POS_MENUBACKY + 9
