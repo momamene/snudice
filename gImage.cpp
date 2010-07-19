@@ -19,10 +19,11 @@ gImage::~gImage()
 bool gImage::Load(char *szFileName)
 {
 	HANDLE		hFile;
+	int			nPallete;
 	DWORD		dwDataSize;
 	DWORD		dwRead;
 	DWORD		dwPitch;
-	RGBQUAD		rgb[256];
+	RGBQUAD		*rgb;
 	BYTE*		pData;
 	char		szError[256];
 
@@ -37,11 +38,13 @@ bool gImage::Load(char *szFileName)
 		return false;
 	}
 
+	ReadFile(hFile, &nPallete, sizeof(int), &dwRead, NULL);
+	rgb = new RGBQUAD[nPallete];
 	ReadFile(hFile, &dwDataSize, sizeof(dwDataSize), &dwRead, NULL);
 	ReadFile(hFile, &m_nWidth, sizeof(m_nWidth), &dwRead, NULL);
 	ReadFile(hFile, &m_nHeight, sizeof(m_nHeight), &dwRead, NULL);
 	ReadFile(hFile, &dwPitch, sizeof(dwPitch), &dwRead, NULL);
-	ReadFile(hFile, rgb, sizeof(RGBQUAD) * 256, &dwRead, NULL);
+	ReadFile(hFile, rgb, sizeof(RGBQUAD) * nPallete, &dwRead, NULL);
 	pData = new BYTE[dwDataSize];
 	ReadFile(hFile, pData, dwDataSize, &dwRead, NULL);
 	CloseHandle(hFile);
@@ -88,6 +91,7 @@ bool gImage::Load(char *szFileName)
 	m_lpDDSur->Unlock(NULL);
 	
 	delete [] pData;
+	delete [] rgb;
 	
 	DDCOLORKEY		colorkey;
 	

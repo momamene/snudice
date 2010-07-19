@@ -111,6 +111,10 @@ SOURCE=.\gImgButton.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\gInterface.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\gMainWin.cpp
 # End Source File
 # Begin Source File
@@ -168,6 +172,10 @@ SOURCE=.\gImage.h
 # Begin Source File
 
 SOURCE=.\gImgButton.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\gInterface.h
 # End Source File
 # Begin Source File
 

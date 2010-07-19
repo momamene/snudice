@@ -18,11 +18,11 @@ void tileContainer::Setup(){
 			tileMap[i*LINEY+j].init(i,j);
 		}
 	}
-	gimage[0].Load("class.img");
-	gimage[1].Load("item.img");
-	gimage[2].Load("stamina.img");
-	gimage[3].Load("bus.img");
-	gimage[4].Load("maingate.img");
+	gimage[0].Load(".\\Data\\Map\\class.img");
+	gimage[1].Load(".\\Data\\Map\\item.img");
+	gimage[2].Load(".\\Data\\Map\\stamina.img");
+	gimage[3].Load(".\\Data\\Map\\bus.img");
+	gimage[4].Load(".\\Data\\Map\\maingate.img");
 	m_wallpaper.Load(TITLE_IMG_TITLE);
 
 	m_xSpacePos=-1;
