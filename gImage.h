@@ -31,6 +31,7 @@ public:
 
 	bool		Load(char *szFileName);							// img 파일만 읽어짐
 	void		Draw(int nX, int nY);							// 출력은 무조건 gMainWin의 백버퍼에
+	
 	void		Draw(RECT rcDest, RECT rcSour);
 	
 	void		Release();

@@ -23,18 +23,30 @@ public:
 	gImage	m_wallpaper;
 
 	int		count;
+	
+	//bool	m_minimapOn;
 	TILE	bmpKindSavor[MAXSAVOR_N];
 	TILE	tileMap[LINEX*LINEY];
+
+
+	int m_xSpacePos;
+	int m_ySpacePos;
+
+	int m_xInitSpacePos;
+	int m_yInitSpacePos;
 
 public:
 	static tileContainer *GetIF();
 	void	Setup();
+	void	Draw();
+	void	minimapDraw(int start_x,int start_y,int n);
+	bool	isExisted(int i, int j);
+	void	posSpacor();
+
+private:
+	void	Load();
+	void	viewSpacor();
 	void	LoadFileToBKS();
 	void	LoadBKSToTM();
-	void	Load();
-//	TILE	GetTileFromIJ(int i, int j);
-//	TILE	GetPrevTileFromIJ(int i, int j);
-//	TILE	GetNextTileFromIJ(int i, int j);
-	void	Draw();
 };
 

@@ -1,6 +1,7 @@
 #include "gGameCore.h"
 #include "gMouse.h"
 #include "const.h"
+#include "gMainWin.h" // 라고 쓰고 키보드라고 읽는다.
 
 
 //------------------------------------------------------------------------------------
@@ -28,27 +29,54 @@ bool gGameCore::SetUp()
 {
 	m_xPos=0;
 	m_yPos=0;
+	m_minimapOn=0;
+	m_spacor=0;
 	tileContainer::GetIF()->Setup();
 	//tileContainer::GetIF()->Load();
 	//MainLoop();
 	return true;
 }
 
-void gGameCore::MainLoop()
+void gGameCore::MainLoop() // MainLoop 내부를 함수들로 다시 깔끔하게 만들 필요가 매우매우 있음
 {
 	gMouse *mouse = gMouse::GetIF();
+	gMainWin *mainWin = gMainWin::GetIF(); // mainWin이라고 쓰고 키보드라고 읽는다.
+	tileContainer *tilecontainer = tileContainer::GetIF();
 	
 	if(mouse->m_nPosX < MINMOVE){
 		if(m_xPos>0) m_xPos--;
 	}
-	else if(mouse->m_nPosY < MINMOVE) {
+	if(mouse->m_nPosY < MINMOVE) {
 		if(m_yPos>0) m_yPos--;
 	}
-	if(mouse->m_nPosX > WNDSIZEW - MINMOVE) { // 미친 수작업.
-		if(m_xPos<(LINEX/2+LINEX%2)*WIDEX-LEFTX-WNDSIZEW) m_xPos++;
+	if(mouse->m_nPosX > WNDSIZEW - MINMOVE) { 
+		//if(m_xPos<(LINEX/2+LINEX%2)*WIDEX-MIDDLEX-WNDSIZEW+20) m_xPos++;
+		if(m_xPos<2228-WNDSIZEW+20) m_xPos++;
 	}
-	if(mouse->m_nPosY > WNDSIZEH - MINMOVE){ // 미친 수작업. 수학 공식 그런거 없음.
-		if(m_yPos<(LINEY+2)*FULLY-WNDSIZEW+10) m_yPos++;
+	if(mouse->m_nPosY > WNDSIZEH - MINMOVE){ // 수학적 공식
+		//if(m_yPos<(LINEY)*FULLY-WNDSIZEH+20) m_yPos++;
+		if(m_yPos<1520-WNDSIZEH+20) m_yPos++;
+	}
+
+	if(mainWin->m_Keys['M']){
+		if(m_minimapOn==0) m_minimapOn=1;
+		if(m_minimapOn==2) m_minimapOn=3;
+	}
+	if(!(mainWin->m_Keys['M'])){
+		if(m_minimapOn==1) m_minimapOn=2;
+		if(m_minimapOn==3) m_minimapOn=0;
+	}
+
+	if(mainWin->m_Keys[VK_SPACE]){
+		if(m_spacor==0) {
+			m_spacor=1;
+			tilecontainer->posSpacor();
+		}
+	}
+	if(!(mainWin->m_Keys[VK_SPACE])){
+		if(m_spacor==1){
+			m_spacor=0;
+		}
 	}
 	Draw();
 }

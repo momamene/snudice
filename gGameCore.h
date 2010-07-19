@@ -23,6 +23,9 @@ public:
 	virtual ~gGameCore();
 	int m_xPos;
 	int m_yPos;
+	int m_minimapOn; // 0 , 1, 2, 3 (1,2) 일 때 On, (3,0) 일 때 Off
+	int m_spacor;
+
 
 
 
