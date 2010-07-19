@@ -29,6 +29,7 @@ public:
 	BOOL		m_Keys[256];				// keyboard
 	RECT		m_rcScr;					// screen
 	eMAINCORE	m_eCoreMode;
+	bool		m_bActive;
 
 	//	direct x
 	LPDIRECTDRAW			m_lpDD;

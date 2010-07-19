@@ -5,6 +5,7 @@
 #include "gMouse.h"
 #include "gCharManager.h"
 #include "gInterface.h"
+#include "gUtil.h"
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
@@ -176,6 +177,9 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 		return false;
 	}
 
+	// font 설정  gUtil
+	gUtil::SetSize(12);
+
 	ShowWindow(m_hWnd, nCmdShow);
 
 	return true;
@@ -232,6 +236,7 @@ void gMainWin::MainLoop()
 		break;
 	}
 	// backbuffer 에 그려진 것들을 출력
+if(!m_bActive) return;
 #ifdef FULLSCREEN
 	m_lpDDPrimary->Flip(NULL, DDFLIP_WAIT);
 #else
@@ -281,7 +286,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 			mouse->m_nPosY = HIWORD(lParam);
 			mouse->OnMouseMove();
 			return 0;
-
+		// active
+		case WM_ACTIVATE:
+			switch(LOWORD(wParam))
+			{
+			case WA_ACTIVE: case WA_CLICKACTIVE:
+				gMainWin::GetIF()->m_bActive = true;
+				break;
+			case WA_INACTIVE:
+				gMainWin::GetIF()->m_bActive = false;
+				break;
+			}
+			return 0;
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			return 0;

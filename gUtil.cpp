@@ -4,11 +4,18 @@
 #include <stdio.h>
 
 HDC		s_hdc;
+HFONT	s_font;
+HFONT	s_ofont;
+int		s_nSize;
+char	s_szFont[32] = "µ¸¿ò";
 
 void gUtil::BeginText()
 {
 	gMainWin::GetIF()->m_lpDDBack->GetDC(&s_hdc);
 	SetBkMode(s_hdc, TRANSPARENT);
+	s_font = CreateFont(s_nSize, 0, 0, 0, 0, 0, 0, 0, HANGUL_CHARSET, 0, 0, 0,
+		VARIABLE_PITCH | FF_ROMAN, s_szFont);
+	s_ofont = (HFONT)SelectObject(s_hdc, s_font);
 }
 
 void gUtil::Text(int x, int y, char *str, int lineterm)
@@ -40,5 +47,22 @@ void gUtil::Text(int x, int y, char *str, int lineterm)
 
 void gUtil::EndText()
 {
+	SelectObject(s_hdc, s_ofont);
+	DeleteObject(s_font);
 	gMainWin::GetIF()->m_lpDDBack->ReleaseDC(s_hdc);
+}
+
+void gUtil::SetFont(char *font)
+{
+	strcpy(s_szFont, font);
+}
+
+void gUtil::SetSize(int size)
+{
+	s_nSize = size;
+}
+
+void gUtil::SetColor()
+{
+
 }
