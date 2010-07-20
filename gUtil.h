@@ -7,6 +7,7 @@
 //	text 출력할 때 무조건 시작할때 begin, 끝나고 end
 //------------------------------------------------------------------------------------
 #pragma once
+#include <windows.h>
 
 class gUtil  
 {
@@ -17,5 +18,6 @@ public:
 	static void BeginText();
 	static void Text(int x, int y, char *str, int lineterm = 20);	//lineterm -> 엔터칠때 얼마나 ㄴ내려가나
 	static void EndText();
+	static bool PointInRect(int x, int y, RECT rc);
 };
 

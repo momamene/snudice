@@ -66,3 +66,12 @@ void gUtil::SetColor()
 {
 
 }
+
+bool gUtil::PointInRect(int x, int y, RECT rc)
+{
+	if(rc.left <= x && x <= rc.right
+		&& rc.top <= y && y <= rc.bottom)
+		return true;
+	else
+		return false;
+}

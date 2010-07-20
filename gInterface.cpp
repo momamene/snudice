@@ -1,6 +1,7 @@
 #include "gInterface.h"
 #include "const.h"
 #include "gMouse.h"
+#include "gUtil.h"
 
 //------------------------------------------------------------------------------------
 //	Constructor	/	Destructor
@@ -47,6 +48,17 @@ bool gInterface::SetUp()
 	if(FAILED(m_BtnMenu[EBTN_SYSTEM].SetUp(IF_IMG_SYSTEM, false, rcPos)))
 		return false;
 
+	// menu mode
+	m_eMenuMode = EMM_END;
+
+	// popup image (pop up ¸Þ´º)
+	if(FAILED(m_ImgMenu[EMM_ITEMCARD].Load(IF_IMG_ITEMBACK)))
+		return false;
+	if(FAILED(m_ImgMenu[EMM_SUGANG].Load(IF_IMG_SUGANGBACK)))
+		return false;
+	if(FAILED(m_ImgMenu[EMM_SYSTEM].Load(IF_IMG_SYSBACK)))
+		return false;
+
 	return true;
 }
 
@@ -57,6 +69,9 @@ void gInterface::Draw()
 	int		i;
 	for(i = 0; i < EBTN_END; i++)
 		m_BtnMenu[i].Draw();
+
+	if(m_eMenuMode != EMM_END)
+		m_ImgMenu[m_eMenuMode].Draw(IF_POS_BACKX, IF_POS_BACKY);
 }
 
 void gInterface::MainLoop()
@@ -66,7 +81,17 @@ void gInterface::MainLoop()
 
 void gInterface::OnLButtonDown()
 {
+	gMouse	*mouse = gMouse::GetIF();
 
+	int		i;
+	for(i = 0; i < EBTN_END; i++)
+	{
+		if(m_BtnMenu[i].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+		{
+			m_eMenuMode = (eMENUMODE)i;
+			break;
+		}
+	}
 }
 
 void gInterface::OnLButtonUp()
@@ -90,5 +115,14 @@ void gInterface::OnMouseMove()
 
 void gInterface::OnRButtonDown()
 {
+	gMouse	*mouse = gMouse::GetIF();
 
+	if(m_eMenuMode != EMM_END)	// EMM_END means EMM_NONE
+	{
+		RECT	rcTemp;
+		SetRect(&rcTemp, IF_POS_BACKX, IF_POS_BACKY,
+			IF_POS_BACKX + IF_POS_SCARDW, IF_POS_BACKY + IF_POS_SCARDH);
+		if(!gUtil::PointInRect(mouse->m_nPosX, mouse->m_nPosY, rcTemp))
+			m_eMenuMode = EMM_END;
+	}
 }

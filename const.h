@@ -114,5 +114,10 @@
 #define	IF_POS_SYSTEMY		IF_POS_MENUBACKY + 9
 
 
-#define	IF_POS_SCARDW		484
+#define	IF_POS_SCARDW		484		// scard, menu_sysback, menu_itemback, menu_sugangback...
 #define IF_POS_SCARDH		287
+#define IF_IMG_ITEMBACK		".\\Data\\Interface\\menu_item_back.img"
+#define IF_IMG_SUGANGBACK	".\\Data\\Interface\\menu_sugang_back.img"
+#define IF_IMG_SYSBACK		".\\Data\\Interface\\menu_system_back.img"
+#define IF_POS_BACKX		((WNDSIZEW - IF_POS_SCARDW) / 2)
+#define IF_POS_BACKY		((WNDSIZEH - IF_POS_SCARDH) / 2)

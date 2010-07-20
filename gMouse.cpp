@@ -46,9 +46,12 @@ void gMouse::OnLButtonDown()
 {
 	switch(gMainWin::GetIF()->m_eCoreMode)
 	{
-		case EMC_TITLE:
-			gTitleCore::GetIF()->OnLButtonDown();
-			break;
+	case EMC_TITLE:
+		gTitleCore::GetIF()->OnLButtonDown();
+		break;
+	case EMC_GAME:
+		gGameCore::GetIF()->OnLButtonDown();
+		break;
 	}
 }
 
@@ -58,6 +61,9 @@ void gMouse::OnLButtonUp()
 	{
 	case EMC_TITLE:
 		gTitleCore::GetIF()->OnLButtonUp();
+		break;
+	case EMC_GAME:
+		gGameCore::GetIF()->OnLButtonUp();
 		break;
 	}
 }
@@ -81,6 +87,9 @@ void gMouse::OnRButtonDown()
 	{
 	case EMC_TITLE:
 		gTitleCore::GetIF()->OnRButtonDown();
+		break;
+	case EMC_GAME:
+		gGameCore::GetIF()->OnRButtonDown();
 		break;
 	}
 }
