@@ -41,4 +41,9 @@ public:
 	void		OnLButtonUp();
 	void		OnMouseMove();
 	void		OnRButtonDown();
+
+private:
+	// MainLoop의 떨거지들
+	void gGameCore::MainLoopMouse();
+	void gGameCore::MainLoopKeyboard();
 };

@@ -38,11 +38,8 @@ bool gGameCore::SetUp()
 	return true;
 }
 
-void gGameCore::MainLoop() // MainLoop 내부를 함수들로 다시 깔끔하게 만들 필요가 매우매우 있음
-{
+void gGameCore::MainLoopMouse(){
 	gMouse *mouse = gMouse::GetIF();
-	gMainWin *mainWin = gMainWin::GetIF(); // mainWin이라고 쓰고 키보드라고 읽는다.
-	tileContainer *tilecontainer = tileContainer::GetIF();
 	
 	if(mouse->m_nPosX < MINMOVE){
 		if(m_xPos>0) m_xPos--;
@@ -59,6 +56,13 @@ void gGameCore::MainLoop() // MainLoop 내부를 함수들로 다시 깔끔하게 만들 필요가
 		if(m_yPos<1520-WNDSIZEH+20) m_yPos++;
 	}
 
+}
+
+void gGameCore::MainLoopKeyboard(){
+	
+	gMainWin *mainWin = gMainWin::GetIF(); // mainWin이라고 쓰고 키보드라고 읽는다.
+	tileContainer *tilecontainer = tileContainer::GetIF();
+	
 	if(mainWin->m_Keys['M']){
 		if(m_minimapOn==0) m_minimapOn=1;
 		if(m_minimapOn==2) m_minimapOn=3;
@@ -67,7 +71,7 @@ void gGameCore::MainLoop() // MainLoop 내부를 함수들로 다시 깔끔하게 만들 필요가
 		if(m_minimapOn==1) m_minimapOn=2;
 		if(m_minimapOn==3) m_minimapOn=0;
 	}
-
+	
 	if(mainWin->m_Keys[VK_SPACE]){
 		if(m_spacor==0) {
 			m_spacor=1;
@@ -79,6 +83,12 @@ void gGameCore::MainLoop() // MainLoop 내부를 함수들로 다시 깔끔하게 만들 필요가
 			m_spacor=0;
 		}
 	}
+}
+
+void gGameCore::MainLoop() // MainLoop 내부를 함수들로 다시 깔끔하게 만들 필요가 매우매우 있음
+{
+	MainLoopMouse();
+	MainLoopKeyboard();
 	Draw();
 }
 
