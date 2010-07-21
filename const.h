@@ -12,7 +12,23 @@
 #define SAFE_DELETE_ARRAY(p) { if(p) { delete[] (p);   (p)=NULL; } }
 #define SAFE_RELEASE(p)      { if(p) { (p)->Release(); (p)=NULL; } }
 
+#define MAXPLAYER			4			// 최대 플레이어 수
+
 //	Title
+
+//	prev, next btn
+#define TITLE_IMG_PREV		".\\Data\\Title\\prev.img"
+#define TITLE_IMG_NEXT		".\\Data\\Title\\next.img"
+#define TITLE_POS_PREVW		40
+#define TITLE_POS_PREVH		40
+#define TITLE_POS_PREVX		WNDSIZEW - 100
+#define TITLE_POS_PREVY		WNDSIZEH - 50
+#define TITLE_POS_NEXTW		40
+#define TITLE_POS_NEXTH		40
+#define TITLE_POS_NEXTX		WNDSIZEW - 50
+#define TITLE_POS_NEXTY		WNDSIZEH - 50
+
+
 #define TITLE_IMG_TITLE		".\\Data\\Title\\title.img"
 //	start button
 #define TBT_START_IMG		".\\Data\\Title\\tstart.img"
@@ -28,6 +44,36 @@
 #define TBT_EXIT_VERTICAL	false		// 가로로 3개
 #define TBT_EXIT_X			40			// 시작 x
 #define TBT_EXIT_Y			380			// 시작 y
+//	Title - playersel
+#define PSEL_IMG_BACK		".\\Data\\Title\\playersel_back.img"
+#define PSEL_IMG_MODE		".\\Data\\Title\\playersel_mode.img"
+#define PSEL_POS_MODEW		417
+#define PSEL_POS_MODEH		60
+#define PSEL_POS_NPW		120			// 1p 2p .. 가로
+#define PSEL_POS_NPH		60			// 1p 2p .. 세로
+#define PSEL_IMG_1P			".\\Data\\Title\\playersel_1p.img"
+#define PSEL_POS_1PX		50
+#define PSEL_POS_1PY		120
+#define PSEL_POS_1MODEX		180
+#define PSEL_IMG_2P			".\\Data\\Title\\playersel_2p.img"
+#define PSEL_POS_2PX		50
+#define PSEL_POS_2PY		200
+#define PSEL_POS_2MODEX		180
+#define PSEL_IMG_3P			".\\Data\\Title\\playersel_3p.img"
+#define PSEL_POS_3PX		50
+#define PSEL_POS_3PY		280
+#define PSEL_POS_3MODEX		180
+#define PSEL_IMG_4P			".\\Data\\Title\\playersel_4p.img"
+#define PSEL_POS_4PX		50
+#define PSEL_POS_4PY		360
+#define PSEL_POS_4MODEX		180
+#define PSEL_IMG_CHECK		".\\Data\\Title\\check.img"
+#define PSEL_POS_CHECKW		70
+#define PSEL_POS_CHECKH		70
+#define PSEL_POS_CHECKHELPX(i)	( (PSEL_POS_MODEW / 3) * (i - 1) + (PSEL_POS_CHECKW / 2) )		// 사람,컴,안해 모드에 따라 check 출력좌표 돠줌
+#define PSEL_POS_CHECKHELPY(i)	( i - 20 )
+
+
 //	Title - charsell
 #define CHARSELBGFILE		".\\Data\\Title\\charselbg.img"
 #define CHARIDCARDW			100			// 캐릭터선택모드에서 그리는 캐릭터 학생증카드

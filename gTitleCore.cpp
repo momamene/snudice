@@ -28,13 +28,25 @@ gTitleCore *gTitleCore::GetIF()
 
 bool gTitleCore::SetUp()
 {
+	RECT	rcBtn;
+	// prev next button setup
+	SetRect(&rcBtn, TITLE_POS_PREVX, TITLE_POS_PREVY,
+			TITLE_POS_PREVX + TITLE_POS_PREVW, TITLE_POS_PREVY + TITLE_POS_PREVH);
+	if(FAILED(m_ImgBtnPrev.SetUp(TITLE_IMG_PREV, false, rcBtn)))
+		return false;
+
+	SetRect(&rcBtn, TITLE_POS_NEXTX, TITLE_POS_NEXTY,
+			TITLE_POS_NEXTX + TITLE_POS_NEXTW, TITLE_POS_NEXTY + TITLE_POS_NEXTH);
+	if(FAILED(m_ImgBtnNext.SetUp(TITLE_IMG_NEXT, false, rcBtn)))
+		return false;
+
+
 	// title setup
 	// title img
 	if(FAILED(m_ImgTitle.Load(TITLE_IMG_TITLE)))
 		return false;
 
 	// button setup
-	RECT	rcBtn;
 	SetRect(&rcBtn, TBT_START_X, TBT_START_Y,
 			TBT_START_X + TBT_START_SIZEW, TBT_START_Y + TBT_START_SIZEH);
 	if(FAILED(m_ImgBtn[ETB_START].SetUp(TBT_START_IMG, TBT_START_VERTICAL, rcBtn)))
@@ -47,11 +59,35 @@ bool gTitleCore::SetUp()
 
 	m_eMode = ETM_TITLE;
 
+	// playersel setup
+	if(FAILED(m_ImgPlayer.Load(PSEL_IMG_BACK)))
+		return false;
+
+	if(FAILED(m_ImgMode.Load(PSEL_IMG_MODE)))
+		return false;
+
+	if(FAILED(m_ImgNP[0].Load(PSEL_IMG_1P)))			//  0 -> 1p
+		return false;
+	if(FAILED(m_ImgNP[1].Load(PSEL_IMG_2P)))
+		return false;
+	if(FAILED(m_ImgNP[2].Load(PSEL_IMG_3P)))
+		return false;
+	if(FAILED(m_ImgNP[3].Load(PSEL_IMG_4P)))
+		return false;
+
+	// check
+	if(FAILED(m_ImgCheck.Load(PSEL_IMG_CHECK)))
+		return false;
+
+	m_ePlayer[0] = EPS_PLAYER;
+	m_ePlayer[1] = EPS_PLAYER;
+	m_ePlayer[2] = EPS_PLAYER;
+	m_ePlayer[3] = EPS_PLAYER;
+
 	// charsel setup
 	// sel img
 	if(FAILED(m_ImgSel.Load(CHARSELBGFILE)))
 		return false;
-
 	// charid(button)
 
 	// 언어계열 7넘
@@ -129,9 +165,83 @@ void gTitleCore::Draw()
 		for(i = 0; i < ETB_END; i++)
 			m_ImgBtn[i].Draw();
 		break;
+	case ETM_PLAYERSEL:
+		m_ImgPlayer.Draw(0, 0);
+
+		m_ImgNP[0].Draw(PSEL_POS_1PX, PSEL_POS_1PY);				// 0 -> 1p
+		m_ImgNP[1].Draw(PSEL_POS_2PX, PSEL_POS_2PY);
+		m_ImgNP[2].Draw(PSEL_POS_3PX, PSEL_POS_3PY);
+		m_ImgNP[3].Draw(PSEL_POS_4PX, PSEL_POS_4PY);
+
+		m_ImgMode.Draw(PSEL_POS_1MODEX, PSEL_POS_1PY);
+		m_ImgMode.Draw(PSEL_POS_2MODEX, PSEL_POS_2PY);
+		m_ImgMode.Draw(PSEL_POS_3MODEX, PSEL_POS_3PY);
+		m_ImgMode.Draw(PSEL_POS_4MODEX, PSEL_POS_4PY);
+
+		// btn
+		m_ImgBtnPrev.Draw();
+		m_ImgBtnNext.Draw();
+
+		switch(m_ePlayer[0])
+		{
+		case EPS_PLAYER:
+			m_ImgCheck.Draw(PSEL_POS_1MODEX + PSEL_POS_CHECKHELPX(1), PSEL_POS_CHECKHELPY(PSEL_POS_1PY));
+			break;
+		case EPS_COM:
+			m_ImgCheck.Draw(PSEL_POS_1MODEX + PSEL_POS_CHECKHELPX(2), PSEL_POS_CHECKHELPY(PSEL_POS_1PY));
+			break;
+		case EPS_NONE:
+			m_ImgCheck.Draw(PSEL_POS_1MODEX + PSEL_POS_CHECKHELPX(3), PSEL_POS_CHECKHELPY(PSEL_POS_1PY));
+			break;
+		}
+
+		switch(m_ePlayer[1])
+		{
+		case EPS_PLAYER:
+			m_ImgCheck.Draw(PSEL_POS_2MODEX + PSEL_POS_CHECKHELPX(1), PSEL_POS_CHECKHELPY(PSEL_POS_2PY));
+			break;
+		case EPS_COM:
+			m_ImgCheck.Draw(PSEL_POS_2MODEX + PSEL_POS_CHECKHELPX(2), PSEL_POS_CHECKHELPY(PSEL_POS_2PY));
+			break;
+		case EPS_NONE:
+			m_ImgCheck.Draw(PSEL_POS_2MODEX + PSEL_POS_CHECKHELPX(3), PSEL_POS_CHECKHELPY(PSEL_POS_2PY));
+			break;
+		}
+
+		switch(m_ePlayer[2])
+		{
+		case EPS_PLAYER:
+			m_ImgCheck.Draw(PSEL_POS_3MODEX + PSEL_POS_CHECKHELPX(1), PSEL_POS_CHECKHELPY(PSEL_POS_3PY));
+			break;
+		case EPS_COM:
+			m_ImgCheck.Draw(PSEL_POS_3MODEX + PSEL_POS_CHECKHELPX(2), PSEL_POS_CHECKHELPY(PSEL_POS_3PY));
+			break;
+		case EPS_NONE:
+			m_ImgCheck.Draw(PSEL_POS_3MODEX + PSEL_POS_CHECKHELPX(3), PSEL_POS_CHECKHELPY(PSEL_POS_3PY));
+			break;
+		}
+
+		switch(m_ePlayer[3])
+		{
+		case EPS_PLAYER:
+			m_ImgCheck.Draw(PSEL_POS_4MODEX + PSEL_POS_CHECKHELPX(1), PSEL_POS_CHECKHELPY(PSEL_POS_4PY));
+			break;
+		case EPS_COM:
+			m_ImgCheck.Draw(PSEL_POS_4MODEX + PSEL_POS_CHECKHELPX(2), PSEL_POS_CHECKHELPY(PSEL_POS_4PY));
+			break;
+		case EPS_NONE:
+			m_ImgCheck.Draw(PSEL_POS_4MODEX + PSEL_POS_CHECKHELPX(3), PSEL_POS_CHECKHELPY(PSEL_POS_4PY));
+			break;
+		}
+
+		break;
 	case ETM_CHARSEL:
 		{
 			m_ImgSel.Draw(0, 0);
+
+			m_ImgBtnPrev.Draw();
+			m_ImgBtnNext.Draw();
+
 
 			for(i = 0; i < CHARNUM; i++)
 				m_ImgID[i].Draw();
@@ -193,23 +303,55 @@ void gTitleCore::OnLButtonDown()
 		for(i = 0; i < ETB_END; i++)
 		{
 			if(m_ImgBtn[i].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+			{
+				m_ImgBtn[i].m_eBtnMode = EBM_NONE;
 				break;
+			}
 		}
 		
 		switch((eTITLE_BTN)i)
 		{
 		case ETB_START:
-			m_eMode = ETM_CHARSEL;
+			m_eMode = ETM_PLAYERSEL;
 			break;
 		case ETB_EXIT:
 			gMainWin::GetIF()->Exit();
 			break;
 		}
 		break;
+
+	case ETM_PLAYERSEL:
+		if(m_ImgBtnPrev.PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+		{
+			m_eMode = ETM_TITLE;
+			m_ImgBtnPrev.m_eBtnMode = EBM_NONE;
+			break;
+		}
+		if(m_ImgBtnNext.PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+		{
+			m_eMode = ETM_CHARSEL;
+			m_ImgBtnNext.m_eBtnMode = EBM_NONE;
+			break;
+		}
+
+		break;
+
 	case ETM_CHARSEL:
-		for(i = 0; i < CHARNUM; i++)
-			if(m_ImgID[i].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
-				gMainWin::GetIF()->m_eCoreMode = EMC_GAME;
+		if(m_ImgBtnPrev.PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+		{
+			m_ImgBtnPrev.m_eBtnMode = EBM_NONE;
+			m_eMode = ETM_PLAYERSEL;
+			break;
+		}
+		if(m_ImgBtnNext.PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+		{
+			gMainWin::GetIF()->m_eCoreMode = EMC_GAME;
+			break;
+		}
+
+// 		for(i = 0; i < CHARNUM; i++)
+// 			if(m_ImgID[i].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+// 				gMainWin::GetIF()->m_eCoreMode = EMC_GAME;
 
 		break;
 	}
@@ -238,7 +380,30 @@ void gTitleCore::OnMouseMove()
 				m_ImgBtn[i].m_eBtnMode = EBM_NONE;
 		}
 		break;
+	case ETM_PLAYERSEL:
+		if(m_ImgBtnPrev.PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+			m_ImgBtnPrev.m_eBtnMode = EBM_HOVER;
+		else
+			m_ImgBtnPrev.m_eBtnMode = EBM_NONE;
+
+		if(m_ImgBtnNext.PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+			m_ImgBtnNext.m_eBtnMode = EBM_HOVER;
+		else
+			m_ImgBtnNext.m_eBtnMode = EBM_NONE;
+
+
+		break;
 	case ETM_CHARSEL:
+		if(m_ImgBtnPrev.PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+			m_ImgBtnPrev.m_eBtnMode = EBM_HOVER;
+		else
+			m_ImgBtnPrev.m_eBtnMode = EBM_NONE;
+		
+		if(m_ImgBtnNext.PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+			m_ImgBtnNext.m_eBtnMode = EBM_HOVER;
+		else
+			m_ImgBtnNext.m_eBtnMode = EBM_NONE;
+
 		for(i = 0; i < CHARNUM; i++)
 		{
 			if(m_ImgID[i].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
