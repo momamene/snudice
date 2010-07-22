@@ -321,21 +321,60 @@ void gTitleCore::OnLButtonDown()
 		break;
 
 	case ETM_PLAYERSEL:
-		if(m_ImgBtnPrev.PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 		{
-			m_eMode = ETM_TITLE;
-			m_ImgBtnPrev.m_eBtnMode = EBM_NONE;
+			if(m_ImgBtnPrev.PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+			{
+				m_eMode = ETM_TITLE;
+				m_ImgBtnPrev.m_eBtnMode = EBM_NONE;
+				break;
+			}
+			if(m_ImgBtnNext.PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+			{
+				m_eMode = ETM_CHARSEL;
+				m_ImgBtnNext.m_eBtnMode = EBM_NONE;
+				break;
+			}
+			
+			//1p 줄
+			int		mouseX;
+			int		onecell = PSEL_POS_MODEW / 3;	// 한칸 길이(사람, 컴퓨터, 안해 각각)
+			if(PSEL_POS_1MODEX < mouse->m_nPosX && mouse->m_nPosX < PSEL_POS_1MODEX + PSEL_POS_MODEW
+				&& PSEL_POS_1PY < mouse->m_nPosY && mouse->m_nPosY < PSEL_POS_1PY + PSEL_POS_MODEH )
+			{
+				mouseX = mouse->m_nPosX - PSEL_POS_1MODEX;
+				if(mouseX - onecell < 0)			m_ePlayer[0] = EPS_PLAYER;
+				else if(mouseX - onecell * 2 < 0)	m_ePlayer[0] = EPS_COM;
+				else								m_ePlayer[0] = EPS_NONE;
+			}
+			//2p
+			if(PSEL_POS_2MODEX < mouse->m_nPosX && mouse->m_nPosX < PSEL_POS_2MODEX + PSEL_POS_MODEW
+				&& PSEL_POS_2PY < mouse->m_nPosY && mouse->m_nPosY < PSEL_POS_2PY + PSEL_POS_MODEH )
+			{
+				mouseX = mouse->m_nPosX - PSEL_POS_2MODEX;
+				if(mouseX - onecell < 0)			m_ePlayer[1] = EPS_PLAYER;
+				else if(mouseX - onecell * 2 < 0)	m_ePlayer[1] = EPS_COM;
+				else								m_ePlayer[1] = EPS_NONE;
+			}
+			//3p
+			if(PSEL_POS_3MODEX < mouse->m_nPosX && mouse->m_nPosX < PSEL_POS_3MODEX + PSEL_POS_MODEW
+				&& PSEL_POS_3PY < mouse->m_nPosY && mouse->m_nPosY < PSEL_POS_3PY + PSEL_POS_MODEH )
+			{
+				mouseX = mouse->m_nPosX - PSEL_POS_3MODEX;
+				if(mouseX - onecell < 0)			m_ePlayer[2] = EPS_PLAYER;
+				else if(mouseX - onecell * 2 < 0)	m_ePlayer[2] = EPS_COM;
+				else								m_ePlayer[2] = EPS_NONE;
+			}
+			//4p
+			if(PSEL_POS_4MODEX < mouse->m_nPosX && mouse->m_nPosX < PSEL_POS_4MODEX + PSEL_POS_MODEW
+				&& PSEL_POS_4PY < mouse->m_nPosY && mouse->m_nPosY < PSEL_POS_4PY + PSEL_POS_MODEH )
+			{
+				mouseX = mouse->m_nPosX - PSEL_POS_4MODEX;
+				if(mouseX - onecell < 0)			m_ePlayer[3] = EPS_PLAYER;
+				else if(mouseX - onecell * 2 < 0)	m_ePlayer[3] = EPS_COM;
+				else								m_ePlayer[3] = EPS_NONE;
+			}
 			break;
 		}
-		if(m_ImgBtnNext.PointInButton(mouse->m_nPosX, mouse->m_nPosY))
-		{
-			m_eMode = ETM_CHARSEL;
-			m_ImgBtnNext.m_eBtnMode = EBM_NONE;
-			break;
-		}
-
-		break;
-
 	case ETM_CHARSEL:
 		if(m_ImgBtnPrev.PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 		{

@@ -16,7 +16,7 @@ public:
 	static void SetSize(int size);
 	static void SetColor();
 	static void BeginText();
-	static void Text(int x, int y, char *str, int lineterm = 20);	//lineterm -> 엔터칠때 얼마나 ㄴ내려가나
+	static void Text(int x, int y, char *str, int lineterm = 20);	//lineterm -> 엔터칠때 얼마나 내려가나
 	static void EndText();
 	static bool PointInRect(int x, int y, RECT rc);
 };
