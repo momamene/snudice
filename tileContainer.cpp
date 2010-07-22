@@ -13,6 +13,9 @@ tileContainer *tileContainer::GetIF() // 3
 	return &s_tileContainer;
 }
 
+// 1. Setup Line
+
+
 void tileContainer::Setup(){
 
 	for(int i = 0 ; i < LINEX ; i++){
@@ -29,9 +32,12 @@ void tileContainer::Setup(){
 
 	m_xSpacePos=-1;
 	m_ySpacePos=-1;
+	m_Next_xSpacePos = -1;
+	m_Next_ySpacePos = -1;
 
 
 	Load();
+	posSpacor();
 }
 
 void tileContainer::LoadFileToBKS(){
@@ -85,9 +91,46 @@ void tileContainer::Load(){
 	LoadBKSToTM();
 }
 
+// Setup Line End
+
+// 2. Draw Line Start
+
+void tileContainer::Draw(){
+	int i,j;
+	
+	int n = 10; // 축소율
+	int start_x =0;
+	int start_y = 0;
+	gGameCore *gameCore = gGameCore::GetIF();
+	m_wallpaper.Draw(0,0);
+	
+	for(i = 0 ; i < LINEX ; i++) { 
+		for(j = 0 ; j < LINEY ; j++) {
+			if(tileMap[i*LINEY+j].tileType==TY_NONE) continue;	
+			if(i%2==0){
+				for(int k = 0 ; k < 5 ; k++){				
+					if(tileMap[i*LINEY+j].tileType==TY_CLASS+k) gimage[k].Draw(-gameCore->m_xPos+WIDEX*i/2,-gameCore->m_yPos+FULLY*j);
+				}
+			}
+			else{
+				for(int k = 0 ; k < 5; k++){
+					if(tileMap[i*LINEY+j].tileType==TY_CLASS+k) gimage[k].Draw(-gameCore->m_xPos+LEFTX+MIDDLEX+WIDEX*(i-1)/2,-gameCore->m_yPos+HALFY+FULLY*j);
+				}
+			}
+		}
+	}
+	// 빈 사각형은 어떻게 띄울 것인가?
+	if(gameCore->m_minimapOn==1||gameCore->m_minimapOn==2)
+		minimapDraw(start_x,start_y,n);
+	DrawSubInfo();
+	
+}
+
 void tileContainer::minimapDraw(int start_x,int start_y,int n){
 	int i,j;
 	RECT inner_a, inner_b;
+	m_wallpaper.Draw(WNDSIZEW - 240,WNDSIZEH - 180); 
+	
 	for(i = 0 ; i < LINEX ; i++) { 
 		for(j = 0 ; j < LINEY ; j++) {
 			if(tileMap[i*LINEY+j].tileType==TY_NONE)continue;	
@@ -121,41 +164,85 @@ void tileContainer::minimapDraw(int start_x,int start_y,int n){
 	}
 }
 
-void tileContainer::Draw(){
-	int i,j;
-	
-	int n = 10; // 축소율
-	int start_x =0;
-	int start_y = 0;
-	gGameCore *gameCore = gGameCore::GetIF();
-	m_wallpaper.Draw(0,0);
 
-	gUtil::BeginText();
+void tileContainer::DrawSubInfo(){
+	gGameCore *ggameCore = gGameCore::GetIF();
+	gUtil::BeginText();	
 	
-
+	POINT Abs;
+	POINT Con2;
+	Con2 = absToCon();
+	if (isExisted(Con2.x,Con2.y)){
+		Abs = conToAbs(Con2);
+		gUtil::Text(Abs.x-(ggameCore->m_xPos),Abs.y-(ggameCore->m_yPos)+FULLY,tileMap[Con2.x*LINEY+Con2.y].college);
+		gUtil::Text(Abs.x-(ggameCore->m_xPos),Abs.y-(ggameCore->m_yPos)+FULLY+20,tileMap[Con2.x*LINEY+Con2.y].building);
+		gUtil::Text(Abs.x-(ggameCore->m_xPos),Abs.y-(ggameCore->m_yPos)+FULLY+40,tileMap[Con2.x*LINEY+Con2.y].subject);
+		
+	}
+	
+	
 	
 	gUtil::EndText();
+}
 
-	for(i = 0 ; i < LINEX ; i++) { 
-		for(j = 0 ; j < LINEY ; j++) {
-				if(tileMap[i*LINEY+j].tileType==TY_NONE)continue;	
-				if(i%2==0){
-					for(int k = 0 ; k < 5 ; k++)
-					if(tileMap[i*LINEY+j].tileType==TY_CLASS+k) gimage[k].Draw(-gameCore->m_xPos+WIDEX*i/2,-gameCore->m_yPos+FULLY*j);
-				}
-				else{
-					for(int k = 0 ; k < 5; k++)
-					if(tileMap[i*LINEY+j].tileType==TY_CLASS+k) gimage[k].Draw(-gameCore->m_xPos+LEFTX+MIDDLEX+WIDEX*(i-1)/2,-gameCore->m_yPos+HALFY+FULLY*j);
-				}
+// 2. Draw Line End
+
+// 3. pos Line Start
+
+// posSpacor() - start, posMovor() - On, posStoper() - End
+void tileContainer::posSpacor() {	// 다음 칸으로 움직이라는 신호.
+	gGameCore *gameCore = gGameCore::GetIF();
+
+
+	if(m_xSpacePos==-1&&m_xSpacePos==-1){
+		m_xSpacePos=m_xInitSpacePos;
+		m_ySpacePos=m_yInitSpacePos;
+		m_Next_xSpacePos = m_xSpacePos;
+		m_Next_ySpacePos = m_ySpacePos;
+	}
+	else{
+		if(isExisted(m_xSpacePos,m_ySpacePos)){
+			m_Next_xSpacePos = tileMap[m_xSpacePos*LINEY+m_ySpacePos].nextTile.x;	// 기본 방침은, Next와 Now가 괴리가 있는 상황은 움직이는 상황인 것이다.
+			m_Next_ySpacePos = tileMap[m_xSpacePos*LINEY+m_ySpacePos].nextTile.y;
+			
+			if(isExisted(m_Next_xSpacePos,m_Next_ySpacePos)){
+
+			}
+			else{
+				// error 처리 해야 하는데 생략
+			}
+			
 		}
 	}
-	m_wallpaper.Draw(WNDSIZEW - 240,WNDSIZEH - 180); 
-	// 빈 사각형은 어떻게 띄울 것인가?
-	if(gameCore->m_minimapOn==1||gameCore->m_minimapOn==2)
-		minimapDraw(start_x,start_y,n);
-	DrawSubInfo();
+}
+void tileContainer::posMover(int frame){
+	gGameCore *ggameCore = gGameCore::GetIF();
+	POINT b, a;
+	b.x = m_Next_xSpacePos;
+	b.y = m_Next_ySpacePos;
+	//b = conToAbs(b);
+	a.x = m_xSpacePos;
+	a.y = m_ySpacePos;
+	//a = conToAbs(a);
+	b = conToAbs(b);
+	a = conToAbs(a);
+	b.x = b.x - WNDSIZEW/2 + HALFX;
+	b.y = b.y - WNDSIZEH/2 + HALFY;
+	a.x = a.x - WNDSIZEW/2 + HALFX;
+	a.y = a.y - WNDSIZEH/2 + HALFY;
+
+	ggameCore->PutScreenPos(a.x + frame*(b.x-a.x)/MAXFRAMECOUNT,a.y + frame*(b.y-a.y)/MAXFRAMECOUNT);
+	//ggameCore->PutScreenPos(b.x,b.y);
 
 }
+void tileContainer::posStoper(){
+	m_xSpacePos = m_Next_xSpacePos;	// 기본 방침은 Next와 Now가 같은 상황은 멈춘 상황이라는 것이다.
+	m_ySpacePos = m_Next_ySpacePos; // 기본 방침은 Pos는 Con 값이라는 것이다.
+}
+
+// 3. Pos Line End
+
+// 4. Essential for All Line Start
 
 bool tileContainer::isExisted(int i, int j){
 	if(i>-1&&j>-1&&i<LINEX&&j<LINEY){
@@ -164,47 +251,11 @@ bool tileContainer::isExisted(int i, int j){
 	return false;
 }
 
-void tileContainer::viewSpacor(){
-	gGameCore *gameCore = gGameCore::GetIF();
-	int a,b;
-	if(m_xSpacePos%2==0){
-		a = WIDEX*m_xSpacePos/2 - WNDSIZEW/2 + HALFX;
-		b = FULLY*m_ySpacePos - WNDSIZEH/2 + HALFY;
-	}
-	else {
-		a = LEFTX+MIDDLEX+WIDEX*(m_xSpacePos-1)/2 - WNDSIZEW/2 + HALFX;
-		b = HALFY+FULLY*m_ySpacePos - WNDSIZEH/2 + HALFY;
-	}
-	gameCore->m_xPos = a; // 첫번째 문제는 6,15가 아니라 abs(6,15)
-	gameCore->m_yPos = b;
-	
-}
-
-void tileContainer::posSpacor() {
-	//TILE temp;
-	int nextX,nextY;
-	if(m_xSpacePos==-1&&m_xSpacePos==-1){
-		m_xSpacePos=m_xInitSpacePos;
-		m_ySpacePos=m_yInitSpacePos;
-		viewSpacor();
-	}
-	else{
-		if(isExisted(m_xSpacePos,m_ySpacePos)){
-			nextX = tileMap[m_xSpacePos*LINEY+m_ySpacePos].nextTile.x;
-			nextY = tileMap[m_xSpacePos*LINEY+m_ySpacePos].nextTile.y;
-			if(isExisted(nextX,nextY)){
-				m_xSpacePos=nextX;
-				m_ySpacePos=nextY;
-				viewSpacor();
-			}
-		}
-	}
-}
 
 POINT tileContainer::conToAbs(POINT ij){
 	POINT res;
 	if(ij.x%2==0){
-		res.x = WIDEX*ij.x/2;
+		res.x = WIDEX*(ij.x/2);
 		res.y = FULLY*ij.y;
 	}
 	else{
@@ -212,36 +263,6 @@ POINT tileContainer::conToAbs(POINT ij){
 		res.y = HALFY+FULLY*ij.y;
 	}
 	return res;
-}
-
-void tileContainer::DrawSubInfo(){
-	gGameCore *ggameCore = gGameCore::GetIF();
-	gUtil::BeginText();
-	for (int i = 0; i < 6 ; i++)
-		gUtil::Text(0,i*20,bmpKindSavor[i].college);
-	gUtil::Text(0,120,tileMap[6*LINEY+3].college);
-	
-
-	POINT Con;
-	POINT Con2;
-	Con2 = absToCon();
-	if (isExisted(Con2.x,Con2.y)){
-		Con = conToAbs(Con2);
-	//	if(tileMap[Con.x*FULLY+Con.y].college!=NULL||strlen(tileMap[Con2.x*FULLY+Con2.y].building)<1)
-		gUtil::Text(Con.x-(ggameCore->m_xPos),Con.y-(ggameCore->m_yPos)+FULLY,tileMap[Con2.x*LINEY+Con2.y].college);
-		//gUtil::Text(Con.x-(ggameCore->m_xPos),Con.y-(ggameCore->m_yPos)+FULLY,"college");
-	//	if(tileMap[Con.x*FULLY+Con.y].building!=NULL||strlen(tileMap[Con2.x*FULLY+Con2.y].building)<1)
-		gUtil::Text(Con.x-(ggameCore->m_xPos),Con.y-(ggameCore->m_yPos)+FULLY+20,tileMap[Con2.x*LINEY+Con2.y].building);
-		//gUtil::Text(Con.x-(ggameCore->m_xPos),Con.y-(ggameCore->m_yPos)+FULLY+20,"building");
-	//	if(tileMap[Con.x*FULLY+Con.y].subject!=NULL||strlen(tileMap[Con2.x*FULLY+Con.y].building)<1)
-		gUtil::Text(Con.x-(ggameCore->m_xPos),Con.y-(ggameCore->m_yPos)+FULLY+40,tileMap[Con2.x*LINEY+Con2.y].subject);
-		//gUtil::Text(Con.x-(ggameCore->m_xPos),Con.y-(ggameCore->m_yPos)+FULLY+40,"subject");
-
-	}
-	
-	
-	
-	gUtil::EndText();
 }
 
 POINT tileContainer::absToCon() {
@@ -258,9 +279,7 @@ POINT tileContainer::absToCon() {
 	xo = (ggameCore->m_xPos + gmouse->m_nPosX) % WIDEX;
 	yo = (ggameCore->m_yPos + gmouse->m_nPosY) % FULLY;
 	
-	// 공식의 타당성에 대해 다시 살펴보기
-	// 상대 지표 적용 (258,80) -> (?,?)
-	// 혹은 (25,52,80) -> (?,?,?)
+
 	if(-1 * HALFY * xo + HALFY * LEFTX > LEFTX * yo) { n--; m--; } 
 	else if(HALFY * xo + HALFY * LEFTX <= LEFTX * yo ) { n--; }
 	else if(yo < HALFY && HALFY * xo + ( HALFY * LEFTX - HALFY * FULLX ) > LEFTX * yo ) { n++; m--; }
@@ -270,3 +289,22 @@ POINT tileContainer::absToCon() {
 	return res;
 	
 }
+
+POINT tileContainer::nextN_Tile(POINT ij, int n) {
+	POINT res;
+	POINT ij2;
+	if(n==0){
+		return ij;
+	}
+	else if(isExisted(ij.x,ij.y)){
+		ij2 =tileMap[ij.x*LINEY+ij.y].prevTile;
+		res = nextN_Tile(ij2,n-1);
+	}
+	else {
+		res.x = -1;
+		res.y = -1;
+	}
+	return res;
+}
+
+// 4. Essential for All Line End

@@ -123,6 +123,14 @@ SOURCE=.\gMouse.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\gPlayer.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\gPlayerManager.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\gTitleCore.cpp
 # End Source File
 # Begin Source File
@@ -184,6 +192,14 @@ SOURCE=.\gMainWin.h
 # Begin Source File
 
 SOURCE=.\gMouse.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\gPlayer.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\gPlayerManager.h
 # End Source File
 # Begin Source File
 

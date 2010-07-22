@@ -32,28 +32,40 @@ public:
 	int m_xSpacePos;
 	int m_ySpacePos;
 
+	int m_Next_xSpacePos;
+	int m_Next_ySpacePos;
+
 	int m_xInitSpacePos;
 	int m_yInitSpacePos;
 
 public:
-	static tileContainer *GetIF();
+	static tileContainer *GetIF();	// 1
 	void	Setup();			// setup
 	void	Draw();				// 그리는 함수
 	void	posSpacor();		// space를 누르면 해당 위치로 이동하고, 캐릭터의 이동을 잡아주는 등의 함수
+	void	posMover(int frame);
+	void	posStoper();
 
-	POINT	conToAbs(POINT ij);
-	void	DrawSubInfo();
+	// 떨거지인지 아닌지 기억이 잘
+	POINT	nextN_Tile(POINT ij, int n);
+	POINT	conToAbs(POINT ij);	
 	POINT	absToCon();
+
+	
 private:					
 	// Setup의 떨거지 (subfunction)
 	void	Load();				// 파일을 불러오는 함수
 	void	LoadFileToBKS();	// Load의 떨거지들
 	void	LoadBKSToTM();
-	// posSpacor의 떨거지
-	void	viewSpacor();		
+
+	// posSpacor (이제는 등) 의 떨거지
+		
+	
 	// Draw의 떨거지
-	void	minimapDraw(int start_x,int start_y,int n);	
+	void	minimapDraw(int start_x,int start_y,int n);		// 잘못된 이름 => DrawMinimap (대문자 시작, 대문자 전환, 첫 이름은 mother name)
+	void	DrawSubInfo();
 	// 기타 중요
+	//POINT	viewSpacor(int x, int y);	
 	bool	isExisted(int i, int j);	// Tile (i,j) 호출은 유효한가? 
 	
 };

@@ -8,7 +8,9 @@
 #pragma once
 #include "gCoreIF.h"
 #include "tileContainer.h"
+#include "gPlayer.h"
 
+#define MAXFRAMECOUNT 180
 enum eGAMEMODE
 {
 	EGM_GAME,
@@ -21,13 +23,15 @@ public:
 
 	gGameCore();
 	virtual ~gGameCore();
-	int m_xPos;
-	int m_yPos;
-	int m_minimapOn; // 0 , 1, 2, 3 (1,2) 일 때 On, (3,0) 일 때 Off
+	int m_minimapOn;	// 0 , 1, 2, 3 (1,2) 일 때 On, (3,0) 일 때 Off
 	int m_spacor;
+	int m_xPos;			// read-only 같은 설정은 없나?
+	int m_yPos;
+	int m_frameCount;
 
-
-
+	// temp
+	//gPlayer a;
+	
 
 
 public:
@@ -41,6 +45,7 @@ public:
 	void		OnLButtonUp();
 	void		OnMouseMove();
 	void		OnRButtonDown();
+	void		PutScreenPos(int x, int y);		
 
 private:
 	// MainLoop의 떨거지들
