@@ -18,7 +18,9 @@ tileContainer *tileContainer::GetIF() // 3
 
 
 void tileContainer::Setup(){
-
+	gGameCore *ggameCore = gGameCore::GetIF();
+	
+	POINT temp;
 	for(int i = 0 ; i < LINEX ; i++){
 		for (int j = 0 ; j < LINEY ; j++){
 			tileMap[i*LINEY+j].init(i,j);
@@ -39,6 +41,11 @@ void tileContainer::Setup(){
 
 	Load();
 	posSpacor();
+	temp.x = m_xSpacePos;
+	temp.y = m_ySpacePos;
+	temp = conToAbs(temp);
+	ggameCore->PutScreenPos(temp.x- WNDSIZEW/2 + HALFX,temp.y- WNDSIZEH/2 + HALFY);
+
 }
 
 void tileContainer::LoadFileToBKS(){

@@ -58,7 +58,7 @@ public:
 	POINT	absToCon();
 
 	
-private:					
+private:
 	// Setup의 떨거지 (subfunction)
 	void	Load();				// 파일을 불러오는 함수
 	void	LoadFileToBKS();	// Load의 떨거지들

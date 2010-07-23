@@ -4,7 +4,8 @@
 #include "gImage.h"
 #include "gGameCore.h"
 
-bool gPlayer::SetUp (gChar gchar){
+bool gPlayer::SetUp (gChar gchar)
+{
 	tileContainer *tilecontainer = tileContainer::GetIF();
 
 	
@@ -33,11 +34,12 @@ bool gPlayer::SetUp (gChar gchar){
 	return true;
 }
 
-void gPlayer::Draw  () {
+void gPlayer::Draw  () 
+{
 	tileContainer *tilecontainer = tileContainer::GetIF();
 	gGameCore *ggameCore = gGameCore::GetIF();
 	
-	POINT ij1,ij2;
+	//POINT ij1,ij2;
 	RECT rc;
 /*	
 	ij1.x = m_xSpacePos;//m_position.x;
@@ -48,6 +50,7 @@ void gPlayer::Draw  () {
 	rc.right = rc.left + FULLX;
 	rc.bottom = rc.top + FULLY * 2;
 */
+	// 캐릭터 드로우.
 	rc.left = -ggameCore->m_xPos + m_xDrawline;
 	rc.top = -ggameCore->m_yPos + m_yDrawline - FULLY;
 	rc.right = rc.left + FULLX;
@@ -57,7 +60,8 @@ void gPlayer::Draw  () {
 	
 }
 
-void gPlayer::posSpacor() {	// 다음 칸으로 움직이라는 신호.
+void gPlayer::posSpacor() 
+{	// 다음 칸으로 움직이라는 신호.
 	gGameCore *gameCore = gGameCore::GetIF();
 	tileContainer * tilecontainer = tileContainer::GetIF();
 	
@@ -65,7 +69,8 @@ void gPlayer::posSpacor() {	// 다음 칸으로 움직이라는 신호.
 	m_Next_ySpacePos = tilecontainer->tileMap[m_xSpacePos*LINEY+m_ySpacePos].nextTile.y;
 }
 
-void gPlayer::posMover(int frame){
+void gPlayer::posMover(int frame)
+{
 	gGameCore *ggameCore = gGameCore::GetIF();
 	tileContainer * tilecontainer = tileContainer::GetIF();
 
@@ -90,7 +95,8 @@ void gPlayer::posMover(int frame){
 	//ggameCore->PutScreenPos(b.x,b.y);
 	
 }
-void gPlayer::posStoper(){
+void gPlayer::posStoper()
+{
 	m_xSpacePos = m_Next_xSpacePos;	// 기본 방침은 Next와 Now가 같은 상황은 멈춘 상황이라는 것이다.
 	m_ySpacePos = m_Next_ySpacePos; // 기본 방침은 Pos는 Con 값이라는 것이다.
 }

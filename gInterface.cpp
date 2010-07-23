@@ -2,6 +2,9 @@
 #include "const.h"
 #include "gMouse.h"
 #include "gUtil.h"
+#include "gGameCore.h"
+#include "gPlayerManager.h"
+#include <stdio.h>
 
 //------------------------------------------------------------------------------------
 //	Constructor	/	Destructor
@@ -62,6 +65,37 @@ bool gInterface::SetUp()
 	return true;
 }
 
+void gInterface::DrawWindow(int mode){
+	gGameCore *gameCore = gGameCore::GetIF();		// ½ºÄÌÅæ? 
+	gPlayerManager *gplayerManager = gPlayerManager::GetIF();
+	tileContainer *tilecontainer = tileContainer::GetIF();
+	m_ImgMenu[mode].Draw(IF_POS_BACKX, IF_POS_BACKY);
+	//RECT rc;
+	if(mode == EMM_SUGANG){
+
+		int tempIndex;
+		char buf[128];
+		double temp;
+	
+		
+		gUtil::BeginText();
+		for(int i = 0 ; i < gplayerManager->m_player[gameCore->m_turnPlayer].m_subjectGrader.m_subjectN ; i++){
+			if(1){	// °ú¸ñÀÌ ÀÖ´Ù¸é.
+				tempIndex=gplayerManager->m_player[gameCore->m_turnPlayer].m_subjectGrader.m_subject[i];
+				gUtil::Text(IF_POS_BACKX+220,IF_POS_BACKY+60+i*15,tilecontainer->tileMap[(tempIndex/100)*LINEY+tempIndex%100].building);
+				gUtil::Text(IF_POS_BACKX+220+70,IF_POS_BACKY+60+i*15,tilecontainer->tileMap[(tempIndex/100)*LINEY+tempIndex%100].subject);
+				temp=gplayerManager->m_player[gameCore->m_turnPlayer].m_subjectGrader.gradeExpectOne(i);
+				//wsprintf(buf,"%d",3);
+				//wsprintf(buf,"%.1f",3.2f);
+				sprintf(buf,"%.1f",temp);
+				gUtil::Text(IF_POS_BACKX+220+70+120,IF_POS_BACKY+60+i*15,buf);
+			}
+		}
+		gUtil::EndText();
+	}
+}
+
+
 void gInterface::Draw()
 {
 	m_ImgMenuback.Draw(IF_POS_MENUBACKX, IF_POS_MENUBACKY);
@@ -71,7 +105,8 @@ void gInterface::Draw()
 		m_BtnMenu[i].Draw();
 
 	if(m_eMenuMode != EMM_END)
-		m_ImgMenu[m_eMenuMode].Draw(IF_POS_BACKX, IF_POS_BACKY);
+		DrawWindow(m_eMenuMode);
+	//	m_ImgMenu[m_eMenuMode].Draw(IF_POS_BACKX, IF_POS_BACKY);
 }
 
 void gInterface::MainLoop()

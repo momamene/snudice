@@ -7,11 +7,6 @@
 #include "gPlayerManager.h"
 #include "time.h"
 
-
-//------------------------------------------------------------------------------------
-//	Constructor	/	Destructor
-//------------------------------------------------------------------------------------
-
 static gGameCore s_GameCore;
 
 gGameCore *gGameCore::GetIF()
@@ -19,15 +14,7 @@ gGameCore *gGameCore::GetIF()
 	return &s_GameCore;
 }
 
-gGameCore::gGameCore()
-{
 
-}
-
-gGameCore::~gGameCore()
-{
-
-}
 
 bool gGameCore::SetUp()
 {
@@ -49,7 +36,7 @@ bool gGameCore::SetUp()
 	return true;
 }
 
-void gGameCore::MainLoopMouse1(){
+void gGameCore::MainLoopMouse(){
 	gMouse *mouse = gMouse::GetIF();
 	
 	if(mouse->m_nPosX < MINMOVE){
@@ -93,7 +80,7 @@ void gGameCore::MainLoopKeyboard(){
 
 	}
 }
-void gGameCore::MainLoopMouse2(){
+void gGameCore::MainLoopMove(){
 	tileContainer *tilecontainer = tileContainer::GetIF();
 	gPlayerManager *gplayerManager = gPlayerManager::GetIF();
 	
@@ -120,7 +107,9 @@ void gGameCore::MainLoopMouse2(){
 				tilecontainer->posSpacor();
 				gplayerManager->m_player[m_turnPlayer].posSpacor();
 			}
-			else{
+			else{	// 실제 종료 조건
+				gplayerManager->m_player[m_turnPlayer].m_subjectGrader.meet(gplayerManager->m_player[m_turnPlayer].m_xSpacePos*100+gplayerManager->m_player[m_turnPlayer].m_ySpacePos);
+
 				if(m_turnPlayer>=MAXPLAYER-1){
 					m_turnPlayer=0;
 					tilecontainer->m_xSpacePos=gplayerManager->m_player[m_turnPlayer].m_xSpacePos;
@@ -153,10 +142,10 @@ void gGameCore::MainLoop() // MainLoop 내부를 함수들로 다시 깔끔하게 만들 필요가
 
 	case EGM_GAME:	
 	MainLoopKeyboard();
-	MainLoopMouse1();	
+	MainLoopMouse();	
 	break;
 	}
-	MainLoopMouse2();
+	MainLoopMove();
 	Draw();
 }
 
@@ -165,6 +154,7 @@ void gGameCore::Draw()
 	tileContainer::GetIF()->Draw();
 	switch(m_gMode){
 	case EGM_SUBMIT:
+//		gInterface::GetIF()->Draw();
 		break;
 	case EGM_GAME:
 		gPlayerManager::GetIF()->Draw();
@@ -177,46 +167,48 @@ void gGameCore::Draw()
 	// temp end
 }
 
-
-void gGameCore::OnLButtonDown()
-{
+void gGameCore::OnLButtonDownSubmit(){
 	gMouse *mouse = gMouse::GetIF();
 	tileContainer *tilecontainer = tileContainer::GetIF();
 	gPlayerManager * gplayerManager = gPlayerManager::GetIF();
 
-	int i;
-	switch(m_gMode){
-	case EGM_SUBMIT:
-		for(i = 0 ; i < tilecontainer->m_subjectN ; i++){
-			if(mouse->m_nPosX < 100 && mouse->m_nPosY > i*20 && mouse->m_nPosY < (i+1)*20){
-				m_selectSubject = tilecontainer->m_subject[i];	// 입력 구문인데. 아 이런 코드는 전반적으로 좋지 않아요. 우리 객체지향해야지.
-				gplayerManager->m_player[m_turnPlayer].m_subjectGrader.m_subject[m_turnN-1] = m_selectSubject;
-				gplayerManager->m_player[m_turnPlayer].m_subjectGrader.m_subjectN++;
-				if(m_turnPlayer>=MAXPLAYER-1){
-					if(m_turnN<=6){
-						m_turnN++;
-						m_turnPlayer=0;
-					}
-					else{
-						m_gMode=EGM_GAME;
-						m_turnN=1;
-						m_turnPlayer=0;
-					}
+	for(int i = 0 ; i < tilecontainer->m_subjectN ; i++){
+		if(mouse->m_nPosX < 100 && mouse->m_nPosY > i*20 && mouse->m_nPosY < (i+1)*20){
+			m_selectSubject = tilecontainer->m_subject[i];	// 입력 구문인데. 아 이런 코드는 전반적으로 좋지 않아요. 우리 객체지향해야지.
+			gplayerManager->m_player[m_turnPlayer].m_subjectGrader.m_subject[m_turnN-1] = m_selectSubject;
+			gplayerManager->m_player[m_turnPlayer].m_subjectGrader.m_subjectN++;
+			if(m_turnPlayer>=MAXPLAYER-1){
+				if(m_turnN<=6){
+					m_turnN++;
+					m_turnPlayer=0;
 				}
 				else{
-					m_turnPlayer++;
+					m_gMode=EGM_GAME;
+					m_turnN=1;
+					m_turnPlayer=0;
 				}
-				break;
 			}
+			else{
+				m_turnPlayer++;
+			}
+			break;
 		}
-		
-		
+	}
 
-		
+}
 
-	break;
+
+void gGameCore::OnLButtonDown()
+{
+
+
+	switch(m_gMode){
+	case EGM_SUBMIT:
+		OnLButtonDownSubmit();	
+		break;
 	case EGM_GAME:
 		gInterface::GetIF()->OnLButtonDown();
+		break;
 	}
 }
 

@@ -23,8 +23,8 @@ public:
 	static gGameCore	*GetIF();
 	eGAMEMODE m_gMode;
 
-	gGameCore();
-	virtual ~gGameCore();
+//	gGameCore();
+//	virtual ~gGameCore();
 	int m_minimapOn;	// 0 , 1, 2, 3 (1,2) 일 때 On, (3,0) 일 때 Off
 	int m_spacor;
 	int m_xPos;			// read-only 같은 설정은 없나?
@@ -62,7 +62,9 @@ public:
 	
 private:
 	// MainLoop의 떨거지들
-	void gGameCore::MainLoopMouse1();
-	void gGameCore::MainLoopMouse2();
-	void gGameCore::MainLoopKeyboard();
+	void MainLoopMouse();
+	void MainLoopMove();
+	void MainLoopKeyboard();
+
+	void OnLButtonDownSubmit();
 };

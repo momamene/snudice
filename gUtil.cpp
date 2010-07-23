@@ -22,7 +22,7 @@ void gUtil::Text(int x, int y, char *str, int lineterm)
 {
 	if(s_hdc == NULL) return;
 
-	int		len = strlen(str);
+	int		len = wcslen((wchar_t *)str);
 	char	szBuf[256];
 	int		k = 0;
 	int		line = 0;
