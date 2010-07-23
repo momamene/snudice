@@ -10,9 +10,10 @@
 #include "tileContainer.h"
 #include "gPlayer.h"
 
-#define MAXFRAMECOUNT 180
+#define MAXFRAMECOUNT 60	// 생각해보니 중요한 변수. 빠르기를 결정!
 enum eGAMEMODE
 {
+	EGM_SUBMIT,
 	EGM_GAME,
 };
 
@@ -20,6 +21,7 @@ class gGameCore : public gCoreIF
 {
 public:
 	static gGameCore	*GetIF();
+	eGAMEMODE m_gMode;
 
 	gGameCore();
 	virtual ~gGameCore();
@@ -29,6 +31,13 @@ public:
 	int m_yPos;
 	int m_frameCount;
 
+	int m_turnN;
+	int m_turnPlayer;
+
+	int m_selectSubject;
+
+	//int		m_selectSubject;
+	//int		m_selectTurn;
 	// temp
 	//gPlayer a;
 	
@@ -39,16 +48,21 @@ public:
 
 	bool		SetUp();
 	void		MainLoop();
-	void		Draw();
+
 	
+	void		Draw();
 	void		OnLButtonDown();
 	void		OnLButtonUp();
 	void		OnMouseMove();
 	void		OnRButtonDown();
-	void		PutScreenPos(int x, int y);		
+	void		PutScreenPos(int x, int y);		// 상우의 PutScreenPos
 
+
+	
+	
 private:
 	// MainLoop의 떨거지들
-	void gGameCore::MainLoopMouse();
+	void gGameCore::MainLoopMouse1();
+	void gGameCore::MainLoopMouse2();
 	void gGameCore::MainLoopKeyboard();
 };

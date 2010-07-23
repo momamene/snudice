@@ -5,6 +5,7 @@
 #include "gMainWin.h"
 #include "gUtil.h"
 #include "gMouse.h"
+#include "gPlayerManager.h"
 
 static tileContainer s_tileContainer; // 2
 
@@ -67,15 +68,15 @@ void tileContainer::LoadBKSToTM(){
 		for (int j = 0 ; j < LINEY ; j++) {
 			if(localcount >= count) return;
 			if(i == bmpKindSavor[localcount].ptPos.x && j == bmpKindSavor[localcount].ptPos.y){
-				//tileMap[i*LINEY+j].init(i,j);
-				//tileMap[i*LINEY+j].tileType=bmpKindSavor[localcount].tileType;
 				tileMap[i*LINEY+j] = bmpKindSavor[localcount];
-				//memset(tileMap[i*LINEY+j].building,0,sizeof(char)*128);
-				//strcpy(tileMap[i*LINEY+j].building,bmpKindSavor[localcount].building);
 				localcount++;
 				if(tileMap[i*LINEY+j].tileType==TY_MAINGATE){
 					m_xInitSpacePos = i;
 					m_yInitSpacePos = j;
+				}
+				if(tileMap[i*LINEY+j].tileType==TY_CLASS){
+					m_subject[m_subjectN]=i*100+j;
+					m_subjectN++;
 				}
 			}
 			else tileMap[i*LINEY+j].init(i,j);
@@ -101,8 +102,62 @@ void tileContainer::Draw(){
 	int n = 10; // 축소율
 	int start_x =0;
 	int start_y = 0;
+	int l_selectSubject;
 	gGameCore *gameCore = gGameCore::GetIF();
+	gPlayerManager *gplayerManager = gPlayerManager::GetIF();
+
+
+	RECT tempRC;
+
+
+
 	m_wallpaper.Draw(0,0);
+
+	if(gameCore->m_gMode==EGM_SUBMIT){
+
+		gUtil::BeginText();	
+		for (i = 0 ; i < m_subjectN ; i++){
+			//char buf[128];
+			//wsprintf(buf,"%d %d",m_subject[i]);
+			//gUtil::Text(0,i*20,buf);
+			if(isExisted(m_subject[i]/100,m_subject[i]%100))
+				gUtil::Text(0,i*20,tileMap[(m_subject[i]/100)*LINEY+m_subject[i]%100].subject);
+		}
+		
+		l_selectSubject=gameCore->m_selectSubject;
+		if(l_selectSubject>=0){
+			if(isExisted(l_selectSubject/100,l_selectSubject%100)){
+				gUtil::Text(320,0,tileMap[(l_selectSubject/100)*LINEY+l_selectSubject%100].college);
+				gUtil::Text(320,20,tileMap[(l_selectSubject/100)*LINEY+l_selectSubject%100].building);
+				gUtil::Text(320,40,tileMap[(l_selectSubject/100)*LINEY+l_selectSubject%100].subject);
+			}
+			
+		}
+
+		for(i = 0 ; i < gplayerManager->m_player[gameCore->m_turnPlayer].m_subjectGrader.m_subjectN ; i++) {
+			int ii;
+			ii=gplayerManager->m_player[gameCore->m_turnPlayer].m_subjectGrader.m_subject[i];
+			if(isExisted(ii/100,ii%100))
+				gUtil::Text(160,i*20,tileMap[(ii/100)*LINEY+ii%100].subject);
+		}
+//		gplayerManager->m_playerN[gameCore->m_turnPlayer].m_subjectN[gameCore->m_turnN] = gameCore->m_selectSubject;
+		tempRC.left = 480;
+		tempRC.top = 0;
+		tempRC.right = 640;
+		tempRC.bottom = 480;
+		//m_wallpaper.Draw(100,100);
+		
+		
+		
+		gUtil::EndText();
+		
+		gplayerManager->m_player[gameCore->m_turnPlayer].m_charInfo.DrawIllu(tempRC); // 여기서 지금 막혓음 problem10
+		
+
+		return;
+	}
+
+	else{
 	
 	for(i = 0 ; i < LINEX ; i++) { 
 		for(j = 0 ; j < LINEY ; j++) {
@@ -119,10 +174,14 @@ void tileContainer::Draw(){
 			}
 		}
 	}
+	
+
+
 	// 빈 사각형은 어떻게 띄울 것인가?
 	if(gameCore->m_minimapOn==1||gameCore->m_minimapOn==2)
 		minimapDraw(start_x,start_y,n);
 	DrawSubInfo();
+	}
 	
 }
 
@@ -289,7 +348,7 @@ POINT tileContainer::absToCon() {
 	return res;
 	
 }
-
+/*
 POINT tileContainer::nextN_Tile(POINT ij, int n) {
 	POINT res;
 	POINT ij2;
@@ -306,5 +365,5 @@ POINT tileContainer::nextN_Tile(POINT ij, int n) {
 	}
 	return res;
 }
-
+*/
 // 4. Essential for All Line End

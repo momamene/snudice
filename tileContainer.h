@@ -24,19 +24,23 @@ public:
 	gImage	m_wallpaper;
 
 	int		count;
+
 	
 	//bool	m_minimapOn;
 	TILE	bmpKindSavor[MAXSAVOR_N];
 	TILE	tileMap[LINEX*LINEY];
 	
+	// 좌표 관련 변수들
 	int m_xSpacePos;
 	int m_ySpacePos;
-
 	int m_Next_xSpacePos;
 	int m_Next_ySpacePos;
-
 	int m_xInitSpacePos;
 	int m_yInitSpacePos;
+
+	// class 변수들
+	int m_subjectN;
+	int m_subject[MAXSAVOR_N];
 
 public:
 	static tileContainer *GetIF();	// 1
@@ -46,8 +50,10 @@ public:
 	void	posMover(int frame);
 	void	posStoper();
 
-	// 떨거지인지 아닌지 기억이 잘
-	POINT	nextN_Tile(POINT ij, int n);
+	
+	//POINT	nextN_Tile(POINT ij, int n);
+
+	// 좌표 변환 중요
 	POINT	conToAbs(POINT ij);	
 	POINT	absToCon();
 
@@ -58,7 +64,6 @@ private:
 	void	LoadFileToBKS();	// Load의 떨거지들
 	void	LoadBKSToTM();
 
-	// posSpacor (이제는 등) 의 떨거지
 		
 	
 	// Draw의 떨거지

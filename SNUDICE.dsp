@@ -103,6 +103,10 @@ SOURCE=.\gGameCore.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\gGrade.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\gImage.cpp
 # End Source File
 # Begin Source File
@@ -172,6 +176,10 @@ SOURCE=.\gCoreIF.h
 # Begin Source File
 
 SOURCE=.\gGameCore.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\gGrade.h
 # End Source File
 # Begin Source File
 

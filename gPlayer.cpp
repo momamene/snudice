@@ -6,6 +6,7 @@
 
 bool gPlayer::SetUp (gChar gchar){
 	tileContainer *tilecontainer = tileContainer::GetIF();
+
 	
 	POINT bBefore,b;
 	
@@ -26,6 +27,8 @@ bool gPlayer::SetUp (gChar gchar){
 	
 	m_xDrawline = b.x; // a.x + frame*(b.x-a.x)/MAXFRAMECOUNT;
 	m_yDrawline = b.y; // a.y + frame*(b.y-a.y)/MAXFRAMECOUNT;
+
+	m_subjectGrader.init(); //m_subjectN = 0;
 
 	return true;
 }
