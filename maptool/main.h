@@ -44,7 +44,7 @@ void globalPaint(HDC hWnd,int x,int y,int n);
 
 
 // left.h
-extern HBITMAP MyBitmap[9];
+extern HBITMAP MyBitmap[10];
 //extern int yPos,xPos;
 //extern int yMax,xMax;
 //extern int xInc,yInc;

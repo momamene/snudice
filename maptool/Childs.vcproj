@@ -295,7 +295,15 @@
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 			>
 			<File
+				RelativePath=".\art.bmp"
+				>
+			</File>
+			<File
 				RelativePath=".\budle.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\bus.bmp"
 				>
 			</File>
 			<File
@@ -304,6 +312,22 @@
 			</File>
 			<File
 				RelativePath=".\food.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\lang.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\maingate.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\math.bmp"
+				>
+			</File>
+			<File
+				RelativePath=".\mountain.bmp"
 				>
 			</File>
 			<File

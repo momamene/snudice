@@ -115,7 +115,7 @@ LRESULT CALLBACK WndProc(HWND hWnd,UINT iMessage,WPARAM wParam,LPARAM lParam)
 			}
 		}
 		mode=1;
-		tempBmpKind.tileType=TY_CLASS;
+		tempBmpKind.tileType=(ETILETYPE)0;
 		//changed1=0;
 		//changed2=0;
 		//message=0;
@@ -296,12 +296,12 @@ LRESULT CALLBACK ChildLeftProc(HWND hWnd,UINT iMessage,WPARAM wParam,LPARAM lPar
 		MyBitmap[1]=LoadBitmap(g_hInst,MAKEINTRESOURCE(IDB_BITMAP2));
 		MyBitmap[2]=LoadBitmap(g_hInst,MAKEINTRESOURCE(IDB_BITMAP3));
 		MyBitmap[3]=LoadBitmap(g_hInst,MAKEINTRESOURCE(IDB_BITMAP4));
-		MyBitmap[4]=LoadBitmap(g_hInst,MAKEINTRESOURCE(IDB_BITMAP5));
-		MyBitmap[5]=LoadBitmap(g_hInst,MAKEINTRESOURCE(IDB_BITMAP1));
-		MyBitmap[6]=LoadBitmap(g_hInst,MAKEINTRESOURCE(IDB_BITMAP2));
-		MyBitmap[7]=LoadBitmap(g_hInst,MAKEINTRESOURCE(IDB_BITMAP3));
-		MyBitmap[8]=LoadBitmap(g_hInst,MAKEINTRESOURCE(IDB_BITMAP4));
-		
+		MyBitmap[4]=LoadBitmap(g_hInst,MAKEINTRESOURCE(IDB_BITMAP6));
+		MyBitmap[5]=LoadBitmap(g_hInst,MAKEINTRESOURCE(IDB_BITMAP7));
+		MyBitmap[6]=LoadBitmap(g_hInst,MAKEINTRESOURCE(IDB_BITMAP8));
+		MyBitmap[7]=LoadBitmap(g_hInst,MAKEINTRESOURCE(IDB_BITMAP9));
+		MyBitmap[8]=LoadBitmap(g_hInst,MAKEINTRESOURCE(IDB_BITMAP11));
+		MyBitmap[9]=LoadBitmap(g_hInst,MAKEINTRESOURCE(IDB_BITMAP12));
 		memset(bmpKind,0,sizeof(int)*LINEX*LINEY);
 		tempBmpKind.init(-1,-1);
 		tempBmpKind.tileType = TY_CLASS;
@@ -440,6 +440,7 @@ LRESULT CALLBACK ChildRightProc(HWND hWnd,UINT iMessage,WPARAM wParam,LPARAM lPa
 
 	int i;
 	TCHAR str[128];
+	/*
 	enum ETILETYPE {
 		TY_STAMINA,
 		TY_ITEM,
@@ -449,8 +450,8 @@ LRESULT CALLBACK ChildRightProc(HWND hWnd,UINT iMessage,WPARAM wParam,LPARAM lPa
 		TY_MAINGATE,
 		TY_CLASS,
 		TY_NONE
-	};
-	TCHAR *Itmes[]={TEXT("STAMINA"),TEXT("ITEM"),TEXT("GRASS"),TEXT("DRINK"),TEXT("BUS"),TEXT("MAINGATE"),TEXT("CLASS"),TEXT("ERASE")};
+	};*/
+	TCHAR *Itmes[]={TEXT("STAMINA"),TEXT("ITEM"),TEXT("GRASS"),TEXT("DRINK"),TEXT("BUS"),TEXT("MAINGATE"),TEXT("MOUNTAIN"),TEXT("CLASS"),TEXT("ERASE")};
 	
 	switch (iMessage) {
 	case WM_CREATE:

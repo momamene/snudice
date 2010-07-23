@@ -4,4 +4,4 @@ int yPos,xPos;
 int yMax,xMax;
 int xInc,yInc;
 //n
-HBITMAP MyBitmap[9];
+HBITMAP MyBitmap[10];

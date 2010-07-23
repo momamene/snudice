@@ -9,6 +9,12 @@
 #define IDB_BITMAP2                     123
 #define IDB_BITMAP3                     124
 #define IDB_BITMAP4                     125
+#define IDB_BITMAP6                     126
+#define IDB_BITMAP7                     127
+#define IDB_BITMAP8                     128
+#define IDB_BITMAP9                     129
+#define IDB_BITMAP11                    130
+#define IDB_BITMAP12                    131
 #define ID_FILE_EXIT                    40001
 #define ID_FILE_SAVE40002               40002
 #define ID_FILE_LOAD                    40003
@@ -24,7 +30,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        126
+#define _APS_NEXT_RESOURCE_VALUE        132
 #define _APS_NEXT_COMMAND_VALUE         40009
 #define _APS_NEXT_CONTROL_VALUE         1001
 #define _APS_NEXT_SYMED_VALUE           101
