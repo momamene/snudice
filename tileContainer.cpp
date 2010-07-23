@@ -17,7 +17,8 @@ tileContainer *tileContainer::GetIF() // 3
 // 1. Setup Line
 
 
-void tileContainer::Setup(){
+void tileContainer::Setup()
+{
 	gGameCore *ggameCore = gGameCore::GetIF();
 	
 	POINT temp;
@@ -48,7 +49,8 @@ void tileContainer::Setup(){
 
 }
 
-void tileContainer::LoadFileToBKS(){
+void tileContainer::LoadFileToBKS()
+{
 	int i;
 	for(i = 0 ; i < LINEX*LINEY ; i++)
 		memset(&tileMap[i],0,sizeof(TILE));
@@ -62,7 +64,8 @@ void tileContainer::LoadFileToBKS(){
 	CloseHandle(hFile);
 }
 
-void tileContainer::LoadBKSToTM(){
+void tileContainer::LoadBKSToTM()
+{
 	gMainWin *gmainWin = gMainWin::GetIF();
 	int i;
 	m_xInitSpacePos=-1;
@@ -94,7 +97,8 @@ void tileContainer::LoadBKSToTM(){
 	}
 }
 
-void tileContainer::Load(){
+void tileContainer::Load()
+{
 	LoadFileToBKS();
 	LoadBKSToTM();
 }
@@ -103,7 +107,8 @@ void tileContainer::Load(){
 
 // 2. Draw Line Start
 
-void tileContainer::Draw(){
+void tileContainer::Draw()
+{
 	int i,j;
 	
 	int n = 10; // 축소율
@@ -192,7 +197,8 @@ void tileContainer::Draw(){
 	
 }
 
-void tileContainer::minimapDraw(int start_x,int start_y,int n){
+void tileContainer::minimapDraw(int start_x,int start_y,int n)
+{
 	int i,j;
 	RECT inner_a, inner_b;
 	m_wallpaper.Draw(WNDSIZEW - 240,WNDSIZEH - 180); 
@@ -231,7 +237,8 @@ void tileContainer::minimapDraw(int start_x,int start_y,int n){
 }
 
 
-void tileContainer::DrawSubInfo(){
+void tileContainer::DrawSubInfo()
+{
 	gGameCore *ggameCore = gGameCore::GetIF();
 	gUtil::BeginText();	
 	
@@ -256,7 +263,8 @@ void tileContainer::DrawSubInfo(){
 // 3. pos Line Start
 
 // posSpacor() - start, posMovor() - On, posStoper() - End
-void tileContainer::posSpacor() {	// 다음 칸으로 움직이라는 신호.
+void tileContainer::posSpacor() 
+{	// 다음 칸으로 움직이라는 신호.
 	gGameCore *gameCore = gGameCore::GetIF();
 
 
@@ -281,7 +289,8 @@ void tileContainer::posSpacor() {	// 다음 칸으로 움직이라는 신호.
 		}
 	}
 }
-void tileContainer::posMover(int frame){
+void tileContainer::posMover(int frame)
+{
 	gGameCore *ggameCore = gGameCore::GetIF();
 	POINT b, a;
 	b.x = m_Next_xSpacePos;
@@ -310,7 +319,8 @@ void tileContainer::posStoper(){
 
 // 4. Essential for All Line Start
 
-bool tileContainer::isExisted(int i, int j){
+bool tileContainer::isExisted(int i, int j)
+{
 	if(i>-1&&j>-1&&i<LINEX&&j<LINEY){
 		if(tileMap[i*LINEY+j].tileType!=TY_NONE) return true;
 	}
@@ -318,7 +328,8 @@ bool tileContainer::isExisted(int i, int j){
 }
 
 
-POINT tileContainer::conToAbs(POINT ij){
+POINT tileContainer::conToAbs(POINT ij)
+{
 	POINT res;
 	if(ij.x%2==0){
 		res.x = WIDEX*(ij.x/2);
@@ -331,7 +342,8 @@ POINT tileContainer::conToAbs(POINT ij){
 	return res;
 }
 
-POINT tileContainer::absToCon() {
+POINT tileContainer::absToCon() 
+{
 	gGameCore *ggameCore = gGameCore::GetIF();
 	gMouse *gmouse = gMouse::GetIF();
 	

@@ -31,16 +31,16 @@ public:
 	TILE	tileMap[LINEX*LINEY];
 	
 	// 좌표 관련 변수들
-	int m_xSpacePos;
-	int m_ySpacePos;
-	int m_Next_xSpacePos;
-	int m_Next_ySpacePos;
-	int m_xInitSpacePos;
-	int m_yInitSpacePos;
+	int		m_xSpacePos;
+	int		m_ySpacePos;
+	int		m_Next_xSpacePos;
+	int		m_Next_ySpacePos;
+	int		m_xInitSpacePos;
+	int		m_yInitSpacePos;
 
 	// class 변수들
-	int m_subjectN;
-	int m_subject[MAXSAVOR_N];
+	int		m_subjectN;
+	int		m_subject[MAXSAVOR_N];
 
 public:
 	static tileContainer *GetIF();	// 1

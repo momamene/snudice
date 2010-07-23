@@ -120,8 +120,8 @@ void gGameCore::MainLoopMove(){
 				else{
 					do m_turnPlayer++; 
 					while(gplayerManager->m_playerState[m_turnPlayer] == EPS_NONE);
-					tilecontainer->m_xSpacePos=gplayerManager->m_player[m_turnPlayer].m_xSpacePos;
-					tilecontainer->m_ySpacePos=gplayerManager->m_player[m_turnPlayer].m_ySpacePos;
+					tilecontainer->m_xSpacePos = gplayerManager->m_player[m_turnPlayer].m_xSpacePos;
+					tilecontainer->m_ySpacePos = gplayerManager->m_player[m_turnPlayer].m_ySpacePos;
 				}
 				
 			}
@@ -178,7 +178,7 @@ void gGameCore::OnLButtonDownSubmit(){
 			gplayerManager->m_player[m_turnPlayer].m_subjectGrader.m_subject[m_turnN-1] = m_selectSubject;
 			gplayerManager->m_player[m_turnPlayer].m_subjectGrader.m_subjectN++;
 			if(m_turnPlayer>=MAXPLAYER-1){
-				if(m_turnN<=6){
+				if(m_turnN < 6){
 					m_turnN++;
 					m_turnPlayer=0;
 				}

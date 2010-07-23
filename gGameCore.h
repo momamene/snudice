@@ -25,16 +25,16 @@ public:
 
 //	gGameCore();
 //	virtual ~gGameCore();
-	int m_minimapOn;	// 0 , 1, 2, 3 (1,2) 일 때 On, (3,0) 일 때 Off
-	int m_spacor;
-	int m_xPos;			// read-only 같은 설정은 없나?
-	int m_yPos;
-	int m_frameCount;
+	int		m_minimapOn;	// 0 , 1, 2, 3 (1,2) 일 때 On, (3,0) 일 때 Off
+	int		m_spacor;
+	int		m_xPos;			// read-only 같은 설정은 없나?
+	int		m_yPos;
+	int		m_frameCount;
 
-	int m_turnN;
-	int m_turnPlayer;
+	int		m_turnN;
+	int		m_turnPlayer;
 
-	int m_selectSubject;
+	int		m_selectSubject;
 
 	//int		m_selectSubject;
 	//int		m_selectTurn;
@@ -62,9 +62,9 @@ public:
 	
 private:
 	// MainLoop의 떨거지들
-	void MainLoopMouse();
-	void MainLoopMove();
-	void MainLoopKeyboard();
+	void	MainLoopMouse();
+	void	MainLoopMove();
+	void	MainLoopKeyboard();
 
-	void OnLButtonDownSubmit();
+	void	OnLButtonDownSubmit();
 };

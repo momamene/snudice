@@ -10,9 +10,9 @@ public:
 	int		m_weightCount[MAXSUBJECT];
 	
 public:
-	void init ();
-	double gradeMinOne (int n);
-	double gradeExpectOne (int n);
-	double gradeAverage ();
-	void meet(int subjectIndex);
+	void	init ();
+	double	gradeMinOne (int n);
+	double	gradeExpectOne (int n);
+	double	gradeAverage ();
+	void	meet(int subjectIndex);
 };
