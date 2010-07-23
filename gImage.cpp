@@ -136,12 +136,41 @@ void gImage::Draw(int nX, int nY)
 	gMainWin::GetIF()->m_lpDDBack->Blt(&rcDest, m_lpDDSur, &rcSour, DDBLT_WAIT | DDBLT_KEYSRC, NULL);
 }
 
-void gImage::Draw(RECT rcDest, RECT rcSour)
+void gImage::Draw(RECT rcDest, RECT rcSour, bool stretch)
 {
-	if(rcDest.left < 0)				rcDest.left	= 0;
-	if(rcDest.top < 0)				rcDest.top	= 0;
-	if(rcDest.right > WNDSIZEW)		rcDest.right = WNDSIZEW;
-	if(rcDest.bottom > WNDSIZEH)	rcDest.bottom = WNDSIZEH;
+	if(stretch)
+	{
+		if(rcDest.left < 0)				rcDest.left	= 0;
+		if(rcDest.top < 0)				rcDest.top	= 0;
+		if(rcDest.right > WNDSIZEW)		rcDest.right = WNDSIZEW;
+		if(rcDest.bottom > WNDSIZEH)	rcDest.bottom = WNDSIZEH;
+	}
+	else
+	{
+		if(rcDest.left < 0)
+		{
+			rcSour.left += -rcDest.left;
+			rcDest.left = 0;
+		}
+		if(rcDest.top < 0)
+		{
+			rcSour.top += -rcDest.top;
+			rcDest.top = 0;
+		}
+		int		noverr;
+		int		noverb;
+
+		if( (noverr = rcDest.left + (rcSour.right - rcSour.left) - WNDSIZEW) > 0)
+		{
+			rcSour.right -= noverr;
+			rcDest.right -= noverr;
+		}
+		if( (noverb = rcDest.top + (rcSour.bottom - rcSour.top) - WNDSIZEH) > 0)
+		{
+			rcSour.bottom -= noverb;
+			rcDest.bottom -= noverb;
+		}
+	}
 
 	gMainWin::GetIF()->m_lpDDBack->Blt(&rcDest, m_lpDDSur, &rcSour, DDBLT_WAIT | DDBLT_KEYSRC, NULL);
 }
