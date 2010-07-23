@@ -7,7 +7,7 @@ void gGrade::init(){
 
 double gGrade::gradeMinOne (int n){
 	double grade;
-	grade = m_weightCount[n] / 50;
+	grade = (double)m_weightCount[n] / 50;
 	if(grade>4.3) grade = 4.3;
 	return grade;
 }
@@ -16,7 +16,7 @@ double gGrade::gradeExpectOne (int n){
 	double grade;
 	if(gameCore->m_turnN==1) return 3.0;
 	else{
-		grade = m_weightCount[n] / gameCore->m_turnN;
+		grade = (double)m_weightCount[n] / gameCore->m_turnN;
 	}
 	if(grade>4.3) grade = 4.3;
 	return grade;	
@@ -34,6 +34,8 @@ void gGrade::meet(int subjectIndex){
 	for(int i = 0 ; i < m_subjectN ; i++ ){
 		if(m_subject[i]==subjectIndex){
 			m_meetCount[i]++;
+			//temp
+			m_weightCount[i]++;
 		}
 	}
 }
