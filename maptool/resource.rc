@@ -7,7 +7,13 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
-#include "afxres.h"
+// #include "afxres.h"
+#include <winresrc.h>
+
+#define IDC_STATIC (-1)
+//[출처] compile error: #include "afxres.h"|작성자 예스빌
+
+
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -113,7 +119,7 @@ IDB_BITMAP3             BITMAP                  "budle.bmp"
 IDB_BITMAP4             BITMAP                  "nokdu.bmp"
 IDB_BITMAP6             BITMAP                  "bus.bmp"
 IDB_BITMAP7             BITMAP                  "maingate.bmp"
-IDB_BITMAP8             BITMAP                  "mountain.bmp"
+IDB_BITMAP8             BITMAP                  "nokdu.bmp" // mountain.bmp
 IDB_BITMAP9             BITMAP                  "lang.bmp"
 IDB_BITMAP11            BITMAP                  "math.bmp"
 IDB_BITMAP12            BITMAP                  "art.bmp"

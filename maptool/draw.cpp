@@ -135,10 +135,12 @@ void globalPaint (HDC hdc,int x0,int y0,int n){
 			else
 				DrawBitmap(hdc,(x0+x1)/n,(y0+y1)/n,MyBitmap[bmpKind[i][j].tileType+bmpKind[i][j].flag1],n);
 			wsprintf(buf,"%d %d",i,j);
-			TextOut(hdc,x0+x1+LEFTX,y0+y1,buf,strlen(buf));
-			TextOut(hdc,x0+x1+LEFTX,y0+y1+20,bmpKind[i][j].college,strlen(bmpKind[i][j].college));
-			TextOut(hdc,x0+x1+LEFTX,y0+y1+40,bmpKind[i][j].building,strlen(bmpKind[i][j].building));
-			TextOut(hdc,x0+x1+LEFTX,y0+y1+60,bmpKind[i][j].subject,strlen(bmpKind[i][j].subject));
+			if(n==1){ // / n 지워야지
+				TextOut(hdc,(x0+x1+LEFTX)/n,(y0+y1)/n,buf,strlen(buf));
+				TextOut(hdc,(x0+x1+LEFTX)/n,(y0+y1+20)/n,bmpKind[i][j].college,strlen(bmpKind[i][j].college));
+				TextOut(hdc,(x0+x1+LEFTX)/n,(y0+y1+40)/n,bmpKind[i][j].building,strlen(bmpKind[i][j].building));
+				TextOut(hdc,(x0+x1+LEFTX)/n,(y0+y1+60)/n,bmpKind[i][j].subject,strlen(bmpKind[i][j].subject));
+			}
 		}
 	}
 

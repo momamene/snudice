@@ -160,12 +160,15 @@ LRESULT CALLBACK WndProc(HWND hWnd,UINT iMessage,WPARAM wParam,LPARAM lParam)
 				WriteFile(hFile,&savor.count,sizeof(int),&dw,NULL);
 				for(int i = 0 ; i < savor.count ; i++)
 					WriteFile(hFile,&savor.bmpKindSavor[i],sizeof(TILE),&dw,NULL);
+				savor.count=0;
 				//for(int i = 0 ; i < LINEX ; i++)
 				//	ReadFile(hFile,bmpKind[i],sizeof(TILE)*LINEY,&dw,NULL);
 
 				CloseHandle(hFile);
 			}
-			else {}
+			else {
+				MessageBox(hWnd,"좆망.","알림",MB_OK);
+			}
 //			WriteFile(hFile,bmpKind,((sizeof)int*LINEX*LINEY),&dw);
 			break;
 
@@ -191,12 +194,16 @@ LRESULT CALLBACK WndProc(HWND hWnd,UINT iMessage,WPARAM wParam,LPARAM lParam)
 					for(int i = 0 ; i < savor.count ; i++)
 						ReadFile(hFile,&savor.bmpKindSavor[i],sizeof(TILE),&dw,NULL); // 이런 고도의...
 					savor.Load();
+					savor.count=0;
+				
 					//for(int i = 0 ; i < LINEX ; i++)
 					//	ReadFile(hFile,bmpKind[i],sizeof(TILE)*LINEY,&dw,NULL);
 					CloseHandle(hFile);
 					//InvalidateRect(hWnd,NULL,TRUE); // 창이 다른데 왜 되는지 기분은 좋지만 이해할 수 없군
 				}
-			else {}
+			else {
+				MessageBox(hWnd,"좆망.","알림",MB_OK);
+			}
 			break;
 			}
 		case 40004:
@@ -294,14 +301,14 @@ LRESULT CALLBACK ChildLeftProc(HWND hWnd,UINT iMessage,WPARAM wParam,LPARAM lPar
 		
 		MyBitmap[0]=LoadBitmap(g_hInst,MAKEINTRESOURCE(IDB_BITMAP1));
 		MyBitmap[1]=LoadBitmap(g_hInst,MAKEINTRESOURCE(IDB_BITMAP2));
-		MyBitmap[2]=LoadBitmap(g_hInst,MAKEINTRESOURCE(IDB_BITMAP3));
-		MyBitmap[3]=LoadBitmap(g_hInst,MAKEINTRESOURCE(IDB_BITMAP4));
-		MyBitmap[4]=LoadBitmap(g_hInst,MAKEINTRESOURCE(IDB_BITMAP6));
-		MyBitmap[5]=LoadBitmap(g_hInst,MAKEINTRESOURCE(IDB_BITMAP7));
-		MyBitmap[6]=LoadBitmap(g_hInst,MAKEINTRESOURCE(IDB_BITMAP8));
-		MyBitmap[7]=LoadBitmap(g_hInst,MAKEINTRESOURCE(IDB_BITMAP9));
-		MyBitmap[8]=LoadBitmap(g_hInst,MAKEINTRESOURCE(IDB_BITMAP11));
-		MyBitmap[9]=LoadBitmap(g_hInst,MAKEINTRESOURCE(IDB_BITMAP12));
+		MyBitmap[2]=LoadBitmap(g_hInst,MAKEINTRESOURCE(IDB_BITMAP4));
+		MyBitmap[3]=LoadBitmap(g_hInst,MAKEINTRESOURCE(IDB_BITMAP6));
+		MyBitmap[4]=LoadBitmap(g_hInst,MAKEINTRESOURCE(IDB_BITMAP7));
+		MyBitmap[5]=LoadBitmap(g_hInst,MAKEINTRESOURCE(IDB_BITMAP3));
+		MyBitmap[6]=LoadBitmap(g_hInst,MAKEINTRESOURCE(IDB_BITMAP9));
+		MyBitmap[7]=LoadBitmap(g_hInst,MAKEINTRESOURCE(IDB_BITMAP11));
+		MyBitmap[8]=LoadBitmap(g_hInst,MAKEINTRESOURCE(IDB_BITMAP12));
+		//MyBitmap[9]=LoadBitmap(g_hInst,MAKEINTRESOURCE(IDB_BITMAP12));
 		memset(bmpKind,0,sizeof(int)*LINEX*LINEY);
 		tempBmpKind.init(-1,-1);
 		tempBmpKind.tileType = TY_CLASS;
@@ -451,7 +458,7 @@ LRESULT CALLBACK ChildRightProc(HWND hWnd,UINT iMessage,WPARAM wParam,LPARAM lPa
 		TY_CLASS,
 		TY_NONE
 	};*/
-	TCHAR *Itmes[]={TEXT("STAMINA"),TEXT("ITEM"),TEXT("GRASS"),TEXT("DRINK"),TEXT("BUS"),TEXT("MAINGATE"),TEXT("MOUNTAIN"),TEXT("CLASS"),TEXT("ERASE")};
+	TCHAR *Itmes[]={TEXT("STAMINA"),TEXT("ITEM"),TEXT("DRINK"),TEXT("BUS"),TEXT("MAINGATE"),TEXT("MOUNTAIN"),TEXT("CLASS"),TEXT("ERASE")};
 	
 	switch (iMessage) {
 	case WM_CREATE:

@@ -1,5 +1,5 @@
 #pragma once
-#define MAXSAVOR_N 60
+#define MAXSAVOR_N 70
 
 class Savor
 {
