@@ -14,8 +14,18 @@ tileContainer *tileContainer::GetIF() // 3
 	return &s_tileContainer;
 }
 
-// 1. Setup Line
+tileContainer::tileContainer()
+{
+	
+}
 
+tileContainer::~tileContainer()
+{
+
+}
+
+
+// 1. Setup Line
 
 void tileContainer::Setup()
 {
