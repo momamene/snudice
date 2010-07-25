@@ -149,12 +149,12 @@ void gImage::Draw(RECT rcDest, RECT rcSour, bool stretch)
 	{
 		if(rcDest.left < 0)
 		{
-			rcSour.left += -rcDest.left;
+			rcSour.left -= rcDest.left;
 			rcDest.left = 0;
 		}
 		if(rcDest.top < 0)
 		{
-			rcSour.top += -rcDest.top;
+			rcSour.top -= rcDest.top;
 			rcDest.top = 0;
 		}
 		int		noverr;

@@ -235,7 +235,7 @@ void tileContainer::DrawHexagon(int x0,int y0,int n){
 			*/
 			SetRect(&b,0,0,FULLX,FULLY);
 
-			if(k==TY_CLASS) gimage[k+tileMap[i*LINEY+j].flag1].Draw(a,b);
+			if(k==TY_CLASS) gimage[k+tileMap[i*LINEY+j].flag1].Draw(a,b,false);
 			else gimage[k].Draw(a,b, false);
 			
 			

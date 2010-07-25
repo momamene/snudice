@@ -46,17 +46,18 @@ public:
 	static tileContainer *GetIF();	// 1
 	void	Setup();			// setup
 	void	Draw();				// 그리는 함수
+
+	// Draw Position set colony
 	void	posSpacor();		// space를 누르면 해당 위치로 이동하고, 캐릭터의 이동을 잡아주는 등의 함수
 	void	posMover(int frame);
-	void	posStoper();
-
+	void	posStoper();		// 항상 posSpacor -> posMover -> posStoper 순으로 써야함
 	
-	//POINT	nextN_Tile(POINT ij, int n);
+	// subject function colony
 	int		flagToRow (int index);
 	int		rowToFirstTile(int row);
 	int		flagToFirstTile(int index);
 
-	// 좌표 변환 중요
+	// abs,con function colony
 	POINT	conToAbs(POINT ij);	
 	POINT	absToCon();
 
@@ -67,16 +68,12 @@ private:
 	void	LoadFileToBKS();	// Load의 떨거지들
 	void	LoadBKSToTM();
 
-		
-	
 	// Draw의 떨거지
-	//void	minimapDraw(int start_x,int start_y,int n);		// 잘못된 이름 => DrawMinimap (대문자 시작, 대문자 전환, 첫 이름은 mother name)
 	void	DrawSubInfo();
 	void    DrawSubmit();
 	void	DrawHexagon(int x0,int y0,int n);
 
 	// 기타 중요
-	//POINT	viewSpacor(int x, int y);	
 	bool	isExisted(int i, int j);	// Tile (i,j) 호출은 유효한가? 
 	bool	isExisted(int line);
 	
