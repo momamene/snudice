@@ -2,7 +2,8 @@
 
 LRESULT CALLBACK WndProc(HWND,UINT,WPARAM,LPARAM);
 //HINSTANCE g_hInst;
-//LPSTR lpszClass="First";
+LPSTR lpszClass="First";
+gContainer container;
 
 int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance
 		  ,LPSTR lpszCmdParam,int nCmdShow)
@@ -19,7 +20,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance
 	WndClass.hIcon=LoadIcon(NULL,IDI_APPLICATION);
 	WndClass.hInstance=hInstance;
 	WndClass.lpfnWndProc=(WNDPROC)WndProc;
-	WndClass.lpszClassName="First";
+	WndClass.lpszClassName=lpszClass;
 	WndClass.lpszMenuName=NULL;
 	WndClass.style=CS_HREDRAW | CS_VREDRAW;
 	RegisterClass(&WndClass);
@@ -38,9 +39,42 @@ int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance
 
 LRESULT CALLBACK WndProc(HWND hWnd,UINT iMessage,WPARAM wParam,LPARAM lParam)
 {
+	HDC hdc;
+	PAINTSTRUCT ps;
+	HBRUSH MyBrush,OldBrush;
+	
+	
 	switch(iMessage) {
 	case WM_DESTROY:
 		PostQuitMessage(0);
+		return 0;
+	case WM_LBUTTONDOWN:
+		POINT tempPT;
+		int index;
+
+		tempPT.x = LOWORD(lParam);
+		tempPT.y = HIWORD(lParam);
+		index = container.absToIndex(tempPT);
+		container.m_gstream[index].m_st_standardLoad++;
+		InvalidateRect(hWnd,NULL,TRUE);
+		return 0;
+
+	case WM_PAINT:
+		RECT tempRC;
+
+		hdc = BeginPaint(hWnd,&ps);
+			
+			MyBrush=CreateSolidBrush(RGB(255,0,0));
+			OldBrush=(HBRUSH)SelectObject(hdc,MyBrush);
+		
+		for(int i = 0 ; i < DAILY ; i++) {
+			tempRC = container.index_valueToRect(i,container.m_gstream[i].m_st_standardLoad);
+			Rectangle(hdc,tempRC.left,tempRC.top,tempRC.right,tempRC.bottom);
+		}
+		
+		SelectObject(hdc,OldBrush);	
+
+		EndPaint(hWnd,&ps);
 		return 0;
 	}
 	return(DefWindowProc(hWnd,iMessage,wParam,lParam));
