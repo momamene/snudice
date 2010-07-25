@@ -58,14 +58,10 @@ void tileContainer::Setup()
 void tileContainer::LoadFileToBKS()
 {
 	int i;
-	//for(i = 0 ; i < LINEX*LINEY ; i++)
-	//	memset(&tileMap[i],0,sizeof(TILE));
-	
+		
 	hFile=CreateFile("load.xy",GENERIC_READ,0,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
 	if(hFile!=INVALID_HANDLE_VALUE) {
 		ReadFile(hFile,&count,sizeof(int),&dw,NULL);
-	//	for(i = 0 ; i < count ; i++)
-	//		ReadFile(hFile,&bmpKindSavor[i],sizeof(TILE)*count,&dw,NULL);
 		for(i = 0 ; i < count ; i++){
 			memset(&bmpKindSavor[i],0,sizeof(TILE));
 			ReadFile(hFile,&bmpKindSavor[i],sizeof(TILE),&dw,NULL);
@@ -75,25 +71,6 @@ void tileContainer::LoadFileToBKS()
 }
 
 
-int tileContainer::flagToRow (int index){
-	for(int i = 0 ; i < m_subjectN ; i++){
-		if(m_subject[i]==index) return i;
-	}
-	return -1;
-}
-
-int tileContainer::rowToFirstTile(int row){
-	for(int i = 0 ; i < LINEX*LINEY ; i++){
-		if(tileMap[i].tileType==TY_CLASS&&tileMap[i].flag2==m_subject[row]) return i;
-	}
-	return -1;
-}
-
-int tileContainer::flagToFirstTile(int index){
-	int row = flagToRow(index);
-	return rowToFirstTile(row); // 실은 더 쉬운 방법이 있지만; (이게 뭐하는 짓이냐 당췌. firsttile이 flag를 가지고 있는데.
-	return -1;
-}
 
 
 void tileContainer::LoadBKSToTM()
@@ -108,7 +85,6 @@ void tileContainer::LoadBKSToTM()
 		memset(&tileMap[i],0,sizeof(TILE));
 	for(i = 0 ; i < LINEX ; i++) {
 		for (int j = 0 ; j < LINEY ; j++) {
-			//if(localcount >= count) return;
 			if(i == bmpKindSavor[localcount].ptPos.x && j == bmpKindSavor[localcount].ptPos.y){
 				tileMap[i*LINEY+j] = bmpKindSavor[localcount];
 				localcount++;
@@ -117,8 +93,6 @@ void tileContainer::LoadBKSToTM()
 					m_yInitSpacePos = j;
 				}
 				if(tileMap[i*LINEY+j].tileType==TY_CLASS){
-					//m_subject[m_subjectN]=tileMap;
-					
 					if(flagToRow(tileMap[i*LINEY+j].flag2)==-1){
 						m_subject[m_subjectN]=tileMap[i*LINEY+j].flag2;
 						m_subjectN++;
@@ -140,7 +114,8 @@ void tileContainer::Load()
 	LoadBKSToTM();
 }
 
-// Setup Line End
+// 1. Setup Line End
+
 
 // 2. Draw Line Start
 
@@ -164,18 +139,18 @@ void tileContainer::DrawSubmit(){
 	l_selectSubject=gameCore->m_selectSubject;
 	if(l_selectSubject>=0){
 		tile = flagToFirstTile(l_selectSubject);
-		//if(isExisted(tile)){
+		if(tile!=-1){
 			gUtil::Text(320,0,tileMap[tile].college);
 			gUtil::Text(320,20,tileMap[tile].building);
 			gUtil::Text(320,40,tileMap[tile].subject);
-		//}
+		}
 		
 	}
 	
 	for(i = 0 ; i < gplayerManager->m_player[gameCore->m_turnPlayer].m_subjectGrader.m_subjectN ; i++) {
 		
 		tile=flagToFirstTile(gplayerManager->m_player[gameCore->m_turnPlayer].m_subjectGrader.m_subject[i]);
-		//if(isExisted(tile))
+		if(tile!=-1)
 			gUtil::Text(160,i*20,tileMap[tile].subject);
 	}
 
@@ -194,13 +169,10 @@ void tileContainer::DrawHexagon(int x0,int y0,int n){
 	gGameCore *gameCore = gGameCore::GetIF();
 
 	int i, j;
-	// Draw local 변수
 	int k;
 	RECT a;
 	RECT b;
 
-	//int x1,y1;
-	//
 	
 	for(i = 0 ; i < LINEX ; i++) { 
 		for(j = 0 ; j < LINEY ; j++) {
@@ -219,20 +191,15 @@ void tileContainer::DrawHexagon(int x0,int y0,int n){
 				a.left -= gameCore->m_xPos;
 				a.top -= gameCore->m_yPos;
 			}
+
 			a.left /= n;
 			a.top /= n;
-
 			a.left += x0;
 			a.top += y0;
 			a.right = a.left + FULLX/n;
 			a.bottom = a.top + FULLY/n;
+
 			
-			/*
-			b.left = 0;
-			b.top = 0;
-			b.right = FULLX;
-			b.bottom = FULLY;
-			*/
 			SetRect(&b,0,0,FULLX,FULLY);
 
 			if(k==TY_CLASS) gimage[k+tileMap[i*LINEY+j].flag1].Draw(a,b,false);
@@ -297,8 +264,8 @@ void tileContainer::DrawSubInfo()
 
 // 2. Draw Line End
 
-// 3. pos Line Start
 
+// 3. pos Line Start
 // posSpacor() - start, posMovor() - On, posStoper() - End
 void tileContainer::posSpacor() 
 {	// 다음 칸으로 움직이라는 신호.
@@ -332,7 +299,6 @@ void tileContainer::posMover(int frame)
 	POINT b, a;
 	b.x = m_Next_xSpacePos;
 	b.y = m_Next_ySpacePos;
-	//b = conToAbs(b);
 	a.x = m_xSpacePos;
 	a.y = m_ySpacePos;
 	//a = conToAbs(a);
@@ -344,8 +310,7 @@ void tileContainer::posMover(int frame)
 	a.y = a.y - WNDSIZEH/2 + HALFY;
 
 	ggameCore->PutScreenPos(a.x + frame*(b.x-a.x)/MAXFRAMECOUNT,a.y + frame*(b.y-a.y)/MAXFRAMECOUNT);
-	//ggameCore->PutScreenPos(b.x,b.y);
-
+	
 }
 void tileContainer::posStoper(){
 	m_xSpacePos = m_Next_xSpacePos;	// 기본 방침은 Next와 Now가 같은 상황은 멈춘 상황이라는 것이다.
@@ -353,6 +318,7 @@ void tileContainer::posStoper(){
 }
 
 // 3. Pos Line End
+
 
 // 4. Essential for All Line Start
 
@@ -410,3 +376,33 @@ POINT tileContainer::absToCon()
 	return res;
 	
 }
+
+// 4. Essential for All Line End
+
+
+// 5. Class functions start
+
+int tileContainer::flagToRow (int index)
+{
+	for(int i = 0 ; i < m_subjectN ; i++){
+		if(m_subject[i]==index) return i;
+	}
+	return -1;
+}
+
+int tileContainer::rowToFirstTile(int row)
+{
+	for(int i = 0 ; i < LINEX*LINEY ; i++){
+		if(tileMap[i].tileType==TY_CLASS&&tileMap[i].flag2==m_subject[row]) return i;
+	}
+	return -1;
+}
+
+int tileContainer::flagToFirstTile(int index)
+{
+	int row = flagToRow(index);
+	return rowToFirstTile(row); // 실은 더 쉬운 방법이 있지만; (이게 뭐하는 짓이냐 당췌. firsttile이 flag를 가지고 있는데.
+	return -1;
+}
+
+// 5. Class functions end
