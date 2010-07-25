@@ -1,6 +1,17 @@
 #include "gContainer.h"
 
+//////////////////////////////////////////////////////////////////////
+//
+//////////////////////////////////////////////////////////////////////
 
+void gContainer::init()
+{
+	m_clickstate = none;
+}
+
+//////////////////////////////////////////////////////////////////////
+//
+//////////////////////////////////////////////////////////////////////
 
 int gContainer::absToIndex(POINT pt)
 {
@@ -13,7 +24,7 @@ int gContainer::absToIndex(POINT pt)
 
 RECT gContainer::index_valueToRect(int index,float val)
 {
-	if( index<0 || index>DAILY ) ; // return NULL;
+	//if( index<0 || index>DAILY ) ; // return NULL;
 	RECT rc;
 	rc.left = ((index%LINEX)*FULLX)/LINEX;
 	rc.right = rc.left + FULLX/LINEX;
@@ -21,3 +32,26 @@ RECT gContainer::index_valueToRect(int index,float val)
 	rc.top = rc.bottom - HEIGHTRATE*val;
 	return rc;
 }
+
+//////////////////////////////////////////////////////////////////////
+//
+//////////////////////////////////////////////////////////////////////
+
+void gContainer::LClick(int x, int y )
+{
+	POINT tempPT;
+	int index;
+
+	tempPT.x = x;
+	tempPT.y = y;
+	index = absToIndex(tempPT);
+	if(m_clickstate!=none)
+		m_gstream[index].m_standardLoad[m_clickstate];
+}
+
+void gContainer::RClick()
+{
+	if(m_clickstate==none) m_clickstate=(State8)0;
+	else m_clickstate = (State8)((int)m_clickstate + 1);
+}
+
