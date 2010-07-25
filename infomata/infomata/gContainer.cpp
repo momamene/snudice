@@ -46,7 +46,7 @@ void gContainer::LClick(int x, int y )
 	tempPT.y = y;
 	index = absToIndex(tempPT);
 	if(m_clickstate!=none)
-		m_gstream[index].m_standardLoad[m_clickstate];
+		m_gstream[index].m_standardLoad[m_clickstate]++;
 }
 
 void gContainer::RClick()
