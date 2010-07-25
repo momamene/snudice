@@ -271,27 +271,59 @@ void gGameCore::Draw_CharSelect()
 	m_ImgSelBack.Draw();
 
 	int		i;
+	RECT	rcDest;
+	RECT	rcSour;
 
 	for(i = 0; i < CHARNUM; i++)
 		m_ImgID[i].Draw();
 
-	RECT	rcCharIllu = {	CSEL_POS_ILLUX,
-							CSEL_POS_ILLUY,
-							CSEL_POS_ILLUX + CSEL_POS_ILLUW,
-							CSEL_POS_ILLUY + CSEL_POS_ILLUH };
+	for(i = 0; i < CHARNUM; i++)
+	{
+		if(m_nSelected[i] < 0) continue;
+		rcDest = m_ImgID[i].m_rcPos;
+		rcDest.left		-= CSEL_POS_OUTLINEX;
+		rcDest.top		-= CSEL_POS_OUTLINEY;
+		rcDest.right	= rcDest.left + CSEL_POS_OUTLINEW;
+		rcDest.bottom	= rcDest.top + CSEL_POS_OUTLINEH;
+		SetRect(&rcSour, 0, 0, CSEL_POS_OUTLINEW, CSEL_POS_OUTLINEH);
+
+		switch(m_nSelected[i])
+		{
+			case 0:
+				OffsetRect(&rcSour, CSEL_POS_OUTLINEW * 0, 0);
+				break;
+			case 1:
+				OffsetRect(&rcSour, CSEL_POS_OUTLINEW * 1, 0);
+				break;
+			case 2:
+				OffsetRect(&rcSour, CSEL_POS_OUTLINEW * 2, 0);
+				break;
+			case 3:
+				OffsetRect(&rcSour, CSEL_POS_OUTLINEW * 3, 0);
+				break;
+		}
+		m_ImgOutline.Draw(rcDest, rcSour);
+	}
+
+
 	// 누가 고를 차례냐
-	RECT	rcDest = {	CSEL_POS_PLAYERX,
+	SetRect(&rcDest,	CSEL_POS_PLAYERX,
 						CSEL_POS_PLAYERY,
 						CSEL_POS_PLAYERX + CSEL_POS_PLAYERW,
-						CSEL_POS_PLAYERY + CSEL_POS_PLAYERH };
-	RECT	rcWho = { 0, 0, CSEL_POS_PLAYERW, CSEL_POS_PLAYERH };
+						CSEL_POS_PLAYERY + CSEL_POS_PLAYERH );
+	SetRect(&rcSour, 0, 0, CSEL_POS_PLAYERW, CSEL_POS_PLAYERH );
 
-	OffsetRect(&rcWho, 0, CSEL_POS_PLAYERH * m_nPlayer);
-	m_ImgWho.Draw(rcDest, rcWho, false);
+	OffsetRect(&rcSour, 0, CSEL_POS_PLAYERH * m_nPlayer);
+	m_ImgWho.Draw(rcDest, rcSour, false);
 
 	// 캐릭터 일러 그리기
+	SetRect(&rcDest,	CSEL_POS_ILLUX,
+						CSEL_POS_ILLUY,
+						CSEL_POS_ILLUX + CSEL_POS_ILLUW,
+						CSEL_POS_ILLUY + CSEL_POS_ILLUH );
+
 	gChar	charac = gCharManager::GetIF()->m_Chars[m_nSel];
-	charac.DrawIllu(rcCharIllu);
+	charac.DrawIllu(rcDest);
 	
 	// 캐릭터 정보 출력
 	HDC			hdc;
@@ -334,6 +366,12 @@ bool gGameCore::SetUp_CharSelect()
 	// player n
 	if(FAILED(m_ImgWho.Load(CSEL_IMG_PLAYER)))
 		return false;
+
+	// outline
+	if(FAILED(m_ImgOutline.Load(CSEL_IMG_OUTLINE)))
+		return false;
+
+	memset(m_nSelected, -1, sizeof(int) * CHARNUM);
 
 	m_nSel			= 0;
 	m_nPlayer		= 0;
@@ -410,7 +448,6 @@ bool gGameCore::SetUp_CharSelect()
 		CSEL_POS_IDCARDX16 + CSEL_POS_IDCARDW, CSEL_POS_IDCARDY16 + CSEL_POS_IDCARDH);
 	m_ImgID[15].SetUp(CSEL_IMG_IDIMG16, true, rcBtn);
 
-
 	return true;
 }
 
@@ -431,6 +468,7 @@ void gGameCore::OnLButtonDown_CharSel()
 
 			gPlayerManager::GetIF()->m_player[m_nPlayer].SetUp(cm->m_Chars[i]);
 			m_ImgID[i].m_eBtnMode = EBM_CLICK;
+			m_nSelected[i] = m_nPlayer;
 			m_nPlayer++;
 			SetPlayerIndex(m_nPlayer);
 
@@ -450,6 +488,7 @@ void gGameCore::OnMouseMove_CharSel()
 	
 	for(i = 0; i < CHARNUM; i++)
 	{
+		if(m_ImgID[i].m_eBtnMode == EBM_CLICK) continue; // 선택된 캐릭터
 		if(m_ImgID[i].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 		{
 			m_ImgID[i].m_eBtnMode = EBM_HOVER;
@@ -467,9 +506,8 @@ void gGameCore::SetPlayerIndex(int np)
 	for(i = np; i < MAXPLAYER; i++)
 	{
 		if(gPlayerManager::GetIF()->m_player[i].m_nNP == -1)
-		{
 			m_nPlayer++;
+		else
 			break;
-		}
 	}
 }

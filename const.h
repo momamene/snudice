@@ -147,11 +147,18 @@
 #define CSEL_POS_PLAYERH		25
 #define CSEL_POS_PLAYERX		480
 #define CSEL_POS_PLAYERY		15
+//	æ∆øÙ∂Û¿Œ
+#define CSEL_IMG_OUTLINE		".\\Data\\CharSelect\\outline.img"
+#define CSEL_POS_OUTLINEW		83
+#define CSEL_POS_OUTLINEH		58
+#define CSEL_POS_OUTLINEX		4 //((CSEL_POS_OUTLINEW - CSEL_POS_IDCARDW) / 2)
+#define CSEL_POS_OUTLINEY		10 //((CSEL_POS_OUTLINEH - CSEL_POS_IDCARDH) / 2)
 
 // CharManager
 // Char
 #define IMGILLUSTW			500
 #define IMGILLUSTH			800
+
 
 // gMouse.h - sangwoo
 #define MINMOVE				20
