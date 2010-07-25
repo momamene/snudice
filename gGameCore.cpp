@@ -5,6 +5,7 @@
 #include "gInterface.h"
 #include "gCharManager.h"
 #include "gPlayerManager.h"
+#include "gUtil.h"
 #include "time.h"
 
 static gGameCore s_GameCore;
@@ -14,10 +15,22 @@ gGameCore *gGameCore::GetIF()
 	return &s_GameCore;
 }
 
+gGameCore::gGameCore()
+{
+
+}
+
+gGameCore::~gGameCore()
+{
+
+}
 
 
 bool gGameCore::SetUp()
 {
+	if(FAILED(SetUp_CharSelect()))
+		return false;
+
 	gCharManager *gcharManager = gCharManager::GetIF();
 	m_xPos=0;
 	m_yPos=0;
@@ -31,7 +44,7 @@ bool gGameCore::SetUp()
 	m_turnPlayer = 0;
 	srand(time(NULL));
 
-	m_gMode = EGM_SUBMIT;
+	m_gMode = EGM_CHARSEL;
 
 	return true;
 }
@@ -136,27 +149,32 @@ void gGameCore::MainLoop() // MainLoop 내부를 함수들로 다시 깔끔하게 만들 필요가
 {
 //	gMainWin *mainWin = gMainWin::GetIF(); // mainWin이라고 쓰고 키보드라고 읽는다.
 	
-	switch(m_gMode){
+	switch(m_gMode)
+	{
+	case EGM_CHARSEL:
+		break;
 	case EGM_SUBMIT:
-	break;
-
+		break;
 	case EGM_GAME:	
-	MainLoopKeyboard();
-	MainLoopMouse();	
-	break;
+		MainLoopKeyboard();
+		MainLoopMouse();	
+		MainLoopMove();
+		break;
 	}
-	MainLoopMove();
 	Draw();
 }
 
 void gGameCore::Draw()
 {
-	tileContainer::GetIF()->Draw();
 	switch(m_gMode){
 	case EGM_SUBMIT:
 //		gInterface::GetIF()->Draw();
 		break;
+	case EGM_CHARSEL:
+		Draw_CharSelect();
+		break;
 	case EGM_GAME:
+		tileContainer::GetIF()->Draw();
 		gPlayerManager::GetIF()->Draw();
 		gInterface::GetIF()->Draw();
 		break;
@@ -200,26 +218,43 @@ void gGameCore::OnLButtonDownSubmit(){
 
 void gGameCore::OnLButtonDown()
 {
+	switch(m_gMode)
+	{
+		case EGM_CHARSEL:
 
-
-	switch(m_gMode){
-	case EGM_SUBMIT:
-		OnLButtonDownSubmit();	
-		break;
-	case EGM_GAME:
-		gInterface::GetIF()->OnLButtonDown();
-		break;
+			break;
+		case EGM_SUBMIT:
+			OnLButtonDownSubmit();	
+			break;
+		case EGM_GAME:
+			gInterface::GetIF()->OnLButtonDown();
+			break;
 	}
 }
 
 void gGameCore::OnLButtonUp()
 {
-	gInterface::GetIF()->OnLButtonUp();
+	switch(m_gMode)
+	{
+		case EGM_CHARSEL:
+			break;
+		case EGM_GAME:
+			gInterface::GetIF()->OnLButtonUp();
+			break;
+	}
 }
 
 void gGameCore::OnMouseMove()
 {
-	gInterface::GetIF()->OnMouseMove();
+	switch(m_gMode)
+	{
+	case EGM_CHARSEL:
+		OnMouseMove_CharSel();
+		break;
+	case EGM_GAME:
+		gInterface::GetIF()->OnMouseMove();
+		break;
+	}
 }
 
 void gGameCore::OnRButtonDown()
@@ -230,4 +265,164 @@ void gGameCore::OnRButtonDown()
 void gGameCore::PutScreenPos(int x,int y){
 	m_xPos = x;
 	m_yPos = y;
+}
+
+void gGameCore::Draw_CharSelect()
+{
+	m_ImgSelBack.Draw();
+
+	int		i;
+
+	for(i = 0; i < CHARNUM; i++)
+		m_ImgID[i].Draw();
+
+	RECT	rcCharIllu = {	CSEL_POS_ILLUX,
+							CSEL_POS_ILLUY,
+							CSEL_POS_ILLUX + CSEL_POS_ILLUW,
+							CSEL_POS_ILLUY + CSEL_POS_ILLUH };
+
+	gChar	charac = gCharManager::GetIF()->m_Chars[m_nSel];
+	
+	charac.DrawIllu(rcCharIllu);
+
+	HDC			hdc;
+	char		szBuf[128];
+	
+	gUtil::BeginText();
+	wsprintf(szBuf, "이름 : %s", charac.m_Data.szName);
+	gUtil::Text(CSEL_POS_CHARINFOX, CSEL_POS_CHARINFOY, szBuf);
+	
+	if(charac.m_Data.eSex == ESEX_MALE)
+		wsprintf(szBuf, "성별 : ♂");
+	else
+		wsprintf(szBuf, "성별 : ♀");
+	gUtil::Text(CSEL_POS_CHARINFOX + 150, CSEL_POS_CHARINFOY, szBuf);
+	
+	wsprintf(szBuf, "소속 : %s", charac.m_Data.szColleage);
+	gUtil::Text(CSEL_POS_CHARINFOX, CSEL_POS_CHARINFOY + 20, szBuf);
+	wsprintf(szBuf, "언어 : %d", charac.m_Data.nLang);
+	gUtil::Text(CSEL_POS_CHARINFOX, CSEL_POS_CHARINFOY + 40, szBuf);
+	wsprintf(szBuf, "수리 : %d", charac.m_Data.nMath);
+	gUtil::Text(CSEL_POS_CHARINFOX, CSEL_POS_CHARINFOY + 60, szBuf);
+	wsprintf(szBuf, "예능 : %d", charac.m_Data.nArt);
+	gUtil::Text(CSEL_POS_CHARINFOX, CSEL_POS_CHARINFOY + 80, szBuf);
+	wsprintf(szBuf, "체력 : %d", charac.m_Data.nStamina);
+	gUtil::Text(CSEL_POS_CHARINFOX, CSEL_POS_CHARINFOY + 100, szBuf);
+	wsprintf(szBuf, "이동 : %d", charac.m_Data.nMove);
+	gUtil::Text(CSEL_POS_CHARINFOX, CSEL_POS_CHARINFOY + 120, szBuf);
+	
+	gUtil::Text(CSEL_POS_CHARINFOX, CSEL_POS_CHARINFOY + 140, charac.m_Data.szComment);
+	
+	gUtil::EndText();
+
+}
+
+bool gGameCore::SetUp_CharSelect()
+{
+	if(FAILED(m_ImgSelBack.Load(CSEL_IMG_BACK)))
+		return false;
+
+	// player n
+	if(FAILED(m_ImgWho.Load(CSEL_IMG_PLAYER)))
+		return false;
+
+	m_nSel		= 0;
+
+	RECT		rcBtn;
+
+	// 언어계열 7넘
+	//	인문대
+	SetRect(&rcBtn, CSEL_POS_IDCARDX1, CSEL_POS_IDCARDY1,
+		CSEL_POS_IDCARDX1 + CSEL_POS_IDCARDW, CSEL_POS_IDCARDY1 + CSEL_POS_IDCARDH);
+	m_ImgID[0].SetUp(CSEL_IMG_IDIMG1, true, rcBtn);
+	//	사회대
+	SetRect(&rcBtn, CSEL_POS_IDCARDX2, CSEL_POS_IDCARDY2,
+		CSEL_POS_IDCARDX2 + CSEL_POS_IDCARDW, CSEL_POS_IDCARDY2 + CSEL_POS_IDCARDH);
+	m_ImgID[1].SetUp(CSEL_IMG_IDIMG2, true, rcBtn);
+	//	경영대
+	SetRect(&rcBtn, CSEL_POS_IDCARDX3, CSEL_POS_IDCARDY3,
+		CSEL_POS_IDCARDX3 + CSEL_POS_IDCARDW, CSEL_POS_IDCARDY3 + CSEL_POS_IDCARDH);
+	m_ImgID[2].SetUp(CSEL_IMG_IDIMG3, true, rcBtn);
+	//	법대
+	SetRect(&rcBtn, CSEL_POS_IDCARDX4, CSEL_POS_IDCARDY4,
+		CSEL_POS_IDCARDX4 + CSEL_POS_IDCARDW, CSEL_POS_IDCARDY4 + CSEL_POS_IDCARDH);
+	m_ImgID[3].SetUp(CSEL_IMG_IDIMG4, true, rcBtn);
+	//	생활과학대
+	SetRect(&rcBtn, CSEL_POS_IDCARDX5, CSEL_POS_IDCARDY5,
+		CSEL_POS_IDCARDX5 + CSEL_POS_IDCARDW, CSEL_POS_IDCARDY5 + CSEL_POS_IDCARDH);
+	m_ImgID[4].SetUp(CSEL_IMG_IDIMG5, true, rcBtn);
+	//	사범대
+	SetRect(&rcBtn, CSEL_POS_IDCARDX6, CSEL_POS_IDCARDY6,
+		CSEL_POS_IDCARDX6 + CSEL_POS_IDCARDW, CSEL_POS_IDCARDY6 + CSEL_POS_IDCARDH);
+	m_ImgID[5].SetUp(CSEL_IMG_IDIMG6, true, rcBtn);
+	//	자유전공
+	SetRect(&rcBtn, CSEL_POS_IDCARDX7, CSEL_POS_IDCARDY7,
+		CSEL_POS_IDCARDX7 + CSEL_POS_IDCARDW, CSEL_POS_IDCARDY7 + CSEL_POS_IDCARDH);
+	m_ImgID[6].SetUp(CSEL_IMG_IDIMG7, true, rcBtn);
+
+	// 수리계열 7넘
+	//	공대
+	SetRect(&rcBtn, CSEL_POS_IDCARDX8, CSEL_POS_IDCARDY8,
+		CSEL_POS_IDCARDX8 + CSEL_POS_IDCARDW, CSEL_POS_IDCARDY8 + CSEL_POS_IDCARDH);
+	m_ImgID[7].SetUp(CSEL_IMG_IDIMG8, true, rcBtn);
+	//	자연대
+	SetRect(&rcBtn, CSEL_POS_IDCARDX9, CSEL_POS_IDCARDY9,
+		CSEL_POS_IDCARDX9 + CSEL_POS_IDCARDW, CSEL_POS_IDCARDY9 + CSEL_POS_IDCARDH);
+	m_ImgID[8].SetUp(CSEL_IMG_IDIMG9, true, rcBtn);
+	//	의대
+	SetRect(&rcBtn, CSEL_POS_IDCARDX10, CSEL_POS_IDCARDY10,
+		CSEL_POS_IDCARDX10 + CSEL_POS_IDCARDW, CSEL_POS_IDCARDY10 + CSEL_POS_IDCARDH);
+	m_ImgID[9].SetUp(CSEL_IMG_IDIMG10, true, rcBtn);
+	//	수의대
+	SetRect(&rcBtn, CSEL_POS_IDCARDX11, CSEL_POS_IDCARDY11,
+		CSEL_POS_IDCARDX11 + CSEL_POS_IDCARDW, CSEL_POS_IDCARDY11 + CSEL_POS_IDCARDH);
+	m_ImgID[10].SetUp(CSEL_IMG_IDIMG11, true, rcBtn);
+	//	약대
+	SetRect(&rcBtn, CSEL_POS_IDCARDX12, CSEL_POS_IDCARDY12,
+		CSEL_POS_IDCARDX12 + CSEL_POS_IDCARDW, CSEL_POS_IDCARDY12 + CSEL_POS_IDCARDH);
+	m_ImgID[11].SetUp(CSEL_IMG_IDIMG12, true, rcBtn);
+	//	간호대
+	SetRect(&rcBtn, CSEL_POS_IDCARDX13, CSEL_POS_IDCARDY13,
+		CSEL_POS_IDCARDX13 + CSEL_POS_IDCARDW, CSEL_POS_IDCARDY13 + CSEL_POS_IDCARDH);
+	m_ImgID[12].SetUp(CSEL_IMG_IDIMG13, true, rcBtn);
+	//	농대
+	SetRect(&rcBtn, CSEL_POS_IDCARDX14, CSEL_POS_IDCARDY14,
+		CSEL_POS_IDCARDX14 + CSEL_POS_IDCARDW, CSEL_POS_IDCARDY14 + CSEL_POS_IDCARDH);
+	m_ImgID[13].SetUp(CSEL_IMG_IDIMG14, true, rcBtn);
+
+	// 예술계열 2넘
+	//	음대
+	SetRect(&rcBtn, CSEL_POS_IDCARDX15, CSEL_POS_IDCARDY15,
+		CSEL_POS_IDCARDX15 + CSEL_POS_IDCARDW, CSEL_POS_IDCARDY15 + CSEL_POS_IDCARDH);
+	m_ImgID[14].SetUp(CSEL_IMG_IDIMG15, true, rcBtn);
+	//	미대
+	SetRect(&rcBtn, CSEL_POS_IDCARDX16, CSEL_POS_IDCARDY16,
+		CSEL_POS_IDCARDX16 + CSEL_POS_IDCARDW, CSEL_POS_IDCARDY16 + CSEL_POS_IDCARDH);
+	m_ImgID[15].SetUp(CSEL_IMG_IDIMG16, true, rcBtn);
+
+
+	return true;
+}
+
+void gGameCore::OnLButtonDown_CharSel()
+{
+
+}
+
+void gGameCore::OnMouseMove_CharSel()
+{
+	gMouse	*mouse = gMouse::GetIF();
+
+	int		i;
+	
+	for(i = 0; i < CHARNUM; i++)
+	{
+		if(m_ImgID[i].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+		{
+			m_ImgID[i].m_eBtnMode = EBM_HOVER;
+			m_nSel = i;
+		}
+		else
+			m_ImgID[i].m_eBtnMode = EBM_NONE;
+	}
 }

@@ -42,6 +42,9 @@ public:
 	void		MainLoop();
 	void		MoveWindow();
 	void		Exit();
+
+private:
+	bool		SetUpDirect();
 };
 
  

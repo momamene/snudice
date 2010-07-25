@@ -4,7 +4,15 @@
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow)
 {
 	if(FAILED(gMainWin::GetIF()->SetUp(hInstance, lpszCmdParam, nCmdShow)))
-		return 0;
+	{
+		if(gMainWin::GetIF()->m_hWnd == NULL)
+			return 0;
+		else
+		{
+			gMainWin::GetIF()->Exit();
+			return 0;
+		}
+	}
 
 	int		retValue;
 	retValue = gMainWin::GetIF()->Run();

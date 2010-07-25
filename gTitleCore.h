@@ -3,7 +3,7 @@
 //
 //	2010. 07. 16	CoderK
 //
-//	타이틀 모드 -> 플레이어 몇명 -> 캐릭터 선택 -> 수강신청
+//	타이틀 모드 -> 플레이어 몇명 -> 게임코어로
 //------------------------------------------------------------------------------------
 #pragma once
 #include "gImage.h"
@@ -24,8 +24,6 @@ enum eTITLEMODE
 {
 	ETM_TITLE,
 	ETM_PLAYERSEL,			// 플레이어 몇명 할거냐
-	ETM_CHARSEL,			// 각자 캐릭터고르자
-	ETM_SUGANG,				// 수강신청
 };
 
 enum ePLAYERSEL
@@ -35,7 +33,6 @@ enum ePLAYERSEL
 	EPS_NONE,				// 안해
 };
 
-class gImage;
 class gTitleCore : public gCoreIF
 {
 public:
@@ -44,28 +41,22 @@ public:
 	gTitleCore();
 	virtual ~gTitleCore();
 public:
-	// prev next button
-	gImgButton	m_ImgBtnPrev;
-	gImgButton	m_ImgBtnNext;
+	eTITLEMODE	m_eMode;
 
 	// title
-	gImage		m_ImgTitle;
+	gImage		m_ImgTitle;				// title 모드 배경
 	gImgButton	m_ImgBtn[ETB_END];
 
 	// player
-	gImage		m_ImgPlayer;
+	gImgButton	m_ImgBtnPrev;
+	gImgButton	m_ImgBtnNext;
+	gImage		m_ImgPlayer;			// player select 모드 배경
 	gImage		m_ImgMode;
 	gImage		m_ImgNP[MAXPLAYER];
 	gImage		m_ImgCheck;
 	ePLAYERSEL	m_ePlayer[MAXPLAYER];
 
-	// sel
-	gImage		m_ImgSel;
-	gImgButton	m_ImgID[CHARNUM];
-	int			m_nSel;		// 선택된넘
-
-	eTITLEMODE	m_eMode;
-
+public:
 	bool		SetUp();
 	void		MainLoop();
 	void		Draw();
@@ -74,4 +65,17 @@ public:
 	void		OnLButtonUp();
 	void		OnMouseMove();
 	void		OnRButtonDown();
+
+private:
+	bool		SetUp_Title();
+	bool		SetUp_PlayerSelect();
+
+	void		Draw_Title();
+	void		Draw_PlayerSelect();
+
+	void		OnLButtonDown_Title();
+	void		OnLButtonDown_PlayerSelect();
+
+	void		OnMouseMove_Title();
+	void		OnMouseMove_PlayerSelect();
 };

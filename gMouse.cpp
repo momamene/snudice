@@ -46,12 +46,12 @@ void gMouse::OnLButtonDown()
 {
 	switch(gMainWin::GetIF()->m_eCoreMode)
 	{
-	case EMC_TITLE:
-		gTitleCore::GetIF()->OnLButtonDown();
-		break;
-	case EMC_GAME:
-		gGameCore::GetIF()->OnLButtonDown();
-		break;
+		case EMC_TITLE:
+			gTitleCore::GetIF()->OnLButtonDown();
+			break;
+		case EMC_GAME:
+			gGameCore::GetIF()->OnLButtonDown();
+			break;
 	}
 }
 
@@ -59,12 +59,12 @@ void gMouse::OnLButtonUp()
 {
 	switch(gMainWin::GetIF()->m_eCoreMode)
 	{
-	case EMC_TITLE:
-		gTitleCore::GetIF()->OnLButtonUp();
-		break;
-	case EMC_GAME:
-		gGameCore::GetIF()->OnLButtonUp();
-		break;
+		case EMC_TITLE:
+			gTitleCore::GetIF()->OnLButtonUp();
+			break;
+		case EMC_GAME:
+			gGameCore::GetIF()->OnLButtonUp();
+			break;
 	}
 }
 
@@ -72,12 +72,12 @@ void gMouse::OnMouseMove()
 {
 	switch(gMainWin::GetIF()->m_eCoreMode)
 	{
-	case EMC_TITLE:
-		gTitleCore::GetIF()->OnMouseMove();
-		break;
-	case EMC_GAME:
-		gGameCore::GetIF()->OnMouseMove();
-		break;
+		case EMC_TITLE:
+			gTitleCore::GetIF()->OnMouseMove();
+			break;
+		case EMC_GAME:
+			gGameCore::GetIF()->OnMouseMove();
+			break;
 	}
 }
 
@@ -85,11 +85,11 @@ void gMouse::OnRButtonDown()
 {
 	switch(gMainWin::GetIF()->m_eCoreMode)
 	{
-	case EMC_TITLE:
-		gTitleCore::GetIF()->OnRButtonDown();
-		break;
-	case EMC_GAME:
-		gGameCore::GetIF()->OnRButtonDown();
-		break;
+		case EMC_TITLE:
+			gTitleCore::GetIF()->OnRButtonDown();
+			break;
+		case EMC_GAME:
+			gGameCore::GetIF()->OnRButtonDown();
+			break;
 	}
 }

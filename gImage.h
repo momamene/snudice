@@ -33,7 +33,7 @@ public:
 	int			m_nHeight;
 
 	bool		Load(char *szFileName);									// img 파일만 읽어짐
-	void		Draw(int nX, int nY);									// 출력은 무조건 gMainWin의 백버퍼에
+	void		Draw(int nX = 0, int nY = 0);							// 출력은 무조건 gMainWin의 백버퍼에
 	void		Draw(RECT rcDest, RECT rcSour, bool stretch = true);	// bool 값으로 확대축소, 클리핑할지 결정
 	
 	void		Release();

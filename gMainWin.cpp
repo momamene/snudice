@@ -73,81 +73,9 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 	// Set core
 	m_eCoreMode = EMC_TITLE;
 
-	// SetUp Direct X
-	if(FAILED(DirectDrawCreate(NULL, &m_lpDD, NULL)))
-	{
-		MessageBox(m_hWnd, "DirectDraw : Interface 생성 실패", "Error", MB_OK);
+	if(FAILED(SetUpDirect()))
 		return false;
-	}
-#ifdef FULLSCREEN
-	if(FAILED(m_lpDD->SetCooperativeLevel(m_hWnd, DDSCL_EXCLUSIVE | DDSCL_FULLSCREEN)))
-	{
-		MessageBox(m_hWnd, "DirectDraw : Cooperative Level 설정 실패", "Error", MB_OK);
-		return false;
-	}
 
-	if(FAILED(m_lpDD->SetDisplayMode(WNDSIZEW, WNDSIZEH, BIT)))
-	{
-		MessageBox(m_hWnd, "DirectDraw : 디스플레이 변경 실패", "Error", MB_OK);
-		return false;
-	}
-
-	// Primary Buffer
-	DDSURFACEDESC	ddsd;
-	memset(&ddsd, 0, sizeof(DDSURFACEDESC));
-	ddsd.dwSize				= sizeof(DDSURFACEDESC);
-	ddsd.dwFlags			= DDSD_CAPS | DDSD_BACKBUFFERCOUNT;
-	ddsd.ddsCaps.dwCaps		= DDSCAPS_PRIMARYSURFACE | DDSCAPS_FLIP | DDSCAPS_COMPLEX | DDSCAPS_SYSTEMMEMORY;
-	ddsd.dwBackBufferCount	= 1;
-	
-	if(FAILED(m_lpDD->CreateSurface(&ddsd, &m_lpDDPrimary, NULL)))
-	{
-		MessageBox(m_hWnd, "DirectDraw : Primary Surface 생성 실패", "Error", MB_OK);
-		return false;
-	}
-
-	// Backbuffer
-	DDSCAPS		ddsCaps;
-	memset(&ddsCaps, 0, sizeof(DDSCAPS));
-	ddsCaps.dwCaps = DDSCAPS_BACKBUFFER;
-
-	m_lpDDPrimary->GetAttachedSurface(&ddsCaps, &m_lpDDBack);
-#else
-	if(FAILED(m_lpDD->SetCooperativeLevel(m_hWnd, DDSCL_NORMAL)))
-	{
-		MessageBox(m_hWnd, "DirectDraw : Cooperative Level 설정 실패", "Error", MB_OK);
-		return false;
-	}
-
-	// Primary Buffer
-	DDSURFACEDESC	ddsd;
-	memset(&ddsd, 0, sizeof(DDSURFACEDESC));
-	ddsd.dwSize			= sizeof(DDSURFACEDESC);
-	ddsd.dwFlags		= DDSD_CAPS;
-	ddsd.ddsCaps.dwCaps	= DDSCAPS_PRIMARYSURFACE;
-
-	if(FAILED(m_lpDD->CreateSurface(&ddsd, &m_lpDDPrimary, NULL)))
-	{
-		MessageBox(m_hWnd, "DirectDraw : Primary Surface 생성 실패", "Error", MB_OK);
-		return false;
-	}
-
-	// Back Buffer
-	memset(&ddsd, 0, sizeof(ddsd));
-	ddsd.dwSize			= sizeof(ddsd);
-	ddsd.dwFlags		= DDSD_CAPS | DDSD_WIDTH | DDSD_HEIGHT;
-	ddsd.ddsCaps.dwCaps	= DDSCAPS_OFFSCREENPLAIN | DDSCAPS_SYSTEMMEMORY; //DDSCAPS_VIDEOMEMORY
-	ddsd.dwWidth		= WNDSIZEW;
-	ddsd.dwHeight		= WNDSIZEH;
-
-	if(FAILED(m_lpDD->CreateSurface(&ddsd, &m_lpDDBack, NULL)))
-	{
-		MessageBox(m_hWnd, "DirectDraw : BackBuffer Surface 생성 실패", "Error", MB_OK);
-		return false;
-	}
-#endif
-
-	// End Direct X Set up
 
 	// SetUp TitleCore 
 	if(FAILED(gTitleCore::GetIF()->SetUp()))
@@ -228,12 +156,12 @@ void gMainWin::MainLoop()
 {
 	switch(m_eCoreMode)
 	{
-	case EMC_TITLE:
-		gTitleCore::GetIF()->MainLoop();
-		break;
-	case EMC_GAME:
-		gGameCore::GetIF()->MainLoop();
-		break;
+		case EMC_TITLE:
+			gTitleCore::GetIF()->MainLoop();
+			break;
+		case EMC_GAME:
+			gGameCore::GetIF()->MainLoop();
+			break;
 	}
 	// backbuffer 에 그려진 것들을 출력
 if(!m_bActive) return;
@@ -290,12 +218,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 		case WM_ACTIVATE:
 			switch(LOWORD(wParam))
 			{
-			case WA_ACTIVE: case WA_CLICKACTIVE:
-				gMainWin::GetIF()->m_bActive = true;
-				break;
-			case WA_INACTIVE:
-				gMainWin::GetIF()->m_bActive = false;
-				break;
+				case WA_ACTIVE: case WA_CLICKACTIVE:
+					gMainWin::GetIF()->m_bActive = true;
+					break;
+				case WA_INACTIVE:
+					gMainWin::GetIF()->m_bActive = false;
+					break;
 			}
 			return 0;
 		case WM_DESTROY:
@@ -308,4 +236,82 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 void gMainWin::Exit()
 {
 	SendMessage(m_hWnd, WM_DESTROY, 0, 0);
+}
+
+bool gMainWin::SetUpDirect()
+{
+	if(FAILED(DirectDrawCreate(NULL, &m_lpDD, NULL)))
+	{
+		MessageBox(m_hWnd, "DirectDraw : Interface 생성 실패", "Error", MB_OK);
+		return false;
+	}
+#ifdef FULLSCREEN
+	if(FAILED(m_lpDD->SetCooperativeLevel(m_hWnd, DDSCL_EXCLUSIVE | DDSCL_FULLSCREEN)))
+	{
+		MessageBox(m_hWnd, "DirectDraw : Cooperative Level 설정 실패", "Error", MB_OK);
+		return false;
+	}
+	
+	if(FAILED(m_lpDD->SetDisplayMode(WNDSIZEW, WNDSIZEH, BIT)))
+	{
+		MessageBox(m_hWnd, "DirectDraw : 디스플레이 변경 실패", "Error", MB_OK);
+		return false;
+	}
+	
+	// Primary Buffer
+	DDSURFACEDESC	ddsd;
+	memset(&ddsd, 0, sizeof(DDSURFACEDESC));
+	ddsd.dwSize				= sizeof(DDSURFACEDESC);
+	ddsd.dwFlags			= DDSD_CAPS | DDSD_BACKBUFFERCOUNT;
+	ddsd.ddsCaps.dwCaps		= DDSCAPS_PRIMARYSURFACE | DDSCAPS_FLIP | DDSCAPS_COMPLEX | DDSCAPS_SYSTEMMEMORY;
+	ddsd.dwBackBufferCount	= 1;
+	
+	if(FAILED(m_lpDD->CreateSurface(&ddsd, &m_lpDDPrimary, NULL)))
+	{
+		MessageBox(m_hWnd, "DirectDraw : Primary Surface 생성 실패", "Error", MB_OK);
+		return false;
+	}
+	
+	// Backbuffer
+	DDSCAPS		ddsCaps;
+	memset(&ddsCaps, 0, sizeof(DDSCAPS));
+	ddsCaps.dwCaps = DDSCAPS_BACKBUFFER;
+	
+	m_lpDDPrimary->GetAttachedSurface(&ddsCaps, &m_lpDDBack);
+#else
+	if(FAILED(m_lpDD->SetCooperativeLevel(m_hWnd, DDSCL_NORMAL)))
+	{
+		MessageBox(m_hWnd, "DirectDraw : Cooperative Level 설정 실패", "Error", MB_OK);
+		return false;
+	}
+	
+	// Primary Buffer
+	DDSURFACEDESC	ddsd;
+	memset(&ddsd, 0, sizeof(DDSURFACEDESC));
+	ddsd.dwSize			= sizeof(DDSURFACEDESC);
+	ddsd.dwFlags		= DDSD_CAPS;
+	ddsd.ddsCaps.dwCaps	= DDSCAPS_PRIMARYSURFACE;
+	
+	if(FAILED(m_lpDD->CreateSurface(&ddsd, &m_lpDDPrimary, NULL)))
+	{
+		MessageBox(m_hWnd, "DirectDraw : Primary Surface 생성 실패", "Error", MB_OK);
+		return false;
+	}
+	
+	// Back Buffer
+	memset(&ddsd, 0, sizeof(ddsd));
+	ddsd.dwSize			= sizeof(ddsd);
+	ddsd.dwFlags		= DDSD_CAPS | DDSD_WIDTH | DDSD_HEIGHT;
+	ddsd.ddsCaps.dwCaps	= DDSCAPS_OFFSCREENPLAIN | DDSCAPS_SYSTEMMEMORY; //DDSCAPS_VIDEOMEMORY
+	ddsd.dwWidth		= WNDSIZEW;
+	ddsd.dwHeight		= WNDSIZEH;
+	
+	if(FAILED(m_lpDD->CreateSurface(&ddsd, &m_lpDDBack, NULL)))
+	{
+		MessageBox(m_hWnd, "DirectDraw : BackBuffer Surface 생성 실패", "Error", MB_OK);
+		return false;
+	}
+#endif
+	
+	return true;
 }
