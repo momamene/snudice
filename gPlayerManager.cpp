@@ -22,10 +22,10 @@ void gPlayerManager::SetUp(){
 	gCharManager *gcharManager = gCharManager::GetIF();
 	
 	m_playerN = 0;
-	m_player[0].SetUp(gcharManager->m_Chars[1]);
-	m_player[1].SetUp(gcharManager->m_Chars[5]);
-	m_player[2].SetUp(gcharManager->m_Chars[8]);
-	m_player[3].SetUp(gcharManager->m_Chars[10]);
+	m_player[0].SetUp(gcharManager->m_Chars[0]);
+	m_player[1].SetUp(gcharManager->m_Chars[1]);
+	m_player[2].SetUp(gcharManager->m_Chars[2]);
+	m_player[3].SetUp(gcharManager->m_Chars[3]);
 	for(int i = 0 ; i < MAXPLAYER ; i++) {
 		m_playerState[i] = gtitleCore->m_ePlayer[i];
 		if(m_playerState[i] != EPS_NONE){

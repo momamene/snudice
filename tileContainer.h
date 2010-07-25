@@ -23,7 +23,7 @@ public:
 	gImage	gimage[9];
 	gImage	m_wallpaper;
 
-	int		count;
+	int		count; // 아마 이것이 tile의 갯수갰지.
 
 	
 	//bool	m_minimapOn;
@@ -52,6 +52,9 @@ public:
 
 	
 	//POINT	nextN_Tile(POINT ij, int n);
+	int		flagToRow (int index);
+	int		rowToFirstTile(int row);
+	int		flagToFirstTile(int index);
 
 	// 좌표 변환 중요
 	POINT	conToAbs(POINT ij);	
@@ -67,7 +70,7 @@ private:
 		
 	
 	// Draw의 떨거지
-	void	minimapDraw(int start_x,int start_y,int n);		// 잘못된 이름 => DrawMinimap (대문자 시작, 대문자 전환, 첫 이름은 mother name)
+	//void	minimapDraw(int start_x,int start_y,int n);		// 잘못된 이름 => DrawMinimap (대문자 시작, 대문자 전환, 첫 이름은 mother name)
 	void	DrawSubInfo();
 	void    DrawSubmit();
 	void	DrawHexagon(int x0,int y0,int n);
@@ -75,6 +78,7 @@ private:
 	// 기타 중요
 	//POINT	viewSpacor(int x, int y);	
 	bool	isExisted(int i, int j);	// Tile (i,j) 호출은 유효한가? 
+	bool	isExisted(int line);
 	
 };
 

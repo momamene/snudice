@@ -33,11 +33,9 @@ void tileContainer::Setup()
 	gimage[3].Load(".\\Data\\Map\\bus.img");
 	gimage[4].Load(".\\Data\\Map\\maingate.img");
 	gimage[5].Load(".\\Data\\Map\\mountain.img");
-	//gimage[5].Load(".\\Data\\Map\\maingate.img");
 	gimage[6].Load(".\\Data\\Map\\lang.img");
 	gimage[7].Load(".\\Data\\Map\\math.img");
 	gimage[8].Load(".\\Data\\Map\\art.img");
-	//gimage[9].Load(".\\Data\\Map\\maingate.img");
 	
 	m_wallpaper.Load(TITLE_IMG_TITLE);
 
@@ -45,6 +43,7 @@ void tileContainer::Setup()
 	m_ySpacePos=-1;
 	m_Next_xSpacePos = -1;
 	m_Next_ySpacePos = -1;
+	m_subjectN=0;
 
 
 	Load();
@@ -75,6 +74,28 @@ void tileContainer::LoadFileToBKS()
 	CloseHandle(hFile);
 }
 
+
+int tileContainer::flagToRow (int index){
+	for(int i = 0 ; i < m_subjectN ; i++){
+		if(m_subject[i]==index) return i;
+	}
+	return -1;
+}
+
+int tileContainer::rowToFirstTile(int row){
+	for(int i = 0 ; i < LINEX*LINEY ; i++){
+		if(tileMap[i].tileType==TY_CLASS&&tileMap[i].flag2==m_subject[row]) return i;
+	}
+	return -1;
+}
+
+int tileContainer::flagToFirstTile(int index){
+	int row = flagToRow(index);
+	return rowToFirstTile(row); // 실은 더 쉬운 방법이 있지만; (이게 뭐하는 짓이냐 당췌. firsttile이 flag를 가지고 있는데.
+	return -1;
+}
+
+
 void tileContainer::LoadBKSToTM()
 {
 	gMainWin *gmainWin = gMainWin::GetIF();
@@ -96,8 +117,13 @@ void tileContainer::LoadBKSToTM()
 					m_yInitSpacePos = j;
 				}
 				if(tileMap[i*LINEY+j].tileType==TY_CLASS){
-					m_subject[m_subjectN]=i*100+j;
-					m_subjectN++;
+					//m_subject[m_subjectN]=tileMap;
+					
+					if(flagToRow(tileMap[i*LINEY+j].flag2)==-1){
+						m_subject[m_subjectN]=tileMap[i*LINEY+j].flag2;
+						m_subjectN++;
+					}
+
 				}
 			}
 			else tileMap[i*LINEY+j].init(i,j);
@@ -125,27 +151,32 @@ void tileContainer::DrawSubmit(){
 	gPlayerManager *gplayerManager = gPlayerManager::GetIF();
 	int l_selectSubject;
 		RECT tempRC;
+		int tile;
 	gUtil::BeginText();	
 	for (i = 0 ; i < m_subjectN ; i++){
-		if(isExisted(m_subject[i]/100,m_subject[i]%100))
-			gUtil::Text(0,i*20,tileMap[(m_subject[i]/100)*LINEY+m_subject[i]%100].subject);
+		tile = rowToFirstTile(i);
+		if(tile>=0)
+			gUtil::Text(0,i*20,tileMap[tile].subject);
+		else
+			gUtil::Text(0,i*20,"you are simang");
 	}
 	
 	l_selectSubject=gameCore->m_selectSubject;
 	if(l_selectSubject>=0){
-		if(isExisted(l_selectSubject/100,l_selectSubject%100)){
-			gUtil::Text(320,0,tileMap[(l_selectSubject/100)*LINEY+l_selectSubject%100].college);
-			gUtil::Text(320,20,tileMap[(l_selectSubject/100)*LINEY+l_selectSubject%100].building);
-			gUtil::Text(320,40,tileMap[(l_selectSubject/100)*LINEY+l_selectSubject%100].subject);
-		}
+		tile = flagToFirstTile(l_selectSubject);
+		//if(isExisted(tile)){
+			gUtil::Text(320,0,tileMap[tile].college);
+			gUtil::Text(320,20,tileMap[tile].building);
+			gUtil::Text(320,40,tileMap[tile].subject);
+		//}
 		
 	}
 	
 	for(i = 0 ; i < gplayerManager->m_player[gameCore->m_turnPlayer].m_subjectGrader.m_subjectN ; i++) {
-		int ii;
-		ii=gplayerManager->m_player[gameCore->m_turnPlayer].m_subjectGrader.m_subject[i];
-		if(isExisted(ii/100,ii%100))
-			gUtil::Text(160,i*20,tileMap[(ii/100)*LINEY+ii%100].subject);
+		
+		tile=flagToFirstTile(gplayerManager->m_player[gameCore->m_turnPlayer].m_subjectGrader.m_subject[i]);
+		//if(isExisted(tile))
+			gUtil::Text(160,i*20,tileMap[tile].subject);
 	}
 
 
@@ -244,46 +275,6 @@ void tileContainer::Draw()
 	
 }
 
-void tileContainer::minimapDraw(int start_x,int start_y,int n)
-{
-	int i,j;
-	RECT inner_a, inner_b;
-	m_wallpaper.Draw(WNDSIZEW - 240,WNDSIZEH - 180); 
-	
-	for(i = 0 ; i < LINEX ; i++) { 
-		for(j = 0 ; j < LINEY ; j++) {
-			if(tileMap[i*LINEY+j].tileType==TY_NONE)continue;	
-			if(i%2==0){
-				for(int k = 0 ; k < 5 ; k++){
-					inner_a.left = WNDSIZEW - 240 + start_x + (WIDEX*i/2)/n;
-					inner_a.top = WNDSIZEH - 180 + start_y + (FULLY*j)/n;
-					inner_a.right = inner_a.left + FULLX/n;
-					inner_a.bottom = inner_a.top + FULLY/n;
-					inner_b.left = 0;
-					inner_b.top = 0;
-					inner_b.right =  gimage[k].m_nWidth;
-					inner_b.bottom =  gimage[k].m_nHeight;
-					if(tileMap[i*LINEY+j].tileType==k) gimage[k].Draw(inner_a,inner_b);
-				}
-			}
-			else{
-				for(int k = 0 ; k < 5; k++){
-					inner_a.left = WNDSIZEW - 240 + (LEFTX+MIDDLEX+WIDEX*(i-1)/2)/n;
-					inner_a.top = WNDSIZEH - 180 + (HALFY+FULLY*j)/n;
-					inner_a.right = inner_a.left + FULLX/n;
-					inner_a.bottom = inner_a.top + FULLY/n;
-					inner_b.left = 0;
-					inner_b.top = 0;
-					inner_b.right = gimage[k].m_nWidth;
-					inner_b.bottom = gimage[k].m_nHeight;
-					if(tileMap[i*LINEY+j].tileType==k) gimage[k].Draw(inner_a,inner_b);
-				}
-			}
-		}
-	}
-}
-
-
 void tileContainer::DrawSubInfo()
 {
 	gGameCore *ggameCore = gGameCore::GetIF();
@@ -372,6 +363,12 @@ bool tileContainer::isExisted(int i, int j)
 	}
 	return false;
 }
+bool tileContainer::isExisted(int line)
+{
+	if(line<0||line>=LINEX*LINEY) return false;
+	else if(tileMap[line].tileType!=TY_NONE) return true;
+	else return false;
+}
 
 
 POINT tileContainer::conToAbs(POINT ij)
@@ -413,22 +410,3 @@ POINT tileContainer::absToCon()
 	return res;
 	
 }
-/*
-POINT tileContainer::nextN_Tile(POINT ij, int n) {
-	POINT res;
-	POINT ij2;
-	if(n==0){
-		return ij;
-	}
-	else if(isExisted(ij.x,ij.y)){
-		ij2 =tileMap[ij.x*LINEY+ij.y].prevTile;
-		res = nextN_Tile(ij2,n-1);
-	}
-	else {
-		res.x = -1;
-		res.y = -1;
-	}
-	return res;
-}
-*/
-// 4. Essential for All Line End
