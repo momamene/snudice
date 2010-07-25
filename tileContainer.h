@@ -18,6 +18,11 @@
 class tileContainer
 {
 public:
+	static tileContainer *GetIF();	// 1
+
+	tileContainer();
+	virtual ~tileContainer();
+public:
 	HANDLE	hFile;
 	DWORD	dw;
 	gImage	gimage[9];
@@ -43,7 +48,6 @@ public:
 	int		m_subject[MAXSAVOR_N];
 
 public:
-	static tileContainer *GetIF();	// 1
 	void	Setup();			// setup
 	void	Draw();				// 그리는 함수
 

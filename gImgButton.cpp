@@ -43,11 +43,6 @@ void gImgButton::Draw()
 	}
 }
 
-void gImgButton::Release()
-{
-	m_Img.Release();
-}
-
 bool gImgButton::PointInButton(int nX, int nY)
 {
 	if(m_bShow)

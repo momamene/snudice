@@ -274,6 +274,8 @@ void gGameCore::Draw_CharSelect()
 	RECT	rcDest;
 	RECT	rcSour;
 
+	m_BtnStart.Draw();
+
 	for(i = 0; i < CHARNUM; i++)
 		m_ImgID[i].Draw();
 
@@ -322,37 +324,37 @@ void gGameCore::Draw_CharSelect()
 						CSEL_POS_ILLUX + CSEL_POS_ILLUW,
 						CSEL_POS_ILLUY + CSEL_POS_ILLUH );
 
-	gChar	charac = gCharManager::GetIF()->m_Chars[m_nSel];
-	charac.DrawIllu(rcDest);
+	gChar	*charac = &gCharManager::GetIF()->m_Chars[m_nSel];
+	charac->DrawIllu(rcDest);
 	
 	// 캐릭터 정보 출력
 	HDC			hdc;
 	char		szBuf[128];
 	
 	gUtil::BeginText();
-	wsprintf(szBuf, "이름 : %s", charac.m_Data.szName);
+	wsprintf(szBuf, "이름 : %s", charac->m_Data.szName);
 	gUtil::Text(CSEL_POS_CHARINFOX, CSEL_POS_CHARINFOY, szBuf);
 	
-	if(charac.m_Data.eSex == ESEX_MALE)
+	if(charac->m_Data.eSex == ESEX_MALE)
 		wsprintf(szBuf, "성별 : ♂");
 	else
 		wsprintf(szBuf, "성별 : ♀");
 	gUtil::Text(CSEL_POS_CHARINFOX + 150, CSEL_POS_CHARINFOY, szBuf);
 	
-	wsprintf(szBuf, "소속 : %s", charac.m_Data.szColleage);
+	wsprintf(szBuf, "소속 : %s", charac->m_Data.szColleage);
 	gUtil::Text(CSEL_POS_CHARINFOX, CSEL_POS_CHARINFOY + 20, szBuf);
-	wsprintf(szBuf, "언어 : %d", charac.m_Data.nLang);
+	wsprintf(szBuf, "언어 : %d", charac->m_Data.nLang);
 	gUtil::Text(CSEL_POS_CHARINFOX, CSEL_POS_CHARINFOY + 40, szBuf);
-	wsprintf(szBuf, "수리 : %d", charac.m_Data.nMath);
+	wsprintf(szBuf, "수리 : %d", charac->m_Data.nMath);
 	gUtil::Text(CSEL_POS_CHARINFOX, CSEL_POS_CHARINFOY + 60, szBuf);
-	wsprintf(szBuf, "예능 : %d", charac.m_Data.nArt);
+	wsprintf(szBuf, "예능 : %d", charac->m_Data.nArt);
 	gUtil::Text(CSEL_POS_CHARINFOX, CSEL_POS_CHARINFOY + 80, szBuf);
-	wsprintf(szBuf, "체력 : %d", charac.m_Data.nStamina);
+	wsprintf(szBuf, "체력 : %d", charac->m_Data.nStamina);
 	gUtil::Text(CSEL_POS_CHARINFOX, CSEL_POS_CHARINFOY + 100, szBuf);
-	wsprintf(szBuf, "이동 : %d", charac.m_Data.nMove);
+	wsprintf(szBuf, "이동 : %d", charac->m_Data.nMove);
 	gUtil::Text(CSEL_POS_CHARINFOX, CSEL_POS_CHARINFOY + 120, szBuf);
 	
-	gUtil::Text(CSEL_POS_CHARINFOX, CSEL_POS_CHARINFOY + 140, charac.m_Data.szComment);
+	gUtil::Text(CSEL_POS_CHARINFOX, CSEL_POS_CHARINFOY + 140, charac->m_Data.szComment);
 	
 	gUtil::EndText();
 
@@ -377,6 +379,10 @@ bool gGameCore::SetUp_CharSelect()
 	m_nPlayer		= 0;
 
 	RECT		rcBtn;
+	// 시작버튼
+	SetRect(&rcBtn, CSEL_POS_STARTX, CSEL_POS_STARTY,
+		CSEL_POS_STARTX + CSEL_POS_STARTW, CSEL_POS_STARTY + CSEL_POS_STARTH);
+	m_BtnStart.SetUp(CSEL_IMG_START, false, rcBtn);
 
 	// 언어계열 7넘
 	//	인문대
@@ -466,17 +472,22 @@ void gGameCore::OnLButtonDown_CharSel()
 			if(m_ImgID[i].m_eBtnMode == EBM_CLICK)
 				return;
 
+			if(m_nPlayer >= MAXPLAYER)
+				return;
+
 			gPlayerManager::GetIF()->m_player[m_nPlayer].SetUp(cm->m_Chars[i]);
 			m_ImgID[i].m_eBtnMode = EBM_CLICK;
 			m_nSelected[i] = m_nPlayer;
 			m_nPlayer++;
 			SetPlayerIndex(m_nPlayer);
 
-			if(m_nPlayer >= MAXPLAYER)
-				m_gMode = EGM_GAME;
-
 			return;
 		}
+	}
+	if(m_BtnStart.PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+	{
+		if(m_nPlayer >= MAXPLAYER)
+			m_gMode = EGM_GAME;
 	}
 }
 
@@ -488,15 +499,24 @@ void gGameCore::OnMouseMove_CharSel()
 	
 	for(i = 0; i < CHARNUM; i++)
 	{
-		if(m_ImgID[i].m_eBtnMode == EBM_CLICK) continue; // 선택된 캐릭터
 		if(m_ImgID[i].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 		{
-			m_ImgID[i].m_eBtnMode = EBM_HOVER;
 			m_nSel = i;
+			if(m_ImgID[i].m_eBtnMode == EBM_CLICK) continue; // 선택된 캐릭터
+			m_ImgID[i].m_eBtnMode = EBM_HOVER;
+			
 		}
 		else
+		{
+			if(m_ImgID[i].m_eBtnMode == EBM_CLICK) continue; // 선택된 캐릭터
 			m_ImgID[i].m_eBtnMode = EBM_NONE;
+		}
 	}
+	if(m_BtnStart.PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+		m_BtnStart.m_eBtnMode = EBM_HOVER;
+	else
+		m_BtnStart.m_eBtnMode = EBM_NONE;
+
 }
 
 void gGameCore::SetPlayerIndex(int np)

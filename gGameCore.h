@@ -36,6 +36,7 @@ public:
 	gImage		m_ImgSelBack;
 	gImage		m_ImgWho;				// Player n  표시
 	gImage		m_ImgOutline;			// 아웃라인
+	gImgButton	m_BtnStart;				// 시작버튼
 	gImgButton	m_ImgID[CHARNUM];
 	int			m_nSelected[CHARNUM];	// 골라졌냐  -1 no , 0 -> 1p
 	int			m_nSel;					// 선택된넘

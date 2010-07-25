@@ -153,37 +153,43 @@
 #define CSEL_POS_OUTLINEH		58
 #define CSEL_POS_OUTLINEX		4 //((CSEL_POS_OUTLINEW - CSEL_POS_IDCARDW) / 2)
 #define CSEL_POS_OUTLINEY		10 //((CSEL_POS_OUTLINEH - CSEL_POS_IDCARDH) / 2)
+//	시작버튼
+#define CSEL_IMG_START			".\\Data\\CharSelect\\start.img"
+#define CSEL_POS_STARTW			50
+#define CSEL_POS_STARTH			50
+#define CSEL_POS_STARTX			340
+#define CSEL_POS_STARTY			400
 
 // CharManager
 // Char
-#define IMGILLUSTW			500
-#define IMGILLUSTH			800
+#define IMGILLUSTW				500
+#define IMGILLUSTH				800
 
 
 // gMouse.h - sangwoo
-#define MINMOVE				20
+#define MINMOVE					20
 
 // Interface
-#define IF_IMG_MENUBACK		".\\Data\\Interface\\menu_back.img"
-#define	IF_POS_MENUBACKX	20
-#define IF_POS_MENUBACKY	0
-#define IF_POS_MENUBTNW		49		//수강, 아이템, 시스템
-#define IF_POS_MENUBTNH		49
-#define IF_IMG_SUGANG		".\\Data\\Interface\\menu_btn_sugang.img"
-#define IF_POS_SUGANGX		IF_POS_MENUBACKX + 276
-#define IF_POS_SUGANGY		IF_POS_MENUBACKY + 19
-#define IF_IMG_ITEM			".\\Data\\Interface\\menu_btn_item.img"
-#define IF_POS_ITEMX		IF_POS_MENUBACKX + 331
-#define IF_POS_ITEMY		IF_POS_MENUBACKY + 5
-#define IF_IMG_SYSTEM		".\\Data\\Interface\\menu_btn_system.img"
-#define IF_POS_SYSTEMX		IF_POS_MENUBACKX + 387
-#define	IF_POS_SYSTEMY		IF_POS_MENUBACKY + 9
+#define IF_IMG_MENUBACK			".\\Data\\Interface\\menu_back.img"
+#define	IF_POS_MENUBACKX		20
+#define IF_POS_MENUBACKY		0
+#define IF_POS_MENUBTNW			49		//수강, 아이템, 시스템
+#define IF_POS_MENUBTNH			49
+#define IF_IMG_SUGANG			".\\Data\\Interface\\menu_btn_sugang.img"
+#define IF_POS_SUGANGX			IF_POS_MENUBACKX + 276
+#define IF_POS_SUGANGY			IF_POS_MENUBACKY + 19
+#define IF_IMG_ITEM				".\\Data\\Interface\\menu_btn_item.img"
+#define IF_POS_ITEMX			IF_POS_MENUBACKX + 331
+#define IF_POS_ITEMY			IF_POS_MENUBACKY + 5
+#define IF_IMG_SYSTEM			".\\Data\\Interface\\menu_btn_system.img"
+#define IF_POS_SYSTEMX			IF_POS_MENUBACKX + 387
+#define	IF_POS_SYSTEMY			IF_POS_MENUBACKY + 9
 
 
-#define	IF_POS_SCARDW		484		// scard, menu_sysback, menu_itemback, menu_sugangback...
-#define IF_POS_SCARDH		287
-#define IF_IMG_ITEMBACK		".\\Data\\Interface\\menu_item_back.img"
-#define IF_IMG_SUGANGBACK	".\\Data\\Interface\\menu_sugang_back.img"
-#define IF_IMG_SYSBACK		".\\Data\\Interface\\menu_system_back.img"
-#define IF_POS_BACKX		((WNDSIZEW - IF_POS_SCARDW) / 2)
-#define IF_POS_BACKY		((WNDSIZEH - IF_POS_SCARDH) / 2)
+#define	IF_POS_SCARDW			484		// scard, menu_sysback, menu_itemback, menu_sugangback...
+#define IF_POS_SCARDH			287
+#define IF_IMG_ITEMBACK			".\\Data\\Interface\\menu_item_back.img"
+#define IF_IMG_SUGANGBACK		".\\Data\\Interface\\menu_sugang_back.img"
+#define IF_IMG_SYSBACK			".\\Data\\Interface\\menu_system_back.img"
+#define IF_POS_BACKX			((WNDSIZEW - IF_POS_SCARDW) / 2)
+#define IF_POS_BACKY			((WNDSIZEH - IF_POS_SCARDH) / 2)

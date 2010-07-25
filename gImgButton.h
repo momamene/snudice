@@ -30,7 +30,7 @@ public:
 
 	bool		SetUp(char *szImgName, bool vertical, RECT rcPos);
 	void		Draw();
-	void		Release();
+
 	bool		PointInButton(int nX, int nY);
 
 };
