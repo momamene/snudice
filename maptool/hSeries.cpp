@@ -66,6 +66,8 @@ void hSeries::hEditChanger (TILE t) {
 	SetWindowText(hEdit[6],str);
 	wsprintf(str,"%d",t.flag2);				
 	SetWindowText(hEdit[7],str);
+	wsprintf(str,"%d",t.flag3);				
+	SetWindowText(hEdit[11],str);
 	SetWindowText(hEdit[8],t.college);
 	SetWindowText(hEdit[9],t.building);
 	SetWindowText(hEdit[10],t.subject);
@@ -159,6 +161,15 @@ void hSeries::caseProcessor (int caseo,int hiParam) {
 			bmpKind[nowConPoint.x][nowConPoint.y].flag2=atoi(str);
 		}
 		break;
+	case 121:
+		if(mode==1){
+		}
+		else if(mode==2){	
+			GetWindowText(H.hEdit[11],str,128);
+			bmpKind[nowConPoint.x][nowConPoint.y].flag3=atoi(str);
+		}
+		break;
+
 	case 118:
 		switch(hiParam){
 		case EN_CHANGE:

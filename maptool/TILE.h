@@ -20,6 +20,24 @@ public:
 	POINT nextTile;
 	int flag1;
 	int flag2;
+	int flag3;
+	char college[128];
+	char building[128];
+	char subject[128];
+public:
+	//TILE();
+	void init(int xo, int yo);
+};
+
+class TILEPREV {
+public:
+	ETILETYPE tileType;
+	POINT prevTile;
+	POINT ptPos;
+	POINT nextTile;
+	int flag1;
+	int flag2;
+
 	char college[128];
 	char building[128];
 	char subject[128];

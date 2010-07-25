@@ -3,7 +3,7 @@
 class hSeries {
 public:
 	HWND hCombo;	
-	HWND hEdit[11];
+	HWND hEdit[12];
 	HWND hButton[2];
 
 	void hEditChanger(TILE t);

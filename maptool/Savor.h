@@ -13,3 +13,9 @@ public:
 	void Load();
 };
 
+class SavorPREV
+{
+public:
+	int count;
+	TILEPREV bmpKindSavor[MAXSAVOR_N];
+};
