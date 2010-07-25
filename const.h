@@ -144,9 +144,9 @@
 //	누구턴이냐
 #define CSEL_IMG_PLAYER			".\\Data\\CharSelect\\player.img"
 #define CSEL_POS_PLAYERW		90
-#define CSEL_POS_PLAYERH		20
-#define CSEL_POS_PLAYERX		520
-#define CSEL_POS_PLAYERY		20
+#define CSEL_POS_PLAYERH		25
+#define CSEL_POS_PLAYERX		480
+#define CSEL_POS_PLAYERY		15
 
 // CharManager
 // Char

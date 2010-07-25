@@ -38,7 +38,6 @@ bool gGameCore::SetUp()
 	m_spacor=0;
 	m_frameCount = 0;
 	tileContainer::GetIF()->Setup();
-	gPlayerManager::GetIF()->SetUp();
 
 	m_turnN = 1;
 	m_turnPlayer = 0;
@@ -128,11 +127,11 @@ void gGameCore::MainLoopMove(){
 					tilecontainer->m_xSpacePos=gplayerManager->m_player[m_turnPlayer].m_xSpacePos;
 					tilecontainer->m_ySpacePos=gplayerManager->m_player[m_turnPlayer].m_ySpacePos;
 					m_turnN++;
-					while(gplayerManager->m_playerState[m_turnPlayer] == EPS_NONE) m_turnPlayer++;
+					while(gplayerManager->m_player[m_turnPlayer].m_nNP == -1) m_turnPlayer++;
 				}
 				else{
 					do m_turnPlayer++; 
-					while(gplayerManager->m_playerState[m_turnPlayer] == EPS_NONE);
+					while(gplayerManager->m_player[m_turnPlayer].m_nNP == -1);
 					tilecontainer->m_xSpacePos = gplayerManager->m_player[m_turnPlayer].m_xSpacePos;
 					tilecontainer->m_ySpacePos = gplayerManager->m_player[m_turnPlayer].m_ySpacePos;
 				}
@@ -167,11 +166,11 @@ void gGameCore::MainLoop() // MainLoop 내부를 함수들로 다시 깔끔하게 만들 필요가
 void gGameCore::Draw()
 {
 	switch(m_gMode){
-	case EGM_SUBMIT:
-//		gInterface::GetIF()->Draw();
-		break;
 	case EGM_CHARSEL:
 		Draw_CharSelect();
+		break;
+	case EGM_SUBMIT:
+//		gInterface::GetIF()->Draw();
 		break;
 	case EGM_GAME:
 		tileContainer::GetIF()->Draw();
@@ -181,7 +180,7 @@ void gGameCore::Draw()
 	}
 	
 	//temp
-	//a.Draw();
+	//
 	// temp end
 }
 
@@ -221,7 +220,7 @@ void gGameCore::OnLButtonDown()
 	switch(m_gMode)
 	{
 		case EGM_CHARSEL:
-
+			OnLButtonDown_CharSel();
 			break;
 		case EGM_SUBMIT:
 			OnLButtonDownSubmit();	
@@ -280,11 +279,21 @@ void gGameCore::Draw_CharSelect()
 							CSEL_POS_ILLUY,
 							CSEL_POS_ILLUX + CSEL_POS_ILLUW,
 							CSEL_POS_ILLUY + CSEL_POS_ILLUH };
+	// 누가 고를 차례냐
+	RECT	rcDest = {	CSEL_POS_PLAYERX,
+						CSEL_POS_PLAYERY,
+						CSEL_POS_PLAYERX + CSEL_POS_PLAYERW,
+						CSEL_POS_PLAYERY + CSEL_POS_PLAYERH };
+	RECT	rcWho = { 0, 0, CSEL_POS_PLAYERW, CSEL_POS_PLAYERH };
 
+	OffsetRect(&rcWho, 0, CSEL_POS_PLAYERH * m_nPlayer);
+	m_ImgWho.Draw(rcDest, rcWho, false);
+
+	// 캐릭터 일러 그리기
 	gChar	charac = gCharManager::GetIF()->m_Chars[m_nSel];
-	
 	charac.DrawIllu(rcCharIllu);
-
+	
+	// 캐릭터 정보 출력
 	HDC			hdc;
 	char		szBuf[128];
 	
@@ -326,7 +335,8 @@ bool gGameCore::SetUp_CharSelect()
 	if(FAILED(m_ImgWho.Load(CSEL_IMG_PLAYER)))
 		return false;
 
-	m_nSel		= 0;
+	m_nSel			= 0;
+	m_nPlayer		= 0;
 
 	RECT		rcBtn;
 
@@ -406,7 +416,30 @@ bool gGameCore::SetUp_CharSelect()
 
 void gGameCore::OnLButtonDown_CharSel()
 {
+	gMouse			*mouse	= gMouse::GetIF();
+	gCharManager	*cm		= gCharManager::GetIF();
 
+	int		i;
+
+	for(i = 0; i < CHARNUM; i++)
+	{
+		if(m_ImgID[i].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+		{
+			//Btn 상태가 Click 이면 누가 고른거로 처리
+			if(m_ImgID[i].m_eBtnMode == EBM_CLICK)
+				return;
+
+			gPlayerManager::GetIF()->m_player[m_nPlayer].SetUp(cm->m_Chars[i]);
+			m_ImgID[i].m_eBtnMode == EBM_CLICK;
+			m_nPlayer++;
+			SetPlayerIndex(m_nPlayer);
+
+			if(m_nPlayer >= MAXPLAYER)
+				m_gMode = EGM_GAME;
+
+			return;
+		}
+	}
 }
 
 void gGameCore::OnMouseMove_CharSel()
@@ -424,5 +457,19 @@ void gGameCore::OnMouseMove_CharSel()
 		}
 		else
 			m_ImgID[i].m_eBtnMode = EBM_NONE;
+	}
+}
+
+void gGameCore::SetPlayerIndex(int np)
+{
+	int		i;
+
+	for(i = np; i < MAXPLAYER; i++)
+	{
+		if(gPlayerManager::GetIF()->m_player[i].m_nNP == -1)
+		{
+			m_nPlayer++;
+			break;
+		}
 	}
 }

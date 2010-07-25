@@ -4,6 +4,8 @@
 #include "gMouse.h"
 #include "gCharManager.h"
 #include "gUtil.h"
+#include "gPlayerManager.h"
+#include "gGameCore.h"
 
 //------------------------------------------------------------------------------------
 //	Constructor	/	Destructor
@@ -332,6 +334,8 @@ void gTitleCore::OnLButtonDown_PlayerSelect()
 			return;
 		}
 
+		gPlayerManager::GetIF()->SetUp();
+		gGameCore::GetIF()->SetPlayerIndex();
 		gMainWin::GetIF()->m_eCoreMode = EMC_GAME;
 		m_ImgBtnNext.m_eBtnMode = EBM_NONE;
 		return;

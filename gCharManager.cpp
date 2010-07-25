@@ -35,7 +35,7 @@ bool gCharManager::SetUp()
 	// read dat file
 	FILE	*fp;
 
-	fp = fopen(CHAEDATAFILE, "rt");
+	fp = fopen(CHARDATAFILE, "rt");
 	if(!fp)	return false;
 
 	char		szBuf[512];

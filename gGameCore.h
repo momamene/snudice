@@ -72,6 +72,7 @@ public:
 	void		OnRButtonDown();
 	void		PutScreenPos(int x, int y);		// 상우의 PutScreenPos
 
+	void		SetPlayerIndex(int nP = 0);				// 1p 2p 3p면 1p 를 시작 index로 셋팅
 private:
 	bool		SetUp_CharSelect();
 

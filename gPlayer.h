@@ -1,5 +1,10 @@
-//#include <windows.h>
-//#include "gImage.h"
+//------------------------------------------------------------------------------------
+//	gPlayer Class
+//
+//	2010. 07. 25	CoderK
+//
+//	플레이어
+//------------------------------------------------------------------------------------
 #pragma once
 #include "gChar.h"
 #include "const.h"
@@ -10,6 +15,9 @@ class gPlayer
 public:
 
 	gChar	m_charInfo;
+
+	int		m_nNP;				// 몇번째 플레이어냐.			-1이면 스킵
+	bool	m_bUser;			// 유저가 하냐 컴퓨터가 하냐
 
 	int		m_xSpacePos;
 	int		m_ySpacePos;
