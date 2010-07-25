@@ -32,6 +32,7 @@ void tileContainer::Setup()
 	gimage[2].Load(".\\Data\\Map\\stamina.img");
 	gimage[3].Load(".\\Data\\Map\\bus.img");
 	gimage[4].Load(".\\Data\\Map\\maingate.img");
+	
 	m_wallpaper.Load(TITLE_IMG_TITLE);
 
 	m_xSpacePos=-1;
