@@ -430,7 +430,7 @@ void gGameCore::OnLButtonDown_CharSel()
 				return;
 
 			gPlayerManager::GetIF()->m_player[m_nPlayer].SetUp(cm->m_Chars[i]);
-			m_ImgID[i].m_eBtnMode == EBM_CLICK;
+			m_ImgID[i].m_eBtnMode = EBM_CLICK;
 			m_nPlayer++;
 			SetPlayerIndex(m_nPlayer);
 
