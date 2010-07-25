@@ -71,7 +71,7 @@ private:
 	// Draw의 떨거지
 	void	DrawSubInfo();
 	void    DrawSubmit();
-	void	DrawHexagon(int x0,int y0,int n);
+	void	DrawHexagon(int x0,int y0,int n,bool boolo=false);
 
 	// 기타 중요
 	bool	isExisted(int i, int j);	// Tile (i,j) 호출은 유효한가? 

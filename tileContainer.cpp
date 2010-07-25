@@ -157,15 +157,17 @@ void tileContainer::DrawSubmit(){
 
 	gUtil::EndText();
 
+	DrawHexagon(160,160,5,true);
+
 	tempRC.left = 480;
 	tempRC.top = 0;
 	tempRC.right = 640;
-	tempRC.bottom = 480;	
+	tempRC.bottom = 240;	
 	gplayerManager->m_player[gameCore->m_turnPlayer].m_charInfo.DrawIllu(tempRC); // ¿©±â¼­ Áö±Ý ¸·ÇúÀ½ problem10 (Ç¬°Å ¾Æ´Ô?)
 		
 }
 
-void tileContainer::DrawHexagon(int x0,int y0,int n){
+void tileContainer::DrawHexagon(int x0,int y0,int n,bool boolo){
 	gGameCore *gameCore = gGameCore::GetIF();
 
 	int i, j;
@@ -202,8 +204,8 @@ void tileContainer::DrawHexagon(int x0,int y0,int n){
 			
 			SetRect(&b,0,0,FULLX,FULLY);
 
-			if(k==TY_CLASS) gimage[k+tileMap[i*LINEY+j].flag1].Draw(a,b,false);
-			else gimage[k].Draw(a,b, false);
+			if(k==TY_CLASS) gimage[k+tileMap[i*LINEY+j].flag1].Draw(a,b,boolo);
+			else gimage[k].Draw(a,b,boolo);
 			
 			
 		}
@@ -232,11 +234,12 @@ void tileContainer::Draw()
 	else{	
 		DrawHexagon(0,0,1);
 	
-
 		// ºó »ç°¢ÇüÀº ¾î¶»°Ô ¶ç¿ï °ÍÀÎ°¡?
-		if(gameCore->m_minimapOn==1||gameCore->m_minimapOn==2)
-			DrawHexagon( WNDSIZEW - 240 , WNDSIZEH - 180 , n );
+		if(gameCore->m_minimapOn==1||gameCore->m_minimapOn==2){
+			m_wallpaper.Draw(WNDSIZEW - 240,WNDSIZEH - 180);
+			DrawHexagon( WNDSIZEW - 240 , WNDSIZEH - 180 , n ,true);
 			//minimapDraw(start_x,start_y,n);
+		}
 		DrawSubInfo();
 	}
 	
@@ -256,8 +259,6 @@ void tileContainer::DrawSubInfo()
 		gUtil::Text(Abs.x-(ggameCore->m_xPos),Abs.y-(ggameCore->m_yPos)+FULLY+20,tileMap[Con2.x*LINEY+Con2.y].building);
 		gUtil::Text(Abs.x-(ggameCore->m_xPos),Abs.y-(ggameCore->m_yPos)+FULLY+40,tileMap[Con2.x*LINEY+Con2.y].subject);
 	}
-	
-	
 	
 	gUtil::EndText();
 }
