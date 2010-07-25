@@ -27,11 +27,17 @@ void tileContainer::Setup()
 			tileMap[i*LINEY+j].init(i,j);
 		}
 	}
-	gimage[0].Load(".\\Data\\Map\\class.img");
-	gimage[1].Load(".\\Data\\Map\\item.img");
-	gimage[2].Load(".\\Data\\Map\\stamina.img");
+	gimage[0].Load(".\\Data\\Map\\food.img");
+	gimage[1].Load(".\\Data\\Map\\card.img");
+	gimage[2].Load(".\\Data\\Map\\nokdu.img");
 	gimage[3].Load(".\\Data\\Map\\bus.img");
 	gimage[4].Load(".\\Data\\Map\\maingate.img");
+	gimage[5].Load(".\\Data\\Map\\mountain.img");
+	//gimage[5].Load(".\\Data\\Map\\maingate.img");
+	gimage[6].Load(".\\Data\\Map\\lang.img");
+	gimage[7].Load(".\\Data\\Map\\math.img");
+	gimage[8].Load(".\\Data\\Map\\art.img");
+	//gimage[9].Load(".\\Data\\Map\\maingate.img");
 	
 	m_wallpaper.Load(TITLE_IMG_TITLE);
 
@@ -53,14 +59,18 @@ void tileContainer::Setup()
 void tileContainer::LoadFileToBKS()
 {
 	int i;
-	for(i = 0 ; i < LINEX*LINEY ; i++)
-		memset(&tileMap[i],0,sizeof(TILE));
+	//for(i = 0 ; i < LINEX*LINEY ; i++)
+	//	memset(&tileMap[i],0,sizeof(TILE));
 	
 	hFile=CreateFile("load.xy",GENERIC_READ,0,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
 	if(hFile!=INVALID_HANDLE_VALUE) {
 		ReadFile(hFile,&count,sizeof(int),&dw,NULL);
-		for(i = 0 ; i < count ; i++)
-			ReadFile(hFile,&bmpKindSavor[i],sizeof(TILE)*count,&dw,NULL);
+	//	for(i = 0 ; i < count ; i++)
+	//		ReadFile(hFile,&bmpKindSavor[i],sizeof(TILE)*count,&dw,NULL);
+		for(i = 0 ; i < count ; i++){
+			memset(&bmpKindSavor[i],0,sizeof(TILE));
+			ReadFile(hFile,&bmpKindSavor[i],sizeof(TILE),&dw,NULL);
+		}
 	}
 	CloseHandle(hFile);
 }
@@ -77,7 +87,7 @@ void tileContainer::LoadBKSToTM()
 		memset(&tileMap[i],0,sizeof(TILE));
 	for(i = 0 ; i < LINEX ; i++) {
 		for (int j = 0 ; j < LINEY ; j++) {
-			if(localcount >= count) return;
+			//if(localcount >= count) return;
 			if(i == bmpKindSavor[localcount].ptPos.x && j == bmpKindSavor[localcount].ptPos.y){
 				tileMap[i*LINEY+j] = bmpKindSavor[localcount];
 				localcount++;
@@ -108,92 +118,128 @@ void tileContainer::Load()
 
 // 2. Draw Line Start
 
+void tileContainer::DrawSubmit(){
+
+	int i;
+	gGameCore *gameCore = gGameCore::GetIF();
+	gPlayerManager *gplayerManager = gPlayerManager::GetIF();
+	int l_selectSubject;
+		RECT tempRC;
+	gUtil::BeginText();	
+	for (i = 0 ; i < m_subjectN ; i++){
+		if(isExisted(m_subject[i]/100,m_subject[i]%100))
+			gUtil::Text(0,i*20,tileMap[(m_subject[i]/100)*LINEY+m_subject[i]%100].subject);
+	}
+	
+	l_selectSubject=gameCore->m_selectSubject;
+	if(l_selectSubject>=0){
+		if(isExisted(l_selectSubject/100,l_selectSubject%100)){
+			gUtil::Text(320,0,tileMap[(l_selectSubject/100)*LINEY+l_selectSubject%100].college);
+			gUtil::Text(320,20,tileMap[(l_selectSubject/100)*LINEY+l_selectSubject%100].building);
+			gUtil::Text(320,40,tileMap[(l_selectSubject/100)*LINEY+l_selectSubject%100].subject);
+		}
+		
+	}
+	
+	for(i = 0 ; i < gplayerManager->m_player[gameCore->m_turnPlayer].m_subjectGrader.m_subjectN ; i++) {
+		int ii;
+		ii=gplayerManager->m_player[gameCore->m_turnPlayer].m_subjectGrader.m_subject[i];
+		if(isExisted(ii/100,ii%100))
+			gUtil::Text(160,i*20,tileMap[(ii/100)*LINEY+ii%100].subject);
+	}
+
+
+	gUtil::EndText();
+
+	tempRC.left = 480;
+	tempRC.top = 0;
+	tempRC.right = 640;
+	tempRC.bottom = 480;	
+	gplayerManager->m_player[gameCore->m_turnPlayer].m_charInfo.DrawIllu(tempRC); // 여기서 지금 막혓음 problem10 (푼거 아님?)
+		
+}
+
+void tileContainer::DrawHexagon(int x0,int y0,int n){
+	gGameCore *gameCore = gGameCore::GetIF();
+
+	int i, j;
+	// Draw local 변수
+	int k;
+	RECT a;
+	RECT b;
+
+	//int x1,y1;
+	//
+	
+	for(i = 0 ; i < LINEX ; i++) { 
+		for(j = 0 ; j < LINEY ; j++) {
+			k = tileMap[i*LINEY+j].tileType;
+			if(k==TY_NONE) continue;
+			
+			if(i%2==0){
+				a.left = WIDEX*i/2;
+				a.top = FULLY*j;
+			}
+			else{
+				a.left = LEFTX + MIDDLEX + WIDEX*(i-1)/2;
+				a.top = HALFY + FULLY*j;
+			}
+			if(n==1){
+				a.left -= gameCore->m_xPos;
+				a.top -= gameCore->m_yPos;
+			}
+			a.left /= n;
+			a.top /= n;
+
+			a.left += x0;
+			a.top += y0;
+			a.right = a.left + FULLX/n;
+			a.bottom = a.top + FULLY/n;
+			
+			/*
+			b.left = 0;
+			b.top = 0;
+			b.right = FULLX;
+			b.bottom = FULLY;
+			*/
+			SetRect(&b,0,0,FULLX,FULLY);
+
+			if(k==TY_CLASS) gimage[k+tileMap[i*LINEY+j].flag1].Draw(a,b);
+			else gimage[k].Draw(a,b, false);
+			
+			
+		}
+	}
+}
+
 void tileContainer::Draw()
 {
 	int i,j;
+
+
 	
 	int n = 10; // 축소율
 	int start_x =0;
 	int start_y = 0;
-	int l_selectSubject;
+	
 	gGameCore *gameCore = gGameCore::GetIF();
-	gPlayerManager *gplayerManager = gPlayerManager::GetIF();
-
-
-	RECT tempRC;
-
 
 
 	m_wallpaper.Draw(0,0);
 
 	if(gameCore->m_gMode==EGM_SUBMIT){
-
-		gUtil::BeginText();	
-		for (i = 0 ; i < m_subjectN ; i++){
-			//char buf[128];
-			//wsprintf(buf,"%d %d",m_subject[i]);
-			//gUtil::Text(0,i*20,buf);
-			if(isExisted(m_subject[i]/100,m_subject[i]%100))
-				gUtil::Text(0,i*20,tileMap[(m_subject[i]/100)*LINEY+m_subject[i]%100].subject);
-		}
-		
-		l_selectSubject=gameCore->m_selectSubject;
-		if(l_selectSubject>=0){
-			if(isExisted(l_selectSubject/100,l_selectSubject%100)){
-				gUtil::Text(320,0,tileMap[(l_selectSubject/100)*LINEY+l_selectSubject%100].college);
-				gUtil::Text(320,20,tileMap[(l_selectSubject/100)*LINEY+l_selectSubject%100].building);
-				gUtil::Text(320,40,tileMap[(l_selectSubject/100)*LINEY+l_selectSubject%100].subject);
-			}
-			
-		}
-
-		for(i = 0 ; i < gplayerManager->m_player[gameCore->m_turnPlayer].m_subjectGrader.m_subjectN ; i++) {
-			int ii;
-			ii=gplayerManager->m_player[gameCore->m_turnPlayer].m_subjectGrader.m_subject[i];
-			if(isExisted(ii/100,ii%100))
-				gUtil::Text(160,i*20,tileMap[(ii/100)*LINEY+ii%100].subject);
-		}
-//		gplayerManager->m_playerN[gameCore->m_turnPlayer].m_subjectN[gameCore->m_turnN] = gameCore->m_selectSubject;
-		tempRC.left = 480;
-		tempRC.top = 0;
-		tempRC.right = 640;
-		tempRC.bottom = 480;
-		//m_wallpaper.Draw(100,100);
-		
-		
-		
-		gUtil::EndText();
-		
-		gplayerManager->m_player[gameCore->m_turnPlayer].m_charInfo.DrawIllu(tempRC); // 여기서 지금 막혓음 problem10
-		
-
+		DrawSubmit();
 		return;
 	}
-
-	else{
-	
-	for(i = 0 ; i < LINEX ; i++) { 
-		for(j = 0 ; j < LINEY ; j++) {
-			if(tileMap[i*LINEY+j].tileType==TY_NONE) continue;	
-			if(i%2==0){
-				for(int k = 0 ; k < 5 ; k++){				
-					if(tileMap[i*LINEY+j].tileType==TY_CLASS+k) gimage[k].Draw(-gameCore->m_xPos+WIDEX*i/2,-gameCore->m_yPos+FULLY*j);
-				}
-			}
-			else{
-				for(int k = 0 ; k < 5; k++){
-					if(tileMap[i*LINEY+j].tileType==TY_CLASS+k) gimage[k].Draw(-gameCore->m_xPos+LEFTX+MIDDLEX+WIDEX*(i-1)/2,-gameCore->m_yPos+HALFY+FULLY*j);
-				}
-			}
-		}
-	}
+	else{	
+		DrawHexagon(0,0,1);
 	
 
-
-	// 빈 사각형은 어떻게 띄울 것인가?
-	if(gameCore->m_minimapOn==1||gameCore->m_minimapOn==2)
-		minimapDraw(start_x,start_y,n);
-	DrawSubInfo();
+		// 빈 사각형은 어떻게 띄울 것인가?
+		if(gameCore->m_minimapOn==1||gameCore->m_minimapOn==2)
+			DrawHexagon( WNDSIZEW - 240 , WNDSIZEH - 180 , n );
+			//minimapDraw(start_x,start_y,n);
+		DrawSubInfo();
 	}
 	
 }
@@ -217,7 +263,7 @@ void tileContainer::minimapDraw(int start_x,int start_y,int n)
 					inner_b.top = 0;
 					inner_b.right =  gimage[k].m_nWidth;
 					inner_b.bottom =  gimage[k].m_nHeight;
-					if(tileMap[i*LINEY+j].tileType==TY_CLASS+k) gimage[k].Draw(inner_a,inner_b);
+					if(tileMap[i*LINEY+j].tileType==k) gimage[k].Draw(inner_a,inner_b);
 				}
 			}
 			else{
@@ -230,7 +276,7 @@ void tileContainer::minimapDraw(int start_x,int start_y,int n)
 					inner_b.top = 0;
 					inner_b.right = gimage[k].m_nWidth;
 					inner_b.bottom = gimage[k].m_nHeight;
-					if(tileMap[i*LINEY+j].tileType==TY_CLASS+k) gimage[k].Draw(inner_a,inner_b);
+					if(tileMap[i*LINEY+j].tileType==k) gimage[k].Draw(inner_a,inner_b);
 				}
 			}
 		}
@@ -251,7 +297,6 @@ void tileContainer::DrawSubInfo()
 		gUtil::Text(Abs.x-(ggameCore->m_xPos),Abs.y-(ggameCore->m_yPos)+FULLY,tileMap[Con2.x*LINEY+Con2.y].college);
 		gUtil::Text(Abs.x-(ggameCore->m_xPos),Abs.y-(ggameCore->m_yPos)+FULLY+20,tileMap[Con2.x*LINEY+Con2.y].building);
 		gUtil::Text(Abs.x-(ggameCore->m_xPos),Abs.y-(ggameCore->m_yPos)+FULLY+40,tileMap[Con2.x*LINEY+Con2.y].subject);
-		
 	}
 	
 	

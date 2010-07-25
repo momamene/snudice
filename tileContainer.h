@@ -2,7 +2,7 @@
 #include "TILE.h"
 #include "gImage.h"
 
-#define MAXSAVOR_N 60
+#define MAXSAVOR_N 100
 
 #define LEFTX 25
 #define MIDDLEX 52
@@ -20,7 +20,7 @@ class tileContainer
 public:
 	HANDLE	hFile;
 	DWORD	dw;
-	gImage	gimage[5];
+	gImage	gimage[9];
 	gImage	m_wallpaper;
 
 	int		count;
@@ -69,6 +69,9 @@ private:
 	// Draw의 떨거지
 	void	minimapDraw(int start_x,int start_y,int n);		// 잘못된 이름 => DrawMinimap (대문자 시작, 대문자 전환, 첫 이름은 mother name)
 	void	DrawSubInfo();
+	void    DrawSubmit();
+	void	DrawHexagon(int x0,int y0,int n);
+
 	// 기타 중요
 	//POINT	viewSpacor(int x, int y);	
 	bool	isExisted(int i, int j);	// Tile (i,j) 호출은 유효한가? 
