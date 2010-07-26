@@ -65,7 +65,7 @@ public:
 	POINT	conToAbs(POINT ij);	
 	POINT	absToCon();
 
-	
+	void	Release();	
 private:
 	// Setup의 떨거지 (subfunction)
 	void	Load();				// 파일을 불러오는 함수

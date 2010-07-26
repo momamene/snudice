@@ -412,3 +412,25 @@ void gTitleCore::OnMouseMove_PlayerSelect()
 		m_ImgBtnNext.m_eBtnMode = EBM_NONE;
 
 }
+
+void gTitleCore::Release()
+{
+	int		i;
+
+	// title ¸ðµå
+	m_ImgTitle.Release();
+	
+	for(i = 0; i < ETB_END; i++)
+		m_ImgBtn[i].Release();
+
+	// player
+	m_ImgBtnPrev.Release();
+	m_ImgBtnNext.Release();
+	m_ImgPlayer.Release();
+	m_ImgMode.Release();
+
+	for(i = 0; i < MAXPLAYER; i++)
+		m_ImgNP[i].Release();
+
+	m_ImgCheck.Release();
+}

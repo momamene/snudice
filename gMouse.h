@@ -23,6 +23,7 @@ public:
 	bool		SetUp();
 	void		MainLoop();
 	void		Draw();
+	void		Release();
 	
 	void		OnLButtonDown();
 	void		OnLButtonUp();

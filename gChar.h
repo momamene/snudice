@@ -41,5 +41,7 @@ public:
 	bool		SetUp(CHARDATA data, char *szIllu);
 	void		Draw();
 	void		DrawIllu(RECT rcScr);
+
+	void		Release();
 };
 

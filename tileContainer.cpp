@@ -173,7 +173,7 @@ void tileContainer::DrawSubmit(){
 	tempRC.top = 0;
 	tempRC.right = 640;
 	tempRC.bottom = 240;	
-	gplayerManager->m_player[gameCore->m_turnPlayer].m_charInfo.DrawIllu(tempRC); // ¿©±â¼­ Áö±Ý ¸·ÇúÀ½ problem10 (Ç¬°Å ¾Æ´Ô?)
+	gplayerManager->m_player[gameCore->m_turnPlayer].m_charInfo->DrawIllu(tempRC); // ¿©±â¼­ Áö±Ý ¸·ÇúÀ½ problem10 (Ç¬°Å ¾Æ´Ô?)
 		
 }
 
@@ -417,3 +417,13 @@ int tileContainer::flagToFirstTile(int index)
 }
 
 // 5. Class functions end
+
+void tileContainer::Release()
+{
+	int		i;
+
+	for(i = 0; i < 9; i++)
+		gimage[i].Release();
+
+	m_wallpaper.Release();
+}

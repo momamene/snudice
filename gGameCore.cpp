@@ -475,7 +475,7 @@ void gGameCore::OnLButtonDown_CharSel()
 			if(m_nPlayer >= MAXPLAYER)
 				return;
 
-			gPlayerManager::GetIF()->m_player[m_nPlayer].SetUp(cm->m_Chars[i]);
+			gPlayerManager::GetIF()->m_player[m_nPlayer].SetUp(&cm->m_Chars[i]);
 			m_ImgID[i].m_eBtnMode = EBM_CLICK;
 			m_nSelected[i] = m_nPlayer;
 			m_nPlayer++;
@@ -530,4 +530,17 @@ void gGameCore::SetPlayerIndex(int np)
 		else
 			break;
 	}
+}
+
+void gGameCore::Release()
+{
+	int		i;
+
+	m_ImgSelBack.Release();
+	m_ImgWho.Release();
+	m_ImgOutline.Release();
+	m_BtnStart.Release();
+
+	for(i = 0; i < CHARNUM; i++)
+		m_ImgID[i].Release();
 }

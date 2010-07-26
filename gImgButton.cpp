@@ -53,3 +53,8 @@ bool gImgButton::PointInButton(int nX, int nY)
 	}
 	return false;
 }
+
+void gImgButton::Release()
+{
+	m_Img.Release();
+}

@@ -63,8 +63,10 @@ void gPlayerManager::Draw(){
 	}
 }
 
-void gPlayerManager::SetPlayer()
+void gPlayerManager::Release()
 {
+	int		i;
 
+	for(i = 0; i < MAXPLAYER; i++)
+		m_player[i].Release();
 }
-

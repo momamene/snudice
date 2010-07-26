@@ -33,5 +33,6 @@ public:
 
 	bool		PointInButton(int nX, int nY);
 
+	void		Release();
 };
 

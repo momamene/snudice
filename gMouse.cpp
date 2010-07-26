@@ -93,3 +93,8 @@ void gMouse::OnRButtonDown()
 			break;
 	}
 }
+
+void gMouse::Release()
+{
+
+}

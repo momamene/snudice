@@ -6,6 +6,7 @@
 #include "gCharManager.h"
 #include "gInterface.h"
 #include "gUtil.h"
+#include "gPlayerManager.h"
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
@@ -122,6 +123,13 @@ void gMainWin::MoveWindow()
 
 void gMainWin::Release()
 {
+	gMouse::GetIF()->Release();
+	gInterface::GetIF()->Release();
+	gGameCore::GetIF()->Release();
+	gTitleCore::GetIF()->Release();
+	gCharManager::GetIF()->Release();
+	gPlayerManager::GetIF()->Release();
+	tileContainer::GetIF()->Release();
 	SAFE_RELEASE(m_lpDDBack);
 	SAFE_RELEASE(m_lpDDPrimary);
 	SAFE_RELEASE(m_lpDD);

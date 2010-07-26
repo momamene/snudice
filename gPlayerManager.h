@@ -24,11 +24,11 @@ public:
 	int				m_playerN;				// player 수
 	gPlayer			m_player[MAXPLAYER];	// 얘가 컴?사람?안해? -> 얘는 gPlayer 내부에서 확인
 											// gPlayer->m_nNP == -1 -> 안해
-
 public:
 	void			SetUp();
-	void			SetPlayer();
 
 	void			Draw();
+
+	void			Release();
 	
 };

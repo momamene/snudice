@@ -12,7 +12,7 @@ gImage::gImage()
 
 gImage::~gImage()
 {
-//	SAFE_RELEASE(m_lpDDSur);
+
 }
 
 
@@ -173,4 +173,9 @@ void gImage::Draw(RECT rcDest, RECT rcSour, bool stretch)
 	}
 
 	gMainWin::GetIF()->m_lpDDBack->Blt(&rcDest, m_lpDDSur, &rcSour, DDBLT_WAIT | DDBLT_KEYSRC, NULL);
+}
+
+void gImage::Release()
+{
+	SAFE_RELEASE(m_lpDDSur);
 }

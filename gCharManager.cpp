@@ -24,6 +24,11 @@ gCharManager::~gCharManager()
 
 void gCharManager::Release()
 {
+	int		i;
+
+	for(i = 0; i < CHARNUM; i++)
+		m_Chars[i].Release();
+		
 	SAFE_DELETE_ARRAY(m_Chars);
 }
 

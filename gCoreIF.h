@@ -13,6 +13,7 @@ class gCoreIF
 	virtual bool SetUp() = 0;			// virtual type func() = 0;  means 순수가상함수.
 	virtual void MainLoop() = 0;
 	virtual void Draw() = 0;
+	virtual	void Release() = 0;
 
 	//about mouse
 	virtual void OnLButtonDown() = 0;

@@ -4,7 +4,7 @@
 #include "gImage.h"
 #include "gGameCore.h"
 
-bool gPlayer::SetUp (gChar gchar)
+bool gPlayer::SetUp (gChar *gchar)
 {
 	tileContainer *tilecontainer = tileContainer::GetIF();
 
@@ -34,7 +34,7 @@ bool gPlayer::SetUp (gChar gchar)
 	return true;
 }
 
-void gPlayer::Draw  () 
+void gPlayer::Draw() 
 {
 	tileContainer *tilecontainer = tileContainer::GetIF();
 	gGameCore *ggameCore = gGameCore::GetIF();
@@ -56,7 +56,7 @@ void gPlayer::Draw  ()
 	rc.right = rc.left + FULLX;
 	rc.bottom = rc.top + FULLY * 2;
 	
-	m_charInfo.DrawIllu(rc);
+	m_charInfo->DrawIllu(rc);
 	
 }
 
@@ -99,4 +99,9 @@ void gPlayer::posStoper()
 {
 	m_xSpacePos = m_Next_xSpacePos;	// 기본 방침은 Next와 Now가 같은 상황은 멈춘 상황이라는 것이다.
 	m_ySpacePos = m_Next_ySpacePos; // 기본 방침은 Pos는 Con 값이라는 것이다.
+}
+
+void gPlayer::Release()
+{
+
 }

@@ -66,6 +66,7 @@ public:
 	void		OnMouseMove();
 	void		OnRButtonDown();
 
+	void		Release();
 private:
 	bool		SetUp_Title();
 	bool		SetUp_PlayerSelect();

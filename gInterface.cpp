@@ -163,3 +163,17 @@ void gInterface::OnRButtonDown()
 			m_eMenuMode = EMM_END;
 	}
 }
+
+void gInterface::Release()
+{
+	int		i;
+
+	m_ImgMenuback.Release();
+	
+	for(i = 0; i < EBTN_END; i++)
+		m_BtnMenu[i].Release();
+
+	for(i = 0; i < EMM_END; i++)
+		m_ImgMenu[i].Release();
+
+}

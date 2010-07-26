@@ -59,20 +59,17 @@ public:
 	// temp
 	//gPlayer a;
 	
-
-
 public:
-	eGAMEMODE	m_eMode;
-
 	bool		SetUp();
 	void		MainLoop();
-
-	
 	void		Draw();
+	void		Release();
+
 	void		OnLButtonDown();
 	void		OnLButtonUp();
 	void		OnMouseMove();
 	void		OnRButtonDown();
+
 	void		PutScreenPos(int x, int y);		// 상우의 PutScreenPos
 
 	void		SetPlayerIndex(int nP = 0);				// 1p 2p 3p면 1p 를 시작 index로 셋팅
