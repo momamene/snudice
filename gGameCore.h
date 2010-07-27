@@ -26,8 +26,6 @@ class gGameCore : public gCoreIF
 public:
 	static gGameCore	*GetIF();
 
-	gGameCore();
-	virtual ~gGameCore();
 
 public:
 	eGAMEMODE	m_gMode;
@@ -74,17 +72,25 @@ public:
 
 	void		SetPlayerIndex(int nP = 0);				// 1p 2p 3p면 1p 를 시작 index로 셋팅
 private:
-	bool		SetUp_CharSelect();
 
+
+	void		startTurnAuto();
+	void		SetUp_Submit();
 	// MainLoop의 떨거지들
 	void		MainLoopMouse();
 	void		MainLoopMove();
 	void		MainLoopKeyboard();
+	void		MainLoopMouseSubmit();	// submit 
 
+	// OnLButtonDown
 	void		OnLButtonDownSubmit();
 
+	// 기타 중요 colony
+	void		nextTurnAuto();
+
+	// CharSelect Colony
+	bool		SetUp_CharSelect();
 	void		OnLButtonDown_CharSel();
 	void		OnMouseMove_CharSel();
-
 	void		Draw_CharSelect();
 };

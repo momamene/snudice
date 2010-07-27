@@ -42,6 +42,7 @@ public:
 	int		m_Next_ySpacePos;
 	int		m_xInitSpacePos;
 	int		m_yInitSpacePos;
+	int		m_selectReadySubjectFlag;
 
 	// class 변수들
 	int		m_subjectN;
@@ -56,11 +57,13 @@ public:
 	void	posMover(int frame);
 	void	posStoper();		// 항상 posSpacor -> posMover -> posStoper 순으로 써야함
 	
-	// subject function colony
+	// subject function colony - 수정대상! (뭐 간단하고, 돌아가면 상관 없지만 ;;;)
 	int		flagToRow (int index);
 	int		rowToFirstTile(int row);
+	int		rowToSecondTile(int row);
 	int		flagToFirstTile(int index);
-
+	int		flagToSecondTile(int index);
+	
 	// abs,con function colony
 	POINT	conToAbs(POINT ij);	
 	POINT	absToCon();
@@ -76,7 +79,8 @@ private:
 	void	DrawSubInfo();
 	void    DrawSubmit();
 	void	DrawHexagon(int x0,int y0,int n,bool boolo=false);
-
+	void	DrawHexagonOne(int x0,int y0,int i,int j,int n,bool boolo,int type=0);
+	
 	// 기타 중요
 	bool	isExisted(int i, int j);	// Tile (i,j) 호출은 유효한가? 
 	bool	isExisted(int line);

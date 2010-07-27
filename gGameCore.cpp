@@ -15,16 +15,6 @@ gGameCore *gGameCore::GetIF()
 	return &s_GameCore;
 }
 
-gGameCore::gGameCore()
-{
-
-}
-
-gGameCore::~gGameCore()
-{
-
-}
-
 
 bool gGameCore::SetUp()
 {
@@ -32,6 +22,7 @@ bool gGameCore::SetUp()
 		return false;
 
 	gCharManager *gcharManager = gCharManager::GetIF();
+
 	m_xPos=0;
 	m_yPos=0;
 	m_minimapOn=0;
@@ -39,13 +30,47 @@ bool gGameCore::SetUp()
 	m_frameCount = 0;
 	tileContainer::GetIF()->Setup();
 
-	m_turnN = 1;
+	//m_turnN = 1;
+
+/*
 	m_turnPlayer = 0;
+	while(gplayerManager->m_player[m_turnPlayer].m_nNP == -1){
+		m_turnPlayer++;
+	}
+	*/
 	srand(time(NULL));
 
 	m_gMode = EGM_CHARSEL;
 
 	return true;
+}
+
+void gGameCore::SetUp_Submit()
+{
+	startTurnAuto();
+	m_gMode = EGM_SUBMIT;
+
+}
+
+void gGameCore::nextTurnAuto()
+{
+	gPlayerManager *gplayerManager = gPlayerManager::GetIF();
+	do {
+		if(m_turnPlayer>=MAXPLAYER-1) {
+			m_turnPlayer = 0;
+			m_turnN++;
+		}
+		else m_turnPlayer++;
+	} while(gplayerManager->m_player[m_turnPlayer].m_nNP == -1);
+}
+
+void gGameCore::startTurnAuto(){
+	gPlayerManager *gplayerManager = gPlayerManager::GetIF();
+	m_turnN = 1;
+	m_turnPlayer = 0;
+	while(gplayerManager->m_player[m_turnPlayer].m_nNP == -1){
+		m_turnPlayer++;
+	}
 }
 
 void gGameCore::MainLoopMouse(){
@@ -120,8 +145,14 @@ void gGameCore::MainLoopMove(){
 				gplayerManager->m_player[m_turnPlayer].posSpacor();
 			}
 			else{	// 실제 종료 조건
-				gplayerManager->m_player[m_turnPlayer].m_subjectGrader.meet(gplayerManager->m_player[m_turnPlayer].m_xSpacePos*100+gplayerManager->m_player[m_turnPlayer].m_ySpacePos);
-
+				int flag = tilecontainer->tileMap[gplayerManager->m_player[m_turnPlayer].m_xSpacePos*LINEY+gplayerManager->m_player[m_turnPlayer].m_ySpacePos].flag2;
+				gplayerManager->m_player[m_turnPlayer].m_subjectGrader.meet(flag);
+				
+				//gplayerManager->m_player[m_turnPlayer].m_subjectGrader.meet(gplayerManager->m_player[m_turnPlayer].m_xSpacePos*100+gplayerManager->m_player[m_turnPlayer].m_ySpacePos);
+				nextTurnAuto();
+				tilecontainer->m_xSpacePos=gplayerManager->m_player[m_turnPlayer].m_xSpacePos;
+				tilecontainer->m_ySpacePos=gplayerManager->m_player[m_turnPlayer].m_ySpacePos;
+/*
 				if(m_turnPlayer>=MAXPLAYER-1){
 					m_turnPlayer=0;
 					tilecontainer->m_xSpacePos=gplayerManager->m_player[m_turnPlayer].m_xSpacePos;
@@ -135,7 +166,7 @@ void gGameCore::MainLoopMove(){
 					tilecontainer->m_xSpacePos = gplayerManager->m_player[m_turnPlayer].m_xSpacePos;
 					tilecontainer->m_ySpacePos = gplayerManager->m_player[m_turnPlayer].m_ySpacePos;
 				}
-				
+*/				
 			}
 			
 		}
@@ -153,6 +184,7 @@ void gGameCore::MainLoop() // MainLoop 내부를 함수들로 다시 깔끔하게 만들 필요가
 	case EGM_CHARSEL:
 		break;
 	case EGM_SUBMIT:
+		MainLoopMouseSubmit();
 		break;
 	case EGM_GAME:	
 		MainLoopKeyboard();
@@ -170,6 +202,7 @@ void gGameCore::Draw()
 		Draw_CharSelect();
 		break;
 	case EGM_SUBMIT:
+		tileContainer::GetIF()->Draw();		
 //		gInterface::GetIF()->Draw();
 		break;
 	case EGM_GAME:
@@ -178,10 +211,27 @@ void gGameCore::Draw()
 		gInterface::GetIF()->Draw();
 		break;
 	}
+}
+
+void gGameCore::MainLoopMouseSubmit(){
+	gMouse *mouse = gMouse::GetIF();
+	tileContainer *tilecontainer = tileContainer::GetIF();
+	//gPlayerManager * gplayerManager = gPlayerManager::GetIF();
 	
-	//temp
-	//
-	// temp end
+	for(int i = 0 ; i < tilecontainer->m_subjectN ; i++){
+		if(mouse->m_nPosX < 100 && mouse->m_nPosY > i*20 && mouse->m_nPosY < (i+1)*20){
+			tilecontainer->m_selectReadySubjectFlag = tilecontainer->m_subject[i];	// 입력 구문인데. 아 이런 코드는 전반적으로 좋지 않아요. 우리 객체지향해야지.
+			if(m_frameCount<2){
+				m_frameCount++;
+			}
+			else{
+				m_frameCount=0;
+			}
+			return;
+		}
+	}
+	m_frameCount = 0;
+	tilecontainer->m_selectReadySubjectFlag = -1;
 }
 
 void gGameCore::OnLButtonDownSubmit(){
@@ -191,24 +241,43 @@ void gGameCore::OnLButtonDownSubmit(){
 
 	for(int i = 0 ; i < tilecontainer->m_subjectN ; i++){
 		if(mouse->m_nPosX < 100 && mouse->m_nPosY > i*20 && mouse->m_nPosY < (i+1)*20){
+			
 			m_selectSubject = tilecontainer->m_subject[i];	// 입력 구문인데. 아 이런 코드는 전반적으로 좋지 않아요. 우리 객체지향해야지.
-			gplayerManager->m_player[m_turnPlayer].m_subjectGrader.m_subject[m_turnN-1] = m_selectSubject;
-			gplayerManager->m_player[m_turnPlayer].m_subjectGrader.m_subjectN++;
-			if(m_turnPlayer>=MAXPLAYER-1){
-				if(m_turnN < 6){
-					m_turnN++;
-					m_turnPlayer=0;
+			if(!gplayerManager->m_player[m_turnPlayer].isMySubject(m_selectSubject)&&gplayerManager->StudentNum(m_selectSubject)<2) {
+				
+				gplayerManager->m_player[m_turnPlayer].m_subjectGrader.m_subject[m_turnN-1] = m_selectSubject;
+				gplayerManager->m_player[m_turnPlayer].m_subjectGrader.m_subjectN++;
+				
+				nextTurnAuto();
+				
+				if(m_turnN >6){
+					m_gMode=EGM_GAME;
+					startTurnAuto();
+					//m_turnN=1;
+					//m_turnPlayer=0;
+				}
+			
+				/*
+				if(m_turnPlayer>=MAXPLAYER-1){
+					if(m_turnN < 6){
+						m_turnN++;
+						m_turnPlayer=0;
+					}
+					else{
+						m_gMode=EGM_GAME;
+						m_turnN=1;
+						m_turnPlayer=0;
+					}
 				}
 				else{
-					m_gMode=EGM_GAME;
-					m_turnN=1;
-					m_turnPlayer=0;
+					m_turnPlayer++;
+					// cantante
+					//do {m_turnPlayer++;} while(gplayerManager->m_player[m_turnPlayer].m_nNP==-1)
 				}
+				*/
+		
+				break;
 			}
-			else{
-				m_turnPlayer++;
-			}
-			break;
 		}
 	}
 
@@ -486,8 +555,9 @@ void gGameCore::OnLButtonDown_CharSel()
 	}
 	if(m_BtnStart.PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 	{
-		if(m_nPlayer >= MAXPLAYER)
-			m_gMode = EGM_GAME;
+		if(m_nPlayer >= MAXPLAYER){
+			SetUp_Submit();
+		}
 	}
 }
 

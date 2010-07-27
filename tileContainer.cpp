@@ -54,6 +54,7 @@ void tileContainer::Setup()
 	m_Next_xSpacePos = -1;
 	m_Next_ySpacePos = -1;
 	m_subjectN=0;
+	m_selectReadySubjectFlag = -1;
 
 
 	Load();
@@ -153,21 +154,37 @@ void tileContainer::DrawSubmit(){
 			gUtil::Text(320,0,tileMap[tile].college);
 			gUtil::Text(320,20,tileMap[tile].building);
 			gUtil::Text(320,40,tileMap[tile].subject);
-		}
-		
+		}	
 	}
 	
 	for(i = 0 ; i < gplayerManager->m_player[gameCore->m_turnPlayer].m_subjectGrader.m_subjectN ; i++) {
-		
 		tile=flagToFirstTile(gplayerManager->m_player[gameCore->m_turnPlayer].m_subjectGrader.m_subject[i]);
 		if(tile!=-1)
 			gUtil::Text(160,i*20,tileMap[tile].subject);
 	}
 
-
+	
 	gUtil::EndText();
 
+	
 	DrawHexagon(160,160,5,true);
+
+	if(m_selectReadySubjectFlag!=-1){
+		int tile;
+		int boole;
+		
+		if(gameCore->m_frameCount>0)	boole=0;
+		else							boole=1;
+
+		tile = flagToFirstTile(m_selectReadySubjectFlag);
+		DrawHexagonOne(160,160,tileMap[tile].ptPos.x,tileMap[tile].ptPos.y,5,true,boole);
+		tile = flagToSecondTile(m_selectReadySubjectFlag);
+		DrawHexagonOne(160,160,tileMap[tile].ptPos.x,tileMap[tile].ptPos.y,5,true,boole);
+		
+		//DrawHexagonOne(160,160,tileMap[tile].ptPos.x,tileMap[tile].ptPos.y,5,true,0);
+
+	}
+
 
 	tempRC.left = 480;
 	tempRC.top = 0;
@@ -177,47 +194,55 @@ void tileContainer::DrawSubmit(){
 		
 }
 
-void tileContainer::DrawHexagon(int x0,int y0,int n,bool boolo){
+void tileContainer::DrawHexagonOne(int x0,int y0,int i,int j,int n,bool boolo,int type){
 	gGameCore *gameCore = gGameCore::GetIF();
-
-	int i, j;
+	
 	int k;
 	RECT a;
 	RECT b;
 
+	k = tileMap[i*LINEY+j].tileType;
+	if(k==TY_NONE) return;
+	
+	if(i%2==0){
+		a.left = WIDEX*i/2;
+		a.top = FULLY*j;
+	}
+	else{
+		a.left = LEFTX + MIDDLEX + WIDEX*(i-1)/2;
+		a.top = HALFY + FULLY*j;
+	}
+	if(n==1){
+		a.left -= gameCore->m_xPos;
+		a.top -= gameCore->m_yPos;
+	}
+	
+	a.left /= n;
+	a.top /= n;
+	a.left += x0;
+	a.top += y0;
+	a.right = a.left + FULLX/n;
+	a.bottom = a.top + FULLY/n;
+	
+	
+	if(!type) SetRect(&b,0,0,FULLX,FULLY);
+	else SetRect(&b,FULLX,0,FULLX*2,FULLY);
+	
+	if(k==TY_CLASS) gimage[k+tileMap[i*LINEY+j].flag1].Draw(a,b,boolo);
+	else gimage[k].Draw(a,b,boolo);
+	
+
+}
+
+void tileContainer::DrawHexagon(int x0,int y0,int n,bool boolo){
+
+
+	int i, j;
+
 	
 	for(i = 0 ; i < LINEX ; i++) { 
 		for(j = 0 ; j < LINEY ; j++) {
-			k = tileMap[i*LINEY+j].tileType;
-			if(k==TY_NONE) continue;
-			
-			if(i%2==0){
-				a.left = WIDEX*i/2;
-				a.top = FULLY*j;
-			}
-			else{
-				a.left = LEFTX + MIDDLEX + WIDEX*(i-1)/2;
-				a.top = HALFY + FULLY*j;
-			}
-			if(n==1){
-				a.left -= gameCore->m_xPos;
-				a.top -= gameCore->m_yPos;
-			}
-
-			a.left /= n;
-			a.top /= n;
-			a.left += x0;
-			a.top += y0;
-			a.right = a.left + FULLX/n;
-			a.bottom = a.top + FULLY/n;
-
-			
-			SetRect(&b,0,0,FULLX,FULLY);
-
-			if(k==TY_CLASS) gimage[k+tileMap[i*LINEY+j].flag1].Draw(a,b,boolo);
-			else gimage[k].Draw(a,b,boolo);
-			
-			
+			DrawHexagonOne(x0,y0,i,j,n,boolo);
 		}
 	}
 }
@@ -409,12 +434,34 @@ int tileContainer::rowToFirstTile(int row)
 	return -1;
 }
 
+int tileContainer::rowToSecondTile(int row)
+{
+	int i;
+	for(i = 0 ; i < LINEX*LINEY ; i++){
+		if(tileMap[i].tileType==TY_CLASS&&tileMap[i].flag2==m_subject[row]) break;
+	}
+	i++;
+	for( ; i < LINEX*LINEY ; i++){
+		if(tileMap[i].tileType==TY_CLASS&&tileMap[i].flag2==m_subject[row]) return i;
+	}
+	return -1;
+}
+
+
 int tileContainer::flagToFirstTile(int index)
 {
 	int row = flagToRow(index);
 	return rowToFirstTile(row); // 실은 더 쉬운 방법이 있지만; (이게 뭐하는 짓이냐 당췌. firsttile이 flag를 가지고 있는데.
-	return -1;
+	//return -1;
 }
+
+int tileContainer::flagToSecondTile(int index)
+{
+	int row = flagToRow(index);
+	return rowToSecondTile(row); // 실은 더 쉬운 방법이 있지만; (이게 뭐하는 짓이냐 당췌. firsttile이 flag를 가지고 있는데.
+	//return -1;
+}
+
 
 // 5. Class functions end
 

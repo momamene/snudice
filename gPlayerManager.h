@@ -29,6 +29,8 @@ public:
 
 	void			Draw();
 
+	int				StudentNum(int flag);
+
 	void			Release();
 	
 };

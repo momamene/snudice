@@ -17,7 +17,8 @@ public:
 	gChar	*m_charInfo;
 
 	int		m_nNP;				// 몇번째 플레이어냐.			-1이면 스킵
-	bool	m_bUser;			// 유저가 하냐 컴퓨터가 하냐
+								// 아마 -1 == none, n == n + 1player
+	bool	m_bUser;			// 유저가 하냐(true) 컴퓨터가 하냐(false)
 
 	int		m_xSpacePos;
 	int		m_ySpacePos;
@@ -35,10 +36,13 @@ public:
 	
 public:
 	bool	SetUp (gChar *gchar);
+
 	void	Draw  ();
 	void	posSpacor();		// space를 누르면 해당 위치로 이동하고, 캐릭터의 이동을 잡아주는 등의 함수
 	void	posMover(int frame);
 	void	posStoper();
+
+	bool	isMySubject(int flag);
 
 	void	Release();
 };

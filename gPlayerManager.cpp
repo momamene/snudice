@@ -5,6 +5,7 @@
 #include "gPlayerManager.h"
 #include "gTitleCore.h"
 #include "gCharManager.h"
+#include "gGameCore.h"
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -69,4 +70,15 @@ void gPlayerManager::Release()
 
 	for(i = 0; i < MAXPLAYER; i++)
 		m_player[i].Release();
+}
+
+int	gPlayerManager::StudentNum(int flag) // flag = flag2 = index != flag1
+{
+	gGameCore *gameCore = gGameCore::GetIF();
+	int res=0;
+	for(int i = 0 ; i < MAXPLAYER ; i++){
+		// cantate
+		if(/*m_player[i].m_nNP!=-1&&*/m_player[i].isMySubject(flag)) res++;
+	}
+	return res;
 }

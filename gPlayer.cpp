@@ -105,3 +105,10 @@ void gPlayer::Release()
 {
 
 }
+
+bool gPlayer::isMySubject(int flag)
+{
+	for(int i = 0 ; i < m_subjectGrader.m_subjectN ; i++ )
+		if(m_subjectGrader.m_subject[i]==flag) return true;
+	return false;
+}
