@@ -11,8 +11,10 @@ public:
 	
 public:
 	void	init ();
-	double	gradeMinOne (int n);
+	//double	gradeMinOne (int n);
 	double	gradeExpectOne (int n);
 	double	gradeAverage ();
-	void	meet(int subjectIndex);
+	//void	meet(int subjectIndex);
+private:
+	double	gradification (double grade);
 };

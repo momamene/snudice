@@ -83,14 +83,16 @@ void gInterface::DrawWindow(int mode){
 		for(int i = 0 ; i < gplayerManager->m_player[gameCore->m_turnPlayer].m_subjectGrader.m_subjectN ; i++){
 			if(1){	// 과목이 있다면.
 				tile=tilecontainer->flagToFirstTile(gplayerManager->m_player[gameCore->m_turnPlayer].m_subjectGrader.m_subject[i]);
-				
+				//gUtil::SetSize(10);
 				gUtil::Text(IF_POS_BACKX+220,IF_POS_BACKY+60+i*15,tilecontainer->tileMap[tile].building);
 				gUtil::Text(IF_POS_BACKX+220+70,IF_POS_BACKY+60+i*15,tilecontainer->tileMap[tile].subject);
 				temp=gplayerManager->m_player[gameCore->m_turnPlayer].m_subjectGrader.gradeExpectOne(i);
-				//wsprintf(buf,"%d",3);
-				//wsprintf(buf,"%.1f",3.2f);
 				sprintf(buf,"%.1f",temp);
 				gUtil::Text(IF_POS_BACKX+220+70+120,IF_POS_BACKY+60+i*15,buf);
+				temp=gplayerManager->m_player[gameCore->m_turnPlayer].m_subjectGrader.gradeAverage();
+				sprintf(buf,"%.1f",temp);
+				//gUtil::SetSize(20);
+				gUtil::Text(IF_POS_BACKX+220,IF_POS_BACKY+60+150,buf);
 			}
 		}
 		gUtil::EndText();

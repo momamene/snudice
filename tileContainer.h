@@ -66,7 +66,7 @@ public:
 	
 	// abs,con function colony
 	POINT	conToAbs(POINT ij);	
-	POINT	absToCon();
+	POINT	absToCon();			// terrible Problem. where is input Point?
 
 	void	Release();	
 private:

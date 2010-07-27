@@ -145,13 +145,20 @@ void gGameCore::MainLoopMove(){
 				gplayerManager->m_player[m_turnPlayer].posSpacor();
 			}
 			else{	// 실제 종료 조건
-				int flag = tilecontainer->tileMap[gplayerManager->m_player[m_turnPlayer].m_xSpacePos*LINEY+gplayerManager->m_player[m_turnPlayer].m_ySpacePos].flag2;
-				gplayerManager->m_player[m_turnPlayer].m_subjectGrader.meet(flag);
-				
+				// cantante
+				//int flag = tilecontainer->tileMap[gplayerManager->m_player[m_turnPlayer].m_xSpacePos*LINEY+gplayerManager->m_player[m_turnPlayer].m_ySpacePos].flag2;
+				//gplayerManager->m_player[m_turnPlayer].m_subjectGrader.meet(flag);
+				gplayerManager->m_player[m_turnPlayer].meet();
+				// cantate
 				//gplayerManager->m_player[m_turnPlayer].m_subjectGrader.meet(gplayerManager->m_player[m_turnPlayer].m_xSpacePos*100+gplayerManager->m_player[m_turnPlayer].m_ySpacePos);
 				nextTurnAuto();
-				tilecontainer->m_xSpacePos=gplayerManager->m_player[m_turnPlayer].m_xSpacePos;
-				tilecontainer->m_ySpacePos=gplayerManager->m_player[m_turnPlayer].m_ySpacePos;
+				POINT pt;
+				pt.x = gplayerManager->m_player[m_turnPlayer].m_xSpacePos;
+				pt.y = gplayerManager->m_player[m_turnPlayer].m_ySpacePos;
+				tilecontainer->m_xSpacePos=pt.x;
+				tilecontainer->m_ySpacePos=pt.y;
+				pt = tilecontainer->conToAbs(pt);
+				PutScreenPos(pt.x - WNDSIZEW/2 + HALFX,pt.y- WNDSIZEH/2 + HALFY);
 /*
 				if(m_turnPlayer>=MAXPLAYER-1){
 					m_turnPlayer=0;

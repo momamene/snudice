@@ -45,4 +45,5 @@ public:
 	bool	isMySubject(int flag);
 
 	void	Release();
+	void	meet();
 };

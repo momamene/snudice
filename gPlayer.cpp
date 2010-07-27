@@ -112,3 +112,28 @@ bool gPlayer::isMySubject(int flag)
 		if(m_subjectGrader.m_subject[i]==flag) return true;
 	return false;
 }
+
+void gPlayer::meet()
+{
+	tileContainer *tilecontainer = tileContainer::GetIF();
+	gGameCore *gameCore = gGameCore::GetIF();
+	int tile = m_xSpacePos*LINEY+m_ySpacePos;
+	int flag2 = tilecontainer->tileMap[tile].flag2;
+	//m_player[m_turnPlayer].m_subjectGrader.meet(flag2);
+			
+	
+
+	//int tile = tilecontainer->flagToFirstTile(subjectIndex);
+	for(int i = 0 ; i < m_subjectGrader.m_subjectN ; i++ ){
+		if(m_subjectGrader.m_subject[i]==flag2){
+			m_subjectGrader.m_meetCount[i]++;
+			
+			if(tilecontainer->tileMap[tile].flag3==0)
+				m_subjectGrader.m_weightCount[i] += m_charInfo->m_Data.nLang * 20;
+			else if (tilecontainer->tileMap[tile].flag3==1)
+				m_subjectGrader.m_weightCount[i] += m_charInfo->m_Data.nMath;
+			else if (tilecontainer->tileMap[tile].flag3==2)
+				m_subjectGrader.m_weightCount[i] += m_charInfo->m_Data.nArt;
+		}
+	}
+}
