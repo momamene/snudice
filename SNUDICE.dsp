@@ -136,6 +136,10 @@ SOURCE=.\gPlayerManager.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\gTimer.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\gTitleCore.cpp
 # End Source File
 # Begin Source File
@@ -209,6 +213,10 @@ SOURCE=.\gPlayer.h
 # Begin Source File
 
 SOURCE=.\gPlayerManager.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\gTimer.h
 # End Source File
 # Begin Source File
 

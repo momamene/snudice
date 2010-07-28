@@ -6,7 +6,8 @@
 #include "gCharManager.h"
 #include "gPlayerManager.h"
 #include "gUtil.h"
-#include "time.h"
+#include <time.h>
+#include "gTimer.h"
 
 static gGameCore s_GameCore;
 
@@ -49,7 +50,6 @@ void gGameCore::SetUp_Submit()
 {
 	startTurnAuto();
 	m_gMode = EGM_SUBMIT;
-
 }
 
 void gGameCore::nextTurnAuto()
@@ -96,6 +96,7 @@ void gGameCore::MainLoopKeyboard(){
 	gMainWin *mainWin = gMainWin::GetIF(); // mainWin이라고 쓰고 키보드라고 읽는다.
 	tileContainer *tilecontainer = tileContainer::GetIF();
 	gPlayerManager *gplayerManager = gPlayerManager::GetIF();
+	//gTimer *gtimer = gTimer::GetIF();
 	if(mainWin->m_Keys['M']){
 		if(m_minimapOn==0) m_minimapOn=1;
 		if(m_minimapOn==2) m_minimapOn=3;
@@ -111,6 +112,7 @@ void gGameCore::MainLoopKeyboard(){
 			m_frameCount=1;
 			tilecontainer->posSpacor();
 			gplayerManager->m_player[m_turnPlayer].posSpacor();
+			//gtimer->frameStart(1000,60);
 		}
 	}
 	if(!(mainWin->m_Keys[VK_SPACE])){
@@ -120,6 +122,7 @@ void gGameCore::MainLoopKeyboard(){
 void gGameCore::MainLoopMove(){
 	tileContainer *tilecontainer = tileContainer::GetIF();
 	gPlayerManager *gplayerManager = gPlayerManager::GetIF();
+	//	gTimer *gtimer = gTimer::GetIF();
 	
 
 	switch(m_gMode){
@@ -129,6 +132,7 @@ void gGameCore::MainLoopMove(){
 	case EGM_GAME:
 
 	if(m_spacor>0){
+		int a;
 		if(m_frameCount < MAXFRAMECOUNT){ // 활성화 조건
 			tilecontainer->posMover(m_frameCount);
 			gplayerManager->m_player[m_turnPlayer].posMover(m_frameCount);
@@ -136,6 +140,7 @@ void gGameCore::MainLoopMove(){
 			m_frameCount++;
 		}
 		else{	// 종료 조건
+//			gtimer->frameSyn();
 			tilecontainer->posStoper();
 			gplayerManager->m_player[m_turnPlayer].posStoper();
 			m_spacor--;
@@ -145,12 +150,7 @@ void gGameCore::MainLoopMove(){
 				gplayerManager->m_player[m_turnPlayer].posSpacor();
 			}
 			else{	// 실제 종료 조건
-				// cantante
-				//int flag = tilecontainer->tileMap[gplayerManager->m_player[m_turnPlayer].m_xSpacePos*LINEY+gplayerManager->m_player[m_turnPlayer].m_ySpacePos].flag2;
-				//gplayerManager->m_player[m_turnPlayer].m_subjectGrader.meet(flag);
 				gplayerManager->m_player[m_turnPlayer].meet();
-				// cantate
-				//gplayerManager->m_player[m_turnPlayer].m_subjectGrader.meet(gplayerManager->m_player[m_turnPlayer].m_xSpacePos*100+gplayerManager->m_player[m_turnPlayer].m_ySpacePos);
 				if(gplayerManager->m_player[m_turnPlayer].m_xSpacePos==tilecontainer->m_xInitSpacePos&&
 					gplayerManager->m_player[m_turnPlayer].m_ySpacePos==tilecontainer->m_yInitSpacePos) {
 					if(gplayerManager->m_player[m_turnPlayer].m_isNokdu) gplayerManager->m_player[m_turnPlayer].m_isNokdu = false;
@@ -164,7 +164,7 @@ void gGameCore::MainLoopMove(){
 				tilecontainer->m_ySpacePos=pt.y;
 				pt = tilecontainer->conToAbs(pt);
 				PutScreenPos(pt.x - WNDSIZEW/2 + HALFX,pt.y- WNDSIZEH/2 + HALFY);
-
+				//gtimer->frameEnd();
 /*
 				if(m_turnPlayer>=MAXPLAYER-1){
 					m_turnPlayer=0;
