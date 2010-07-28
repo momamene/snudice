@@ -31,6 +31,8 @@ bool gPlayer::SetUp (gChar *gchar)
 
 	m_subjectGrader.init(); //m_subjectN = 0;
 
+	m_isNokdu = false;
+
 	return true;
 }
 
@@ -39,18 +41,8 @@ void gPlayer::Draw()
 	tileContainer *tilecontainer = tileContainer::GetIF();
 	gGameCore *ggameCore = gGameCore::GetIF();
 	
-	//POINT ij1,ij2;
 	RECT rc;
-/*	
-	ij1.x = m_xSpacePos;//m_position.x;
-	ij1.y = m_ySpacePos; //m_position.y;
-	ij2 = tilecontainer->conToAbs(ij1);
-	rc.left = -ggameCore->m_xPos + ij2.x;
-	rc.top = -ggameCore->m_yPos + ij2.y - FULLY;
-	rc.right = rc.left + FULLX;
-	rc.bottom = rc.top + FULLY * 2;
-*/
-	// 캐릭터 드로우.
+
 	rc.left = -ggameCore->m_xPos + m_xDrawline;
 	rc.top = -ggameCore->m_yPos + m_yDrawline - FULLY;
 	rc.right = rc.left + FULLX;
@@ -64,9 +56,15 @@ void gPlayer::posSpacor()
 {	// 다음 칸으로 움직이라는 신호.
 	gGameCore *gameCore = gGameCore::GetIF();
 	tileContainer * tilecontainer = tileContainer::GetIF();
-	
-	m_Next_xSpacePos = tilecontainer->tileMap[m_xSpacePos*LINEY+m_ySpacePos].nextTile.x;	// 기본 방침은, Next와 Now가 괴리가 있는 상황은 움직이는 상황인 것이다.
-	m_Next_ySpacePos = tilecontainer->tileMap[m_xSpacePos*LINEY+m_ySpacePos].nextTile.y;
+	if(tilecontainer->m_xInitSpacePos == m_xSpacePos && tilecontainer->m_yInitSpacePos == m_ySpacePos && m_isNokdu){
+		m_Next_xSpacePos = tilecontainer->tileMap[m_xSpacePos*LINEY+m_ySpacePos].flag1; // gplayerManager->m_player[gameCore->m_turnPlayer]->m_charInfo;
+		m_Next_ySpacePos = tilecontainer->tileMap[m_xSpacePos*LINEY+m_ySpacePos].flag2; // gplayerManager->m_player[gameCore->m_turnPlayer];
+	}
+	else{
+		m_Next_xSpacePos = tilecontainer->tileMap[m_xSpacePos*LINEY+m_ySpacePos].nextTile.x;	// 기본 방침은, Next와 Now가 괴리가 있는 상황은 움직이는 상황인 것이다.
+		m_Next_ySpacePos = tilecontainer->tileMap[m_xSpacePos*LINEY+m_ySpacePos].nextTile.y;
+	}
+
 }
 
 void gPlayer::posMover(int frame)
@@ -90,15 +88,20 @@ void gPlayer::posMover(int frame)
 	a.x = a.x - WNDSIZEW/2 + HALFX;
 	a.y = a.y - WNDSIZEH/2 + HALFY;
 
-
-	//ggameCore->PutScreenPos(a.x + frame*(b.x-a.x)/MAXFRAMECOUNT,a.y + frame*(b.y-a.y)/MAXFRAMECOUNT);
-	//ggameCore->PutScreenPos(b.x,b.y);
 	
 }
+
 void gPlayer::posStoper()
 {
+	tileContainer *tilecontainer = tileContainer::GetIF();
 	m_xSpacePos = m_Next_xSpacePos;	// 기본 방침은 Next와 Now가 같은 상황은 멈춘 상황이라는 것이다.
 	m_ySpacePos = m_Next_ySpacePos; // 기본 방침은 Pos는 Con 값이라는 것이다.
+	/*
+	if(m_xSpacePos==tilecontainer->m_xInitSpacePos&&m_ySpacePos==tilecontainer->m_yInitSpacePos){
+		if(m_isNokdu) m_isNokdu = false;
+		else m_isNokdu = true;
+	}
+	*/
 }
 
 void gPlayer::Release()

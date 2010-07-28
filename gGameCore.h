@@ -12,7 +12,7 @@
 #include "tileContainer.h"
 #include "gPlayer.h"
 
-#define MAXFRAMECOUNT 8	// 생각해보니 중요한 변수. 빠르기를 결정!
+#define MAXFRAMECOUNT 30	// 생각해보니 중요한 변수. 빠르기를 결정!
 // 우리집 컴터가 하도 느림. 한 4배 차이나는 듯.
 
 enum eGAMEMODE
@@ -88,7 +88,7 @@ private:
 
 	// 기타 중요 colony
 	void		nextTurnAuto();
-
+	
 	// CharSelect Colony
 	bool		SetUp_CharSelect();
 	void		OnLButtonDown_CharSel();

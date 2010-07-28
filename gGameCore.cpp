@@ -107,7 +107,7 @@ void gGameCore::MainLoopKeyboard(){
 	
 	if(mainWin->m_Keys[VK_SPACE]){
 		if(m_spacor==0) {
-			m_spacor=rand()%6;
+			m_spacor=rand()%6+1;
 			m_frameCount=1;
 			tilecontainer->posSpacor();
 			gplayerManager->m_player[m_turnPlayer].posSpacor();
@@ -151,6 +151,11 @@ void gGameCore::MainLoopMove(){
 				gplayerManager->m_player[m_turnPlayer].meet();
 				// cantate
 				//gplayerManager->m_player[m_turnPlayer].m_subjectGrader.meet(gplayerManager->m_player[m_turnPlayer].m_xSpacePos*100+gplayerManager->m_player[m_turnPlayer].m_ySpacePos);
+				if(gplayerManager->m_player[m_turnPlayer].m_xSpacePos==tilecontainer->m_xInitSpacePos&&
+					gplayerManager->m_player[m_turnPlayer].m_ySpacePos==tilecontainer->m_yInitSpacePos) {
+					if(gplayerManager->m_player[m_turnPlayer].m_isNokdu) gplayerManager->m_player[m_turnPlayer].m_isNokdu = false;
+					else gplayerManager->m_player[m_turnPlayer].m_isNokdu = true;
+				}
 				nextTurnAuto();
 				POINT pt;
 				pt.x = gplayerManager->m_player[m_turnPlayer].m_xSpacePos;
@@ -159,6 +164,7 @@ void gGameCore::MainLoopMove(){
 				tilecontainer->m_ySpacePos=pt.y;
 				pt = tilecontainer->conToAbs(pt);
 				PutScreenPos(pt.x - WNDSIZEW/2 + HALFX,pt.y- WNDSIZEH/2 + HALFY);
+
 /*
 				if(m_turnPlayer>=MAXPLAYER-1){
 					m_turnPlayer=0;

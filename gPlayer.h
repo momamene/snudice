@@ -26,6 +26,8 @@ public:
 	int		m_Next_ySpacePos;
 	int		m_xDrawline;
 	int		m_yDrawline;
+
+	bool	m_isNokdu;
 /*
 	int		m_subjectN;
 	int		m_subject[6];		// 번호는 tileMap의 번호와 같습니다. (tileMap의 번호가 key인 셈이죠.)

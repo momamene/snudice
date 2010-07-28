@@ -306,7 +306,7 @@ void tileContainer::DrawSubInfo()
 void tileContainer::posSpacor() 
 {	// 다음 칸으로 움직이라는 신호.
 	gGameCore *gameCore = gGameCore::GetIF();
-
+	gPlayerManager *gplayerManager = gPlayerManager::GetIF();
 
 	if(m_xSpacePos==-1&&m_xSpacePos==-1){
 		m_xSpacePos=m_xInitSpacePos;
@@ -316,16 +316,14 @@ void tileContainer::posSpacor()
 	}
 	else{
 		if(isExisted(m_xSpacePos,m_ySpacePos)){
+			if(m_xInitSpacePos == m_xSpacePos && m_yInitSpacePos == m_ySpacePos&&gplayerManager->m_player[gameCore->m_turnPlayer].m_isNokdu){
+				m_Next_xSpacePos = tileMap[m_xSpacePos*LINEY+m_ySpacePos].flag1; // gplayerManager->m_player[gameCore->m_turnPlayer]->m_charInfo;
+				m_Next_ySpacePos = tileMap[m_xSpacePos*LINEY+m_ySpacePos].flag2; // gplayerManager->m_player[gameCore->m_turnPlayer];
+			}
+			else {
 			m_Next_xSpacePos = tileMap[m_xSpacePos*LINEY+m_ySpacePos].nextTile.x;	// 기본 방침은, Next와 Now가 괴리가 있는 상황은 움직이는 상황인 것이다.
 			m_Next_ySpacePos = tileMap[m_xSpacePos*LINEY+m_ySpacePos].nextTile.y;
-			
-			if(isExisted(m_Next_xSpacePos,m_Next_ySpacePos)){
-
 			}
-			else{
-				// error 처리 해야 하는데 생략
-			}
-			
 		}
 	}
 }
@@ -348,9 +346,14 @@ void tileContainer::posMover(int frame)
 	ggameCore->PutScreenPos(a.x + frame*(b.x-a.x)/MAXFRAMECOUNT,a.y + frame*(b.y-a.y)/MAXFRAMECOUNT);
 	
 }
-void tileContainer::posStoper(){
+
+void tileContainer::posStoper()
+{
+	gPlayerManager *gplayerManager = gPlayerManager::GetIF();
+	gGameCore *gameCore = gGameCore::GetIF();
 	m_xSpacePos = m_Next_xSpacePos;	// 기본 방침은 Next와 Now가 같은 상황은 멈춘 상황이라는 것이다.
 	m_ySpacePos = m_Next_ySpacePos; // 기본 방침은 Pos는 Con 값이라는 것이다.
+	
 }
 
 // 3. Pos Line End
