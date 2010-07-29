@@ -57,6 +57,9 @@ public:
 	//int		m_selectTurn;
 	// temp
 	//gPlayer a;
+
+	// 무엇에 쫓기는가
+	int		m_busMode;
 	
 public:
 	bool		SetUp();
@@ -85,6 +88,7 @@ private:
 
 	// OnLButtonDown
 	void		OnLButtonDownSubmit();
+	void		OnLButtonDownBus();
 
 	// 기타 중요 colony
 	void		nextTurnAuto();

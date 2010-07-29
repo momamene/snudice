@@ -33,7 +33,7 @@ gTitleCore *gTitleCore::GetIF()
 
 bool gTitleCore::SetUp()
 {
-	gTimer *gtimer = gTimer::GetIF();
+//	gTimer *gtimer = gTimer::GetIF();
 	m_eMode = ETM_TITLE;
 
 	if(FAILED(SetUp_Title()))
@@ -42,8 +42,8 @@ bool gTitleCore::SetUp()
 		return false;
 	
 	// sangwoo temp
-	gtimer->SetUp();
-	gtimer->frameStart(1000,60);
+//	gtimer->SetUp();
+//	gtimer->frameStart(1000,60);
 	// sangwoo temp End
 
 	return true;
@@ -198,7 +198,7 @@ bool gTitleCore::SetUp_PlayerSelect()
 void gTitleCore::Draw_Title()
 {
 	//gUtil *gutil = gUtil::GetIF();
-	gTimer *gtimer = gTimer::GetIF();
+	//gTimer *gtimer = gTimer::GetIF();
 	int		i;
 	char	buf[128];
 
@@ -208,6 +208,7 @@ void gTitleCore::Draw_Title()
 			m_ImgBtn[i].Draw();
 
 	// sangwoo temp
+	/*
 	gUtil::BeginText();
 	sprintf(buf,"%d",gtimer->m_start);
 	gUtil::Text(0,0,buf);
@@ -220,6 +221,7 @@ void gTitleCore::Draw_Title()
 	sprintf(buf,"%d",gtimer->frame());
 	gUtil::Text(0,80,buf);
 	gUtil::EndText();
+	*/
 	// sangwoo temp end
 
 }

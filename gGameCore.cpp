@@ -9,6 +9,11 @@
 #include <time.h>
 #include "gTimer.h"
 
+// sangwoo bus, timer and etc
+#define BUS_NORMAL				200
+#define BUS_FAST				100
+#define BUS_FRAME				60
+
 static gGameCore s_GameCore;
 
 gGameCore *gGameCore::GetIF()
@@ -23,6 +28,7 @@ bool gGameCore::SetUp()
 		return false;
 
 	gCharManager *gcharManager = gCharManager::GetIF();
+	gTimer *gtimer = gTimer::GetIF();
 
 	m_xPos=0;
 	m_yPos=0;
@@ -34,6 +40,10 @@ bool gGameCore::SetUp()
 	srand(time(NULL));
 
 	m_gMode = EGM_CHARSEL;
+
+	m_busMode = false;
+
+	gtimer->SetUp();
 
 	return true;
 }
@@ -99,17 +109,26 @@ void gGameCore::MainLoopKeyboard(){
 	}
 	
 	if(mainWin->m_Keys[VK_SPACE]){
-		if(m_spacor==0) {
+
+		if(m_busMode==0&&m_spacor==0) {
 			m_spacor=rand()%6+1;
 			m_frameCount=1;
 			tilecontainer->posSpacor();
 			gplayerManager->m_player[m_turnPlayer].posSpacor();
-			gtimer->frameStart(200,60);
+			gtimer->frameStart(BUS_NORMAL,BUS_FRAME);
 		}
 	}
 	if(!(mainWin->m_Keys[VK_SPACE])){
 
 	}
+	// sangwoo temp
+	/*
+	if(mainWin->m_Keys['A']){
+		m_busMode = true;
+		gtimer->frameStart(200,2);
+	}
+	*/
+	// sangwoo temp end
 }
 void gGameCore::MainLoopMove(){
 	tileContainer *tilecontainer = tileContainer::GetIF();
@@ -122,6 +141,7 @@ void gGameCore::MainLoopMove(){
 
 		break;
 	case EGM_GAME:
+	if(m_busMode==1) break;
 
 	if(m_spacor>0){  
 		int a = gtimer->frame(); // 매우 심각한 문제인데 [sangwoo problem] 이걸 뒤에 쓰면 개차반이 된다는거
@@ -138,18 +158,35 @@ void gGameCore::MainLoopMove(){
 			m_spacor--;
 			if(m_spacor>0){
 				//m_frameCount=1;
-				gtimer->frameStart(200,60);
+				if(m_busMode==0)
+					gtimer->frameStart(BUS_NORMAL,BUS_FRAME);
+				else if(m_busMode==2)
+					gtimer->frameStart(BUS_FAST,BUS_FRAME);
 				tilecontainer->posSpacor();
 				gplayerManager->m_player[m_turnPlayer].posSpacor();
 			}
 			else{	// 실제 종료 조건
+			
 				gplayerManager->m_player[m_turnPlayer].meet();
 				if(gplayerManager->m_player[m_turnPlayer].m_xSpacePos==tilecontainer->m_xInitSpacePos&&
 					gplayerManager->m_player[m_turnPlayer].m_ySpacePos==tilecontainer->m_yInitSpacePos) {
 					if(gplayerManager->m_player[m_turnPlayer].m_isNokdu) gplayerManager->m_player[m_turnPlayer].m_isNokdu = false;
 					else gplayerManager->m_player[m_turnPlayer].m_isNokdu = true;
 				}
+				else if(m_busMode==2){
+					m_busMode=0;
+				}
+				else if(tilecontainer->tileMap[gplayerManager->m_player[m_turnPlayer].m_xSpacePos*LINEY+gplayerManager->m_player[m_turnPlayer].m_ySpacePos].tileType==TY_BUS){
+					m_busMode = 1;
+					
+					gtimer->frameStart(200,2);
+					break;
+				}
+				
+
+
 				nextTurnAuto();
+
 				POINT pt;
 				pt.x = gplayerManager->m_player[m_turnPlayer].m_xSpacePos;
 				pt.y = gplayerManager->m_player[m_turnPlayer].m_ySpacePos;
@@ -273,7 +310,38 @@ void gGameCore::OnLButtonDownSubmit(){
 	}
 
 }
-
+void gGameCore::OnLButtonDownBus()
+{
+	tileContainer *tilecontainer = tileContainer::GetIF();
+	gMouse *gmouse = gMouse::GetIF();
+	gPlayerManager *gplayerManager = gPlayerManager::GetIF();
+	gTimer *gtimer = gTimer::GetIF();
+	int nextBusTile;
+//	int dist;
+	
+	nextBusTile = tilecontainer->busClickProcessor(m_xPos+gmouse->m_nPosX,m_yPos+gmouse->m_nPosY);
+	if(nextBusTile==-1) return;
+	else{
+		gtimer->frameEnd();
+		gtimer->frameStart(BUS_FAST,BUS_FRAME);
+		m_spacor = tilecontainer->distance(gplayerManager->m_player[m_turnPlayer].m_xSpacePos*LINEY+gplayerManager->m_player[m_turnPlayer].m_ySpacePos,nextBusTile);
+		
+		if(m_spacor==0) {
+			nextTurnAuto();
+			POINT pt;
+			pt.x = gplayerManager->m_player[m_turnPlayer].m_xSpacePos;
+			pt.y = gplayerManager->m_player[m_turnPlayer].m_ySpacePos;
+			tilecontainer->m_xSpacePos=pt.x;
+			tilecontainer->m_ySpacePos=pt.y;
+			pt = tilecontainer->conToAbs(pt);
+			PutScreenPos(pt.x - WNDSIZEW/2 + HALFX,pt.y- WNDSIZEH/2 + HALFY);
+			m_busMode = 0;
+		}
+		else {
+			m_busMode = 2;
+		}
+	}
+}
 
 void gGameCore::OnLButtonDown()
 {
@@ -286,6 +354,8 @@ void gGameCore::OnLButtonDown()
 			OnLButtonDownSubmit();	
 			break;
 		case EGM_GAME:
+			if(m_busMode==1)
+				OnLButtonDownBus();
 			gInterface::GetIF()->OnLButtonDown();
 			break;
 	}

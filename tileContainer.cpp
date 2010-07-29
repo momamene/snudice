@@ -248,6 +248,21 @@ void tileContainer::DrawHexagon(int x0,int y0,int n,bool boolo){
 	}
 }
 
+void tileContainer::DrawHexagonBus()
+{
+	gTimer *gtimer = gTimer::GetIF();
+	gGameCore *gameCore = gGameCore::GetIF();
+
+	int i,j;
+	
+	for(i = 0 ; i < LINEX ; i++) { 
+		for(j = 0 ; j < LINEY ; j++) {
+			if(tileMap[i*LINEY+j].tileType==TY_BUS)
+				DrawHexagonOne(0,0,i,j,1,true,gtimer->frame());
+		}
+	}
+}
+
 void tileContainer::Draw()
 {
 	int i,j;
@@ -259,6 +274,7 @@ void tileContainer::Draw()
 	int start_y = 0;
 	
 	gGameCore *gameCore = gGameCore::GetIF();
+	gTimer *gtimer = gTimer::GetIF();
 
 
 	m_wallpaper.Draw(0,0);
@@ -269,6 +285,9 @@ void tileContainer::Draw()
 	}
 	else{	
 		DrawHexagon(0,0,1);
+		
+		if(gameCore->m_busMode==1&&gtimer->m_on)
+			DrawHexagonBus();
 	
 		// 빈 사각형은 어떻게 띄울 것인가?
 		if(gameCore->m_minimapOn==1||gameCore->m_minimapOn==2){
@@ -277,8 +296,7 @@ void tileContainer::Draw()
 			//minimapDraw(start_x,start_y,n);
 		}
 		DrawSubInfo();
-	}
-	
+	}	
 }
 
 void tileContainer::DrawSubInfo()
@@ -338,7 +356,6 @@ void tileContainer::posMover(int frame)
 	b.y = m_Next_ySpacePos;
 	a.x = m_xSpacePos;
 	a.y = m_ySpacePos;
-	//a = conToAbs(a);
 	b = conToAbs(b);
 	a = conToAbs(a);
 	b.x = b.x - WNDSIZEW/2 + HALFX;
@@ -419,6 +436,33 @@ POINT tileContainer::absToCon()
 	
 }
 
+POINT tileContainer::absToCon(POINT ij) 
+{
+	/*
+	gGameCore *ggameCore = gGameCore::GetIF();
+	gMouse *gmouse = gMouse::GetIF();
+	*/
+	POINT res;
+	
+	int n,m;
+	int xo,yo;
+	n = (ij.x) / WIDEX;
+	n = n*2;
+	m = (ij.y) / FULLY;
+	xo = (ij.x) % WIDEX;
+	yo = (ij.y) % FULLY;
+	
+	
+	if(-1 * HALFY * xo + HALFY * LEFTX > LEFTX * yo) { n--; m--; } 
+	else if(HALFY * xo + HALFY * LEFTX <= LEFTX * yo ) { n--; }
+	else if(yo < HALFY && HALFY * xo + ( HALFY * LEFTX - HALFY * FULLX ) > LEFTX * yo ) { n++; m--; }
+	else if(yo >= HALFY && - HALFY * xo + ( HALFY * LEFTX + HALFY * FULLX ) <= LEFTX*yo ) { n++; }
+	res.x = n;
+	res.y = m;
+	return res;
+	
+}
+
 // 4. Essential for All Line End
 
 
@@ -479,4 +523,48 @@ void tileContainer::Release()
 		gimage[i].Release();
 
 	m_wallpaper.Release();
+}
+
+int tileContainer::busClickProcessor(int x,int y){	// output은 tile 정보
+	gMainWin *gmainWin = gMainWin::GetIF();
+	POINT xy;
+	//sangwoo temp
+	
+	// sangwoo temp end		
+	xy.x = x;
+	xy.y=  y;
+	xy = absToCon(xy);
+	if(x == 2 && y == 17) {
+		MessageBox(gmainWin->m_hWnd, "당신의 이성이 그곳으로 가는 것을 막았습니다", "Error", MB_OK);
+		return -1; //if(tileMap[2*LINEY+17])
+	}
+	if(tileMap[xy.x*LINEY+xy.y].tileType==TY_BUS){
+		return xy.x*LINEY+xy.y;
+	}	
+	return -1;
+
+}
+
+int tileContainer::distance(int mapA,int mapB){	// 치명적인 녹두 문제. 녹두 들어가면 무한루프 때문에 그 오류를 알 수 있음
+	int localCount= 0;
+	int iter=mapA;
+	// sangwoo temp
+	
+	
+	do {
+		iter = tileMap[iter].nextTile.x*LINEY+tileMap[iter].nextTile.y;
+		localCount++;
+	} while(iter!=mapB);
+	
+		// sangwoo temp end
+	/*
+	if(mapA==mapB) return 0;
+	
+	while(iter!=mapB) {
+		iter = tileMap[iter].nextTile.x*LINEY+tileMap[iter].nextTile.y;
+		localCount++;
+	} 
+	*/
+	localCount++;
+	return localCount;
 }

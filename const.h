@@ -193,3 +193,4 @@
 #define IF_IMG_SYSBACK			".\\Data\\Interface\\menu_system_back.img"
 #define IF_POS_BACKX			((WNDSIZEW - IF_POS_SCARDW) / 2)
 #define IF_POS_BACKY			((WNDSIZEH - IF_POS_SCARDH) / 2)
+

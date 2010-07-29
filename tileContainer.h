@@ -30,7 +30,6 @@ public:
 
 	int		count; // 아마 이것이 tile의 갯수갰지.
 
-	
 	//bool	m_minimapOn;
 	TILE	bmpKindSavor[MAXSAVOR_N];
 	TILE	tileMap[LINEX*LINEY];
@@ -47,6 +46,8 @@ public:
 	// class 변수들
 	int		m_subjectN;
 	int		m_subject[MAXSAVOR_N];
+
+
 
 public:
 	void	Setup();			// setup
@@ -65,10 +66,16 @@ public:
 	int		flagToSecondTile(int index);
 	
 	// abs,con function colony
-	POINT	conToAbs(POINT ij);	
-	POINT	absToCon();			// terrible Problem. where is input Point?
+	POINT	conToAbs(POINT ij);
+	POINT	absToCon(POINT ij); 
+
+	// 상우의 막장 돌진 함수군
+	int		busClickProcessor(int x,int y);
+	int		distance(int mapA,int mapB);	// 치명적인 녹두 문제. 녹두 들어가면 무한루프 때문에 그 오류를 알 수 있음
 
 	void	Release();	
+
+
 private:
 	// Setup의 떨거지 (subfunction)
 	void	Load();				// 파일을 불러오는 함수
@@ -79,11 +86,14 @@ private:
 	void	DrawSubInfo();
 	void    DrawSubmit();
 	void	DrawHexagon(int x0,int y0,int n,bool boolo=false);
-	void	DrawHexagonOne(int x0,int y0,int i,int j,int n,bool boolo,int type=0);
+	void	DrawHexagonOne(int x0,int y0,int i,int j,int n,bool boolo,int type=0);	// 0은 기본 1은 선택된 표시
+	void	DrawHexagonBus();
 	
 	// 기타 중요
 	bool	isExisted(int i, int j);	// Tile (i,j) 호출은 유효한가? 
 	bool	isExisted(int line);
+	POINT	absToCon();			// terrible Problem. where is input Point? (gmouse의 mouse군과 gGameCore의 x_Pos를 읽어 자동 출력 하는 놀라운 함수)
+
 	
 };
 
