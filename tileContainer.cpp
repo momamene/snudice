@@ -534,7 +534,7 @@ int tileContainer::busClickProcessor(int x,int y){	// output은 tile 정보
 	xy.x = x;
 	xy.y=  y;
 	xy = absToCon(xy);
-	if(x == 2 && y == 17) {
+	if(xy.x == 2 && xy.y == 17) {
 		MessageBox(gmainWin->m_hWnd, "당신의 이성이 그곳으로 가는 것을 막았습니다", "Error", MB_OK);
 		return -1; //if(tileMap[2*LINEY+17])
 	}
