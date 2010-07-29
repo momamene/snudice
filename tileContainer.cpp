@@ -6,6 +6,7 @@
 #include "gUtil.h"
 #include "gMouse.h"
 #include "gPlayerManager.h"
+#include "gTimer.h"
 
 static tileContainer s_tileContainer; // 2
 
@@ -327,9 +328,11 @@ void tileContainer::posSpacor()
 		}
 	}
 }
+
 void tileContainer::posMover(int frame)
 {
 	gGameCore *ggameCore = gGameCore::GetIF();
+	gTimer *gtimer = gTimer::GetIF();
 	POINT b, a;
 	b.x = m_Next_xSpacePos;
 	b.y = m_Next_ySpacePos;
@@ -343,7 +346,7 @@ void tileContainer::posMover(int frame)
 	a.x = a.x - WNDSIZEW/2 + HALFX;
 	a.y = a.y - WNDSIZEH/2 + HALFY;
 
-	ggameCore->PutScreenPos(a.x + frame*(b.x-a.x)/MAXFRAMECOUNT,a.y + frame*(b.y-a.y)/MAXFRAMECOUNT);
+	ggameCore->PutScreenPos(a.x + frame*(b.x-a.x)/gtimer->m_frame,a.y + frame*(b.y-a.y)/gtimer->m_frame);
 	
 }
 

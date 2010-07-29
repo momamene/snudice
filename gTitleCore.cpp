@@ -6,6 +6,9 @@
 #include "gUtil.h"
 #include "gPlayerManager.h"
 #include "gGameCore.h"
+#include "gTimer.h"
+#include <windows.h>
+#include <stdio.h>
 
 //------------------------------------------------------------------------------------
 //	Constructor	/	Destructor
@@ -30,12 +33,18 @@ gTitleCore *gTitleCore::GetIF()
 
 bool gTitleCore::SetUp()
 {
+	gTimer *gtimer = gTimer::GetIF();
 	m_eMode = ETM_TITLE;
 
 	if(FAILED(SetUp_Title()))
 		return false;
 	if(FAILED(SetUp_PlayerSelect()))
 		return false;
+	
+	// sangwoo temp
+	gtimer->SetUp();
+	gtimer->frameStart(1000,60);
+	// sangwoo temp End
 
 	return true;
 }
@@ -188,12 +197,31 @@ bool gTitleCore::SetUp_PlayerSelect()
 
 void gTitleCore::Draw_Title()
 {
+	//gUtil *gutil = gUtil::GetIF();
+	gTimer *gtimer = gTimer::GetIF();
 	int		i;
+	char	buf[128];
 
 	m_ImgTitle.Draw(0, 0);
 	
 	for(i = 0; i < ETB_END; i++)
 			m_ImgBtn[i].Draw();
+
+	// sangwoo temp
+	gUtil::BeginText();
+	sprintf(buf,"%d",gtimer->m_start);
+	gUtil::Text(0,0,buf);
+	sprintf(buf,"%d",GetTickCount());
+	gUtil::Text(0,20,buf);
+	sprintf(buf,"%d",GetTickCount()-(gtimer->m_start));
+	gUtil::Text(0,40,buf);
+	sprintf(buf,"%d",(GetTickCount()-(gtimer->m_start))*gtimer->m_frame);
+	gUtil::Text(0,60,buf);
+	sprintf(buf,"%d",gtimer->frame());
+	gUtil::Text(0,80,buf);
+	gUtil::EndText();
+	// sangwoo temp end
+
 }
 
 void gTitleCore::Draw_PlayerSelect()

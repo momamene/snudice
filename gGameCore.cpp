@@ -31,14 +31,6 @@ bool gGameCore::SetUp()
 	m_frameCount = 0;
 	tileContainer::GetIF()->Setup();
 
-	//m_turnN = 1;
-
-/*
-	m_turnPlayer = 0;
-	while(gplayerManager->m_player[m_turnPlayer].m_nNP == -1){
-		m_turnPlayer++;
-	}
-	*/
 	srand(time(NULL));
 
 	m_gMode = EGM_CHARSEL;
@@ -96,7 +88,7 @@ void gGameCore::MainLoopKeyboard(){
 	gMainWin *mainWin = gMainWin::GetIF(); // mainWin이라고 쓰고 키보드라고 읽는다.
 	tileContainer *tilecontainer = tileContainer::GetIF();
 	gPlayerManager *gplayerManager = gPlayerManager::GetIF();
-	//gTimer *gtimer = gTimer::GetIF();
+	gTimer *gtimer = gTimer::GetIF();
 	if(mainWin->m_Keys['M']){
 		if(m_minimapOn==0) m_minimapOn=1;
 		if(m_minimapOn==2) m_minimapOn=3;
@@ -112,7 +104,7 @@ void gGameCore::MainLoopKeyboard(){
 			m_frameCount=1;
 			tilecontainer->posSpacor();
 			gplayerManager->m_player[m_turnPlayer].posSpacor();
-			//gtimer->frameStart(1000,60);
+			gtimer->frameStart(200,60);
 		}
 	}
 	if(!(mainWin->m_Keys[VK_SPACE])){
@@ -122,7 +114,7 @@ void gGameCore::MainLoopKeyboard(){
 void gGameCore::MainLoopMove(){
 	tileContainer *tilecontainer = tileContainer::GetIF();
 	gPlayerManager *gplayerManager = gPlayerManager::GetIF();
-	//	gTimer *gtimer = gTimer::GetIF();
+	gTimer *gtimer = gTimer::GetIF();
 	
 
 	switch(m_gMode){
@@ -131,21 +123,22 @@ void gGameCore::MainLoopMove(){
 		break;
 	case EGM_GAME:
 
-	if(m_spacor>0){
-		int a;
-		if(m_frameCount < MAXFRAMECOUNT){ // 활성화 조건
-			tilecontainer->posMover(m_frameCount);
-			gplayerManager->m_player[m_turnPlayer].posMover(m_frameCount);
+	if(m_spacor>0){  
+		int a = gtimer->frame(); // 매우 심각한 문제인데 [sangwoo problem] 이걸 뒤에 쓰면 개차반이 된다는거
+		if(gtimer->m_turn == 0){ // 활성화 조건
+			tilecontainer->posMover(a);
+			gplayerManager->m_player[m_turnPlayer].posMover(a);
 			
 			m_frameCount++;
 		}
 		else{	// 종료 조건
-//			gtimer->frameSyn();
+			gtimer->frameEnd();
 			tilecontainer->posStoper();
 			gplayerManager->m_player[m_turnPlayer].posStoper();
 			m_spacor--;
 			if(m_spacor>0){
-				m_frameCount=1;
+				//m_frameCount=1;
+				gtimer->frameStart(200,60);
 				tilecontainer->posSpacor();
 				gplayerManager->m_player[m_turnPlayer].posSpacor();
 			}
@@ -164,22 +157,7 @@ void gGameCore::MainLoopMove(){
 				tilecontainer->m_ySpacePos=pt.y;
 				pt = tilecontainer->conToAbs(pt);
 				PutScreenPos(pt.x - WNDSIZEW/2 + HALFX,pt.y- WNDSIZEH/2 + HALFY);
-				//gtimer->frameEnd();
-/*
-				if(m_turnPlayer>=MAXPLAYER-1){
-					m_turnPlayer=0;
-					tilecontainer->m_xSpacePos=gplayerManager->m_player[m_turnPlayer].m_xSpacePos;
-					tilecontainer->m_ySpacePos=gplayerManager->m_player[m_turnPlayer].m_ySpacePos;
-					m_turnN++;
-					while(gplayerManager->m_player[m_turnPlayer].m_nNP == -1) m_turnPlayer++;
-				}
-				else{
-					do m_turnPlayer++; 
-					while(gplayerManager->m_player[m_turnPlayer].m_nNP == -1);
-					tilecontainer->m_xSpacePos = gplayerManager->m_player[m_turnPlayer].m_xSpacePos;
-					tilecontainer->m_ySpacePos = gplayerManager->m_player[m_turnPlayer].m_ySpacePos;
-				}
-*/				
+			
 			}
 			
 		}

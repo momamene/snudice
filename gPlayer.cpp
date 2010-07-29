@@ -3,6 +3,7 @@
 #include "tileContainer.h"
 #include "gImage.h"
 #include "gGameCore.h"
+#include "gTimer.h"
 
 bool gPlayer::SetUp (gChar *gchar)
 {
@@ -71,6 +72,7 @@ void gPlayer::posMover(int frame)
 {
 	gGameCore *ggameCore = gGameCore::GetIF();
 	tileContainer * tilecontainer = tileContainer::GetIF();
+	gTimer *gtimer = gTimer::GetIF();
 
 	POINT b, a;
 	b.x = m_Next_xSpacePos;
@@ -80,8 +82,8 @@ void gPlayer::posMover(int frame)
 	b = tilecontainer->conToAbs(b);
 	a = tilecontainer->conToAbs(a);
 
-	m_xDrawline = a.x + frame*(b.x-a.x)/MAXFRAMECOUNT;
-	m_yDrawline = a.y + frame*(b.y-a.y)/MAXFRAMECOUNT;
+	m_xDrawline = a.x + frame*(b.x-a.x)/(gtimer->m_frame);
+	m_yDrawline = a.y + frame*(b.y-a.y)/(gtimer->m_frame);
 
 	b.x = b.x - WNDSIZEW/2 + HALFX;
 	b.y = b.y - WNDSIZEH/2 + HALFY;
