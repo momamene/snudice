@@ -45,6 +45,8 @@ bool gGameCore::SetUp()
 
 	gtimer->SetUp();
 
+	m_masterState = 0;
+
 	return true;
 }
 
@@ -96,9 +98,6 @@ void gGameCore::MainLoopMouse(){
 void gGameCore::MainLoopKeyboard(){
 	
 	gMainWin *mainWin = gMainWin::GetIF(); // mainWin이라고 쓰고 키보드라고 읽는다.
-	tileContainer *tilecontainer = tileContainer::GetIF();
-	gPlayerManager *gplayerManager = gPlayerManager::GetIF();
-	gTimer *gtimer = gTimer::GetIF();
 	if(mainWin->m_Keys['M']){
 		if(m_minimapOn==0) m_minimapOn=1;
 		if(m_minimapOn==2) m_minimapOn=3;
@@ -111,95 +110,138 @@ void gGameCore::MainLoopKeyboard(){
 	if(mainWin->m_Keys[VK_SPACE]){
 
 		if(m_busMode==0&&m_spacor==0) {
-			m_spacor=rand()%6+1;
-			m_frameCount=1;
-			tilecontainer->posSpacor();
-			gplayerManager->m_player[m_turnPlayer].posSpacor();
-			gtimer->frameStart(BUS_NORMAL,BUS_FRAME);
+			MainLoopMoveSetup();
 		}
 	}
+	/*
 	if(!(mainWin->m_Keys[VK_SPACE])){
 
 	}
-	// sangwoo temp
-	/*
-	if(mainWin->m_Keys['A']){
-		m_busMode = true;
-		gtimer->frameStart(200,2);
-	}
 	*/
-	// sangwoo temp end
+	if(mainWin->m_Keys['A']){
+		m_masterState = 1;
+		MainLoopMoveSetup(1);
+		//m_spacor = 1;
+	}
 }
-void gGameCore::MainLoopMove(){
+
+void gGameCore::MainLoopMoveSetup(int spacor)
+{
+	tileContainer *tilecontainer = tileContainer::GetIF();
+	gPlayerManager *gplayerManager = gPlayerManager::GetIF();
+	gTimer *gtimer = gTimer::GetIF();
+
+	if(spacor==0) m_spacor=rand()%6+1;
+	else	m_spacor=spacor;
+	m_frameCount=1;
+	tilecontainer->posSpacor();
+	gplayerManager->m_player[m_turnPlayer].posSpacor();
+	gtimer->frameStart(BUS_NORMAL,BUS_FRAME);
+
+}
+
+void gGameCore::MainLoopMoveOn(int a)
+{
+	tileContainer *tilecontainer = tileContainer::GetIF();
+	gPlayerManager *gplayerManager = gPlayerManager::GetIF();
+	tilecontainer->posMover(a);
+	gplayerManager->m_player[m_turnPlayer].posMover(a);
+	
+	m_frameCount++;
+}
+
+void gGameCore::MainLoopMoveStepEnd()
+{
+	tileContainer *tilecontainer = tileContainer::GetIF();
+	gTimer *gtimer = gTimer::GetIF();
+	gPlayerManager *gplayerManager = gPlayerManager::GetIF();
+	
+	gtimer->frameEnd();
+	tilecontainer->posStoper();
+	gplayerManager->m_player[m_turnPlayer].posStoper();
+	m_spacor--;
+}
+
+void gGameCore::MainLoopMoveStepStart()
+{
 	tileContainer *tilecontainer = tileContainer::GetIF();
 	gPlayerManager *gplayerManager = gPlayerManager::GetIF();
 	gTimer *gtimer = gTimer::GetIF();
 	
+	//m_frameCount=1;
+	if(m_busMode==0)
+		gtimer->frameStart(BUS_NORMAL,BUS_FRAME);
+	else if(m_busMode==2)
+		gtimer->frameStart(BUS_FAST,BUS_FRAME);
+	tilecontainer->posSpacor();
+	gplayerManager->m_player[m_turnPlayer].posSpacor();
+}
 
-	switch(m_gMode){
-	case EGM_SUBMIT:
+void gGameCore::MainLoopMoveEnd()
+{
+	tileContainer *tilecontainer = tileContainer::GetIF();
+	gPlayerManager *gplayerManager = gPlayerManager::GetIF();
+	gTimer *gtimer = gTimer::GetIF();
+	
+	gplayerManager->m_player[m_turnPlayer].meet();
+	if(gplayerManager->m_player[m_turnPlayer].m_xSpacePos==tilecontainer->m_xInitSpacePos&&
+		gplayerManager->m_player[m_turnPlayer].m_ySpacePos==tilecontainer->m_yInitSpacePos) { // 만약 init 지점에 도착했다면.
+	
+		if(gplayerManager->m_player[m_turnPlayer].m_isNokdu) gplayerManager->m_player[m_turnPlayer].m_isNokdu = false;
+		else gplayerManager->m_player[m_turnPlayer].m_isNokdu = true;
+	}
+	else if(m_busMode==2){	// bus로 움직인거라면
+		m_busMode=0;		// bus 해제
+	}
+	else if(tilecontainer->tileMap[gplayerManager->m_player[m_turnPlayer].m_xSpacePos*LINEY+gplayerManager->m_player[m_turnPlayer].m_ySpacePos].tileType==TY_BUS){	// bus에 도착했다면
+		m_busMode = 1;		// bus on!
+		gtimer->frameStart(200,2);
+		//return;
+	}
+}
 
-		break;
-	case EGM_GAME:
-	if(m_busMode==1) break;
+void gGameCore::PlayerPosSet()
+{
+	tileContainer *tilecontainer = tileContainer::GetIF();
+	gPlayerManager *gplayerManager = gPlayerManager::GetIF();
+
+	POINT pt;
+	pt.x = gplayerManager->m_player[m_turnPlayer].m_xSpacePos;
+	pt.y = gplayerManager->m_player[m_turnPlayer].m_ySpacePos;
+	tilecontainer->m_xSpacePos=pt.x;
+	tilecontainer->m_ySpacePos=pt.y;
+	pt = tilecontainer->conToAbs(pt);
+	PutScreenPos(pt.x - WNDSIZEW/2 + HALFX,pt.y- WNDSIZEH/2 + HALFY);
+}
+
+void gGameCore::MainLoopMove(){
+	gTimer *gtimer = gTimer::GetIF();
+	
+	if(m_busMode==1) return;
 
 	if(m_spacor>0){  
 		int a = gtimer->frame(); // 매우 심각한 문제인데 [sangwoo problem] 이걸 뒤에 쓰면 개차반이 된다는거
 		if(gtimer->m_turn == 0){ // 활성화 조건
-			tilecontainer->posMover(a);
-			gplayerManager->m_player[m_turnPlayer].posMover(a);
-			
-			m_frameCount++;
+			MainLoopMoveOn(a);
 		}
 		else{	// 종료 조건
-			gtimer->frameEnd();
-			tilecontainer->posStoper();
-			gplayerManager->m_player[m_turnPlayer].posStoper();
-			m_spacor--;
+			MainLoopMoveStepEnd();
 			if(m_spacor>0){
-				//m_frameCount=1;
-				if(m_busMode==0)
-					gtimer->frameStart(BUS_NORMAL,BUS_FRAME);
-				else if(m_busMode==2)
-					gtimer->frameStart(BUS_FAST,BUS_FRAME);
-				tilecontainer->posSpacor();
-				gplayerManager->m_player[m_turnPlayer].posSpacor();
+				MainLoopMoveStepStart();
 			}
 			else{	// 실제 종료 조건
-			
-				gplayerManager->m_player[m_turnPlayer].meet();
-				if(gplayerManager->m_player[m_turnPlayer].m_xSpacePos==tilecontainer->m_xInitSpacePos&&
-					gplayerManager->m_player[m_turnPlayer].m_ySpacePos==tilecontainer->m_yInitSpacePos) {
-					if(gplayerManager->m_player[m_turnPlayer].m_isNokdu) gplayerManager->m_player[m_turnPlayer].m_isNokdu = false;
-					else gplayerManager->m_player[m_turnPlayer].m_isNokdu = true;
+				MainLoopMoveEnd();
+				if(m_busMode==0){
+					if(m_masterState==0){
+						nextTurnAuto();
+						PlayerPosSet();
+					}
+					else if(m_masterState==1){
+						m_masterState=0;
+					}
 				}
-				else if(m_busMode==2){
-					m_busMode=0;
-				}
-				else if(tilecontainer->tileMap[gplayerManager->m_player[m_turnPlayer].m_xSpacePos*LINEY+gplayerManager->m_player[m_turnPlayer].m_ySpacePos].tileType==TY_BUS){
-					m_busMode = 1;
-					
-					gtimer->frameStart(200,2);
-					break;
-				}
-				
-
-
-				nextTurnAuto();
-
-				POINT pt;
-				pt.x = gplayerManager->m_player[m_turnPlayer].m_xSpacePos;
-				pt.y = gplayerManager->m_player[m_turnPlayer].m_ySpacePos;
-				tilecontainer->m_xSpacePos=pt.x;
-				tilecontainer->m_ySpacePos=pt.y;
-				pt = tilecontainer->conToAbs(pt);
-				PutScreenPos(pt.x - WNDSIZEW/2 + HALFX,pt.y- WNDSIZEH/2 + HALFY);
-			
 			}
-			
 		}
-	}
-	break;
 	}
 }
 
@@ -283,33 +325,14 @@ void gGameCore::OnLButtonDownSubmit(){
 					startTurnAuto();
 					//m_turnN=1;
 					//m_turnPlayer=0;
-				}
-			
-				/*
-				if(m_turnPlayer>=MAXPLAYER-1){
-					if(m_turnN < 6){
-						m_turnN++;
-						m_turnPlayer=0;
-					}
-					else{
-						m_gMode=EGM_GAME;
-						m_turnN=1;
-						m_turnPlayer=0;
-					}
-				}
-				else{
-					m_turnPlayer++;
-					// cantante
-					//do {m_turnPlayer++;} while(gplayerManager->m_player[m_turnPlayer].m_nNP==-1)
-				}
-				*/
-		
+				}		
 				break;
 			}
 		}
 	}
 
 }
+
 void gGameCore::OnLButtonDownBus()
 {
 	tileContainer *tilecontainer = tileContainer::GetIF();
@@ -325,21 +348,13 @@ void gGameCore::OnLButtonDownBus()
 		gtimer->frameEnd();
 		gtimer->frameStart(BUS_FAST,BUS_FRAME);
 		m_spacor = tilecontainer->distance(gplayerManager->m_player[m_turnPlayer].m_xSpacePos*LINEY+gplayerManager->m_player[m_turnPlayer].m_ySpacePos,nextBusTile);
-		
-		if(m_spacor==0) {
-			nextTurnAuto();
-			POINT pt;
-			pt.x = gplayerManager->m_player[m_turnPlayer].m_xSpacePos;
-			pt.y = gplayerManager->m_player[m_turnPlayer].m_ySpacePos;
-			tilecontainer->m_xSpacePos=pt.x;
-			tilecontainer->m_ySpacePos=pt.y;
-			pt = tilecontainer->conToAbs(pt);
-			PutScreenPos(pt.x - WNDSIZEW/2 + HALFX,pt.y- WNDSIZEH/2 + HALFY);
-			m_busMode = 0;
+
+		m_busMode = 2;
+
+		if(gplayerManager->m_player[m_turnPlayer].m_xSpacePos==2&&gplayerManager->m_player[m_turnPlayer].m_ySpacePos==17){
+			gplayerManager->m_player[m_turnPlayer].m_isNokdu=false;
 		}
-		else {
-			m_busMode = 2;
-		}
+
 	}
 }
 

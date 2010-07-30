@@ -42,16 +42,18 @@ public:
 	int			m_nPlayer;				// 누구차례냐
 
 
-	int			m_minimapOn;	// 0 , 1, 2, 3 (1,2) 일 때 On, (3,0) 일 때 Off
+	int			m_minimapOn;			// 0 , 1, 2, 3 (1,2) 일 때 On, (3,0) 일 때 Off
 	int			m_spacor;
-	int			m_xPos;			// read-only 같은 설정은 없나?
+
+	// m_xPos, m_yPos 는 Draw되는 시작 시점을 의미한다.
+	int			m_xPos;					// read-only 같은 설정은 없나?
 	int			m_yPos;
-	int			m_frameCount;
+	int			m_frameCount;			// frameCount는 Timer 기능을 가지는 것으로, gTimer class에 의해 대체될 운명이다.
 
-	int			m_turnN;
-	int			m_turnPlayer;
+	int			m_turnN;				// 몇턴인가?
+	int			m_turnPlayer;			// 누구 차례인가?
 
-	int			m_selectSubject;
+	int			m_selectSubject;		// submit에서 선택된 과목이 m_selectSubject이다. (index, 혹은 maptool에서 flag2값)
 
 	//int		m_selectSubject;
 	//int		m_selectTurn;
@@ -59,7 +61,9 @@ public:
 	//gPlayer a;
 
 	// 무엇에 쫓기는가
-	int		m_busMode;
+	int			m_busMode;
+	
+	int			m_masterState;	// 0이면 아무것도 아님 (기본값), 1이면 움직인 다음에도 턴이 넘어가지 않음.
 	
 public:
 	bool		SetUp();
@@ -72,7 +76,7 @@ public:
 	void		OnMouseMove();
 	void		OnRButtonDown();
 
-	void		PutScreenPos(int x, int y);		// 상우의 PutScreenPos
+	void		PutScreenPos(int x, int y);				// 상우의 PutScreenPos 좌표는 절대값입니다.
 
 	void		SetPlayerIndex(int nP = 0);				// 1p 2p 3p면 1p 를 시작 index로 셋팅
 private:
@@ -80,15 +84,23 @@ private:
 
 	void		startTurnAuto();
 	void		SetUp_Submit();
+
 	// MainLoop의 떨거지들
 	void		MainLoopMouse();
-	void		MainLoopMove();
 	void		MainLoopKeyboard();
 	void		MainLoopMouseSubmit();	// submit 
-
+	// MainLoop의 떨거지인 MainLoopMove와 그들의 떨거지들
+	void		MainLoopMove();
+	void		MainLoopMoveSetup(int spacor=0);
+	void		MainLoopMoveOn(int a);
+	void		MainLoopMoveStepEnd();
+	void		MainLoopMoveStepStart();
+	void		MainLoopMoveEnd();
+	
 	// OnLButtonDown
 	void		OnLButtonDownSubmit();
 	void		OnLButtonDownBus();
+	void		PlayerPosSet();
 
 	// 기타 중요 colony
 	void		nextTurnAuto();
@@ -98,4 +110,5 @@ private:
 	void		OnLButtonDown_CharSel();
 	void		OnMouseMove_CharSel();
 	void		Draw_CharSelect();
+	
 };
