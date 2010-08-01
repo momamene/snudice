@@ -49,6 +49,8 @@ void tileContainer::Setup()
 	gimage[8].Load(".\\Data\\Map\\art.img");
 	
 	m_wallpaper.Load(TITLE_IMG_TITLE);
+	m_wallpaperSubmit.Load(SUBMIT_IMG_TITLE);
+	m_buttonSubmit.Load(SUBMIT_IMG_BUTTON);
 
 	m_xSpacePos=-1;
 	m_ySpacePos=-1;
@@ -130,8 +132,41 @@ void tileContainer::Load()
 
 
 // 2. Draw Line Start
+void tileContainer::DrawSubmitButtonOne (int x0,int y0,int type){
+	RECT rcDest = {x0,y0,x0+30,y0+20};
+	RECT rcSour = {type*30,0,(type+1)*30,20};
+	m_buttonSubmit.Draw(rcDest,rcSour,true); // true나 false나 상관 없겠지. 뭔진 기억 안나지만.
+}
 
-void tileContainer::DrawSubmit(){
+void tileContainer::DrawSubmitButton(int io,int tile){
+	gPlayerManager *gplayerManager = gPlayerManager::GetIF();
+	int flag = rowToFlag(io);
+	int i,j;
+	int type[3];
+	i=0;
+	
+	//for( i = 0 ; i < 2 /*tileMap[tile].flag3*/ ; ){
+		for( j = 0 ; j < MAXPLAYER ; j++){
+			if(gplayerManager->m_player[j].m_nNP!=-1&&gplayerManager->m_player[j].isMySubject(flag)){
+				type[i] = j;
+				i++;
+			}
+		}
+	//} 
+	for( ; i < 2 /*tileMap[tile].flag3*/ ; i++){
+		type[i] = 4;
+	}
+	for( ; i < 3 ; i++){
+		type[i] = 5;
+	}
+
+	for (i = 0 ; i < 3 ; i++){
+		DrawSubmitButtonOne(i*32+135,io*22+50-3,type[i]);
+	}
+}
+
+void tileContainer::DrawSubmit(){	// 좌표 하드코딩의 절정
+									// DrawSubmit과 gGameCore::OnLButtonDownSubmit() 이 연동되는데 하드코딩 상황이다.
 
 	int i;
 	gGameCore *gameCore = gGameCore::GetIF();
@@ -139,13 +174,21 @@ void tileContainer::DrawSubmit(){
 	int l_selectSubject;
 		RECT tempRC;
 		int tile;
-	gUtil::BeginText();	
+	for(i = 0 ; i < m_subjectN ; i++){
+		tile = rowToFirstTile(i);
+		DrawSubmitButton(i,tile);
+	}
+
+	gUtil::BeginText();
 	for (i = 0 ; i < m_subjectN ; i++){
+		//m_buttonSubmit.Draw(0,0);
 		tile = rowToFirstTile(i);
 		if(tile>=0)
-			gUtil::Text(0,i*20,tileMap[tile].subject);
+			gUtil::Text(15,i*22+50,tileMap[tile].subject);
 		else
-			gUtil::Text(0,i*20,"you are simang");
+			gUtil::Text(15,i*22+50,"you are simang");
+		
+		
 	}
 	
 	l_selectSubject=gameCore->m_selectSubject;
@@ -157,18 +200,17 @@ void tileContainer::DrawSubmit(){
 			gUtil::Text(320,40,tileMap[tile].subject);
 		}	
 	}
-	
+	/*	// 이걸 지운다는 것이 무슨 의미인지를 이해하지 못한 한 절대 지우지 말 것
 	for(i = 0 ; i < gplayerManager->m_player[gameCore->m_turnPlayer].m_subjectGrader.m_subjectN ; i++) {
 		tile=flagToFirstTile(gplayerManager->m_player[gameCore->m_turnPlayer].m_subjectGrader.m_subject[i]);
 		if(tile!=-1)
 			gUtil::Text(160,i*20,tileMap[tile].subject);
 	}
-
-	
+*/
 	gUtil::EndText();
 
 	
-	DrawHexagon(160,160,5,true);
+	DrawHexagon(240,200,6,true);
 
 	if(m_selectReadySubjectFlag!=-1){
 		int tile;
@@ -178,9 +220,9 @@ void tileContainer::DrawSubmit(){
 		else							boole=1;
 
 		tile = flagToFirstTile(m_selectReadySubjectFlag);
-		DrawHexagonOne(160,160,tileMap[tile].ptPos.x,tileMap[tile].ptPos.y,5,true,boole);
+		DrawHexagonOne(240,200,tileMap[tile].ptPos.x,tileMap[tile].ptPos.y,6,true,boole);
 		tile = flagToSecondTile(m_selectReadySubjectFlag);
-		DrawHexagonOne(160,160,tileMap[tile].ptPos.x,tileMap[tile].ptPos.y,5,true,boole);
+		DrawHexagonOne(240,200,tileMap[tile].ptPos.x,tileMap[tile].ptPos.y,6,true,boole);
 		
 		//DrawHexagonOne(160,160,tileMap[tile].ptPos.x,tileMap[tile].ptPos.y,5,true,0);
 
@@ -277,13 +319,15 @@ void tileContainer::Draw()
 	gTimer *gtimer = gTimer::GetIF();
 
 
-	m_wallpaper.Draw(0,0);
+	
 
 	if(gameCore->m_gMode==EGM_SUBMIT){
+		m_wallpaperSubmit.Draw(0,0);
 		DrawSubmit();
 		return;
 	}
 	else{	
+		m_wallpaper.Draw(0,0);
 		DrawHexagon(0,0,1);
 		
 		if(gameCore->m_busMode==1&&gtimer->m_on)
@@ -474,6 +518,13 @@ int tileContainer::flagToRow (int index)
 		if(m_subject[i]==index) return i;
 	}
 	return -1;
+}
+
+int tileContainer::rowToFlag (int row)
+{
+	for(int i = 0 ; i < m_subjectN ; i++){
+		if(m_subject[row]==i) return i;
+	}
 }
 
 int tileContainer::rowToFirstTile(int row)

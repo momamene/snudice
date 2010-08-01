@@ -285,7 +285,7 @@ void gGameCore::MainLoopMouseSubmit(){
 	//gPlayerManager * gplayerManager = gPlayerManager::GetIF();
 	
 	for(int i = 0 ; i < tilecontainer->m_subjectN ; i++){
-		if(mouse->m_nPosX < 100 && mouse->m_nPosY > i*20 && mouse->m_nPosY < (i+1)*20){
+		if(mouse->m_nPosX < 100+15 && mouse->m_nPosY > i*22+50 && mouse->m_nPosY < (i+1)*22+50){
 			tilecontainer->m_selectReadySubjectFlag = tilecontainer->m_subject[i];	// 입력 구문인데. 아 이런 코드는 전반적으로 좋지 않아요. 우리 객체지향해야지.
 			if(m_frameCount<2){
 				m_frameCount++;
@@ -306,7 +306,7 @@ void gGameCore::OnLButtonDownSubmit(){
 	gPlayerManager * gplayerManager = gPlayerManager::GetIF();
 
 	for(int i = 0 ; i < tilecontainer->m_subjectN ; i++){
-		if(mouse->m_nPosX < 100 && mouse->m_nPosY > i*20 && mouse->m_nPosY < (i+1)*20){
+		if(mouse->m_nPosX < 100+15 && mouse->m_nPosY > i*22+50 && mouse->m_nPosY < (i+1)*22+50){
 			
 			m_selectSubject = tilecontainer->m_subject[i];	// 입력 구문인데. 아 이런 코드는 전반적으로 좋지 않아요. 우리 객체지향해야지.
 			if(!gplayerManager->m_player[m_turnPlayer].isMySubject(m_selectSubject)&&gplayerManager->StudentNum(m_selectSubject)<2) {

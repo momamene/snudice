@@ -30,6 +30,11 @@
 
 
 #define TITLE_IMG_TITLE			".\\Data\\Title\\title.img"
+// sangwoo add start.
+#define SUBMIT_IMG_TITLE		".\\Data\\Sugang\\sugang_back.img" 
+#define SUBMIT_IMG_BUTTON		".\\Data\\Sugang\\sugang_button.img"
+// sangwoo add end. 
+
 //	start button
 #define TBT_START_IMG			".\\Data\\Title\\tstart.img"
 #define TBT_START_SIZEW			62			// start button °¡·Î

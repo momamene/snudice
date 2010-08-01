@@ -2,7 +2,7 @@
 #define LEFTX 25
 #define MIDDLEX 52
 #define FULLX 102
-#define WIDEX 152
+#define WIDEX 154
 #define HALFY 40
 #define FULLY 80
 

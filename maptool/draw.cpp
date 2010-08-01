@@ -103,6 +103,7 @@ void hahaha(HWND hWnd) {
 	char buf[1000];
 		
 	globalPaint(hMemDC,0,0,1);
+	//TextOut(hMemDC,0,0,"Hello",strlen("Hello"));
 
 	DeleteDC(hMemDC);
 	ReleaseDC(hWnd,hdc);

@@ -8,7 +8,7 @@
 #define MIDDLEX 52
 #define HALFX 52 // 25+ 52/2 = 52 
 #define FULLX 102
-#define WIDEX 152
+#define WIDEX 154
 #define HALFY 40
 #define FULLY 80
 
@@ -27,6 +27,8 @@ public:
 	DWORD	dw;
 	gImage	gimage[9];
 	gImage	m_wallpaper;
+	gImage	m_wallpaperSubmit;
+	gImage	m_buttonSubmit;
 
 	int		count; // 아마 이것이 tile의 갯수갰지.
 
@@ -60,6 +62,7 @@ public:
 	
 	// subject function colony - 수정대상! (뭐 간단하고, 돌아가면 상관 없지만 ;;;)
 	int		flagToRow (int index);
+	int		rowToFlag (int row);
 	int		rowToFirstTile(int row);
 	int		rowToSecondTile(int row);
 	int		flagToFirstTile(int index);
@@ -85,6 +88,9 @@ private:
 	// Draw의 떨거지
 	void	DrawSubInfo();
 	void    DrawSubmit();
+	void	DrawSubmitButton(int io,int tile);
+	void	DrawSubmitButtonOne (int x0,int y0,int type);
+
 	void	DrawHexagon(int x0,int y0,int n,bool boolo=false);
 	void	DrawHexagonOne(int x0,int y0,int i,int j,int n,bool boolo,int type=0);	// 0은 기본 1은 선택된 표시
 	void	DrawHexagonBus();
@@ -94,6 +100,5 @@ private:
 	bool	isExisted(int line);
 	POINT	absToCon();			// terrible Problem. where is input Point? (gmouse의 mouse군과 gGameCore의 x_Pos를 읽어 자동 출력 하는 놀라운 함수)
 
-	
 };
 
