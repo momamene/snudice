@@ -55,6 +55,9 @@ void gPlayerManager::SetUp()
 }
 
 void gPlayerManager::Draw(){
+	tileContainer *tilecontainer = tileContainer::GetIF();
+
+	/*
 	for(int i = 0 ; i < MAXPLAYER ; i++)
 	{
 		if(m_player[i].m_nNP != -1)
@@ -62,6 +65,14 @@ void gPlayerManager::Draw(){
 			m_player[i].Draw();
 		}
 	}
+	*/
+	for(int i = 0 ; i < LINEX*LINEY ; i++){
+		if(tilecontainer->tileMap[i].tileType==TY_NONE) continue;
+		for(int j = 0 ; j < MAXPLAYER ; j++){
+			if(m_player[j].m_nNP!=-1&&m_player[j].m_xSpacePos==i/LINEY&&m_player[j].m_ySpacePos==i%LINEY) m_player[j].Draw();
+		}
+	}
+
 }
 
 void gPlayerManager::Release()

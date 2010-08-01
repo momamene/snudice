@@ -550,21 +550,22 @@ int tileContainer::distance(int mapA,int mapB){	// 치명적인 녹두 문제. 녹두 들어
 	int iter=mapA;
 	// sangwoo temp
 	
-	
+	/*
 	do {
 		iter = tileMap[iter].nextTile.x*LINEY+tileMap[iter].nextTile.y;
 		localCount++;
 	} while(iter!=mapB);
-	
+	*/
 		// sangwoo temp end
-	/*
+	
+	
 	if(mapA==mapB) return 0;
 	
 	while(iter!=mapB) {
 		iter = tileMap[iter].nextTile.x*LINEY+tileMap[iter].nextTile.y;
 		localCount++;
 	} 
-	*/
+	
 	localCount++;
 	return localCount;
 }

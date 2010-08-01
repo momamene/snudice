@@ -34,6 +34,9 @@ bool gPlayer::SetUp (gChar *gchar)
 
 	m_isNokdu = false;
 
+	m_moveFoot = 1;
+	m_movePosition = -1;
+
 	return true;
 }
 
@@ -48,8 +51,10 @@ void gPlayer::Draw()
 	rc.top = -ggameCore->m_yPos + m_yDrawline - FULLY;
 	rc.right = rc.left + FULLX;
 	rc.bottom = rc.top + FULLY * 2;
-	
-	m_charInfo->DrawIllu(rc);
+	if(m_movePosition==-1)
+		m_charInfo->DrawIllu(rc);
+	else
+		m_charInfo->DrawDot(rc,m_moveFoot,m_movePosition);
 	
 }
 
@@ -65,6 +70,11 @@ void gPlayer::posSpacor()
 		m_Next_xSpacePos = tilecontainer->tileMap[m_xSpacePos*LINEY+m_ySpacePos].nextTile.x;	// 기본 방침은, Next와 Now가 괴리가 있는 상황은 움직이는 상황인 것이다.
 		m_Next_ySpacePos = tilecontainer->tileMap[m_xSpacePos*LINEY+m_ySpacePos].nextTile.y;
 	}
+	if(m_xSpacePos < m_Next_xSpacePos) m_movePosition = 3;
+	else if(m_xSpacePos > m_Next_xSpacePos) m_movePosition = 1;
+	else if(m_ySpacePos < m_Next_ySpacePos) m_movePosition = 0;
+	else if(m_ySpacePos > m_Next_ySpacePos) m_movePosition = 2;
+	else m_movePosition = -1;
 
 }
 
@@ -73,6 +83,8 @@ void gPlayer::posMover(int frame)
 	gGameCore *ggameCore = gGameCore::GetIF();
 	tileContainer * tilecontainer = tileContainer::GetIF();
 	gTimer *gtimer = gTimer::GetIF();
+
+	int frameMax = gtimer->m_frame;
 
 	POINT b, a;
 	b.x = m_Next_xSpacePos;
@@ -84,6 +96,11 @@ void gPlayer::posMover(int frame)
 
 	m_xDrawline = a.x + frame*(b.x-a.x)/(gtimer->m_frame);
 	m_yDrawline = a.y + frame*(b.y-a.y)/(gtimer->m_frame);
+
+	if(frame<frameMax/4) m_moveFoot = 1;
+	else if(frame<frameMax/2) m_moveFoot = 0;
+	else if(frame<(frameMax*3)/4) m_moveFoot = 1;
+	else m_moveFoot = 2;
 
 	b.x = b.x - WNDSIZEW/2 + HALFX;
 	b.y = b.y - WNDSIZEH/2 + HALFY;
@@ -104,6 +121,7 @@ void gPlayer::posStoper()
 		else m_isNokdu = true;
 	}
 	*/
+	m_movePosition = -1;
 }
 
 void gPlayer::Release()

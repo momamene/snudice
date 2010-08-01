@@ -36,11 +36,13 @@ public:
 	virtual ~gChar();
 public:
 	gImage		m_ImgIllu;
+	gImage		m_ImgDot;
 	CHARDATA	m_Data;
 
-	bool		SetUp(CHARDATA data, char *szIllu);
+	bool		SetUp(CHARDATA data, char *szIllu, char *szDot);
 	void		Draw();
 	void		DrawIllu(RECT rcScr);
+	void		DrawDot(RECT rcScr,int dotConX, int dotConY);	// 0~2, 0~3 까지의 숫자만 입력하세요.
 
 	void		Release();
 };

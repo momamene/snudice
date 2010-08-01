@@ -9,10 +9,6 @@
 #include <time.h>
 #include "gTimer.h"
 
-// sangwoo bus, timer and etc
-#define BUS_NORMAL				200
-#define BUS_FAST				100
-#define BUS_FRAME				60
 
 static gGameCore s_GameCore;
 
@@ -348,8 +344,12 @@ void gGameCore::OnLButtonDownBus()
 		gtimer->frameEnd();
 		gtimer->frameStart(BUS_FAST,BUS_FRAME);
 		m_spacor = tilecontainer->distance(gplayerManager->m_player[m_turnPlayer].m_xSpacePos*LINEY+gplayerManager->m_player[m_turnPlayer].m_ySpacePos,nextBusTile);
-
-		m_busMode = 2;
+		if(m_spacor==0) {	// 너무 강제적인 느낌이 들지 않니?
+			m_busMode = 0;
+			nextTurnAuto();
+			PlayerPosSet();
+		}
+		else m_busMode = 2;
 
 		if(gplayerManager->m_player[m_turnPlayer].m_xSpacePos==2&&gplayerManager->m_player[m_turnPlayer].m_ySpacePos==17){
 			gplayerManager->m_player[m_turnPlayer].m_isNokdu=false;

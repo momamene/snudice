@@ -194,3 +194,7 @@
 #define IF_POS_BACKX			((WNDSIZEW - IF_POS_SCARDW) / 2)
 #define IF_POS_BACKY			((WNDSIZEH - IF_POS_SCARDH) / 2)
 
+// sangwoo bus, timer and etc
+#define BUS_NORMAL				100		// 숫자가 커지면 느려집니다. (한 타일을 400ms에 움직인다. 예컨대)
+#define BUS_FAST				50
+#define BUS_FRAME				60
