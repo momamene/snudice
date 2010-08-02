@@ -574,6 +574,8 @@ void tileContainer::Release()
 		gimage[i].Release();
 
 	m_wallpaper.Release();
+	m_wallpaperSubmit.Release();
+	m_buttonSubmit.Release();
 }
 
 int tileContainer::busClickProcessor(int x,int y){	// output¿∫ tile ¡§∫∏

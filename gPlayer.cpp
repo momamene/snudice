@@ -35,7 +35,7 @@ bool gPlayer::SetUp (gChar *gchar)
 	m_isNokdu = false;
 
 	m_moveFoot = 1;
-	m_movePosition = -1;
+	m_movePosition = 0;
 
 	return true;
 }
@@ -47,13 +47,15 @@ void gPlayer::Draw()
 	
 	RECT rc;
 
-	rc.left = -ggameCore->m_xPos + m_xDrawline;
+	rc.left = -ggameCore->m_xPos + m_xDrawline + 15;
 	rc.top = -ggameCore->m_yPos + m_yDrawline - FULLY;
-	rc.right = rc.left + FULLX;
-	rc.bottom = rc.top + FULLY * 2;
-	if(m_movePosition==-1)
-		m_charInfo->DrawIllu(rc);
-	else
+	rc.right = rc.left + DOT_WIDTH;
+	rc.bottom = rc.top + DOT_HEIGHT;
+
+// 	if(m_movePosition==-1)
+// 		//m_charInfo->DrawIllu(rc);
+// 		m_charInfo->DrawDot(rc,m_moveFoot,m_movePosition);
+// 	else
 		m_charInfo->DrawDot(rc,m_moveFoot,m_movePosition);
 	
 }
@@ -62,11 +64,14 @@ void gPlayer::posSpacor()
 {	// 다음 칸으로 움직이라는 신호.
 	gGameCore *gameCore = gGameCore::GetIF();
 	tileContainer * tilecontainer = tileContainer::GetIF();
-	if(tilecontainer->m_xInitSpacePos == m_xSpacePos && tilecontainer->m_yInitSpacePos == m_ySpacePos && m_isNokdu){
+
+	if(tilecontainer->m_xInitSpacePos == m_xSpacePos && tilecontainer->m_yInitSpacePos == m_ySpacePos && m_isNokdu)
+	{
 		m_Next_xSpacePos = tilecontainer->tileMap[m_xSpacePos*LINEY+m_ySpacePos].flag1; // gplayerManager->m_player[gameCore->m_turnPlayer]->m_charInfo;
 		m_Next_ySpacePos = tilecontainer->tileMap[m_xSpacePos*LINEY+m_ySpacePos].flag2; // gplayerManager->m_player[gameCore->m_turnPlayer];
 	}
-	else{
+	else
+	{
 		m_Next_xSpacePos = tilecontainer->tileMap[m_xSpacePos*LINEY+m_ySpacePos].nextTile.x;	// 기본 방침은, Next와 Now가 괴리가 있는 상황은 움직이는 상황인 것이다.
 		m_Next_ySpacePos = tilecontainer->tileMap[m_xSpacePos*LINEY+m_ySpacePos].nextTile.y;
 	}
@@ -74,7 +79,7 @@ void gPlayer::posSpacor()
 	else if(m_xSpacePos > m_Next_xSpacePos) m_movePosition = 1;
 	else if(m_ySpacePos < m_Next_ySpacePos) m_movePosition = 0;
 	else if(m_ySpacePos > m_Next_ySpacePos) m_movePosition = 2;
-	else m_movePosition = -1;
+//	else m_movePosition = -1;
 
 }
 
@@ -121,7 +126,8 @@ void gPlayer::posStoper()
 		else m_isNokdu = true;
 	}
 	*/
-	m_movePosition = -1;
+//	m_movePosition = -1;
+	m_moveFoot = 1;
 }
 
 void gPlayer::Release()
