@@ -27,6 +27,7 @@ bool gPopUp::SetUp()
 {
 	m_bPopup	= false;
 	m_bReturn	= false;
+	m_Img		= NULL;
 	
 	if(FAILED(m_ImgPopup.Load(POPUP_IMG_BACK)))
 		return false;
@@ -83,6 +84,15 @@ bool gPopUp::SetPopUp(BTNCLK btn, char *szLine1, char *szLine2)
 	return true;
 }
 
+bool gPopUp::SetImgPopUp(BTNCLK btn, gImage *img, char *szLine1, char *szLine2)
+{
+	m_Img		= img;
+
+	bool ret = SetPopUp(btn, szLine1, szLine2);
+
+	return ret;
+}
+
 void gPopUp::Release()
 {
 	m_ImgPopup.Release();
@@ -98,14 +108,23 @@ void gPopUp::TextPosX()
 	{
 		length = strlen(m_szLine1);
 		length *= 6;		// 글자 하나당 6pixel이라고 가정(한글기준)
-		m_nLine1X = POPUP_X + (POPUP_WIDTH - length) / 2;
+
+		if(m_Img)
+			m_nLine1X = POPUP_X + POPUP_IMG_W + (POPUP_WIDTH - POPUP_IMG_W - length) / 2;
+		else
+			m_nLine1X = POPUP_X + (POPUP_WIDTH - length) / 2;
 	}
+
 	if(m_szLine2 != NULL)
 	{
 		length = strlen(m_szLine2);
 		length *= 6;		// 글자 하나당 6pixel이라고 가정(한글기준)
 		m_nLine2X = POPUP_X + (POPUP_WIDTH - length) / 2;
-	}
+
+		if(m_Img)
+			m_nLine2X = POPUP_X + POPUP_IMG_W + (POPUP_WIDTH - POPUP_IMG_W - length) / 2;
+		else
+			m_nLine2X = POPUP_X + (POPUP_WIDTH - length) / 2;	}
 }
 
 bool gPopUp::isPopUp()
@@ -148,6 +167,7 @@ void gPopUp::Ok()
 	memset(m_szLine1, 0, 128);
 	memset(m_szLine2, 0, 128);
 	m_bReturn	= true;
+	m_Img		= NULL;
 }
 
 void gPopUp::Cancel()
@@ -157,6 +177,7 @@ void gPopUp::Cancel()
 	memset(m_szLine1, 0, 128);
 	memset(m_szLine2, 0, 128);
 	m_bReturn	= true;
+	m_Img		= NULL;
 }
 
 void gPopUp::Draw()
@@ -176,6 +197,9 @@ void gPopUp::Draw()
 			m_ImgBtn[ECLK_CANCEL].Draw();
 			break;
 	}
+
+	if(m_Img != NULL)
+		m_Img->Draw(POPUP_IMG_X, POPUP_IMG_Y);
 
 	gUtil::BeginText();
 		if(m_szLine1)

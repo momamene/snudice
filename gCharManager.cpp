@@ -47,6 +47,7 @@ bool gCharManager::SetUp()
 	char		szTemp[512];
 	char		szIllu[128];
 	char		szDot[128];
+	char		szPopup[128];
 	int			i, k;
 	int			nSlot = 0;
 	int			nCount;			// 뭐 입력하는중이냐 0 단대 1 이름 ...
@@ -100,7 +101,10 @@ bool gCharManager::SetUp()
 					strcpy(szIllu, szTemp);
 					break;
 				case 10: // Dot img
-					strcpy(szDot,szTemp);
+					strcpy(szDot, szTemp);
+					break;
+				case 11:
+					strcpy(szPopup, szTemp);
 					break;
 				}
 				k = 0;
@@ -109,7 +113,7 @@ bool gCharManager::SetUp()
 				szTemp[k++] = szBuf[i];
 			i++;
 		}
-		m_Chars[nSlot++].SetUp(chardata, szIllu, szDot);
+		m_Chars[nSlot++].SetUp(chardata, szIllu, szDot, szPopup);
 	}
 	fclose(fp);
 	// end read data file

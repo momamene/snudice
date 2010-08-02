@@ -29,7 +29,9 @@ public:
 public:
 	BTNCLK		m_eBtnClk;
 
-	gImage		m_ImgPopup;				// popup창 이미지
+	gImage*		m_Img;					// popup에 띄울 이미지
+
+	gImage		m_ImgPopup;				// popup창 배경 이미지
 	gImgButton	m_ImgBtn[ECLK_END];
 	bool		m_bPopup;				// popup됬냐
 	char		m_szLine1[128];			// popup창에 띄울 메시지 - 1번째 줄
@@ -42,6 +44,7 @@ public:
 public:
 
 	bool		SetPopUp(BTNCLK btn, char *szLine1 = NULL, char *szLine2 = NULL);		// popup창 띄우기 전에 정보 셋팅
+	bool		SetImgPopUp(BTNCLK btn, gImage *img, char *szLine1 = NULL, char *szLine2 = NULL);
 	bool		isPopUp();
 
 	// overriding

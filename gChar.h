@@ -37,9 +37,10 @@ public:
 public:
 	gImage		m_ImgIllu;
 	gImage		m_ImgDot;
+	gImage		m_ImgPopup;
 	CHARDATA	m_Data;
 
-	bool		SetUp(CHARDATA data, char *szIllu, char *szDot);
+	bool		SetUp(CHARDATA data, char *szIllu, char *szDot, char *szPopup);
 	void		Draw();
 	void		DrawIllu(RECT rcScr);
 	void		DrawDot(RECT rcScr,int dotConX, int dotConY);	// 0~2, 0~3 까지의 숫자만 입력하세요.
