@@ -7,6 +7,7 @@
 #include "gInterface.h"
 #include "gUtil.h"
 #include "gPlayerManager.h"
+#include "gPopUp.h"
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
@@ -106,6 +107,14 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 		return false;
 	}
 
+	// SetUp PopUp
+	if(FAILED(gPopUp::GetIF()->SetUp()))
+	{
+		MessageBox(m_hWnd, "PopUp : Setup 실패", "Error", MB_OK);
+		return false;
+	}
+
+
 	// font 설정  gUtil
 	gUtil::SetSize(12);
 
@@ -130,6 +139,7 @@ void gMainWin::Release()
 	gCharManager::GetIF()->Release();
 	gPlayerManager::GetIF()->Release();
 	tileContainer::GetIF()->Release();
+	gPopUp::GetIF()->Release();
 	SAFE_RELEASE(m_lpDDBack);
 	SAFE_RELEASE(m_lpDDPrimary);
 	SAFE_RELEASE(m_lpDD);

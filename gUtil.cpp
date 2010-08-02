@@ -1,7 +1,8 @@
-#include "gUtil.h"
-#include "gMainWin.h"
 #include <windows.h>
 #include <stdio.h>
+#include "gUtil.h"
+#include "gMainWin.h"
+#include "const.h"
 
 HDC		s_hdc;
 HFONT	s_font;

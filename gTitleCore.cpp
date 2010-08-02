@@ -6,7 +6,8 @@
 #include "gUtil.h"
 #include "gPlayerManager.h"
 #include "gGameCore.h"
-#include "gTimer.h"
+//#include "gTimer.h"
+#include "gPopUp.h"
 #include <windows.h>
 #include <stdio.h>
 
@@ -52,6 +53,29 @@ bool gTitleCore::SetUp()
 void gTitleCore::MainLoop()
 {
 	Draw();
+
+	gPopUp::GetIF()->MainLoop();
+
+	//popup창에서 메시지가 옴
+	if(gPopUp::GetIF()->m_bReturn)
+	{
+		switch(m_eMode)
+		{
+			case ETM_TITLE:
+				switch(gPopUp::GetIF()->m_eBtnClk)
+				{
+					case ECLK_OK:
+						gMainWin::GetIF()->Exit();
+						break;
+					case ECLK_CANCEL:
+						break;
+				}
+				break;
+			case ETM_PLAYERSEL:
+				break;
+		}
+		gPopUp::GetIF()->m_bReturn = false;
+	}
 }
 
 void gTitleCore::Draw()
@@ -74,6 +98,12 @@ void gTitleCore::Draw()
 //------------------------------------------------------------------------------------
 void gTitleCore::OnLButtonDown()
 {
+	if(gPopUp::GetIF()->isPopUp())
+	{
+		gPopUp::GetIF()->OnLButtonDown();
+		return;
+	}
+
 	switch(m_eMode)
 	{
 		case ETM_TITLE:
@@ -113,6 +143,12 @@ void gTitleCore::OnLButtonUp()
 
 void gTitleCore::OnMouseMove()
 {
+	if(gPopUp::GetIF()->isPopUp())
+	{
+		gPopUp::GetIF()->OnMouseMove();
+		return;
+	}
+	
 	switch(m_eMode)
 	{
 		case ETM_TITLE:
@@ -318,7 +354,8 @@ void gTitleCore::OnLButtonDown_Title()
 			m_eMode = ETM_PLAYERSEL;
 			break;
 		case ETB_EXIT:
-			gMainWin::GetIF()->Exit();
+			gPopUp::GetIF()->SetPopUp(ECLK_CANCEL, "정말 종료하시겠습니까?");
+			//gMainWin::GetIF()->Exit();
 			break;
 	}
 }

@@ -200,6 +200,29 @@
 #define IF_POS_BACKY			((WNDSIZEH - IF_POS_SCARDH) / 2)
 
 // sangwoo bus, timer and etc
-#define BUS_NORMAL				100		// 숫자가 커지면 느려집니다. (한 타일을 400ms에 움직인다. 예컨대)
+#define BUS_NORMAL				400		// 숫자가 커지면 느려집니다. (한 타일을 400ms에 움직인다. 예컨대)
 #define BUS_FAST				50
 #define BUS_FRAME				60
+
+// Gamdmode
+#define DOT_WIDTH				70
+#define DOT_HEIGHT				130
+
+// gUtil - popup
+#define POPUP_IMG_BACK			".\\Data\\Interface\\popup.img"
+#define POPUP_IMG_OK			".\\Data\\Interface\\popup_ok.img"
+#define POPUP_IMG_CANCEL		".\\Data\\Interface\\popup_cancel.img"
+#define POPUP_WIDTH				200
+#define POPUP_HEIGHT			100
+#define POPUP_X					((WNDSIZEW - POPUP_WIDTH) / 2)
+#define POPUP_Y					((WNDSIZEH - POPUP_HEIGHT) / 2)
+#define POPUP_BTNW				50
+#define POPUP_BTNH				20
+#define POPUP_ONEBTNX			(POPUP_X + (POPUP_WIDTH - POPUP_BTNW) / 2)
+#define POPUP_ONEBTNY			(POPUP_Y + 70)
+#define POPUP_1STBTNX			(POPUP_X + 40)
+#define POPUP_1STBTNY			POPUP_ONEBTNY
+#define POPUP_2NDBTNX			(POPUP_X + 110)
+#define POPUP_2NDBTNY			POPUP_ONEBTNY
+#define POPUP_1STTEXTY			(POPUP_Y + 30)
+#define POPUP_2NDTEXTY			(POPUP_Y + 50)

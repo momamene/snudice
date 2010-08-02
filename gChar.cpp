@@ -40,10 +40,11 @@ void gChar::DrawDot(RECT rcScr,int dotConX, int dotConY)	// 0~2, 0~3 까지의 숫자
 	int FULLX = 70;
 	int FULLY = 130;
 	RECT	rcImg = {dotConX*FULLX, dotConY*FULLY, (dotConX+1)*FULLX, (dotConY+1)*FULLY};
-	m_ImgDot.Draw(rcScr, rcImg);
+	m_ImgDot.Draw(rcScr, rcImg, false);
 }
 
 void gChar::Release()
 {
 	m_ImgIllu.Release();
+	m_ImgDot.Release();
 }
