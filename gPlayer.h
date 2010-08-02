@@ -38,6 +38,9 @@ public:
 	gGrade	m_subjectGrader;
 
 	int		m_myItem[MAXPLAYER];
+
+	int		m_itemCardIndex[MAXCARDPOSSESS];
+	int		m_itemCooltime[MAXCARD];
 	
 public:
 	bool	SetUp (gChar *gchar);
@@ -51,4 +54,6 @@ public:
 
 	void	Release();
 	void	meet();
+private:
+	int		meetItemCalculator(int classType,int originalVal);
 };

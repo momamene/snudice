@@ -4,16 +4,18 @@
 #include "gImage.h"
 #include "gGameCore.h"
 #include "gTimer.h"
+#include "itemContainer.h"
 
 bool gPlayer::SetUp (gChar *gchar)
 {
 	tileContainer *tilecontainer = tileContainer::GetIF();
+	int i;
 
 	
 	POINT bBefore,b;
 	
 	m_charInfo = gchar;
-	for(int i = 0 ; i < 4 ; i++){
+	for(i = 0 ; i < 4 ; i++){
 		m_myItem[i] = 0;
 	}
 	m_xSpacePos = tilecontainer->m_xInitSpacePos;
@@ -36,6 +38,9 @@ bool gPlayer::SetUp (gChar *gchar)
 
 	m_moveFoot = 1;
 	m_movePosition = 0;
+	//memset(0,m_itemCooltime);
+	for(i = 0 ; i < MAXCARD ; i++)
+		m_itemCooltime[i] = 0;
 
 	return true;
 }
@@ -125,7 +130,7 @@ void gPlayer::posStoper()
 		if(m_isNokdu) m_isNokdu = false;
 		else m_isNokdu = true;
 	}
-	*/
+	*/ 
 //	m_movePosition = -1;
 	m_moveFoot = 1;
 }
@@ -142,27 +147,60 @@ bool gPlayer::isMySubject(int flag)
 	return false;
 }
 
+int gPlayer::meetItemCalculator(int classType,int originalVal) {
+	itemContainer* itemcontainer = itemContainer::GetIF();
+
+	int i;
+	int convertedVal = originalVal;
+
+	for (i = 0 ; i < MAXCARD ; i++){
+
+  		if(m_itemCooltime[i]==0) continue;
+
+
+		if(itemcontainer->m_item[i].m_effect==0 || itemcontainer->m_item[i].m_effect==classType+1 ){
+
+			if(itemcontainer->m_item[i].m_flagHigh==0) convertedVal += itemcontainer->m_item[i].m_flagLow;
+			else if (itemcontainer->m_item[i].m_flagHigh==1){
+       				convertedVal -= itemcontainer->m_item[i].m_flagLow;
+			}
+		}
+	}
+	for (i = 0 ; i < MAXCARD ; i++){
+		if(m_itemCooltime[i]==0) continue;
+		if(itemcontainer->m_item[i].m_effect==0 || itemcontainer->m_item[i].m_effect==classType+1 ){
+			if(itemcontainer->m_item[i].m_flagHigh==2) convertedVal *= itemcontainer->m_item[i].m_flagLow;
+		}
+	}
+
+	if(convertedVal < 0 ) convertedVal = 0;
+
+	return convertedVal*20;
+}
+
 void gPlayer::meet()
 {
 	tileContainer *tilecontainer = tileContainer::GetIF();
 	gGameCore *gameCore = gGameCore::GetIF();
 	int tile = m_xSpacePos*LINEY+m_ySpacePos;
-	int flag2 = tilecontainer->tileMap[tile].flag2;
+	bool boolo = (tilecontainer->tileMap[tile].tileType==TY_CLASS);
+	int flag2 = tilecontainer->tileMap[tile].flag2;                  
 	//m_player[m_turnPlayer].m_subjectGrader.meet(flag2);
 			
 	
 
 	//int tile = tilecontainer->flagToFirstTile(subjectIndex);
 	for(int i = 0 ; i < m_subjectGrader.m_subjectN ; i++ ){
-		if(m_subjectGrader.m_subject[i]==flag2){
+		if(boolo && m_subjectGrader.m_subject[i]==flag2){
 			m_subjectGrader.m_meetCount[i]++;
 			
 			if(tilecontainer->tileMap[tile].flag3==0)
-				m_subjectGrader.m_weightCount[i] += m_charInfo->m_Data.nLang * 20;
+				m_subjectGrader.m_weightCount[i] += meetItemCalculator(0,m_charInfo->m_Data.nLang);
 			else if (tilecontainer->tileMap[tile].flag3==1)
-				m_subjectGrader.m_weightCount[i] += m_charInfo->m_Data.nMath;
+				m_subjectGrader.m_weightCount[i] += meetItemCalculator(1,m_charInfo->m_Data.nMath);
 			else if (tilecontainer->tileMap[tile].flag3==2)
-				m_subjectGrader.m_weightCount[i] += m_charInfo->m_Data.nArt;
+				m_subjectGrader.m_weightCount[i] += meetItemCalculator(2,m_charInfo->m_Data.nArt);
+				
 		}
 	}
 }

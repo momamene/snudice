@@ -7,6 +7,9 @@
 #include "gMouse.h"
 #include "gPlayerManager.h"
 #include "gTimer.h"
+// sangwoo temp
+// #include "itemContainer.h"
+// temp end
 
 static tileContainer s_tileContainer; // 2
 
@@ -167,6 +170,9 @@ void tileContainer::DrawSubmitButton(int io,int tile){
 
 void tileContainer::DrawSubmit(){	// 좌표 하드코딩의 절정
 									// DrawSubmit과 gGameCore::OnLButtonDownSubmit() 이 연동되는데 하드코딩 상황이다.
+//	itemContainer* itemcontainer = itemContainer::GetIF();
+	char buf[128];
+	
 
 	int i;
 	gGameCore *gameCore = gGameCore::GetIF();
@@ -180,6 +186,25 @@ void tileContainer::DrawSubmit(){	// 좌표 하드코딩의 절정
 	}
 
 	gUtil::BeginText();
+	// sangwoo temp start
+	/*
+	for(i = 0 ; i < 4 ; i++){
+	wsprintf(buf,"%d",itemcontainer->m_item[i].m_index);
+	gUtil::Text(i*100,0,buf);
+	wsprintf(buf,"%d",itemcontainer->m_item[i].m_effect);
+	gUtil::Text(i*100,20,buf);
+	wsprintf(buf,"%d",itemcontainer->m_item[i].m_flagHigh);
+	gUtil::Text(i*100,40,buf);
+	wsprintf(buf,"%d",itemcontainer->m_item[i].m_flagLow);
+	gUtil::Text(i*100,60,buf);
+	wsprintf(buf,"%d",itemcontainer->m_item[i].m_activeType);
+	gUtil::Text(i*100,80,buf);
+	wsprintf(buf,"%d",itemcontainer->m_item[i].m_turn);
+	gUtil::Text(i*100,100,buf);	
+	}
+	*/
+	// sangwoo temp end
+	
 	for (i = 0 ; i < m_subjectN ; i++){
 		//m_buttonSubmit.Draw(0,0);
 		tile = rowToFirstTile(i);
@@ -209,6 +234,8 @@ void tileContainer::DrawSubmit(){	// 좌표 하드코딩의 절정
 */
 	gUtil::EndText();
 
+
+
 	
 	DrawHexagon(240,200,6,true);
 
@@ -225,7 +252,7 @@ void tileContainer::DrawSubmit(){	// 좌표 하드코딩의 절정
 		DrawHexagonOne(240,200,tileMap[tile].ptPos.x,tileMap[tile].ptPos.y,6,true,boole);
 		
 		//DrawHexagonOne(160,160,tileMap[tile].ptPos.x,tileMap[tile].ptPos.y,5,true,0);
-
+		
 	}
 
 
@@ -307,7 +334,7 @@ void tileContainer::DrawHexagonBus()
 
 void tileContainer::Draw()
 {
-	int i,j;
+//	int i,j;
 
 
 	
@@ -581,9 +608,7 @@ void tileContainer::Release()
 int tileContainer::busClickProcessor(int x,int y){	// output은 tile 정보
 	gMainWin *gmainWin = gMainWin::GetIF();
 	POINT xy;
-	//sangwoo temp
-	
-	// sangwoo temp end		
+
 	xy.x = x;
 	xy.y=  y;
 	xy = absToCon(xy);

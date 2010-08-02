@@ -230,3 +230,9 @@
 #define POPUP_IMG_H				48
 #define POPUP_IMG_X				(POPUP_X + 10)
 #define POPUP_IMG_Y				(POPUP_Y + 10)
+
+// sangwoo - ITEM series
+
+#define CARDDATAFILE			".\\carddat.dat"
+#define MAXCARD					20
+#define MAXCARDPOSSESS			4

@@ -32,5 +32,6 @@ public:
 	int				StudentNum(int flag);
 
 	void			Release();
+	void			CooltimePass(); 
 	
 };

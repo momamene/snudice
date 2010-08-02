@@ -8,6 +8,7 @@
 #include "gUtil.h"
 #include <time.h>
 #include "gTimer.h"
+#include "itemContainer.h"
 
 
 static gGameCore s_GameCore;
@@ -32,6 +33,7 @@ bool gGameCore::SetUp()
 	m_spacor=0;
 	m_frameCount = 0;
 	tileContainer::GetIF()->Setup();
+	itemContainer::GetIF()->SetUp();
 
 	srand(time(NULL));
 
@@ -59,6 +61,7 @@ void gGameCore::nextTurnAuto()
 		if(m_turnPlayer>=MAXPLAYER-1) {
 			m_turnPlayer = 0;
 			m_turnN++;
+			gplayerManager->CooltimePass();
 		}
 		else m_turnPlayer++;
 	} while(gplayerManager->m_player[m_turnPlayer].m_nNP == -1);
@@ -94,6 +97,11 @@ void gGameCore::MainLoopMouse(){
 void gGameCore::MainLoopKeyboard(){
 	
 	gMainWin *mainWin = gMainWin::GetIF(); // mainWin이라고 쓰고 키보드라고 읽는다.
+
+	// sangwoo master temp start
+	itemContainer *itemcontainer = itemContainer::GetIF();
+	// sangwoo master temp end
+	
 	if(mainWin->m_Keys['M']){
 		if(m_minimapOn==0) m_minimapOn=1;
 		if(m_minimapOn==2) m_minimapOn=3;
@@ -119,6 +127,16 @@ void gGameCore::MainLoopKeyboard(){
 		MainLoopMoveSetup(1);
 		//m_spacor = 1;
 	}
+
+	if(mainWin->m_Keys['B']){
+		itemcontainer->itemUse(0,20,1);
+		//itemcontainer->itemUse(1,5);
+		//m_masterState = 1;
+		//MainLoopMoveSetup(1);
+		//m_spacor = 1;
+	}
+
+
 }
 
 void gGameCore::MainLoopMoveSetup(int spacor)

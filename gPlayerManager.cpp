@@ -93,3 +93,14 @@ int	gPlayerManager::StudentNum(int flag) // flag = flag2 = index != flag1
 	}
 	return res;
 }
+
+void gPlayerManager::CooltimePass() 
+{
+	for(int i = 0 ; i < MAXPLAYER ; i++) {
+		if(m_player[i].m_nNP == -1) continue;
+		for(int j = 0 ; j < MAXCARD ; j++) {
+			if(m_player[i].m_itemCooltime[j] > 0 ) m_player[i].m_itemCooltime[j]--;
+		}
+	}
+	return;
+}
