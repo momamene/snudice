@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>	// 이게 분명 gCharManager에서는 필요하지 않았을 텐데..
 #include "gPlayerManager.h"
+#include "tileContainer.h"
 
 static itemContainer s_itemContainer; // 2
 
@@ -77,9 +78,11 @@ bool itemContainer::SetUp()		// gCharManager 의 SetUp을 모방한 것이 자명하다.
 
 void itemContainer::itemUse(int player,int cardIndex,int activeTarget) {
 	gPlayerManager* gplayerManager = gPlayerManager::GetIF();
+	tileContainer* tilecontainer = tileContainer::GetIF();
 	
 	int i;
 	int case5NokduSelect;
+	POINT tempPt;
 	//int case5ActiveType;
 	if (m_item[cardIndex-1].m_turn==0){
 		switch(m_item[cardIndex-1].m_effect){
@@ -172,8 +175,15 @@ void itemContainer::itemUse(int player,int cardIndex,int activeTarget) {
 						gplayerManager->m_player[i].m_ySpacePos = 17;
 						gplayerManager->m_player[i].m_Next_xSpacePos = 2;
 						gplayerManager->m_player[i].m_Next_xSpacePos = 17;
-						gplayerManager->m_player[i].m_xDrawline = 2;
-						gplayerManager->m_player[i].m_yDrawline = 17;
+						tempPt.x= 2;
+						tempPt.y= 17;
+						tempPt = tilecontainer->conToAbs(tempPt);
+						gplayerManager->m_player[i].m_xDrawline = tempPt.x;
+						gplayerManager->m_player[i].m_yDrawline = tempPt.y;
+						tilecontainer->m_xSpacePos = 2;
+						tilecontainer->m_ySpacePos = 17;
+						//tilecontainer->m_Next_xSpacePos = tempPt.x;
+						//tilecontainer->m_Next_ySpacePos = tempPt.y;
 						gplayerManager->m_player[i].m_isNokdu = case5NokduSelect;
 					}
 					break;

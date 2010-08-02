@@ -129,8 +129,8 @@ void gGameCore::MainLoopKeyboard(){
 	}
 
 	if(mainWin->m_Keys['B']){
-		itemcontainer->itemUse(0,20,1);
-		//itemcontainer->itemUse(1,5);
+		//itemcontainer->itemUse(0,20,1);
+		itemcontainer->itemUse(0,5);
 		//m_masterState = 1;
 		//MainLoopMoveSetup(1);
 		//m_spacor = 1;

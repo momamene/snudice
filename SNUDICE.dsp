@@ -152,6 +152,14 @@ SOURCE=.\gUtil.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\ITEM.CPP
+# End Source File
+# Begin Source File
+
+SOURCE=.\itemContainer.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\main.cpp
 # End Source File
 # Begin Source File
@@ -233,6 +241,14 @@ SOURCE=.\gTitleCore.h
 # Begin Source File
 
 SOURCE=.\gUtil.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ITEM.H
+# End Source File
+# Begin Source File
+
+SOURCE=.\itemContainer.h
 # End Source File
 # Begin Source File
 
