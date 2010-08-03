@@ -56,6 +56,7 @@ void gPlayerManager::SetUp()
 
 void gPlayerManager::Draw(){
 	tileContainer *tilecontainer = tileContainer::GetIF();
+	gGameCore *ggameCore = gGameCore::GetIF();
 
 	/*
 	for(int i = 0 ; i < MAXPLAYER ; i++)
@@ -69,9 +70,11 @@ void gPlayerManager::Draw(){
 	for(int i = 0 ; i < LINEX*LINEY ; i++){
 		if(tilecontainer->tileMap[i].tileType==TY_NONE) continue;
 		for(int j = 0 ; j < MAXPLAYER ; j++){
+			if(j==ggameCore->m_turnPlayer) continue;
 			if(m_player[j].m_nNP!=-1&&m_player[j].m_xSpacePos==i/LINEY&&m_player[j].m_ySpacePos==i%LINEY) m_player[j].Draw();
 		}
 	}
+	m_player[ggameCore->m_turnPlayer].Draw();
 
 }
 

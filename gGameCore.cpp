@@ -45,6 +45,7 @@ bool gGameCore::SetUp()
 	gtimer->SetUp();
 
 	m_masterState = 0;
+	m_tempNextMode = 0;
 
 	return true;
 }
@@ -66,6 +67,20 @@ void gGameCore::nextTurnAuto()
 		}
 		else m_turnPlayer++;
 	} while(gplayerManager->m_player[m_turnPlayer].m_nNP == -1);
+}
+
+int gGameCore::nextPlayer(int turnPlayer)
+{
+	gPlayerManager *gplayerManager = gPlayerManager::GetIF();
+
+	int l_turnPlayer = turnPlayer;
+	do {
+		if(l_turnPlayer>=MAXPLAYER-1) {
+			l_turnPlayer = 0;
+		}
+		else l_turnPlayer++;
+	} while(gplayerManager->m_player[l_turnPlayer].m_nNP == -1);
+	return l_turnPlayer;
 }
 
 void gGameCore::startTurnAuto(){
@@ -230,11 +245,13 @@ void gGameCore::PlayerPosSet()
 }
 
 void gGameCore::MainLoopMove(){
+	tileContainer *tilecontainer = tileContainer::GetIF();
+	gPlayerManager *gplayerManager= gPlayerManager::GetIF();
 	gTimer *gtimer = gTimer::GetIF();
 	
 	if(m_busMode==1) return;
 
-	if(m_spacor>0){  
+	if(m_spacor>0&&m_tempNextMode!=2){  
 		int a = gtimer->frame(); // 매우 심각한 문제인데 [sangwoo problem] 이걸 뒤에 쓰면 개차반이 된다는거
 		if(gtimer->m_turn == 0){ // 활성화 조건
 			MainLoopMoveOn(a);
@@ -245,18 +262,53 @@ void gGameCore::MainLoopMove(){
 				MainLoopMoveStepStart();
 			}
 			else{	// 실제 종료 조건
-				MainLoopMoveEnd();
-				if(m_busMode==0){
-					if(m_masterState==0){
+
+ 				if(m_tempNextMode==0) {
+					m_tempNextMode = 1;
+					MainLoopMoveEnd();
+				}
+				else if(m_tempNextMode==3) {
+
+					m_tempNextMode = 0;
+					if(m_busMode==0){
+						if(m_masterState==0){
+
+							nextTurnAuto();
+							PlayerPosSet();
+						}
+						else if(m_masterState==1){
+							m_masterState=0;
+						}
+					}
+					
+					else if(m_busMode==2) {
 						nextTurnAuto();
 						PlayerPosSet();
+						m_busMode=0;
 					}
-					else if(m_masterState==1){
-						m_masterState=0;
-					}
+					
+				}
+				else {
+					// logic Fatal error.
 				}
 			}
 		}
+	}
+	else if(m_tempNextMode == 2){	// 이제 posSpacor만 고치면 되는 거지?
+		
+		m_tempNextMode=3;
+		if(m_busMode==0)
+			gtimer->frameStart(BUS_NORMAL,BUS_FRAME);
+		else if(m_busMode==1||m_busMode==2)
+			gtimer->frameStart(BUS_FAST,BUS_FRAME);
+		if(m_busMode!=2){
+			m_spacor = 1;
+			tilecontainer->posSpacor(gplayerManager->m_player[nextPlayer(m_turnPlayer)].m_xSpacePos,gplayerManager->m_player[nextPlayer(m_turnPlayer)].m_ySpacePos);
+		}
+		else {
+			MainLoopMoveStepStart();
+		}
+		//gplayerManager->m_player[m_turnPlayer].posSpacor();
 	}
 }
 
@@ -285,6 +337,7 @@ void gGameCore::MainLoop() // MainLoop 내부를 함수들로 다시 깔끔하게 만들 필요가
 				switch(gPopUp::GetIF()->m_eBtnClk)
 				{
 					case ECLK_OK:
+						if(m_tempNextMode==1) m_tempNextMode=2;
 						break;
 					case ECLK_CANCEL:
 						break;
@@ -301,9 +354,14 @@ void gGameCore::MainLoop() // MainLoop 내부를 함수들로 다시 깔끔하게 만들 필요가
 		case EGM_SUBMIT:
 			MainLoopMouseSubmit();
 			break;
-		case EGM_GAME:	
-			MainLoopKeyboard();
-			MainLoopMouse();	
+		case EGM_GAME:
+			if(m_tempNextMode==0){
+				MainLoopKeyboard();
+				MainLoopMouse();	
+			}
+			else if(m_busMode==1){
+				MainLoopMouse();
+			}
 			MainLoopMove();
 			break;
 	}
@@ -333,7 +391,7 @@ void gGameCore::MainLoopMouseSubmit(){
 	//gPlayerManager * gplayerManager = gPlayerManager::GetIF();
 	
 	for(int i = 0 ; i < tilecontainer->m_subjectN ; i++){
-		if(mouse->m_nPosX < 100+15 && mouse->m_nPosY > i*22+50 && mouse->m_nPosY < (i+1)*22+50){
+		if((mouse->m_nPosX < 100+15 || ( mouse->m_nPosX > 135 && mouse->m_nPosX < 197 )) && mouse->m_nPosY > i*22+50 && mouse->m_nPosY < (i+1)*22+50){
 			tilecontainer->m_selectReadySubjectFlag = tilecontainer->m_subject[i];	// 입력 구문인데. 아 이런 코드는 전반적으로 좋지 않아요. 우리 객체지향해야지.
 			if(m_frameCount<2){
 				m_frameCount++;
@@ -354,7 +412,7 @@ void gGameCore::OnLButtonDownSubmit(){
 	gPlayerManager * gplayerManager = gPlayerManager::GetIF();
 
 	for(int i = 0 ; i < tilecontainer->m_subjectN ; i++){
-		if(mouse->m_nPosX < 100+15 && mouse->m_nPosY > i*22+50 && mouse->m_nPosY < (i+1)*22+50){
+		if((mouse->m_nPosX < 100+15 || ( mouse->m_nPosX > 135 && mouse->m_nPosX < 197 )) && mouse->m_nPosY > i*22+50 && mouse->m_nPosY < (i+1)*22+50){
 			
 			m_selectSubject = tilecontainer->m_subject[i];	// 입력 구문인데. 아 이런 코드는 전반적으로 좋지 않아요. 우리 객체지향해야지.
 			if(!gplayerManager->m_player[m_turnPlayer].isMySubject(m_selectSubject)&&gplayerManager->StudentNum(m_selectSubject)<2) {
@@ -394,8 +452,8 @@ void gGameCore::OnLButtonDownBus()
 		m_spacor = tilecontainer->distance(gplayerManager->m_player[m_turnPlayer].m_xSpacePos*LINEY+gplayerManager->m_player[m_turnPlayer].m_ySpacePos,nextBusTile);
 		if(m_spacor==0) {	// 너무 강제적인 느낌이 들지 않니?
 			m_busMode = 0;
-			nextTurnAuto();
-			PlayerPosSet();
+			//nextTurnAuto();
+			//PlayerPosSet();
 		}
 		else m_busMode = 2;
 

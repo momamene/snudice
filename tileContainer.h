@@ -57,6 +57,7 @@ public:
 
 	// Draw Position set colony
 	void	posSpacor();		// space를 누르면 해당 위치로 이동하고, 캐릭터의 이동을 잡아주는 등의 함수
+	void	posSpacor(int xSpacePos,int ySpacePos);
 	void	posMover(int frame);
 	void	posStoper();		// 항상 posSpacor -> posMover -> posStoper 순으로 써야함
 	

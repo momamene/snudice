@@ -14,7 +14,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 		}
 	}
 
-	int		retValue;
+	int		retValue; 
 	retValue = gMainWin::GetIF()->Run();
 	gMainWin::GetIF()->Release();
 

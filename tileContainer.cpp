@@ -493,6 +493,35 @@ void tileContainer::posSpacor()
 	}
 }
 
+void tileContainer::posSpacor(int xSpacePos,int ySpacePos) 
+{	// 다음 칸으로 움직이라는 신호.
+	m_Next_xSpacePos = xSpacePos;
+	m_Next_ySpacePos = ySpacePos;
+	/*
+	gGameCore *gameCore = gGameCore::GetIF();
+	gPlayerManager *gplayerManager = gPlayerManager::GetIF();
+	
+	if(m_xSpacePos==-1&&m_xSpacePos==-1){
+		m_xSpacePos=m_xInitSpacePos;
+		m_ySpacePos=m_yInitSpacePos;
+		m_Next_xSpacePos = m_xSpacePos;
+		m_Next_ySpacePos = m_ySpacePos;
+	}
+	else{
+		if(isExisted(m_xSpacePos,m_ySpacePos)){
+			if(m_xInitSpacePos == m_xSpacePos && m_yInitSpacePos == m_ySpacePos&&gplayerManager->m_player[gameCore->m_turnPlayer].m_isNokdu){
+				m_Next_xSpacePos = tileMap[m_xSpacePos*LINEY+m_ySpacePos].flag1; // gplayerManager->m_player[gameCore->m_turnPlayer]->m_charInfo;
+				m_Next_ySpacePos = tileMap[m_xSpacePos*LINEY+m_ySpacePos].flag2; // gplayerManager->m_player[gameCore->m_turnPlayer];
+			}
+			else {
+				m_Next_xSpacePos = tileMap[m_xSpacePos*LINEY+m_ySpacePos].nextTile.x;	// 기본 방침은, Next와 Now가 괴리가 있는 상황은 움직이는 상황인 것이다.
+				m_Next_ySpacePos = tileMap[m_xSpacePos*LINEY+m_ySpacePos].nextTile.y;
+			}
+		}
+	}
+	*/
+}
+
 void tileContainer::posMover(int frame)
 {
 	gGameCore *ggameCore = gGameCore::GetIF();

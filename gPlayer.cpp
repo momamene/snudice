@@ -185,7 +185,10 @@ void gPlayer::meet()
 	gGameCore *gameCore = gGameCore::GetIF();
 	int tile = m_xSpacePos*LINEY+m_ySpacePos;
 	bool boolo = (tilecontainer->tileMap[tile].tileType==TY_CLASS);
-	int flag2 = tilecontainer->tileMap[tile].flag2;                  
+	int flag2 = tilecontainer->tileMap[tile].flag2;                 
+	char buf [128];
+	char buf2 [128];
+	int resultMIC;
 	//m_player[m_turnPlayer].m_subjectGrader.meet(flag2);
 			
 	
@@ -198,15 +201,23 @@ void gPlayer::meet()
 			// 수업이름
 			// n의 성취도 획득!!  <- 이렇게 띄워지게 바꿔라
 
-			gPopUp::GetIF()->SetImgPopUp(ECLK_OK, &m_charInfo->m_ImgPopup, "수업 이름", "n의 성취도 획득!!");
+		
 			
+
+
 			if(tilecontainer->tileMap[tile].flag3==0)
-				m_subjectGrader.m_weightCount[i] += meetItemCalculator(0,m_charInfo->m_Data.nLang);
+				m_subjectGrader.m_weightCount[i] += (resultMIC =meetItemCalculator(0,m_charInfo->m_Data.nLang));
 			else if (tilecontainer->tileMap[tile].flag3==1)
-				m_subjectGrader.m_weightCount[i] += meetItemCalculator(1,m_charInfo->m_Data.nMath);
+				m_subjectGrader.m_weightCount[i] += (resultMIC = meetItemCalculator(1,m_charInfo->m_Data.nMath));
 			else if (tilecontainer->tileMap[tile].flag3==2)
-				m_subjectGrader.m_weightCount[i] += meetItemCalculator(2,m_charInfo->m_Data.nArt);
-				
+				m_subjectGrader.m_weightCount[i] += (resultMIC = meetItemCalculator(2,m_charInfo->m_Data.nArt));
+			strcpy(buf,tilecontainer->tileMap[tile].subject);
+			wsprintf(buf2,"%d의 성취도 획득!!",resultMIC);
+			gPopUp::GetIF()->SetImgPopUp(ECLK_OK, &m_charInfo->m_ImgPopup, buf, buf2);
+			return;
 		}
 	}
+	gameCore->m_tempNextMode = 2;
+
+
 }

@@ -63,6 +63,8 @@ public:
 	int			m_busMode;
 	
 	int			m_masterState;	// 0이면 아무것도 아님 (기본값), 1이면 움직인 다음에도 턴이 넘어가지 않음.
+
+	int			m_tempNextMode;
 	
 public:
 	bool		SetUp();
@@ -103,11 +105,13 @@ private:
 
 	// 기타 중요 colony
 	void		nextTurnAuto();
-	
+	int			nextPlayer(int turnPlayer);
+
 	// CharSelect Colony
 	bool		SetUp_CharSelect();
 	void		OnLButtonDown_CharSel();
 	void		OnMouseMove_CharSel();
 	void		Draw_CharSelect();
+	
 	
 };
