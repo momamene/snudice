@@ -7,6 +7,7 @@
 #include "gMouse.h"
 #include "gPlayerManager.h"
 #include "gTimer.h"
+#include "gInterface.h"
 // sangwoo temp
 // #include "itemContainer.h"
 // temp end
@@ -366,26 +367,100 @@ void tileContainer::Draw()
 			DrawHexagon( WNDSIZEW - 240 , WNDSIZEH - 180 , n ,true);
 			//minimapDraw(start_x,start_y,n);
 		}
-		DrawSubInfo();
+		SetUpSubInfo();
 	}	
 }
 
-void tileContainer::DrawSubInfo()
+void tileContainer::SetUpSubInfo()
 {
 	gGameCore *ggameCore = gGameCore::GetIF();
-	gUtil::BeginText();	
 	
 	POINT Abs;
 	POINT Con2;
 	Con2 = absToCon();
-	if (isExisted(Con2.x,Con2.y)){
+	if (isExisted(Con2.x,Con2.y))
+	{
+		gInterface	*inf = gInterface::GetIF();
+		int		x, y;
+		int		i;
+
 		Abs = conToAbs(Con2);
-		gUtil::Text(Abs.x-(ggameCore->m_xPos),Abs.y-(ggameCore->m_yPos)+FULLY,tileMap[Con2.x*LINEY+Con2.y].college);
-		gUtil::Text(Abs.x-(ggameCore->m_xPos),Abs.y-(ggameCore->m_yPos)+FULLY+20,tileMap[Con2.x*LINEY+Con2.y].building);
-		gUtil::Text(Abs.x-(ggameCore->m_xPos),Abs.y-(ggameCore->m_yPos)+FULLY+40,tileMap[Con2.x*LINEY+Con2.y].subject);
+		x = Abs.x - (ggameCore->m_xPos) + 50;
+		y = Abs.y - (ggameCore->m_yPos) + 40;
+
+		if(inf->m_tooltip.nX != x || inf->m_tooltip.nY != y || !inf->m_bTooltip)
+		{
+			TILE		*tile = &tileMap[Con2.x * LINEY + Con2.y ];
+			inf->m_tooltip.szSubject	= tile->subject;
+			inf->m_tooltip.szBuilding	= tile->building;
+			inf->m_tooltip.szColleage	= tile->college;
+
+			switch(tileMap[Con2.x * LINEY + Con2.y ].tileType)
+			{
+				case TY_CLASS:
+					{
+						switch(tile->flag1)
+						{
+							case 0:							// lang
+								inf->m_tooltip.type	= ETIP_LANG;
+								break;
+							case 1:							// math
+								inf->m_tooltip.type	= ETIP_MATH;
+								break;
+							case 2:							// art
+								inf->m_tooltip.type	= ETIP_ART;
+								break;
+							break;
+						}
+
+						int		nCount = 0;
+
+						for(i = 0; i < MAXPLAYER; i++)
+						{
+							if(gPlayerManager::GetIF()->m_player[i].m_nNP == -1) continue;
+
+							gPlayer		*player = &gPlayerManager::GetIF()->m_player[i];
+
+							if(player->isMySubject(tile->flag2))
+							{
+								inf->m_tooltip.pPlayer[nCount++]	= player;
+								inf->m_tooltip.nIndex				= tile->flag2;
+							}
+						}
+						break;
+					}
+				case TY_ITEM:
+					inf->m_tooltip.type	= ETIP_ITEM;
+					break;
+				case TY_BUS:
+					inf->m_tooltip.type	= ETIP_BUS;
+					break;
+				case TY_DRINK:
+					inf->m_tooltip.type	= ETIP_DRINK;
+					break;
+				case TY_MAINGATE:
+					inf->m_tooltip.type	= ETIP_MAINGATE;
+					break;
+				case TY_MOUNTAIN:
+					inf->m_tooltip.type	= ETIP_MOUNTAIN;
+					break;
+				case TY_STAMINA:
+					inf->m_tooltip.type	= ETIP_FOOD;
+					break;
+			}
+			inf->m_tooltip.nX			= x;
+			inf->m_tooltip.nY			= y;
+			inf->m_bTooltip				= true;
+		}
+
+// 		gUtil::Text(Abs.x-(ggameCore->m_xPos),Abs.y-(ggameCore->m_yPos)+FULLY,tileMap[Con2.x*LINEY+Con2.y].college);
+// 		gUtil::Text(Abs.x-(ggameCore->m_xPos),Abs.y-(ggameCore->m_yPos)+FULLY+20,tileMap[Con2.x*LINEY+Con2.y].building);
+// 		gUtil::Text(Abs.x-(ggameCore->m_xPos),Abs.y-(ggameCore->m_yPos)+FULLY+40,tileMap[Con2.x*LINEY+Con2.y].subject);
 	}
-	
-	gUtil::EndText();
+	else
+	{
+		gInterface::GetIF()->ClearTooltip();
+	}
 }
 
 // 2. Draw Line End

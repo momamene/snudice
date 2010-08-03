@@ -9,6 +9,7 @@
 #include <time.h>
 #include "gTimer.h"
 #include "itemContainer.h"
+#include "gPopUp.h"
 
 
 static gGameCore s_GameCore;
@@ -262,21 +263,50 @@ void gGameCore::MainLoopMove(){
 void gGameCore::MainLoop() // MainLoop 내부를 함수들로 다시 깔끔하게 만들 필요가 매우매우 있음
 {
 //	gMainWin *mainWin = gMainWin::GetIF(); // mainWin이라고 쓰고 키보드라고 읽는다.
+	Draw();
+
+	// popup
+	if(gPopUp::GetIF()->isPopUp())
+	{
+		gPopUp::GetIF()->MainLoop();
+		return;
+	}
+
+	//popup창에서 메시지가 옴
+	if(gPopUp::GetIF()->m_bReturn)
+	{
+		switch(m_gMode)
+		{
+			case EGM_CHARSEL:
+				break;
+			case EGM_SUBMIT:
+				break;
+			case EGM_GAME:
+				switch(gPopUp::GetIF()->m_eBtnClk)
+				{
+					case ECLK_OK:
+						break;
+					case ECLK_CANCEL:
+						break;
+				}
+				break;
+		}
+		gPopUp::GetIF()->m_bReturn = false;
+	}
 	
 	switch(m_gMode)
 	{
-	case EGM_CHARSEL:
-		break;
-	case EGM_SUBMIT:
-		MainLoopMouseSubmit();
-		break;
-	case EGM_GAME:	
-		MainLoopKeyboard();
-		MainLoopMouse();	
-		MainLoopMove();
-		break;
+		case EGM_CHARSEL:
+			break;
+		case EGM_SUBMIT:
+			MainLoopMouseSubmit();
+			break;
+		case EGM_GAME:	
+			MainLoopKeyboard();
+			MainLoopMouse();	
+			MainLoopMove();
+			break;
 	}
-	Draw();
 }
 
 void gGameCore::Draw()
@@ -378,6 +408,12 @@ void gGameCore::OnLButtonDownBus()
 
 void gGameCore::OnLButtonDown()
 {
+	if(gPopUp::GetIF()->isPopUp())
+	{
+		gPopUp::GetIF()->OnLButtonDown();
+		return;
+	}
+
 	switch(m_gMode)
 	{
 		case EGM_CHARSEL:
@@ -408,20 +444,26 @@ void gGameCore::OnLButtonUp()
 
 void gGameCore::OnMouseMove()
 {
+	if(gPopUp::GetIF()->isPopUp())
+	{
+		gPopUp::GetIF()->OnMouseMove();
+		return;
+	}
+
 	switch(m_gMode)
 	{
-	case EGM_CHARSEL:
-		OnMouseMove_CharSel();
-		break;
-	case EGM_GAME:
-		gInterface::GetIF()->OnMouseMove();
-		break;
+		case EGM_CHARSEL:
+			OnMouseMove_CharSel();
+			break;
+		case EGM_GAME:
+			gInterface::GetIF()->OnMouseMove();
+			break;
 	}
 }
 
 void gGameCore::OnRButtonDown()
 {
-	gInterface::GetIF()->OnRButtonDown();	
+	gInterface::GetIF()->OnRButtonDown();
 }
 
 void gGameCore::PutScreenPos(int x,int y){

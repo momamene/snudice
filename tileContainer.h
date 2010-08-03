@@ -86,7 +86,7 @@ private:
 	void	LoadBKSToTM();
 
 	// Draw의 떨거지
-	void	DrawSubInfo();
+	void	SetUpSubInfo();		// setup만 해주고 interface에서 툴팁 그림
 	void    DrawSubmit();
 	void	DrawSubmitButton(int io,int tile);
 	void	DrawSubmitButtonOne (int x0,int y0,int type);

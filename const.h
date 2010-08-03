@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------------
-//	const.h 18
+//	const.h
 //------------------------------------------------------------------------------------
 #pragma once
 #define BIT			32
@@ -13,6 +13,10 @@
 #define SAFE_RELEASE(p)      { if(p) { (p)->Release(); (p)=NULL; } }
 
 #define MAXPLAYER			4			// 최대 플레이어 수
+
+//	Message
+#define	STR_1					"정말 종료하시겠습니까?"
+#define STR_2					"성취도 %n 획득!!"
 
 //	Title
 
@@ -207,6 +211,15 @@
 // Gamdmode
 #define DOT_WIDTH				70
 #define DOT_HEIGHT				130
+
+#define TOOLTIP_IMG_BACK		".\\Data\\Interface\\tooltip_back.img"
+#define TOOLTIP_IMG_ACTIVE		".\\Data\\Interface\\tooltip_active.img"
+#define TOOLTIP_WIDTH			120
+#define TOOLTIP_HEIGHT			136
+#define TOOLTIP_ACTIVEW			32
+#define TOOLTIP_ACTIVEH			32
+#define TOOLTIP_CHARIMGW		32
+#define TOOLTIP_CHARIMGH		32
 
 // gUtil - popup
 #define POPUP_IMG_BACK			".\\Data\\Interface\\popup.img"

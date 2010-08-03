@@ -172,6 +172,9 @@ int gMainWin::Run()
 
 void gMainWin::MainLoop()
 {
+	if(!m_bActive)
+		return;
+
 	switch(m_eCoreMode)
 	{
 		case EMC_TITLE:
@@ -182,7 +185,7 @@ void gMainWin::MainLoop()
 			break;
 	}
 	// backbuffer 에 그려진 것들을 출력
-if(!m_bActive) return;
+
 #ifdef FULLSCREEN
 	m_lpDDPrimary->Flip(NULL, DDFLIP_WAIT);
 #else
@@ -206,28 +209,46 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 #endif
 		// keyboard
 		case WM_KEYDOWN:
+			if(!gMainWin::GetIF()->m_bActive)
+				return 0;
+
 			mw->m_Keys[wParam] = true;
 			return 0;
 		case WM_KEYUP:
+			if(!gMainWin::GetIF()->m_bActive)
+				return 0;
+
 			mw->m_Keys[wParam] = false;
 			return 0;
 		// mouse
 		case WM_LBUTTONDOWN:
+			if(!gMainWin::GetIF()->m_bActive)
+				return 0;
+
 			mouse->m_nPosX = LOWORD(lParam);
 			mouse->m_nPosY = HIWORD(lParam);
 			mouse->OnLButtonDown();
 			return 0;
 		case WM_LBUTTONUP:
+			if(!gMainWin::GetIF()->m_bActive)
+				return 0;
+
 			mouse->m_nPosX = LOWORD(lParam);
 			mouse->m_nPosY = HIWORD(lParam);
 			mouse->OnLButtonUp();
 			return 0;
 		case WM_RBUTTONDOWN:
+			if(!gMainWin::GetIF()->m_bActive)
+				return 0;
+
 			mouse->m_nPosX = LOWORD(lParam);
 			mouse->m_nPosY = HIWORD(lParam);
 			mouse->OnRButtonDown();
 			return 0;
 		case WM_MOUSEMOVE:
+			if(!gMainWin::GetIF()->m_bActive)
+				return 0;
+
 			mouse->m_nPosX = LOWORD(lParam);
 			mouse->m_nPosY = HIWORD(lParam);
 			mouse->OnMouseMove();

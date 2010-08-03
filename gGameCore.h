@@ -41,7 +41,6 @@ public:
 	int			m_nSel;					// 선택된넘
 	int			m_nPlayer;				// 누구차례냐
 
-
 	int			m_minimapOn;			// 0 , 1, 2, 3 (1,2) 일 때 On, (3,0) 일 때 Off
 	int			m_spacor;
 

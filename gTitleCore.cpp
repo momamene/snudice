@@ -39,6 +39,7 @@ bool gTitleCore::SetUp()
 
 	if(FAILED(SetUp_Title()))
 		return false;
+
 	if(FAILED(SetUp_PlayerSelect()))
 		return false;
 	
@@ -54,7 +55,11 @@ void gTitleCore::MainLoop()
 {
 	Draw();
 
-	gPopUp::GetIF()->MainLoop();
+	if(gPopUp::GetIF()->isPopUp())
+	{
+		gPopUp::GetIF()->MainLoop();
+		return;
+	}
 
 	//popup창에서 메시지가 옴
 	if(gPopUp::GetIF()->m_bReturn)
@@ -354,7 +359,7 @@ void gTitleCore::OnLButtonDown_Title()
 			m_eMode = ETM_PLAYERSEL;
 			break;
 		case ETB_EXIT:
-			gPopUp::GetIF()->SetPopUp(ECLK_CANCEL, "정말 종료하시겠습니까?");
+			gPopUp::GetIF()->SetPopUp(ECLK_CANCEL, STR_1);
 			//gMainWin::GetIF()->Exit();
 			break;
 	}

@@ -1,10 +1,11 @@
  #include "gPlayer.h"
-// #include "const.h"
+ #include "const.h"
 #include "tileContainer.h"
 #include "gImage.h"
 #include "gGameCore.h"
 #include "gTimer.h"
 #include "itemContainer.h"
+#include "gPopUp.h"
 
 bool gPlayer::SetUp (gChar *gchar)
 {
@@ -193,6 +194,11 @@ void gPlayer::meet()
 	for(int i = 0 ; i < m_subjectGrader.m_subjectN ; i++ ){
 		if(boolo && m_subjectGrader.m_subject[i]==flag2){
 			m_subjectGrader.m_meetCount[i]++;
+			
+			// ¼ö¾÷ÀÌ¸§
+			// nÀÇ ¼ºÃëµµ È¹µæ!!  <- ÀÌ·¸°Ô ¶ç¿öÁö°Ô ¹Ù²ã¶ó
+
+			gPopUp::GetIF()->SetImgPopUp(ECLK_OK, &m_charInfo->m_ImgPopup, "¼ö¾÷ ÀÌ¸§", "nÀÇ ¼ºÃëµµ È¹µæ!!");
 			
 			if(tilecontainer->tileMap[tile].flag3==0)
 				m_subjectGrader.m_weightCount[i] += meetItemCalculator(0,m_charInfo->m_Data.nLang);

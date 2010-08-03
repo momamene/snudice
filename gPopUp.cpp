@@ -168,6 +168,8 @@ void gPopUp::Ok()
 	memset(m_szLine2, 0, 128);
 	m_bReturn	= true;
 	m_Img		= NULL;
+	m_ImgBtn[ECLK_OK].m_eBtnMode = EBM_NONE;
+	m_ImgBtn[ECLK_CANCEL].m_eBtnMode = EBM_NONE;
 }
 
 void gPopUp::Cancel()
@@ -178,6 +180,8 @@ void gPopUp::Cancel()
 	memset(m_szLine2, 0, 128);
 	m_bReturn	= true;
 	m_Img		= NULL;
+	m_ImgBtn[ECLK_OK].m_eBtnMode = EBM_NONE;
+	m_ImgBtn[ECLK_CANCEL].m_eBtnMode = EBM_NONE;
 }
 
 void gPopUp::Draw()
@@ -244,6 +248,8 @@ void gPopUp::OnMouseMove()
 		case ECLK_OK:
 			if(m_ImgBtn[ECLK_OK].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 				m_ImgBtn[ECLK_OK].m_eBtnMode = EBM_HOVER;
+			else
+				m_ImgBtn[ECLK_OK].m_eBtnMode = EBM_NONE;
 			break;
 		case ECLK_CANCEL:
 			if(m_ImgBtn[ECLK_OK].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
