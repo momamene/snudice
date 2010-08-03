@@ -15,7 +15,7 @@ gChar::~gChar()
 
 }
 
-bool gChar::SetUp(CHARDATA data, char *szIllu, char *szDot, char *szPopup)
+bool gChar::SetUp(CHARDATA data, char *szIllu, char *szDot, char *szPopup, char *szTooltip)
 {
 	m_Data = data;
 
@@ -26,6 +26,9 @@ bool gChar::SetUp(CHARDATA data, char *szIllu, char *szDot, char *szPopup)
 		return false;
 
 	if(FAILED(m_ImgPopup.Load(szPopup)))
+		return false;
+
+	if(FAILED(m_ImgTooltip.Load(szTooltip)))
 		return false;
 
 	return true;
@@ -55,4 +58,5 @@ void gChar::Release()
 	m_ImgIllu.Release();
 	m_ImgDot.Release();
 	m_ImgPopup.Release();
+	m_ImgTooltip.Release();
 }
