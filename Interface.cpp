@@ -255,7 +255,7 @@ void gInterface::DrawTooltip()
 							SetRect(&rcSourAc,
 									0, 0, TOOLTIP_CHARIMGW, TOOLTIP_CHARIMGH);	// img
 
-							OffsetRect(&rcDestAc, 0, -36);						// img
+							OffsetRect(&rcDestAc, 0, -34);						// img
 							m_tooltip.pPlayer[i]->m_charInfo->m_ImgTooltip.Draw(rcDestAc, rcSourAc, false);
 						}
 					}

@@ -40,7 +40,6 @@ RSC=rc.exe
 # PROP Use_Debug_Libraries 0
 # PROP Output_Dir "Release"
 # PROP Intermediate_Dir "Release"
-# PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /c
 # ADD CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /c
@@ -53,23 +52,22 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386
-# ADD LINK32 ddraw.lib dxguid.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /machine:I386
 
 !ELSEIF  "$(CFG)" == "SNUDICE - Win32 Debug"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
-# PROP BASE Output_Dir "Debug"
-# PROP BASE Intermediate_Dir "Debug"
+# PROP BASE Output_Dir "SNUDICE___Win32_Debug"
+# PROP BASE Intermediate_Dir "SNUDICE___Win32_Debug"
 # PROP BASE Target_Dir ""
 # PROP Use_MFC 0
 # PROP Use_Debug_Libraries 1
-# PROP Output_Dir "Debug"
-# PROP Intermediate_Dir "Debug"
-# PROP Ignore_Export_Lib 0
+# PROP Output_Dir "SNUDICE___Win32_Debug"
+# PROP Intermediate_Dir "SNUDICE___Win32_Debug"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /FR /YX /FD /GZ /c
+# ADD CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x412 /d "_DEBUG"
@@ -79,7 +77,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 ddraw.lib dxguid.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
 
 !ENDIF 
 
@@ -92,71 +90,39 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=.\gChar.cpp
+SOURCE=.\Char.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\gCharManager.cpp
+SOURCE=.\CharContainer.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\gGameCore.cpp
+SOURCE=.\GameCore.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\gGrade.cpp
+SOURCE=.\Grade.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\gImage.cpp
+SOURCE=.\Image.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\gImgButton.cpp
+SOURCE=.\ImgButton.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\gInterface.cpp
+SOURCE=.\Interface.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\gMainWin.cpp
+SOURCE=.\Item.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\gMouse.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\gPlayer.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\gPlayerManager.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\gPopUp.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\gTimer.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\gTitleCore.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\gUtil.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\ITEM.CPP
-# End Source File
-# Begin Source File
-
-SOURCE=.\itemContainer.cpp
+SOURCE=.\ItemContainer.cpp
 # End Source File
 # Begin Source File
 
@@ -164,11 +130,43 @@ SOURCE=.\main.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\TILE.CPP
+SOURCE=.\MainWin.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\tileContainer.cpp
+SOURCE=.\Mouse.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Player.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\PlayerContainer.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\PopUp.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Tile.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TileContainer.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Timer.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TitleCore.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Util.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -176,87 +174,87 @@ SOURCE=.\tileContainer.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
+SOURCE=.\Char.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CharContainer.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\const.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\gChar.h
+SOURCE=.\Core.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\gCharManager.h
+SOURCE=.\GameCore.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\gCoreIF.h
+SOURCE=.\Grade.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\gGameCore.h
+SOURCE=.\Image.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\gGrade.h
+SOURCE=.\ImgButton.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\gImage.h
+SOURCE=.\Interface.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\gImgButton.h
+SOURCE=.\Item.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\gInterface.h
+SOURCE=.\ItemContainer.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\gMainWin.h
+SOURCE=.\MainWin.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\gMouse.h
+SOURCE=.\Mouse.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\gPlayer.h
+SOURCE=.\Player.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\gPlayerManager.h
+SOURCE=.\PlayerContainer.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\gPopUp.h
+SOURCE=.\PopUp.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\gTimer.h
+SOURCE=.\Tile.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\gTitleCore.h
+SOURCE=.\TileContainer.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\gUtil.h
+SOURCE=.\Timer.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\ITEM.H
+SOURCE=.\TitleCore.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\itemContainer.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\TILE.H
-# End Source File
-# Begin Source File
-
-SOURCE=.\tileContainer.h
+SOURCE=.\Util.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"
