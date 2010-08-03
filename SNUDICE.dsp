@@ -221,6 +221,10 @@ SOURCE=.\Core.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\coreconst.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\CSelectCore.h
 # End Source File
 # Begin Source File
@@ -249,6 +253,10 @@ SOURCE=.\TitleCore.h
 # PROP Default_Filter ""
 # Begin Source File
 
+SOURCE=.\graphicconst.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\Image.h
 # End Source File
 # Begin Source File
@@ -265,6 +273,10 @@ SOURCE=.\Char.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\charconst.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\CharContainer.h
 # End Source File
 # End Group
@@ -274,6 +286,10 @@ SOURCE=.\CharContainer.h
 # Begin Source File
 
 SOURCE=.\Item.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\itemconst.h
 # End Source File
 # Begin Source File
 
@@ -299,10 +315,18 @@ SOURCE=.\Timer.h
 
 SOURCE=.\Util.h
 # End Source File
+# Begin Source File
+
+SOURCE=.\utilconst.h
+# End Source File
 # End Group
 # Begin Group "Map.h"
 
 # PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\mapconst.h
+# End Source File
 # Begin Source File
 
 SOURCE=.\Tile.h
@@ -322,6 +346,10 @@ SOURCE=.\Grade.h
 # Begin Source File
 
 SOURCE=.\Player.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\playerconst.h
 # End Source File
 # Begin Source File
 
