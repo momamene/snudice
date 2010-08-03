@@ -88,13 +88,12 @@ LINK32=link.exe
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
+# Begin Group "Core.cpp"
+
+# PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=.\Char.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\CharContainer.cpp
+SOURCE=.\CSelectCore.cpp
 # End Source File
 # Begin Source File
 
@@ -102,8 +101,24 @@ SOURCE=.\GameCore.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Grade.cpp
+SOURCE=.\Interface.cpp
 # End Source File
+# Begin Source File
+
+SOURCE=.\PSelectCore.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\SubmitCore.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TitleCore.cpp
+# End Source File
+# End Group
+# Begin Group "Graphic.cpp"
+
+# PROP Default_Filter ""
 # Begin Source File
 
 SOURCE=.\Image.cpp
@@ -112,10 +127,22 @@ SOURCE=.\Image.cpp
 
 SOURCE=.\ImgButton.cpp
 # End Source File
+# End Group
+# Begin Group "Char.cpp"
+
+# PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=.\Interface.cpp
+SOURCE=.\Char.cpp
 # End Source File
+# Begin Source File
+
+SOURCE=.\CharContainer.cpp
+# End Source File
+# End Group
+# Begin Group "Item.cpp"
+
+# PROP Default_Filter ""
 # Begin Source File
 
 SOURCE=.\Item.cpp
@@ -124,17 +151,45 @@ SOURCE=.\Item.cpp
 
 SOURCE=.\ItemContainer.cpp
 # End Source File
-# Begin Source File
+# End Group
+# Begin Group "Util.cpp"
 
-SOURCE=.\main.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\MainWin.cpp
-# End Source File
+# PROP Default_Filter ""
 # Begin Source File
 
 SOURCE=.\Mouse.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\PopUp.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Timer.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Util.cpp
+# End Source File
+# End Group
+# Begin Group "Map.cpp"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\Tile.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TileContainer.cpp
+# End Source File
+# End Group
+# Begin Group "Player.cpp"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\Grade.cpp
 # End Source File
 # Begin Source File
 
@@ -144,49 +199,29 @@ SOURCE=.\Player.cpp
 
 SOURCE=.\PlayerContainer.cpp
 # End Source File
+# End Group
 # Begin Source File
 
-SOURCE=.\PopUp.cpp
+SOURCE=.\main.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Tile.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\TileContainer.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\Timer.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\TitleCore.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\Util.cpp
+SOURCE=.\MainWin.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
-# Begin Source File
+# Begin Group "Core.h"
 
-SOURCE=.\Char.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\CharContainer.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\const.h
-# End Source File
+# PROP Default_Filter ""
 # Begin Source File
 
 SOURCE=.\Core.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CSelectCore.h
 # End Source File
 # Begin Source File
 
@@ -194,8 +229,24 @@ SOURCE=.\GameCore.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\Grade.h
+SOURCE=.\Interface.h
 # End Source File
+# Begin Source File
+
+SOURCE=.\PSelectCore.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\SubmitCore.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TitleCore.h
+# End Source File
+# End Group
+# Begin Group "Graphic.h"
+
+# PROP Default_Filter ""
 # Begin Source File
 
 SOURCE=.\Image.h
@@ -204,10 +255,22 @@ SOURCE=.\Image.h
 
 SOURCE=.\ImgButton.h
 # End Source File
+# End Group
+# Begin Group "Char.h"
+
+# PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=.\Interface.h
+SOURCE=.\Char.h
 # End Source File
+# Begin Source File
+
+SOURCE=.\CharContainer.h
+# End Source File
+# End Group
+# Begin Group "Item.h"
+
+# PROP Default_Filter ""
 # Begin Source File
 
 SOURCE=.\Item.h
@@ -216,13 +279,45 @@ SOURCE=.\Item.h
 
 SOURCE=.\ItemContainer.h
 # End Source File
-# Begin Source File
+# End Group
+# Begin Group "Util.h"
 
-SOURCE=.\MainWin.h
-# End Source File
+# PROP Default_Filter ""
 # Begin Source File
 
 SOURCE=.\Mouse.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\PopUp.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Timer.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Util.h
+# End Source File
+# End Group
+# Begin Group "Map.h"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\Tile.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TileContainer.h
+# End Source File
+# End Group
+# Begin Group "Player.h"
+
+# PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\Grade.h
 # End Source File
 # Begin Source File
 
@@ -232,29 +327,14 @@ SOURCE=.\Player.h
 
 SOURCE=.\PlayerContainer.h
 # End Source File
+# End Group
 # Begin Source File
 
-SOURCE=.\PopUp.h
+SOURCE=.\const.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\Tile.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\TileContainer.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Timer.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\TitleCore.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Util.h
+SOURCE=.\MainWin.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"
