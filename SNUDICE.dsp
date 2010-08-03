@@ -364,6 +364,10 @@ SOURCE=.\const.h
 
 SOURCE=.\MainWin.h
 # End Source File
+# Begin Source File
+
+SOURCE=.\stringconst.h
+# End Source File
 # End Group
 # Begin Group "Resource Files"
 

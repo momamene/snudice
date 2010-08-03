@@ -1,22 +1,24 @@
 #include <windows.h>
-#include "gMainWin.h"
+#include "MainWin.h"
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow)
 {
-	if(FAILED(gMainWin::GetIF()->SetUp(hInstance, lpszCmdParam, nCmdShow)))
+	gMainWin	*main = gMainWin::GetIF();
+
+	if(main->SetUp(hInstance, lpszCmdParam, nCmdShow))
 	{
-		if(gMainWin::GetIF()->m_hWnd == NULL)
+		if(main->m_hWnd == NULL)
 			return 0;
 		else
 		{
-			gMainWin::GetIF()->Exit();
+			main->Exit();
 			return 0;
 		}
 	}
 
 	int		retValue; 
-	retValue = gMainWin::GetIF()->Run();
-	gMainWin::GetIF()->Release();
+	retValue = main->Run();
+	main->Release();
 
 	return retValue;
 }
