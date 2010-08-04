@@ -43,13 +43,14 @@ bool gPopUp::SetUp()
 	return true;
 }
 
-bool gPopUp::SetPopUp(BTNCLK btn, char *szLine1, char *szLine2)
+bool gPopUp::SetPopUp(BTNCLK btn, ePOPTYPE pop, char *szLine1, char *szLine2)
 {
 	if(m_bPopup)
 		return false;
 	
-	m_eBtnClk = btn;
-	m_bReturn = false;
+	m_eBtnClk	= btn;
+	m_bReturn	= false;
+	m_ePop		= pop;
 
 	switch(btn)
 	{
@@ -85,11 +86,11 @@ bool gPopUp::SetPopUp(BTNCLK btn, char *szLine1, char *szLine2)
 	return true;
 }
 
-bool gPopUp::SetImgPopUp(BTNCLK btn, gImage *img, char *szLine1, char *szLine2)
+bool gPopUp::SetImgPopUp(BTNCLK btn, ePOPTYPE pop, gImage *img, char *szLine1, char *szLine2)
 {
 	m_Img		= img;
 
-	bool ret = SetPopUp(btn, szLine1, szLine2);
+	bool ret = SetPopUp(btn, pop, szLine1, szLine2);
 
 	return ret;
 }
@@ -104,11 +105,16 @@ void gPopUp::Release()
 void gPopUp::TextPosX()
 {
 	int		length;
+	int		i;
 	
 	if(m_szLine1 != NULL)
 	{
 		length = strlen(m_szLine1);
 		length *= POPUP_PIXEL_PER_LETTER;		// 글자 하나당 6pixel이라고 가정(한글기준)
+
+		for(i = 0; i < strlen(m_szLine1); i++)
+			if(m_szLine1[i] == ' ' || m_szLine1[i] == ',' || m_szLine1[i] == '.')
+				length -= 2;
 
 		if(m_Img)
 			m_nLine1X = POPUP_X + POPUP_IMG_W + (POPUP_WIDTH - POPUP_IMG_W - length) / 2;
@@ -116,16 +122,20 @@ void gPopUp::TextPosX()
 			m_nLine1X = POPUP_X + (POPUP_WIDTH - length) / 2;
 	}
 
-	if(m_szLine2 != NULL)
+	if(m_szLine2 != NULL)	
 	{
 		length = strlen(m_szLine2);
 		length *= POPUP_PIXEL_PER_LETTER;		// 글자 하나당 6pixel이라고 가정(한글기준)
-		m_nLine2X = POPUP_X + (POPUP_WIDTH - length) / 2;
 
+		for(i = 0; i < strlen(m_szLine1); i++)
+			if(m_szLine2[i] == ' ' || m_szLine2[i] == ',' || m_szLine2[i] == '.')
+				length -= 2;
+	
 		if(m_Img)
 			m_nLine2X = POPUP_X + POPUP_IMG_W + (POPUP_WIDTH - POPUP_IMG_W - length) / 2;
 		else
-			m_nLine2X = POPUP_X + (POPUP_WIDTH - length) / 2;	}
+			m_nLine2X = POPUP_X + (POPUP_WIDTH - length) / 2;
+	}
 }
 
 bool gPopUp::isPopUp()

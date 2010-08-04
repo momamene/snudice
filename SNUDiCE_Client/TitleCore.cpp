@@ -63,16 +63,28 @@ void gTitleCore::MainLoop()
 
 	if(gPopUp::GetIF()->m_bReturn)
 	{
-		switch(gPopUp::GetIF()->m_eBtnClk)
+		switch(gPopUp::GetIF()->m_ePop)
 		{
-			case ECLK_OK:
-				gServer::GetIF()->ReConnect();
+			case EPOP_RECONNECT:
+				switch(gPopUp::GetIF()->m_eBtnClk)
+				{
+					case ECLK_OK:
+						gServer::GetIF()->ReConnect();
+						break;
+					case ECLK_CANCEL:
+						gMainWin::GetIF()->Exit();
+						break;
+				}
 				break;
-			case ECLK_CANCEL:
-				gMainWin::GetIF()->Exit();
+			case EPOP_DISCONNECT:
+				switch(gPopUp::GetIF()->m_eBtnClk)
+				{
+					case ECLK_OK:
+						gMainWin::GetIF()->Exit();
+						break;
+				}
 				break;
 		}
-
 		gPopUp::GetIF()->m_bReturn = false;
 	}
 

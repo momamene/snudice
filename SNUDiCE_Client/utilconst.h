@@ -27,8 +27,8 @@
 #define POPUP_1STBTNY			POPUP_ONEBTNY
 #define POPUP_2NDBTNX			(POPUP_X + 110)
 #define POPUP_2NDBTNY			POPUP_ONEBTNY
-#define POPUP_1STTEXTY			(POPUP_Y + 30)
-#define POPUP_2NDTEXTY			(POPUP_Y + 50)
+#define POPUP_1STTEXTY			(POPUP_Y + 28)
+#define POPUP_2NDTEXTY			(POPUP_Y + 48)
 #define POPUP_IMG_W				48			// popup창에 띄우는 이미지
 #define POPUP_IMG_H				48
 #define POPUP_IMG_X				(POPUP_X + 10)

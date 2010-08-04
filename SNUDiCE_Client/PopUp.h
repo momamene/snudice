@@ -17,6 +17,12 @@ enum BTNCLK				// popup창에서 어떤 버튼이 클릭되었나
 	ECLK_END,
 };
 
+enum ePOPTYPE			// 팝업창 타입
+{
+	EPOP_RECONNECT,
+	EPOP_DISCONNECT,
+};
+
 
 class gPopUp : Core
 {
@@ -27,6 +33,7 @@ public:
 	static gPopUp	*GetIF();
 public:
 	BTNCLK		m_eBtnClk;
+	ePOPTYPE	m_ePop;
 
 	gImage*		m_Img;					// popup에 띄울 이미지
 
@@ -44,8 +51,8 @@ public:
 
 public:
 
-	bool		SetPopUp(BTNCLK btn, char *szLine1 = NULL, char *szLine2 = NULL);		// popup창 띄우기 전에 정보 셋팅
-	bool		SetImgPopUp(BTNCLK btn, gImage *img, char *szLine1 = NULL, char *szLine2 = NULL);
+	bool		SetPopUp(BTNCLK btn, ePOPTYPE pop, char *szLine1 = NULL, char *szLine2 = NULL);		// popup창 띄우기 전에 정보 셋팅
+	bool		SetImgPopUp(BTNCLK btn, ePOPTYPE pop, gImage *img, char *szLine1 = NULL, char *szLine2 = NULL);
 	bool		isPopUp();
 
 	// overriding

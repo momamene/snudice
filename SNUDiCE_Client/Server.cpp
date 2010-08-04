@@ -94,6 +94,10 @@ void gServer::Receive(LPARAM lParam)
 		case FD_WRITE:
 			break;
 		case FD_CLOSE:
+			wsprintf(szBuf, "[Close] %s : %d\n",
+				inet_ntoa(s_serverAddr.sin_addr), ntohs(s_serverAddr.sin_port));
+			gUtil::DebugMsg(szBuf);
+			m_bConnect = false;
 			break;
 	}
 
@@ -119,6 +123,7 @@ void gServer::ReConnect()
 		EndSocket();
 		wsprintf(szBuf, "socket connect faild: %d\n", WSAGetLastError());
 		gUtil::DebugMsg(szBuf);
+		return ;
 	}
 	wsprintf(szBuf, "socket [re]connect because: %d\n", WSAGetLastError());
 	gUtil::DebugMsg(szBuf);
@@ -136,7 +141,7 @@ void gServer::EndSocket()
 {
 	if(s_sock)
 	{
-//		shutdown(s_sock, 0x02);		// SD_BOTH 는 뭘까?
+		shutdown(s_sock, 0x02);		// SD_BOTH 는 뭘까?
 		closesocket(s_sock);
 		s_sock = NULL;
 	}
@@ -149,16 +154,25 @@ bool gServer::SocketErrorMessage(LPARAM lParam)
 	
 	if( WSAGETSELECTERROR(lParam) )
 	{
+		m_bConnect = false;
+
 		if( ( WSAGETSELECTERROR(lParam) == WSAECONNREFUSED ) ||		// 10061 :Connection refused. 서버 프로그램이 실행 X
 			( WSAGETSELECTERROR(lParam) == WSAENETUNREACH ) ||		// 10051 :Network is unreachable.
-			( WSAGETSELECTERROR(lParam) == WSAETIMEDOUT )  )		// 10060 :Connection timed out.
+			( WSAGETSELECTERROR(lParam) == WSAETIMEDOUT ) )//||		// 10060 :Connection timed out.
 		{
-			gPopUp::GetIF()->SetPopUp(ECLK_CANCEL, STR_1, STR_2);
+			gPopUp::GetIF()->SetPopUp(ECLK_CANCEL, EPOP_RECONNECT, STR_1, STR_2);
 
  			return false;
 		}
 		EndSocket();
-		wsprintf(szBuf, "WM_SOCKET error: %d\n", WSAGETSELECTERROR(lParam));
+		if( WSAGETSELECTERROR(lParam) == WSAECONNABORTED)			// 10053 :서버가 종료됨.. 아마도
+		{
+			gUtil::DebugMsg("서버와의 연결이 끊김\n");
+			gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_DISCONNECT, STR_3);
+			return false;
+		}
+		else
+			wsprintf(szBuf, "WM_SOCKET error: %d\n", WSAGETSELECTERROR(lParam));
 		gUtil::DebugMsg(szBuf);
 		return false;
 	}

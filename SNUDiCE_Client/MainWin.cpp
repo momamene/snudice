@@ -91,6 +91,10 @@ void gMainWin::MoveWindow()
 
 void gMainWin::Release()
 {
+	gServer::GetIF()->Release();
+	gPopUp::GetIF()->Release();
+	gMouse::GetIF()->Release();
+	gTitleCore::GetIF()->Release();
 	SAFE_RELEASE(m_lpDDBack);
 	SAFE_RELEASE(m_lpDDPrimary);
 	SAFE_RELEASE(m_lpDD);
