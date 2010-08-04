@@ -1,0 +1,22 @@
+// 캐릭터정보 ,로 구분 _ ->줄바꾸기(엔터)
+// 단과대학, 이름, 성별, 언어, 수리, 예능, 체력, 이동, 기타설명, 일러, 도트, 팝업, 툴팁
+// 공부스탯 max 8 이동,체력 max 14
+// 언어계열
+인문대,서정시,여,8,1,1,0,0,영화감상을 좋아한다_취미는 시 읽기,.\\Data\\Char\\illu1.img,.\\Data\\Char\\dot1.img,.\\Data\\Char\\popup1.img,.\\Data\\Char\\tooltip1.img,.\\Data\\Char\\tooltip1.img,
+사회대,이교양,여,5,2,3,0,0,스타벅스에서 커피를 마시며_독서를 즐긴다.,.\\Data\\Char\\illu2.img,.\\Data\\Char\\dot2.img,.\\Data\\Char\\popup2.img,.\\Data\\Char\\tooltip2.img,
+경영대,허경영,남,5,4,1,0,0,1집 Call me_2집 Red Angels를 낸 2집 가수,.\\Data\\Char\\illu3.img,.\\Data\\Char\\dot3.img,.\\Data\\Char\\popup3.img,.\\Data\\Char\\tooltip3.img,
+법대,남도일,여,5,1,4,0,0,아침에 눈을 뜨면 지난밤이 궁금해_오늘은 어떤 사건이 날 부를까,.\\Data\\Char\\illu4.img,.\\Data\\Char\\dot4.img,.\\Data\\Char\\popup4.img,.\\Data\\Char\\tooltip4.img,
+생활과학대,이슬기,남,5,4,1,0,0,네이버 웹툰을 가고 싶어하는_슭이로운 생활 연재작가,.\\Data\\Char\\illu5.img,.\\Data\\Char\\dot5.img,.\\Data\\Char\\popup5.img,.\\Data\\Char\\tooltip5.img,
+사범대,한교육,여,3,3,3,0,0,모든이가 꿈꾸는 교생선생님이미지_제작자가 하앍하앍,.\\Data\\Char\\illu6.img,.\\Data\\Char\\dot6.img,.\\Data\\Char\\popup6.img,.\\Data\\Char\\tooltip6.img,
+자유전공,석호필,남,3,3,3,0,0,고난 역경을 뚫고 이제는 자유인이 되었다.,.\\Data\\Char\\illu7.img,.\\Data\\Char\\dot7.img,.\\Data\\Char\\popup7.img,.\\Data\\Char\\tooltip7.img,
+// 수리계열
+공대,이진수,남,1,7,1,0,0,0101101110101101,.\\Data\\Char\\illu8.img,.\\Data\\Char\\dot8.img,.\\Data\\Char\\popup8.img,.\\Data\\Char\\tooltip8.img,
+자연대,자연희,여,1,4,4,0,0,세상의 물리법칙만큼이나_아름다운 그녀,.\\Data\\Char\\illu9.img,.\\Data\\Char\\dot9.img,.\\Data\\Char\\popup9.img,.\\Data\\Char\\tooltip9.img,
+의대,김본좌,남,2,5,2,0,0,인체 성의학에 대해서는_그를 따라올 자가 없다.,.\\Data\\Char\\illu10.img,.\\Data\\Char\\dot10.img,.\\Data\\Char\\popup10.img,.\\Data\\Char\\tooltip10.img,
+수의대,Lozitec Mouse,여,3,4,2,0,0,저 멀리 미국에서 온 유학생,.\\Data\\Char\\illu11.img,.\\Data\\Char\\dot11.img,.\\Data\\Char\\popup11.img,.\\Data\\Char\\tooltip11.img,
+약대,양귀비,여,4,4,1,0,0,미국 친구 마리화나_중국 친구 대마. 글로벌 학생,.\\Data\\Char\\illu12.img,.\\Data\\Char\\dot12.img,.\\Data\\Char\\popup12.img,.\\Data\\Char\\tooltip12.img,
+간호대,심영인,남,2,4,3,0,0,심영이라고도 불리우는 이 친구는_의학계열에서 유명하다,.\\Data\\Char\\illu13.img,.\\Data\\Char\\dot13.img,.\\Data\\Char\\popup13.img,.\\Data\\Char\\tooltip13.img,
+농대,농경인,남,4,3,2,0,0,청춘불패 구하라가 오기를 꿈꾸며_오늘도 농촌 봉사를 나간다,.\\Data\\Char\\illu14.img,.\\Data\\Char\\dot14.img,.\\Data\\Char\\popup14.img,.\\Data\\Char\\tooltip14.img,
+// 예능계열
+음대,김성대,남,2,2,5,0,0,탄탄한 체구에서 나오는 그의 스킬_그는 estro 김 성 대!,.\\Data\\Char\\illu15.img,.\\Data\\Char\\dot15.img,.\\Data\\Char\\popup15.img,.\\Data\\Char\\tooltip15.img,
+미대,유채화,여,1,3,5,0,0,어릴 적 "참 쉽죠잉?"의 밥 아저씨를_보고 미대에 오게 되었다.,.\\Data\\Char\\illu16.img,.\\Data\\Char\\dot16.img,.\\Data\\Char\\popup16.img,.\\Data\\Char\\tooltip16.img,

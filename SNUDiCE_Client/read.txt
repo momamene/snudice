@@ -1,0 +1,32 @@
+TYPE					접두어			ex
+
+int						n				nTemp;
+float					f				fTemp;
+double					d				dTemp;
+bool					b				bTemp;
+string					sz				szTemp;
+RECT					rc				rcTemp;
+POINT					pt				ptTemp;
+DWORD					dw				dwTemp;
+
+사용자 정의 구조체인 경우 알아서 적절히 줄이기
+
+enum					e				eTemp;
+
+
+
+
+영역					접두어			ex
+
+클래스 멤버 변수		m_
+글로벌					g_
+static					s_
+
+
+class header
+
+//------------------------------------------------------------------------------------
+//	파일 이름
+//	마지막 수정 날짜				수정한 사람
+//	comment
+//------------------------------------------------------------------------------------
