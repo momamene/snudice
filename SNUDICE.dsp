@@ -65,6 +65,7 @@ LINK32=link.exe
 # PROP Use_Debug_Libraries 1
 # PROP Output_Dir "SNUDICE___Win32_Debug"
 # PROP Intermediate_Dir "SNUDICE___Win32_Debug"
+# PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /GZ /c
 # ADD CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /GZ /c
@@ -77,7 +78,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
+# ADD LINK32 ddraw.lib dxguid.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
 
 !ENDIF 
 
@@ -91,26 +92,6 @@ LINK32=link.exe
 # Begin Group "Core.cpp"
 
 # PROP Default_Filter ""
-# Begin Source File
-
-SOURCE=.\CSelectCore.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\GameCore.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\Interface.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\PSelectCore.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\SubmitCore.cpp
-# End Source File
 # Begin Source File
 
 SOURCE=.\TitleCore.cpp
@@ -131,26 +112,10 @@ SOURCE=.\ImgButton.cpp
 # Begin Group "Char.cpp"
 
 # PROP Default_Filter ""
-# Begin Source File
-
-SOURCE=.\Char.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\CharContainer.cpp
-# End Source File
 # End Group
 # Begin Group "Item.cpp"
 
 # PROP Default_Filter ""
-# Begin Source File
-
-SOURCE=.\Item.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\ItemContainer.cpp
-# End Source File
 # End Group
 # Begin Group "Util.cpp"
 
@@ -165,40 +130,16 @@ SOURCE=.\PopUp.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Timer.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\Util.cpp
 # End Source File
 # End Group
 # Begin Group "Map.cpp"
 
 # PROP Default_Filter ""
-# Begin Source File
-
-SOURCE=.\Tile.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\TileContainer.cpp
-# End Source File
 # End Group
 # Begin Group "Player.cpp"
 
 # PROP Default_Filter ""
-# Begin Source File
-
-SOURCE=.\Grade.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\Player.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\PlayerContainer.cpp
-# End Source File
 # End Group
 # Begin Source File
 
@@ -225,26 +166,6 @@ SOURCE=.\coreconst.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\CSelectCore.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\GameCore.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Interface.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\PSelectCore.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\SubmitCore.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\TitleCore.h
 # End Source File
 # End Group
@@ -267,34 +188,10 @@ SOURCE=.\ImgButton.h
 # Begin Group "Char.h"
 
 # PROP Default_Filter ""
-# Begin Source File
-
-SOURCE=.\Char.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\charconst.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\CharContainer.h
-# End Source File
 # End Group
 # Begin Group "Item.h"
 
 # PROP Default_Filter ""
-# Begin Source File
-
-SOURCE=.\Item.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\itemconst.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\ItemContainer.h
-# End Source File
 # End Group
 # Begin Group "Util.h"
 
@@ -309,10 +206,6 @@ SOURCE=.\PopUp.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\Timer.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\Util.h
 # End Source File
 # Begin Source File
@@ -323,38 +216,10 @@ SOURCE=.\utilconst.h
 # Begin Group "Map.h"
 
 # PROP Default_Filter ""
-# Begin Source File
-
-SOURCE=.\mapconst.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Tile.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\TileContainer.h
-# End Source File
 # End Group
 # Begin Group "Player.h"
 
 # PROP Default_Filter ""
-# Begin Source File
-
-SOURCE=.\Grade.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Player.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\playerconst.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\PlayerContainer.h
-# End Source File
 # End Group
 # Begin Source File
 

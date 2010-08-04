@@ -6,10 +6,9 @@
 //	popup창 띄우자
 //------------------------------------------------------------------------------------
 #pragma once
-#include "const.h"
-#include "gImage.h"
-#include "gImgButton.h"
-#include "gCoreIF.h"
+#include "Image.h"
+#include "ImgButton.h"
+#include "Core.h"
 
 enum BTNCLK				// popup창에서 어떤 버튼이 클릭되었나
 {
@@ -19,7 +18,7 @@ enum BTNCLK				// popup창에서 어떤 버튼이 클릭되었나
 };
 
 
-class gPopUp : gCoreIF
+class gPopUp : Core
 {
 public:
 	gPopUp();
@@ -33,7 +32,9 @@ public:
 
 	gImage		m_ImgPopup;				// popup창 배경 이미지
 	gImgButton	m_ImgBtn[ECLK_END];
+
 	bool		m_bPopup;				// popup됬냐
+
 	char		m_szLine1[128];			// popup창에 띄울 메시지 - 1번째 줄
 	int			m_nLine1X;
 	char		m_szLine2[128];			// popup창에 띄울 메시지 - 2번째 줄
@@ -49,7 +50,7 @@ public:
 
 	// overriding
 	bool		SetUp();
-	void		MainLoop();
+	bool		MainLoop();
 	void		Draw();
 	void		Release();
 	
@@ -57,6 +58,7 @@ public:
 	void		OnLButtonUp();
 	void		OnMouseMove();
 	void		OnRButtonDown();
+	//	end overriding
 
 private:
 	void		TextPosX();						// comment의 x 좌표 계산(popup창 중앙에 정렬하기 위함)

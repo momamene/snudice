@@ -5,7 +5,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 {
 	gMainWin	*main = gMainWin::GetIF();
 
-	if(main->SetUp(hInstance, lpszCmdParam, nCmdShow))
+	if(!main->SetUp(hInstance, lpszCmdParam, nCmdShow))
 	{
 		if(main->m_hWnd == NULL)
 			return 0;

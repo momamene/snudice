@@ -1,82 +1,44 @@
 //------------------------------------------------------------------------------------
 //	gTitleCore Class
 //
-//	2010. 07. 16	CoderK
+//	2010. 08. 04	CoderK
 //
-//	타이틀 모드 -> 플레이어 몇명 -> 게임코어로
+//	타이틀 모드
 //------------------------------------------------------------------------------------
 #pragma once
-#include "gImage.h"
-#include "gCoreIF.h"
-#include "gImgButton.h"
-#include "const.h"
+#include "Core.h"
+#include "Image.h"
+#include "ImgButton.h"
 
-//#define PLAYERSEL			// 플레이어 수 정할 수 있냐
-
-enum eTITLE_BTN
+enum eTITLEBTN
 {
-	ETB_START,
-	ETB_EXIT,
+	ETB_START,			// 시작
+	ETB_EXIT,			// 종료
 	ETB_END,
 };
 
-enum eTITLEMODE
-{
-	ETM_TITLE,
-	ETM_PLAYERSEL,			// 플레이어 몇명 할거냐
-};
-
-enum ePLAYERSEL
-{
-	EPS_PLAYER,				// 사람
-	EPS_COM,				// 컴퓨터
-	EPS_NONE,				// 안해
-};
-
-class gTitleCore : public gCoreIF
+class gTitleCore : Core
 {
 public:
 	static gTitleCore	*GetIF();
-
+	
 	gTitleCore();
 	virtual ~gTitleCore();
-public:
-	eTITLEMODE	m_eMode;
-
-	// title
-	gImage		m_ImgTitle;				// title 모드 배경
-	gImgButton	m_ImgBtn[ETB_END];
-
-	// player
-	gImgButton	m_ImgBtnPrev;
-	gImgButton	m_ImgBtnNext;
-	gImage		m_ImgPlayer;			// player select 모드 배경
-	gImage		m_ImgMode;
-	gImage		m_ImgNP[MAXPLAYER];
-	gImage		m_ImgCheck;
-	ePLAYERSEL	m_ePlayer[MAXPLAYER];
 
 public:
+	gImage		m_ImgBack;			// title 배경
+	gImgButton	m_Btn[ETB_END];
+
+public:
+	// overridng from Core 인터페이스
 	bool		SetUp();
-	void		MainLoop();
+	bool		MainLoop();
 	void		Draw();
-
+	void		Release();
+	
 	void		OnLButtonDown();
 	void		OnLButtonUp();
 	void		OnMouseMove();
 	void		OnRButtonDown();
-
-	void		Release();
-private:
-	bool		SetUp_Title();
-	bool		SetUp_PlayerSelect();
-
-	void		Draw_Title();
-	void		Draw_PlayerSelect();
-
-	void		OnLButtonDown_Title();
-	void		OnLButtonDown_PlayerSelect();
-
-	void		OnMouseMove_Title();
-	void		OnMouseMove_PlayerSelect();
+	// end overridng
 };

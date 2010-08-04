@@ -1,12 +1,13 @@
 //------------------------------------------------------------------------------------
 //	gImgButton Class
 //
-//	2010. 07. 16	CoderK
+//	2010. 08. 04	CoderK
 //
 //	이미지 버튼을 다루는 클래스
+//	Image처럼 Release 잊지 말 것
 //------------------------------------------------------------------------------------
 #pragma once
-#include "gImage.h"
+#include "Image.h"
 
 enum eBUTTONMODE
 {
@@ -20,6 +21,7 @@ class gImgButton
 public:
 	gImgButton();
 	virtual ~gImgButton();
+
 public:
 	gImage		m_Img;						// 버튼에 입력받는 이미지는, 가로 또는 세로로 3개의 이미지의 연속
 											// 순서대로 일반, 마우스 올려져 있을 때, 클릭했을 때

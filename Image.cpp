@@ -1,10 +1,7 @@
 #include "const.h"
-#include "gImage.h"
-#include "gMainWin.h"
+#include "Image.h"
+#include "MainWin.h"
 
-//------------------------------------------------------------------------------------
-//	Constructor	/	Destructor
-//------------------------------------------------------------------------------------
 gImage::gImage()
 {
 	memset(this, 0, sizeof(gImage));
@@ -157,6 +154,7 @@ void gImage::Draw(RECT rcDest, RECT rcSour, bool stretch)
 			rcSour.top -= rcDest.top;
 			rcDest.top = 0;
 		}
+
 		int		noverr;
 		int		noverb;
 

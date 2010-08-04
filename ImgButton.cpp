@@ -1,8 +1,4 @@
-#include "gImgButton.h"
-
-//------------------------------------------------------------------------------------
-//	Constructor	/	Destructor
-//------------------------------------------------------------------------------------
+#include "ImgButton.h"
 
 gImgButton::gImgButton()
 {
@@ -16,7 +12,9 @@ gImgButton::~gImgButton()
 
 bool gImgButton::SetUp(char *szImgName, bool vertical, RECT rcPos)
 {
-	if(FAILED(m_Img.Load(szImgName))) return false;
+	if(!m_Img.Load(szImgName))
+		return false;
+
 	m_bVertical	= vertical;
 	m_rcPos		= rcPos;
 	m_bShow		= true;
@@ -29,6 +27,7 @@ void gImgButton::Draw()
 	if(m_bShow)
 	{
 		RECT	rcPrt;
+
 		if(m_bVertical)
 		{
 			SetRect(&rcPrt, 0, 0, m_Img.m_nWidth, m_Img.m_nHeight / 3);

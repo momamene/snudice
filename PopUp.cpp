@@ -1,8 +1,8 @@
 #include <windows.h>
-#include "gPopUp.h"
-#include "gUtil.h"
-#include "gMainWin.h"
-#include "gMouse.h"
+#include "PopUp.h"
+#include "Util.h"
+#include "MainWin.h"
+#include "Mouse.h"
 
 
 gPopUp::gPopUp()
@@ -29,14 +29,14 @@ bool gPopUp::SetUp()
 	m_bReturn	= false;
 	m_Img		= NULL;
 	
-	if(FAILED(m_ImgPopup.Load(POPUP_IMG_BACK)))
+	if(!m_ImgPopup.Load(POPUP_IMG_BACK))
 		return false;
 	
 	RECT		rc;
 	// 버튼 위치는 차후에 셋팅
-	if(FAILED(m_ImgBtn[ECLK_OK].SetUp(POPUP_IMG_OK, false, rc)))
+	if(!m_ImgBtn[ECLK_OK].SetUp(POPUP_IMG_OK, false, rc))
 		return false;
-	if(FAILED(m_ImgBtn[ECLK_CANCEL].SetUp(POPUP_IMG_CANCEL, false, rc)))
+	if(!m_ImgBtn[ECLK_CANCEL].SetUp(POPUP_IMG_CANCEL, false, rc))
 		return false;
 
 	return true;
@@ -107,7 +107,7 @@ void gPopUp::TextPosX()
 	if(m_szLine1 != NULL)
 	{
 		length = strlen(m_szLine1);
-		length *= 6;		// 글자 하나당 6pixel이라고 가정(한글기준)
+		length *= POPUP_PIXEL_PER_LETTER;		// 글자 하나당 6pixel이라고 가정(한글기준)
 
 		if(m_Img)
 			m_nLine1X = POPUP_X + POPUP_IMG_W + (POPUP_WIDTH - POPUP_IMG_W - length) / 2;
@@ -118,7 +118,7 @@ void gPopUp::TextPosX()
 	if(m_szLine2 != NULL)
 	{
 		length = strlen(m_szLine2);
-		length *= 6;		// 글자 하나당 6pixel이라고 가정(한글기준)
+		length *= POPUP_PIXEL_PER_LETTER;		// 글자 하나당 6pixel이라고 가정(한글기준)
 		m_nLine2X = POPUP_X + (POPUP_WIDTH - length) / 2;
 
 		if(m_Img)

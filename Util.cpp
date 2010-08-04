@@ -1,21 +1,20 @@
-#include <windows.h>
 #include <stdio.h>
-#include "gUtil.h"
-#include "gMainWin.h"
-#include "const.h"
+#include "utilconst.h"
+#include "Util.h"
+#include "MainWin.h"
 
 HDC		s_hdc;
 HFONT	s_font;
 HFONT	s_ofont;
-int		s_nSize;
-char	s_szFont[32] = "µ¸¿ò";
+int		s_nSize			= UTIL_DEFAULT_FONTSIZE;
+char	s_szFont[32]	= UTIL_DEFAULT_FONT;
 
 void gUtil::BeginText()
 {
 	gMainWin::GetIF()->m_lpDDBack->GetDC(&s_hdc);
 	SetBkMode(s_hdc, TRANSPARENT);
 	s_font = CreateFont(s_nSize, 0, 0, 0, 0, 0, 0, 0, HANGUL_CHARSET, 0, 0, 0,
-		VARIABLE_PITCH | FF_ROMAN, s_szFont);
+			VARIABLE_PITCH | FF_ROMAN, s_szFont);
 	s_ofont = (HFONT)SelectObject(s_hdc, s_font);
 }
 

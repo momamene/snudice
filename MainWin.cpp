@@ -1,19 +1,9 @@
-#include "gMainWin.h"
+#include "MainWin.h"
 #include "const.h"
-#include "gTitleCore.h"
-#include "gGameCore.h"
-#include "gMouse.h"
-#include "gCharManager.h"
-#include "gInterface.h"
-#include "gUtil.h"
-#include "gPlayerManager.h"
-#include "gPopUp.h"
+#include "Mouse.h"
+#include "TitleCore.h"
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
-
-//------------------------------------------------------------------------------------
-//	Constructor	/	Destructor
-//------------------------------------------------------------------------------------
 
 static gMainWin	s_MainWin;		// for singleton
 
@@ -32,9 +22,6 @@ gMainWin* gMainWin::GetIF()
 	return &s_MainWin;
 }
 
-//------------------------------------------------------------------------------------
-//	SetUp
-//------------------------------------------------------------------------------------
 bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 {
 	// Initialize
@@ -72,53 +59,17 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 	MoveWindow();
 #endif
 
-	// Set core
-	m_eCoreMode = EMC_TITLE;
-
-	if(FAILED(SetUpDirect()))
+	if(!SetUpDirect())
 		return false;
 
-
-	// SetUp TitleCore 
-	if(FAILED(gTitleCore::GetIF()->SetUp()))
-	{
-		MessageBox(m_hWnd, "TitleCore : Setup 실패", "Error", MB_OK);
+	if(!gTitleCore::GetIF()->SetUp())
 		return false;
-	}
-
-	// SetUp CharManager
-	if(FAILED(gCharManager::GetIF()->SetUp()))
-	{
-		MessageBox(m_hWnd, "CharManager : Setup 실패", "Error", MB_OK);
-		return false;
-	}
-
-	// SetUp GameCore
-	if(FAILED(gGameCore::GetIF()->SetUp()))
-	{
-		MessageBox(m_hWnd, "GameCore : Setup 실패", "Error", MB_OK);
-		return false;
-	}
-
-	// SetUp Interface
-	if(FAILED(gInterface::GetIF()->SetUp()))
-	{
-		MessageBox(m_hWnd, "Interface : Setup 실패", "Error", MB_OK);
-		return false;
-	}
-
-	// SetUp PopUp
-	if(FAILED(gPopUp::GetIF()->SetUp()))
-	{
-		MessageBox(m_hWnd, "PopUp : Setup 실패", "Error", MB_OK);
-		return false;
-	}
-
-
-	// font 설정  gUtil
-	gUtil::SetSize(12);
 
 	ShowWindow(m_hWnd, nCmdShow);
+
+	// Set Coremode
+
+	m_eCoreMode = ECM_TITLE;
 
 	return true;
 }
@@ -132,14 +83,6 @@ void gMainWin::MoveWindow()
 
 void gMainWin::Release()
 {
-	gMouse::GetIF()->Release();
-	gInterface::GetIF()->Release();
-	gGameCore::GetIF()->Release();
-	gTitleCore::GetIF()->Release();
-	gCharManager::GetIF()->Release();
-	gPlayerManager::GetIF()->Release();
-	tileContainer::GetIF()->Release();
-	gPopUp::GetIF()->Release();
 	SAFE_RELEASE(m_lpDDBack);
 	SAFE_RELEASE(m_lpDDPrimary);
 	SAFE_RELEASE(m_lpDD);
@@ -156,9 +99,12 @@ int gMainWin::Run()
 		// 메시지 큐에 메시지 있으면 처리
 		if(PeekMessage(&Msg, NULL, 0, 0, PM_REMOVE))
 		{
-			//ALT 막기
-			if(Msg.message == WM_SYSKEYDOWN) continue;
-			if(Msg.message == WM_QUIT) break;
+			// ALT 막기
+			if(Msg.message == WM_SYSKEYDOWN)
+				continue;
+			if(Msg.message == WM_QUIT)
+				break;
+
 			TranslateMessage(&Msg);
 			DispatchMessage(&Msg);
 		}
@@ -175,17 +121,27 @@ void gMainWin::MainLoop()
 	if(!m_bActive)
 		return;
 
+	bool	bDraw = false;	// mainloop가 false return하면 출력 안함
+
 	switch(m_eCoreMode)
 	{
-		case EMC_TITLE:
-			gTitleCore::GetIF()->MainLoop();
+		case ECM_TITLE:
+			bDraw = gTitleCore::GetIF()->MainLoop();
 			break;
-		case EMC_GAME:
-			gGameCore::GetIF()->MainLoop();
+		case ECM_PSEL:
+			break;
+		case ECM_CSEL:
+			break;
+		case ECM_SUBMIT:
+			break;
+		case ECM_GAME:
 			break;
 	}
-	// backbuffer 에 그려진 것들을 출력
 
+	if(!bDraw)
+		return;
+
+	// backbuffer 에 그려진 것들을 출력
 #ifdef FULLSCREEN
 	m_lpDDPrimary->Flip(NULL, DDFLIP_WAIT);
 #else
@@ -193,13 +149,11 @@ void gMainWin::MainLoop()
 #endif
 }
 
-//------------------------------------------------------------------------------------
-// window message -; 키보드, 마우스
-//------------------------------------------------------------------------------------
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 {
-	gMainWin	*mw = gMainWin::GetIF();
-	gMouse		*mouse = gMouse::GetIF();
+	gMainWin	*mw		= gMainWin::GetIF();
+	gMouse		*mouse	= gMouse::GetIF();
+
 	switch(iMsg)
 	{
 #ifndef FULLSCREEN
@@ -209,20 +163,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 #endif
 		// keyboard
 		case WM_KEYDOWN:
-			if(!gMainWin::GetIF()->m_bActive)
+			if(!mw->m_bActive)
 				return 0;
 
 			mw->m_Keys[wParam] = true;
 			return 0;
 		case WM_KEYUP:
-			if(!gMainWin::GetIF()->m_bActive)
+			if(!mw->m_bActive)
 				return 0;
 
 			mw->m_Keys[wParam] = false;
 			return 0;
+
 		// mouse
 		case WM_LBUTTONDOWN:
-			if(!gMainWin::GetIF()->m_bActive)
+			if(!mw->m_bActive)
 				return 0;
 
 			mouse->m_nPosX = LOWORD(lParam);
@@ -230,7 +185,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 			mouse->OnLButtonDown();
 			return 0;
 		case WM_LBUTTONUP:
-			if(!gMainWin::GetIF()->m_bActive)
+			if(!mw->m_bActive)
 				return 0;
 
 			mouse->m_nPosX = LOWORD(lParam);
@@ -238,7 +193,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 			mouse->OnLButtonUp();
 			return 0;
 		case WM_RBUTTONDOWN:
-			if(!gMainWin::GetIF()->m_bActive)
+			if(!mw->m_bActive)
 				return 0;
 
 			mouse->m_nPosX = LOWORD(lParam);
@@ -246,22 +201,23 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 			mouse->OnRButtonDown();
 			return 0;
 		case WM_MOUSEMOVE:
-			if(!gMainWin::GetIF()->m_bActive)
+			if(!mw->m_bActive)
 				return 0;
 
 			mouse->m_nPosX = LOWORD(lParam);
 			mouse->m_nPosY = HIWORD(lParam);
 			mouse->OnMouseMove();
 			return 0;
+
 		// active
 		case WM_ACTIVATE:
 			switch(LOWORD(wParam))
 			{
 				case WA_ACTIVE: case WA_CLICKACTIVE:
-					gMainWin::GetIF()->m_bActive = true;
+					mw->m_bActive = true;
 					break;
 				case WA_INACTIVE:
-					gMainWin::GetIF()->m_bActive = false;
+					mw->m_bActive = false;
 					break;
 			}
 			return 0;
