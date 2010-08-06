@@ -118,6 +118,14 @@ int gMainWin::Run()
 			if(Msg.message == WM_QUIT)
 				break;
 
+			switch(m_eCoreMode)
+			{
+				case ECM_LOGIN:
+					if(gLoginCore::GetIF()->PreTransMsg(Msg))
+						continue;
+					break;
+			}
+
 			TranslateMessage(&Msg);
 			DispatchMessage(&Msg);
 		}

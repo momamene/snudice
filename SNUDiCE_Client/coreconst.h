@@ -29,7 +29,7 @@
 #define TITLE_POS_EXITBTNY		380
 
 // id, pw edit control
-#define LOGIN_EDIT_SZLENGTH		32			// 사실 바이트 수
+#define LOGIN_EDIT_SZLENGTH		16			// 사실 바이트 수
 #define LOGIN_EDIT_IMG			".\\Data\\Title\\login_edit.img"
 #define LOGIN_EDIT_ID_W			120
 #define LOGIN_EDIT_ID_H			20

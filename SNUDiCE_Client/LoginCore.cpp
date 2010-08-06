@@ -74,14 +74,64 @@ bool gLoginCore::SetUp()
 	return true;
 }
 
+bool gLoginCore::PreTransMsg(MSG &msg)
+{
+	char		szTemp[128];
+
+	if(msg.hwnd == m_EditID.m_hEdit)
+	{
+		if(msg.message == WM_KEYDOWN)
+		{
+			switch(msg.wParam)
+			{
+				case VK_RETURN:
+					m_EditPW.SetFocusOn();
+					return true;
+				case VK_TAB:
+					m_EditPW.SetFocusOn();
+					return true;
+				case VK_SPACE:
+				case VK_ESCAPE:
+					return true;
+				case VK_BACK:
+					return false;
+				default:
+					if( SendMessage(m_EditID.m_hEdit, EM_LINELENGTH, 0, 0) > LOGIN_EDIT_SZLENGTH - 1)
+						return true;
+					break;
+			}
+		}
+	}
+	else if(msg.hwnd == m_EditPW.m_hEdit)
+	{
+		if(msg.message == WM_KEYDOWN)
+		{
+			switch(msg.wParam)
+			{
+				case VK_RETURN:
+//					m_EditPW.SetFocusOn();
+					return true;
+				case VK_TAB:
+					m_EditID.SetFocusOn();
+					return true;
+				case VK_ESCAPE:
+					return true;
+				default:
+					if(SendMessage(m_EditPW.m_hEdit, EM_LINELENGTH, 0, 0) > LOGIN_EDIT_SZLENGTH - 1)
+						return true;
+					return false;
+			}
+		}
+	}
+
+	return false;
+}
+
 void gLoginCore::MainLoop()
 {
 	Draw();
 
-	if(gMainWin::GetIF()->m_Keys[VK_RETURN])
-		gUtil::DebugMsg("bbbbb");
-
-	// popup 芒 贸府
+// popup 芒 贸府
 	if(gPopUp::GetIF()->isPopUp())
 	{
 		gPopUp::GetIF()->MainLoop();

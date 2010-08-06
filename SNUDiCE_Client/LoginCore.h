@@ -45,4 +45,6 @@ public:
 	void		OnMouseMove();
 	void		OnRButtonDown();
 	// end overridng
+
+	bool		PreTransMsg(MSG &msg);
 };
