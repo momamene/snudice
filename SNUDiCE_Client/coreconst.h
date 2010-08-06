@@ -6,8 +6,10 @@
 //	core모드 관련 define
 //------------------------------------------------------------------------------------
 #pragma once
+#include <windows.h>
+#include "MainWin.h"
 
-// ECM_TITLE
+// ECM_LOGIN.		login모드인데 바꾸기 구찮아서 걍 title_xx... 로 놔둠
 #define TITLE_FILE_BACK			".\\Data\\Title\\title.img"
 
 // start
@@ -25,3 +27,16 @@
 #define TITLE_VERT_EXITBTN		false
 #define TITLE_POS_EXITBTNX		40
 #define TITLE_POS_EXITBTNY		380
+
+// id, pw edit control
+#define LOGIN_EDIT_SZLENGTH		32			// 사실 바이트 수
+#define LOGIN_EDIT_IMG			".\\Data\\Title\\login_edit.img"
+#define LOGIN_EDIT_ID_W			120
+#define LOGIN_EDIT_ID_H			20
+#define LOGIN_EDIT_ID_X			((WNDSIZEW - LOGIN_EDIT_ID_W) / 2)
+#define LOGIN_EDIT_ID_Y			300
+#define LOGIN_EDIT_PW_W			120
+#define LOGIN_EDIT_PW_H			20
+#define LOGIN_EDIT_PW_X			((WNDSIZEW - LOGIN_EDIT_ID_W) / 2)
+#define LOGIN_EDIT_PW_Y			330
+

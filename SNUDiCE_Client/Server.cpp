@@ -73,6 +73,13 @@ bool gServer::SetUp()
 	return m_bConnect;
 }
 
+void gServer::Send()
+{
+	char	szBuf[256] = " aa ";
+
+	send(s_sock, szBuf, strlen(szBuf), 0);
+}
+
 void gServer::Receive(LPARAM lParam)
 {
 	if(!SocketErrorMessage(lParam))
@@ -160,7 +167,7 @@ bool gServer::SocketErrorMessage(LPARAM lParam)
 			( WSAGETSELECTERROR(lParam) == WSAENETUNREACH ) ||		// 10051 :Network is unreachable.
 			( WSAGETSELECTERROR(lParam) == WSAETIMEDOUT ) )//||		// 10060 :Connection timed out.
 		{
-			gPopUp::GetIF()->SetPopUp(ECLK_CANCEL, EPOP_RECONNECT, STR_1, STR_2);
+		//	gPopUp::GetIF()->SetPopUp(ECLK_CANCEL, EPOP_RECONNECT, STR_1, STR_2);
 
  			return false;
 		}

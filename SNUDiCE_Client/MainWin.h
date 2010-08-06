@@ -19,6 +19,7 @@
 
 enum eCOREMODE
 {
+	ECM_LOGIN,
 	ECM_TITLE,				// 타이틀
 	ECM_PSEL,				// 플레이어 고르자
 	ECM_CSEL,				// 캐릭터 고르자
@@ -35,6 +36,7 @@ public:
 	virtual ~gMainWin();
 
 public:
+	HINSTANCE	m_hInst;
 	HWND		m_hWnd;
 	BOOL		m_Keys[256];				// keyboard
 	RECT		m_rcScr;					// screen 출력 영역

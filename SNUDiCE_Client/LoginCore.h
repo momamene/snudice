@@ -1,33 +1,37 @@
 //------------------------------------------------------------------------------------
-//	gTitleCore Class
+//	gLoginCore Class
 //
 //	2010. 08. 04	CoderK
 //
-//	타이틀 모드
+//	로그인 모드. 게임의 시작.
 //------------------------------------------------------------------------------------
 #pragma once
+#include <windows.h>
 #include "Core.h"
 #include "Image.h"
 #include "ImgButton.h"
+#include "Edit.h"
 
-enum eTITLEBTN
+enum eLOGINBTN
 {
-	ETB_START,			// 시작
-	ETB_EXIT,			// 종료
-	ETB_END,
+	ELB_START,			// 시작
+	ELB_EXIT,			// 종료
+	ELB_END,
 };
 
-class gTitleCore : Core
+class gLoginCore : Core
 {
 public:
-	static gTitleCore	*GetIF();
+	static gLoginCore	*GetIF();
 	
-	gTitleCore();
-	virtual ~gTitleCore();
+	gLoginCore();
+	virtual ~gLoginCore();
 
 public:
 	gImage		m_ImgBack;			// title 배경
-	gImgButton	m_Btn[ETB_END];
+	gImgButton	m_Btn[ELB_END];
+	gEdit		m_EditID;
+	gEdit		m_EditPW;
 
 public:
 	// overridng from Core 인터페이스

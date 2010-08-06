@@ -1,7 +1,7 @@
 #include "Mouse.h"
 #include "MainWin.h"
 #include "PopUp.h"
-#include "TitleCore.h"
+#include "LoginCore.h"
 
 static gMouse s_Mouse;
 
@@ -46,8 +46,8 @@ void gMouse::OnLButtonDown()
 
 	switch(gMainWin::GetIF()->m_eCoreMode)
 	{
-		case ECM_TITLE:
-			gTitleCore::GetIF()->OnLButtonDown();
+		case ECM_LOGIN:
+			gLoginCore::GetIF()->OnLButtonDown();
 			break;
 		case ECM_PSEL:
 			break;
@@ -80,8 +80,8 @@ void gMouse::OnMouseMove()
 
 	switch(gMainWin::GetIF()->m_eCoreMode)
 	{
-	case ECM_TITLE:
-		gTitleCore::GetIF()->OnMouseMove();
+	case ECM_LOGIN:
+		gLoginCore::GetIF()->OnMouseMove();
 		break;
 	case ECM_PSEL:
 		break;

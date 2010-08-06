@@ -78,7 +78,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 ddraw.lib dxguid.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib  ws2_32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
+# ADD LINK32 ddraw.lib dxguid.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib ws2_32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
 
 !ENDIF 
 
@@ -94,7 +94,7 @@ LINK32=link.exe
 # PROP Default_Filter ""
 # Begin Source File
 
-SOURCE=.\TitleCore.cpp
+SOURCE=.\LoginCore.cpp
 # End Source File
 # End Group
 # Begin Group "Graphic.cpp"
@@ -120,6 +120,10 @@ SOURCE=.\ImgButton.cpp
 # Begin Group "Util.cpp"
 
 # PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\Edit.cpp
+# End Source File
 # Begin Source File
 
 SOURCE=.\Mouse.cpp
@@ -174,7 +178,7 @@ SOURCE=.\coreconst.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\TitleCore.h
+SOURCE=.\LoginCore.h
 # End Source File
 # End Group
 # Begin Group "Graphic.h"
@@ -204,6 +208,10 @@ SOURCE=.\ImgButton.h
 # Begin Group "Util.h"
 
 # PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\Edit.h
+# End Source File
 # Begin Source File
 
 SOURCE=.\Mouse.h

@@ -1,7 +1,7 @@
 #include "MainWin.h"
 #include "const.h"
 #include "Mouse.h"
-#include "TitleCore.h"
+#include "LoginCore.h"
 #include "Server.h"
 #include "Util.h"
 #include "PopUp.h"
@@ -30,6 +30,7 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 	// Initialize
 	memset(this, 0, sizeof(gMainWin));
 
+	m_hInst	= hInstance;
 	// Make Window
 	WNDCLASS	WndClass;
 	memset(&WndClass, 0, sizeof(WNDCLASS));
@@ -68,7 +69,7 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 	if(!gPopUp::GetIF()->SetUp())
 		return false;
 
-	if(!gTitleCore::GetIF()->SetUp())
+	if(!gLoginCore::GetIF()->SetUp())
 		return false;
 
 	gServer::GetIF()->SetUp();
@@ -77,7 +78,7 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 
 	// Set Coremode
 
-	m_eCoreMode = ECM_TITLE;
+	m_eCoreMode = ECM_LOGIN;
 
 	return true;
 }
@@ -94,7 +95,7 @@ void gMainWin::Release()
 	gServer::GetIF()->Release();
 	gPopUp::GetIF()->Release();
 	gMouse::GetIF()->Release();
-	gTitleCore::GetIF()->Release();
+	gLoginCore::GetIF()->Release();
 	SAFE_RELEASE(m_lpDDBack);
 	SAFE_RELEASE(m_lpDDPrimary);
 	SAFE_RELEASE(m_lpDD);
@@ -135,8 +136,8 @@ void gMainWin::MainLoop()
 
 	switch(m_eCoreMode)
 	{
-		case ECM_TITLE:
-			gTitleCore::GetIF()->MainLoop();
+		case ECM_LOGIN:
+			gLoginCore::GetIF()->MainLoop();
 			break;
 		case ECM_PSEL:
 			break;

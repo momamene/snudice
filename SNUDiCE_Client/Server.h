@@ -22,6 +22,7 @@ public:
 public:
 	bool		SetUp();
 	void		Release();
+	void		Send();
 	void		Receive(LPARAM lParam);
 	void		ReConnect();			// titlecore에서 재접속 요청
 
