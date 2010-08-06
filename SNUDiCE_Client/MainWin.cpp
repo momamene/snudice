@@ -76,6 +76,9 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 
 	ShowWindow(m_hWnd, nCmdShow);
 
+	if(!DisableBeep())
+		return false;
+
 	// Set Coremode
 
 	m_eCoreMode = ECM_LOGIN;
@@ -99,6 +102,7 @@ void gMainWin::Release()
 	SAFE_RELEASE(m_lpDDBack);
 	SAFE_RELEASE(m_lpDDPrimary);
 	SAFE_RELEASE(m_lpDD);
+	EnableBeep();
 }
 
 
@@ -329,5 +333,74 @@ bool gMainWin::SetUpDirect()
 	}
 #endif
 	
+	return true;
+}
+
+bool gMainWin::DisableBeep()
+{
+	// sound beep음 해제		- Registry 이용.
+	HKEY		key;
+	DWORD		dwDisp;
+	
+	if(RegCreateKeyEx(HKEY_CURRENT_USER, BEEPHACKREG, 0, NULL,
+		REG_OPTION_VOLATILE, KEY_WRITE, NULL, &key, &dwDisp) != ERROR_SUCCESS)
+		return false;
+	
+	if(RegSetValueEx(key, "Beep", 0, REG_SZ, (LPBYTE)"no", 3) != ERROR_SUCCESS)
+		return false;
+	
+	RegCloseKey(key);
+	
+	// sound beep음... edit control 이넘이더라.
+	// %SystemRoot%\media\Windows XP Ding.wav
+	
+	if(RegCreateKeyEx(HKEY_CURRENT_USER, BEEPHACKREG2, 0, NULL,
+		REG_OPTION_VOLATILE, KEY_ALL_ACCESS, NULL, &key, &dwDisp) != ERROR_SUCCESS)
+		return false;
+	
+	dwDisp = 128;
+	
+	if(RegQueryValueEx(key, NULL, 0, NULL, 
+		(LPBYTE)m_szTempReg, &dwDisp) != ERROR_SUCCESS)
+		return false;
+	
+	RegCloseKey(key);
+	
+	if(RegCreateKeyEx(HKEY_CURRENT_USER, BEEPHACKREG2, 0, NULL,
+		REG_OPTION_VOLATILE, KEY_WRITE, NULL, &key, &dwDisp) != ERROR_SUCCESS)
+		return false;
+	
+	if(RegSetValueEx(key, NULL, 0, REG_EXPAND_SZ, (LPBYTE)"", 1) != ERROR_SUCCESS)
+		return false;
+	
+	RegCloseKey(key);
+
+	return true;
+}
+
+bool gMainWin::EnableBeep()
+{
+	// sound beep음 해제 복구	- Registry 이용.
+	HKEY		key;
+	DWORD		dwDisp;
+	
+	if(RegCreateKeyEx(HKEY_CURRENT_USER, BEEPHACKREG, 0, NULL,
+		REG_OPTION_VOLATILE, KEY_WRITE, NULL, &key, &dwDisp) != ERROR_SUCCESS)
+		return false;
+	
+	if(RegSetValueEx(key, "Beep", 0, REG_SZ, (LPBYTE)"yes", 4) != ERROR_SUCCESS)
+		return false;
+	
+	RegCloseKey(key);
+	
+	if(RegCreateKeyEx(HKEY_CURRENT_USER, BEEPHACKREG2, 0, NULL,
+		REG_OPTION_VOLATILE, KEY_WRITE, NULL, &key, &dwDisp) != ERROR_SUCCESS)
+		return false;
+	
+	if(RegSetValueEx(key, "", 0, REG_EXPAND_SZ, (LPBYTE)m_szTempReg, strlen(m_szTempReg) + 1) != ERROR_SUCCESS)
+		return false;
+	
+	RegCloseKey(key);
+
 	return true;
 }

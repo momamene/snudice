@@ -80,6 +80,9 @@ bool gLoginCore::PreTransMsg(MSG &msg)
 
 	if(msg.hwnd == m_EditID.m_hEdit)
 	{
+		if(!gServer::GetIF()->m_bConnect)
+			return true;
+
 		if(msg.message == WM_KEYDOWN)
 		{
 			switch(msg.wParam)
@@ -93,17 +96,14 @@ bool gLoginCore::PreTransMsg(MSG &msg)
 				case VK_SPACE:
 				case VK_ESCAPE:
 					return true;
-				case VK_BACK:
-					return false;
-				default:
-					if( SendMessage(m_EditID.m_hEdit, EM_LINELENGTH, 0, 0) > LOGIN_EDIT_SZLENGTH - 1)
-						return true;
-					break;
 			}
 		}
 	}
 	else if(msg.hwnd == m_EditPW.m_hEdit)
 	{
+		if(!gServer::GetIF()->m_bConnect)
+			return true;
+		
 		if(msg.message == WM_KEYDOWN)
 		{
 			switch(msg.wParam)
@@ -114,12 +114,9 @@ bool gLoginCore::PreTransMsg(MSG &msg)
 				case VK_TAB:
 					m_EditID.SetFocusOn();
 					return true;
+				case VK_SPACE:
 				case VK_ESCAPE:
 					return true;
-				default:
-					if(SendMessage(m_EditPW.m_hEdit, EM_LINELENGTH, 0, 0) > LOGIN_EDIT_SZLENGTH - 1)
-						return true;
-					return false;
 			}
 		}
 	}

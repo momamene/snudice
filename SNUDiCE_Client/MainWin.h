@@ -16,6 +16,8 @@
 #define WNDSIZEH		480
 #define GAMENAME		"SNU Dice"
 #define WNDSTYLE		(WS_CAPTION | WS_SYSMENU)
+#define BEEPHACKREG		"Control Panel\\Sound"
+#define BEEPHACKREG2	"AppEvents\\Schemes\\Apps\\.Default\\.Default\\.Current"
 
 enum eCOREMODE
 {
@@ -56,6 +58,11 @@ public:
 	void		Exit();
 
 private:
+	char		m_szTempReg[128];	
+
+private:
+	bool		DisableBeep();
+	bool		EnableBeep();
 	bool		SetUpDirect();
 	void		MainLoop();
 };
