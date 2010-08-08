@@ -78,10 +78,12 @@ void gEdit::Draw()
 	m_ImgEdit.Draw(m_rcPos, rcSour, false);
 	GetWindowText(m_hEdit, m_szEdit, m_nStrSize);
 
+	char	szTemp[256];
 	if(m_eType == EDIT_PASSWORD)
 	{
 		int		i;
 
+		strcpy(szTemp, m_szEdit);
 		for(i = 0; i < strlen(m_szEdit); i++)
 		{
 			m_szEdit[i] = '*';
@@ -91,6 +93,9 @@ void gEdit::Draw()
 	gUtil::BeginText();
 		gUtil::Text(m_rcPos.left + 5, m_rcPos.top + 4, m_szEdit);
 	gUtil::EndText();
+
+	if(m_eType == EDIT_PASSWORD)
+		strcpy(m_szEdit, szTemp);
 }
 
 bool gEdit::isPointInEdit(int nX, int nY)
@@ -114,4 +119,9 @@ bool gEdit::isKorean()
 		return true;
 	else
 		return false;
+}
+
+int	gEdit::GetszLength()
+{
+	return strlen(m_szEdit);
 }

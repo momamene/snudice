@@ -6,6 +6,7 @@
 #include "MainWin.h"
 #include "Util.h"
 
+
 static gLoginCore s_LoginCore;
 
 gLoginCore::gLoginCore()
@@ -25,28 +26,38 @@ gLoginCore *gLoginCore::GetIF()
 
 bool gLoginCore::SetUp()
 {
-	RECT		rcBtn;
-
 	// title img
 	if(!m_ImgBack.Load(TITLE_FILE_BACK))
 		return false;
-	
+
 	// button setup
-	SetRect(&rcBtn, TITLE_POS_STARTBTNX,
-					TITLE_POS_STARTBTNY,
-					TITLE_POS_STARTBTNX + TITLE_SIZE_STARTBTNW,
-					TITLE_POS_STARTBTNY + TITLE_SIZE_STARTBTNH );
+	RECT		rcBtn;
 
-	if(!m_Btn[ELB_START].SetUp(TITLE_FILE_STARTBTN, TITLE_VERT_STARTBTN, rcBtn))
+	SetRect(&rcBtn, LOGIN_POS_CONNECTBTNX,
+					LOGIN_POS_CONNECTBTNY,
+					LOGIN_POS_CONNECTBTNX + LOGIN_SIZE_CONNECTBTNW,
+					LOGIN_POS_CONNECTBTNY + LOGIN_SIZE_CONNECTBTNH);
+
+	if(!m_Btn[ELB_CONNECT].SetUp(LOGIN_FILE_CONNECTBTN, LOGIN_VERT_CONNECTBTN, rcBtn))
 		return false;
 	
-	SetRect(&rcBtn, TITLE_POS_EXITBTNX,
-					TITLE_POS_EXITBTNY,
-					TITLE_POS_EXITBTNX + TITLE_SIZE_EXITBTNW,
-					TITLE_POS_EXITBTNY + TITLE_SIZE_EXITBTNH );
 
-	if(!m_Btn[ELB_EXIT].SetUp(TITLE_FILE_EXITBTN, TITLE_VERT_EXITBTN, rcBtn))
-		return false;
+// 	// button setup
+// 	SetRect(&rcBtn, TITLE_POS_STARTBTNX,
+// 					TITLE_POS_STARTBTNY,
+// 					TITLE_POS_STARTBTNX + TITLE_SIZE_STARTBTNW,
+// 					TITLE_POS_STARTBTNY + TITLE_SIZE_STARTBTNH );
+// 
+// 	if(!m_Btn[ELB_START].SetUp(TITLE_FILE_STARTBTN, TITLE_VERT_STARTBTN, rcBtn))
+// 		return false;
+// 	
+// 	SetRect(&rcBtn, TITLE_POS_EXITBTNX,
+// 					TITLE_POS_EXITBTNY,
+// 					TITLE_POS_EXITBTNX + TITLE_SIZE_EXITBTNW,
+// 					TITLE_POS_EXITBTNY + TITLE_SIZE_EXITBTNH );
+// 
+// 	if(!m_Btn[ELB_EXIT].SetUp(TITLE_FILE_EXITBTN, TITLE_VERT_EXITBTN, rcBtn))
+// 		return false;
 
 	// edit control
 	RECT		rcDest;
@@ -212,13 +223,16 @@ void gLoginCore::OnLButtonDown()
 
 	int		i;
 
-	for(i = 0; i < ELB_END; i++)
+	if(m_Btn[ELB_CONNECT].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 	{
-		if(m_Btn[i].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
-		{
+		PK_LOGIN_ASK	ask;
 
-		}
+		strcpy(ask.szID, m_EditID.m_szEdit);
+		strcpy(ask.szPW, m_EditPW.m_szEdit);
+		gServer::GetIF()->Send(PL_LOGIN_ASK, sizeof(ask), &ask);
 	}
+
+
 
 }
 

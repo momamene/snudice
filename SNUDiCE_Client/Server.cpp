@@ -73,11 +73,39 @@ bool gServer::SetUp()
 	return m_bConnect;
 }
 
-void gServer::Send()
+bool gServer::Send(DWORD type, DWORD size, void *buf)
 {
-	char	szBuf[256] = " aa ";
+	if(!s_sock)
+		return false;
 
-	send(s_sock, szBuf, strlen(szBuf), 0);
+	char *temp = (char*)buf;
+
+	m_pkDefault.dwProtocol = type;
+
+	if(size)
+		memcpy(m_pkDefault.strPacket, temp, size);
+
+	m_pkDefault.dwSize = PK_HEADER_SIZE + size;
+
+	int		r1 = 0, r2 = 0;
+	int		fail_count = 0;
+
+	while(true)
+	{
+		r2 = send(s_sock, (char*)&m_pkDefault, m_pkDefault.dwSize, 0);
+
+		if(r2 != SOCKET_ERROR)
+			r1 += r2;
+
+		if(r1 == m_pkDefault.dwSize)
+			break;
+
+		fail_count++;
+
+		if(fail_count > 10)
+			return false;
+	}
+	return true;
 }
 
 void gServer::Receive(LPARAM lParam)

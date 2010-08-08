@@ -45,4 +45,5 @@ public:
 	bool		SetUp(RECT rcPos, char *img, int strsize, EDITTYPE type);
 	void		Release();
 	bool		isPointInEdit(int nX, int nY);
+	int			GetszLength();
 };

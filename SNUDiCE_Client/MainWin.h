@@ -9,6 +9,7 @@
 #pragma once
 #include <windows.h>
 #include <ddraw.h>
+#include "networkconst.h"
 
 //#define FULLSCREEN		//	define 풀었다 해제하면서 fullscreen 체크
 #define BIT				32
@@ -19,15 +20,6 @@
 #define BEEPHACKREG		"Control Panel\\Sound"
 #define BEEPHACKREG2	"AppEvents\\Schemes\\Apps\\.Default\\.Default\\.Current"
 
-enum eCOREMODE
-{
-	ECM_LOGIN,
-	ECM_TITLE,				// 타이틀
-	ECM_PSEL,				// 플레이어 고르자
-	ECM_CSEL,				// 캐릭터 고르자
-	ECM_SUBMIT,				// 수강신청
-	ECM_GAME,				// 게임
-};
 
 class gMainWin  
 {

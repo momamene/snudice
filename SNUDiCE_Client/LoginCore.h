@@ -14,8 +14,10 @@
 
 enum eLOGINBTN
 {
-	ELB_START,			// 시작
-	ELB_EXIT,			// 종료
+	ELB_CONNECT,		// 접속
+
+// 	ELB_START,			// 시작
+// 	ELB_EXIT,			// 종료
 	ELB_END,
 };
 
