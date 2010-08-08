@@ -23,6 +23,7 @@ public:
 	SOCKET		m_listen_sock;
 
 public:
+	void		Recv(PK_DEFAULT *pk, SOCKET	sock);
 	bool		SetUp(int argc, char *argv[]);
 	void		Run();
 	void		Release();

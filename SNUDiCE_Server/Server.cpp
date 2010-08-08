@@ -1,10 +1,11 @@
 #include "Server.h"
+#include "LoginCore.h"
 
 
 static gServer	s_Server;
 
-static DWORD WINAPI ProcessClient(LPVOID arg);	// server <-> client 간 통신. 스레드
-static void err_quit(char *msg);						// 소켓 함수 오류 출력후 종료
+DWORD WINAPI ProcessClient(LPVOID arg);				// server <-> client 간 통신. 스레드
+static void err_quit(char *msg);					// 소켓 함수 오류 출력후 종료
 static void err_display(char *msg);					// 소켓 함수 오류 출력
 
 
@@ -59,6 +60,10 @@ bool gServer::SetUp(int argc, char *argv[])
 	if(retVal == SOCKET_ERROR)
 		err_quit("listen()");
 
+	if(!gLoginCore::GetIF()->SetUp())
+		return false;
+
+
 	return true;
 }
 
@@ -106,6 +111,19 @@ void gServer::Release()
 	WSACleanup();
 }
 
+
+void gServer::Recv(PK_DEFAULT *pk, SOCKET sock)
+{
+	switch(pk->dwProtocol)
+	{
+		case PL_LOGIN_ASK:
+			gLoginCore::GetIF()->pk_login_rep(pk, sock);
+		break;
+
+	}
+
+}
+
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 //	private
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
@@ -140,11 +158,12 @@ void err_display(char *msg)
 // client <-> server 간 통신.
 DWORD WINAPI ProcessClient(LPVOID arg)
 {
-	SOCKET		client_sock = (SOCKET)arg;
-	SOCKADDR_IN	clientAddr;
-	char		szBuf[BUFFERSIZE + 1];
-	int			addrLen;
-	int			retVal;
+	SOCKET			client_sock = (SOCKET)arg;
+	SOCKADDR_IN		clientAddr;
+	char			szBuf[BUFFERSIZE + 1];
+	int				addrLen;
+	int				retVal;
+	PK_DEFAULT		pkDefault;
 
 	// 클라이언트 정보 얻기
 	addrLen = sizeof(clientAddr);
@@ -152,30 +171,64 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 
 	while(true)
 	{
-		// 데이터 받기
-		retVal = recv(client_sock, szBuf, BUFFERSIZE, 0);
+		int		r1 = 0, r2 = 0;
+		int		fail_count = 0;
+		
+		retVal = recv(client_sock, (char*)&pkDefault, PK_HEADER_SIZE, 0);
 		if(retVal == SOCKET_ERROR)
-		{
-			err_display("recv()");
-			break;
-		}
-		else if(retVal == 0)
-			break;
+			continue;
 
-		// 받은 데이터 출력
-		szBuf[retVal] = '\0';
-		printf("[TCP/%s:%d] %s\n",
-				inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port), szBuf);
+		r1 += PK_HEADER_SIZE;
 
-		// 데이터 보내기
-		strcpy(szBuf, "aaaaa");
-		retVal = send(client_sock, szBuf, strlen(szBuf), 0);
-		if(retVal == SOCKET_ERROR)
+		while(true)
 		{
-			err_display("send()");
-			break;
+			r2 = recv(client_sock, pkDefault.strPacket, pkDefault.dwSize - PK_HEADER_SIZE, 0);
+			
+			if(r2 != SOCKET_ERROR)
+				r1 += r2;
+			
+			if(r1 == pkDefault.dwSize)
+				break;
+			
+			fail_count++;
+			
+			if(fail_count > 10)
+				break;
 		}
+
+		if(fail_count <= 10)
+			gServer::GetIF()->Recv(&pkDefault, client_sock);
 	}
+
+
+// 	while(true)
+// 	{
+		
+
+// 		// 데이터 받기
+// 		retVal = recv(client_sock, (char*)&pkDefault, PK_HEADER_SIZE, 0);
+// 		if(retVal == SOCKET_ERROR)
+// 		{
+// 			err_display("recv()");
+// 			break;
+// 		}
+// 		else if(retVal == 0)
+// 			break;
+// 
+// 		// 받은 데이터 출력
+// 		szBuf[retVal] = '\0';
+// 		printf("[TCP/%s:%d] %s\n",
+// 				inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port), szBuf);
+// 
+// 		// 데이터 보내기
+// 		strcpy(szBuf, "aaaaa");
+// 		retVal = send(client_sock, szBuf, strlen(szBuf), 0);
+// 		if(retVal == SOCKET_ERROR)
+// 		{
+// 			err_display("send()");
+// 			break;
+// 		}
+//	}
 
 	// closesocket
 	closesocket(client_sock);
