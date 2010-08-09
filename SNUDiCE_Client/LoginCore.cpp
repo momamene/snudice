@@ -231,9 +231,6 @@ void gLoginCore::OnLButtonDown()
 		strcpy(ask.szPW, m_EditPW.m_szEdit);
 		gServer::GetIF()->Send(PL_LOGIN_ASK, sizeof(ask), &ask);
 	}
-
-
-
 }
 
 void gLoginCore::OnLButtonUp()
@@ -263,5 +260,11 @@ void gLoginCore::OnRButtonDown()
 {
 	if(!gServer::GetIF()->m_bConnect)	// 서버랑 연결 안되었으면 입력 막자
 		return;
+
+}
+
+void gLoginCore::pk_login_rep(PK_LOGIN_REP *rep)
+{
+	gUtil::DebugMsg("get pk_login_rep\n");
 
 }

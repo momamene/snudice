@@ -3,6 +3,7 @@
 #include "Util.h"
 #include "stringconst.h"
 #include "PopUp.h"
+#include "LoginCore.h"
 
 static SOCKET		s_sock = NULL;
 static SOCKADDR_IN	s_serverAddr;
@@ -125,6 +126,7 @@ void gServer::Receive(LPARAM lParam)
 			m_bConnect = true;
 			break;
 		case FD_READ:
+			ReadPacket();
 			break;
 		case FD_WRITE:
 			break;
@@ -135,15 +137,51 @@ void gServer::Receive(LPARAM lParam)
 			m_bConnect = false;
 			break;
 	}
+}
 
+void gServer::ReadPacket()
+{
+	PK_DEFAULT		pk;
 
-// 	char	szBuf[256];
-// 	int		retVal;
-// 
-// 	retVal = recv(s_sock, szBuf, 256, 0);
-// 	szBuf[retVal] = '\0';
-// 	gUtil::DebugMsg(szBuf);
+	int		r1 = 0, r2 = 0;
+	int		fail_count = 0;
 
+	r2 = recv(s_sock, (char*)&pk, PK_HEADER_SIZE, 0);
+	if(r2 == SOCKET_ERROR)
+		return;
+
+	r1 += PK_HEADER_SIZE;
+
+	while(true)
+	{
+		r2 = recv(s_sock, pk.strPacket, pk.dwSize - PK_HEADER_SIZE, 0);
+
+		if(r2 != SOCKET_ERROR)
+			r1 += r2;
+
+		if(r1 == pk.dwSize)
+			break;
+
+		fail_count++;
+
+		if(fail_count > 10)
+			break;
+	}
+
+	if(fail_count <= 10)
+		Recv(&pk);
+}
+
+void gServer::Recv(PK_DEFAULT *pk)
+{
+	switch(pk->dwProtocol)
+	{
+		case PL_LOGIN_REP:
+			gLoginCore::GetIF()->pk_login_rep((PK_LOGIN_REP*)pk->strPacket);
+		break;
+		
+	}
+	
 }
 
 void gServer::ReConnect()

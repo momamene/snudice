@@ -11,6 +11,7 @@
 #include "Image.h"
 #include "ImgButton.h"
 #include "Edit.h"
+#include "networkconst.h"
 
 enum eLOGINBTN
 {
@@ -49,4 +50,7 @@ public:
 	// end overridng
 
 	bool		PreTransMsg(MSG &msg);
+
+public:
+	void		pk_login_rep(PK_LOGIN_REP *rep);
 };
