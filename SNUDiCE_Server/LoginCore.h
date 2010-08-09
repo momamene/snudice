@@ -25,13 +25,13 @@ public:
 	USER_LIST		m_UserList;
 
 public:
-	bool		SetUp();
-	void		Release();
+	bool			SetUp();
+	void			Release();
 
 	// packet
 
-	void		pk_login_rep(PK_DEFAULT *pk, SOCKET sock);
+	void			pk_login_ask(PK_DEFAULT *pk, SOCKET sock);
 
-//	void		PrintUserList();
+//	void			PrintUserList();
 
 };

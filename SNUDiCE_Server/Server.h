@@ -6,7 +6,7 @@
 //	게임 서버(일단은 배틀넷)
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 #pragma once
-#include <winsock2.h>
+#include <windows.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include "network.h"
@@ -23,8 +23,9 @@ public:
 	SOCKET		m_listen_sock;
 
 public:
+	bool		Send(DWORD type, DWORD size, void *buf, SOCKET sock);
 	void		Recv(PK_DEFAULT *pk, SOCKET	sock);
-	bool		SetUp(int argc, char *argv[]);
+	bool		SetUp();
 	void		Run();
 	void		Release();
 };

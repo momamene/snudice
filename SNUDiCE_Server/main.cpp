@@ -1,12 +1,12 @@
 #include "Server.h"
 
-int main(int argc, char *argv[])
+int main()
 {
 	int		nRet;
 
 	gServer *sv = gServer::GetIF();
 
-	if(!sv->SetUp(argc, argv))
+	if(!sv->SetUp())
 		return -1;
 
 	sv->Run();

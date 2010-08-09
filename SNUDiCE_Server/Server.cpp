@@ -24,7 +24,7 @@ gServer::~gServer()
 
 }
 
-bool gServer::SetUp(int argc, char *argv[])
+bool gServer::SetUp()
 {
 	int		retVal;
 
@@ -109,6 +109,7 @@ void gServer::Release()
 {
 	closesocket(m_listen_sock);
 	WSACleanup();
+	gLoginCore::GetIF()->Release();
 }
 
 
@@ -117,11 +118,48 @@ void gServer::Recv(PK_DEFAULT *pk, SOCKET sock)
 	switch(pk->dwProtocol)
 	{
 		case PL_LOGIN_ASK:
-			gLoginCore::GetIF()->pk_login_rep(pk, sock);
+			gLoginCore::GetIF()->pk_login_ask(pk, sock);
 		break;
 
 	}
 
+}
+
+bool gServer::Send(DWORD type, DWORD size, void *buf, SOCKET sock)
+{
+	PK_DEFAULT		pk;
+
+	if(!sock)
+		return false;
+	
+	char *temp = (char*)buf;
+	
+	pk.dwProtocol = type;
+	
+	if(size)
+		memcpy(pk.strPacket, temp, size);
+	
+	pk.dwSize = PK_HEADER_SIZE + size;
+	
+	int		r1 = 0, r2 = 0;
+	int		fail_count = 0;
+	
+	while(true)
+	{
+		r2 = send(sock, (char*)&pk, pk.dwSize, 0);
+		
+		if(r2 != SOCKET_ERROR)
+			r1 += r2;
+		
+		if(r1 == pk.dwSize)
+			break;
+		
+		fail_count++;
+		
+		if(fail_count > 10)
+			return false;
+	}
+	return true;
 }
 
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
@@ -177,6 +215,8 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 		retVal = recv(client_sock, (char*)&pkDefault, PK_HEADER_SIZE, 0);
 		if(retVal == SOCKET_ERROR)
 			continue;
+		if(retVal == 0)
+			break;
 
 		r1 += PK_HEADER_SIZE;
 
@@ -199,36 +239,6 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 		if(fail_count <= 10)
 			gServer::GetIF()->Recv(&pkDefault, client_sock);
 	}
-
-
-// 	while(true)
-// 	{
-		
-
-// 		// 데이터 받기
-// 		retVal = recv(client_sock, (char*)&pkDefault, PK_HEADER_SIZE, 0);
-// 		if(retVal == SOCKET_ERROR)
-// 		{
-// 			err_display("recv()");
-// 			break;
-// 		}
-// 		else if(retVal == 0)
-// 			break;
-// 
-// 		// 받은 데이터 출력
-// 		szBuf[retVal] = '\0';
-// 		printf("[TCP/%s:%d] %s\n",
-// 				inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port), szBuf);
-// 
-// 		// 데이터 보내기
-// 		strcpy(szBuf, "aaaaa");
-// 		retVal = send(client_sock, szBuf, strlen(szBuf), 0);
-// 		if(retVal == SOCKET_ERROR)
-// 		{
-// 			err_display("send()");
-// 			break;
-// 		}
-//	}
 
 	// closesocket
 	closesocket(client_sock);
