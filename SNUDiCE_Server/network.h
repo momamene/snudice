@@ -14,8 +14,9 @@
 #define SERVER_PORT				9000
 #define BUFFERSIZE				1024
 
-#define PK_HEADER_SIZE		4
+#define PK_HEADER_SIZE			4
 
+#define CHATMSG_LENGTH			64
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 //	통신 프로토콜
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
@@ -23,6 +24,8 @@ enum ePROTOCOL
 {
 	PL_LOGIN_ASK,
 	PL_LOGIN_REP,
+	PL_NORMALMSG_ASK,
+	PL_NORMALMSG_REP,
 };
 
 
@@ -61,6 +64,7 @@ struct PLAYER
 	char		szID[16];
 	eCOREMODE	coreWhere;
 	int			nCoreFlag;
+	SOCKET		sock;
 };
 
 struct PK_LOGIN_ASK
@@ -82,3 +86,10 @@ struct PK_LOGIN_REP
 	PLAYER			player;
 	LOGIN_ERROR		error;
 };
+
+typedef struct
+{
+	char	szID[16];
+	char	szMsg[CHATMSG_LENGTH];	
+
+}	PK_NORMALMSG_ASK,	PK_NORMALMSG_REP;

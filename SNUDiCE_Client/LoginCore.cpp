@@ -5,6 +5,7 @@
 #include "Server.h"
 #include "MainWin.h"
 #include "Util.h"
+#include "stringconst.h"
 
 
 static gLoginCore s_LoginCore;
@@ -96,6 +97,14 @@ bool gLoginCore::PreTransMsg(MSG &msg)
 
 		if(msg.message == WM_KEYDOWN)
 		{
+			if(gPopUp::GetIF()->isPopUp())
+			{
+				if(msg.wParam == VK_RETURN)
+					gPopUp::GetIF()->DoEnter();
+
+				return true;
+			}
+
 			switch(msg.wParam)
 			{
 				case VK_RETURN:
@@ -117,10 +126,18 @@ bool gLoginCore::PreTransMsg(MSG &msg)
 		
 		if(msg.message == WM_KEYDOWN)
 		{
+			if(gPopUp::GetIF()->isPopUp())
+			{
+				if(msg.wParam == VK_RETURN)
+					gPopUp::GetIF()->DoEnter();
+
+				return true;
+			}
+
 			switch(msg.wParam)
 			{
 				case VK_RETURN:
-//					m_EditPW.SetFocusOn();
+					SendLogin();
 					return true;
 				case VK_TAB:
 					m_EditID.SetFocusOn();
@@ -173,9 +190,16 @@ void gLoginCore::MainLoop()
 		gPopUp::GetIF()->m_bReturn = false;
 	}
 
+	if(gMainWin::GetIF()->m_Keys[VK_TAB])
+	{
+		m_EditID.SetFocusOn();
+		gMainWin::GetIF()->m_Keys[VK_TAB] = false;
+	}
+
 	// 서버랑 연결 안되었으면 입력 막자
 	if(!gServer::GetIF()->m_bConnect)
 		return;
+
 
 }
 
@@ -207,6 +231,15 @@ void gLoginCore::Release()
 
 }
 
+void gLoginCore::SendLogin()
+{
+	PK_LOGIN_ASK	ask;
+	
+	strcpy(ask.szID, m_EditID.m_szEdit);
+	strcpy(ask.szPW, m_EditPW.m_szEdit);
+	gServer::GetIF()->Send(PL_LOGIN_ASK, sizeof(ask), &ask);
+}
+
 void gLoginCore::OnLButtonDown()
 {
 	if(!gServer::GetIF()->m_bConnect)	// 서버랑 연결 안되었으면 입력 막자
@@ -224,13 +257,7 @@ void gLoginCore::OnLButtonDown()
 	int		i;
 
 	if(m_Btn[ELB_CONNECT].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
-	{
-		PK_LOGIN_ASK	ask;
-
-		strcpy(ask.szID, m_EditID.m_szEdit);
-		strcpy(ask.szPW, m_EditPW.m_szEdit);
-		gServer::GetIF()->Send(PL_LOGIN_ASK, sizeof(ask), &ask);
-	}
+		SendLogin();
 }
 
 void gLoginCore::OnLButtonUp()
@@ -265,6 +292,21 @@ void gLoginCore::OnRButtonDown()
 
 void gLoginCore::pk_login_rep(PK_LOGIN_REP *rep)
 {
-	gUtil::DebugMsg("get pk_login_rep\n");
-
+	switch(rep->error)
+	{
+		case ELE_OVERCONNECT:
+			break;
+		case ELE_NOID:
+			gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_6);
+			m_EditID.SetFocusOn();
+			break;
+		case ELE_PWERROR:
+			gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_7);
+			m_EditPW.SetFocusOn();
+			break;
+		case ELE_SUCCESS:
+			gMainWin::GetIF()->m_eCoreMode = ECM_BATTLENET;
+			gUtil::DebugMsg("login success\n");
+			break;
+	}
 }

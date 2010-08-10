@@ -1,5 +1,6 @@
 #include "Server.h"
 #include "LoginCore.h"
+#include "PlayerContainer.h"
 
 
 static gServer	s_Server;
@@ -61,6 +62,9 @@ bool gServer::SetUp()
 		err_quit("listen()");
 
 	if(!gLoginCore::GetIF()->SetUp())
+		return false;
+
+	if(!gPlayerContainer::GetIF()->SetUp())
 		return false;
 
 
@@ -241,6 +245,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	}
 
 	// closesocket
+	gPlayerContainer::GetIF()->DeletePlayer(client_sock);
 	closesocket(client_sock);
 	printf("[TCP Server] Client Exit : IP = %s\t Port = %d\n",
 			inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port));

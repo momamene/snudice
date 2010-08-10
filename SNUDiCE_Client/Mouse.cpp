@@ -2,6 +2,7 @@
 #include "MainWin.h"
 #include "PopUp.h"
 #include "LoginCore.h"
+#include "BattleNetCore.h"
 
 static gMouse s_Mouse;
 
@@ -49,13 +50,8 @@ void gMouse::OnLButtonDown()
 		case ECM_LOGIN:
 			gLoginCore::GetIF()->OnLButtonDown();
 			break;
-		case ECM_PSEL:
-			break;
-		case ECM_CSEL:
-			break;
-		case ECM_SUBMIT:
-			break;
-		case ECM_GAME:
+		case ECM_BATTLENET:
+			gBattleNetCore::GetIF()->OnLButtonDown();
 			break;
 	}
 
@@ -67,6 +63,16 @@ void gMouse::OnLButtonUp()
 	{
 		gPopUp::GetIF()->OnLButtonUp();
 		return;	
+	}
+
+	switch(gMainWin::GetIF()->m_eCoreMode)
+	{
+		case ECM_LOGIN:
+			gLoginCore::GetIF()->OnLButtonUp();
+			break;
+		case ECM_BATTLENET:
+			gBattleNetCore::GetIF()->OnLButtonUp();
+			break;
 	}
 }
 
@@ -80,17 +86,12 @@ void gMouse::OnMouseMove()
 
 	switch(gMainWin::GetIF()->m_eCoreMode)
 	{
-	case ECM_LOGIN:
-		gLoginCore::GetIF()->OnMouseMove();
-		break;
-	case ECM_PSEL:
-		break;
-	case ECM_CSEL:
-		break;
-	case ECM_SUBMIT:
-		break;
-	case ECM_GAME:
-		break;
+		case ECM_LOGIN:
+			gLoginCore::GetIF()->OnMouseMove();
+			break;
+		case ECM_BATTLENET:
+			gBattleNetCore::GetIF()->OnMouseMove();
+			break;
 	}
 }
 
@@ -100,6 +101,16 @@ void gMouse::OnRButtonDown()
 	{
 		gPopUp::GetIF()->OnRButtonDown();
 		return;	
+	}
+
+	switch(gMainWin::GetIF()->m_eCoreMode)
+	{
+		case ECM_LOGIN:
+			gLoginCore::GetIF()->OnRButtonDown();
+			break;
+		case ECM_BATTLENET:
+			gBattleNetCore::GetIF()->OnRButtonDown();
+			break;
 	}
 }
 

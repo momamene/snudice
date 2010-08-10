@@ -2,6 +2,7 @@
 #include "const.h"
 #include "Mouse.h"
 #include "LoginCore.h"
+#include "BattleNetCore.h"
 #include "Server.h"
 #include "Util.h"
 #include "PopUp.h"
@@ -72,6 +73,9 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 	if(!gLoginCore::GetIF()->SetUp())
 		return false;
 
+	if(!gBattleNetCore::GetIF()->SetUp())
+		return false;
+
 	gServer::GetIF()->SetUp();
 
 	ShowWindow(m_hWnd, nCmdShow);
@@ -128,6 +132,10 @@ int gMainWin::Run()
 					if(gLoginCore::GetIF()->PreTransMsg(Msg))
 						continue;
 					break;
+				case ECM_BATTLENET:
+					if(gBattleNetCore::GetIF()->PreTransMsg(Msg))
+						continue;
+					break;
 			}
 
 			TranslateMessage(&Msg);
@@ -151,13 +159,8 @@ void gMainWin::MainLoop()
 		case ECM_LOGIN:
 			gLoginCore::GetIF()->MainLoop();
 			break;
-		case ECM_PSEL:
-			break;
-		case ECM_CSEL:
-			break;
-		case ECM_SUBMIT:
-			break;
-		case ECM_GAME:
+		case ECM_BATTLENET:
+			gBattleNetCore::GetIF()->MainLoop();
 			break;
 	}
 

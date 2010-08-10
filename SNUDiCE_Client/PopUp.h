@@ -21,6 +21,7 @@ enum ePOPTYPE			// 팝업창 타입
 {
 	EPOP_RECONNECT,
 	EPOP_DISCONNECT,
+	EPOP_OK,			// 걍 OK 눌러서 메시지 확인하는 팝업
 };
 
 
@@ -54,6 +55,9 @@ public:
 	bool		SetPopUp(BTNCLK btn, ePOPTYPE pop, char *szLine1 = NULL, char *szLine2 = NULL);		// popup창 띄우기 전에 정보 셋팅
 	bool		SetImgPopUp(BTNCLK btn, ePOPTYPE pop, gImage *img, char *szLine1 = NULL, char *szLine2 = NULL);
 	bool		isPopUp();
+
+	void		DoEnter();
+	void		DoEsc();
 
 	// overriding
 	bool		SetUp();

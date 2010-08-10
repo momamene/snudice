@@ -148,26 +148,10 @@ void gPopUp::MainLoop()
 	if(!m_bPopup) return;
 
 	if(gMainWin::GetIF()->m_Keys[VK_RETURN])	// ok
-	{
-		switch(m_eBtnClk)
-		{
-			case ECLK_OK:
-			case ECLK_CANCEL:
-				Ok();
-				break;
-		}
-	}
+		DoEnter();
 	else if(gMainWin::GetIF()->m_Keys[VK_ESCAPE])	// cancel
-	{
-		switch(m_eBtnClk)
-		{
-			case ECLK_OK:
-				break;
-			case ECLK_CANCEL:
-				Cancel();
-				break;
-		}			
-	}
+		DoEsc();
+
 	Draw();
 }
 
@@ -284,4 +268,28 @@ void gPopUp::OnRButtonDown()
 void gPopUp::OnLButtonUp()
 {
 	
+}
+
+void gPopUp::DoEnter()
+{
+	switch(m_eBtnClk)
+	{
+		case ECLK_OK:
+		case ECLK_CANCEL:
+			Ok();
+			break;
+	}
+}
+
+void gPopUp::DoEsc()
+{
+
+	switch(m_eBtnClk)
+	{
+		case ECLK_OK:
+			break;
+		case ECLK_CANCEL:
+			Cancel();
+			break;
+	}		
 }

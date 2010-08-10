@@ -78,7 +78,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 ddraw.lib dxguid.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib ws2_32.lib  imm32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
+# ADD LINK32 ddraw.lib dxguid.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib ws2_32.lib imm32.lib /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
 
 !ENDIF 
 
@@ -92,6 +92,10 @@ LINK32=link.exe
 # Begin Group "Core.cpp"
 
 # PROP Default_Filter ""
+# Begin Source File
+
+SOURCE=.\BattleNetCore.cpp
+# End Source File
 # Begin Source File
 
 SOURCE=.\LoginCore.cpp
@@ -170,6 +174,10 @@ SOURCE=.\MainWin.cpp
 # PROP Default_Filter ""
 # Begin Source File
 
+SOURCE=.\BattleNetCore.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\Core.h
 # End Source File
 # Begin Source File
@@ -222,6 +230,10 @@ SOURCE=.\PopUp.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\stringconst.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\Util.h
 # End Source File
 # Begin Source File
@@ -256,10 +268,6 @@ SOURCE=.\const.h
 # Begin Source File
 
 SOURCE=.\MainWin.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\stringconst.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"

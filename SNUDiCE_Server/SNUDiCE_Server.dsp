@@ -94,6 +94,10 @@ SOURCE=.\main.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\PlayerContainer.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\Server.cpp
 # End Source File
 # End Group
@@ -107,6 +111,10 @@ SOURCE=.\LoginCore.h
 # Begin Source File
 
 SOURCE=.\network.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\PlayerContainer.h
 # End Source File
 # Begin Source File
 

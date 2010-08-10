@@ -34,6 +34,6 @@ private:
 	void		EndSocket();
 	bool		SocketErrorMessage(LPARAM lParam);	// error나면 false
 	void		ReadPacket();				// packet 읽은 후 recv 호출
-	void		Recv(PK_DEFAULT *pk);
+	void		Recv();
 
 };

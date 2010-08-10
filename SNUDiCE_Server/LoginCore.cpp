@@ -1,5 +1,6 @@
 #include "LoginCore.h"
 #include "Server.h"
+#include "PlayerContainer.h"
 
 static gLoginCore s_LoginCore;
 
@@ -82,6 +83,7 @@ void gLoginCore::pk_login_ask(PK_DEFAULT *pk, SOCKET sock)
 	PK_LOGIN_REP	rep;
 	USER			*user;
 	bool			bFind = false;
+	bool			bSuccess = false;
 
 	for(USER_LIST::iterator it = m_UserList.begin(); it != m_UserList.end(); it++)
 	{
@@ -94,12 +96,15 @@ void gLoginCore::pk_login_ask(PK_DEFAULT *pk, SOCKET sock)
 				if(user->coreWhere != ECM_NONLOGIN)
 					rep.error	= ELE_OVERCONNECT;
 				else
+				{
+					bSuccess = true;
 					rep.error	= ELE_SUCCESS;
 					strcpy(rep.player.szID, user->szID);
 					rep.player.coreWhere = ECM_BATTLENET;
 					rep.player.nCoreFlag = 0;
 					bFind = true;
 					break;
+				}
 			}
 			else
 			{
@@ -111,6 +116,12 @@ void gLoginCore::pk_login_ask(PK_DEFAULT *pk, SOCKET sock)
 	}
 	if(!bFind)
 		rep.error = ELE_NOID;
+
+	if(bSuccess)
+	{
+		rep.player.sock = sock;
+		gPlayerContainer::GetIF()->AddPlayer(&rep.player);
+	}
 
 	gServer::GetIF()->Send(PL_LOGIN_REP, sizeof(rep), &rep, sock);
 }

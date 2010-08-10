@@ -141,25 +141,25 @@ void gServer::Receive(LPARAM lParam)
 
 void gServer::ReadPacket()
 {
-	PK_DEFAULT		pk;
-
 	int		r1 = 0, r2 = 0;
 	int		fail_count = 0;
 
-	r2 = recv(s_sock, (char*)&pk, PK_HEADER_SIZE, 0);
+	r2 = recv(s_sock, (char*)&m_pkDefault, PK_HEADER_SIZE, 0);
 	if(r2 == SOCKET_ERROR)
+		return;
+	if(r2 == 0)
 		return;
 
 	r1 += PK_HEADER_SIZE;
 
 	while(true)
 	{
-		r2 = recv(s_sock, pk.strPacket, pk.dwSize - PK_HEADER_SIZE, 0);
+		r2 = recv(s_sock, m_pkDefault.strPacket, m_pkDefault.dwSize - PK_HEADER_SIZE, 0);
 
 		if(r2 != SOCKET_ERROR)
 			r1 += r2;
 
-		if(r1 == pk.dwSize)
+		if(r1 == m_pkDefault.dwSize)
 			break;
 
 		fail_count++;
@@ -169,15 +169,15 @@ void gServer::ReadPacket()
 	}
 
 	if(fail_count <= 10)
-		Recv(&pk);
+		Recv();
 }
 
-void gServer::Recv(PK_DEFAULT *pk)
+void gServer::Recv()
 {
-	switch(pk->dwProtocol)
+	switch(m_pkDefault.dwProtocol)
 	{
 		case PL_LOGIN_REP:
-			gLoginCore::GetIF()->pk_login_rep((PK_LOGIN_REP*)pk->strPacket);
+			gLoginCore::GetIF()->pk_login_rep((PK_LOGIN_REP*)m_pkDefault.strPacket);
 		break;
 		
 	}

@@ -24,7 +24,7 @@
 enum ePROTOCOL
 {
 	PL_LOGIN_ASK,
-		PL_LOGIN_REP,
+	PL_LOGIN_REP,
 };
 
 
@@ -63,6 +63,7 @@ struct PLAYER
 	char		szID[16];
 	eCOREMODE	coreWhere;
 	int			nCoreFlag;
+	SOCKET		sock;
 };
 
 struct PK_LOGIN_ASK
