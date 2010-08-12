@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SNUDiCE_Server_Win", "SNUDiCE_Server_Win\SNUDiCE_Server_Win.vcproj", "{F7E7BEC5-AAC4-4691-8ADB-5C03A3ADAD5A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F7E7BEC5-AAC4-4691-8ADB-5C03A3ADAD5A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F7E7BEC5-AAC4-4691-8ADB-5C03A3ADAD5A}.Debug|Win32.Build.0 = Debug|Win32
+		{F7E7BEC5-AAC4-4691-8ADB-5C03A3ADAD5A}.Release|Win32.ActiveCfg = Release|Win32
+		{F7E7BEC5-AAC4-4691-8ADB-5C03A3ADAD5A}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
