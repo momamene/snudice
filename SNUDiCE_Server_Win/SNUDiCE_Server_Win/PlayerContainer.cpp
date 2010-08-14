@@ -47,6 +47,21 @@ void gPlayerContainer::AddPlayer(PLAYER* player)
 	m_PlayerList.push_back(add);
 }
 
+bool gPlayerContainer::isExistedPlayer(char* id)
+{
+	PLAYER*		temp;
+
+	for(PLAYER_LIST::iterator it = m_PlayerList.begin();
+		it != m_PlayerList.end(); it++)
+	{
+		temp = *it;
+
+		if(strcmp(temp->szID, id) == 0)
+			return true;
+	}
+	return false;
+}
+
 void gPlayerContainer::DeletePlayer(SOCKET sock)
 {
 	PLAYER*		temp;

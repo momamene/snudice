@@ -13,18 +13,16 @@
 #include "network.h"
 
 //#define FULLSCREEN		//	define 풀었다 해제하면서 fullscreen 체크
-
-#define BIT				32
 #define	WNDSIZEW		640
 #define WNDSIZEH		480
-#define GAMENAME		"SNU Dice"
+#define WNDNAME			"SNU Dice Server"
 #define WNDSTYLE		(WS_CAPTION | WS_SYSMENU)
 //#define BEEPHACKREG		"Control Panel\\Sound"
 //#define BEEPHACKREG2	"AppEvents\\Schemes\\Apps\\.Default\\.Default\\.Current"
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 DWORD WINAPI ProcessClient(LPVOID arg);
-DWORD WINAPI Run(LPVOID prc);
+DWORD WINAPI Listen(LPVOID prc);		// 클라의 접속요청 받아 처리하는 쓰레드
 
 class gMainWin  
 {
@@ -37,7 +35,7 @@ public:
 	
 public:
 	HINSTANCE	m_hInst;
-	//HWND		m_hWnd;
+	HWND		m_hWnd;
 	BOOL		m_Keys[256];				// keyboard
 	RECT		m_rcScr;					// screen 출력 영역
 	bool		m_bActive;					// 게임(윈도우)가 활성화 되어있나
@@ -66,6 +64,8 @@ public:
 	//bool		DisableBeep();
 	//bool		EnableBeep();
 	//bool		SetUpDirect();
+	bool		MakeListenThread();
+	int			Run();
 	void		MainLoop();
 };
 

@@ -1,6 +1,7 @@
 #include "LoginCore.h"
 #include "MainWin.h"
 #include "PlayerContainer.h"
+#include "MysqlDB.h"
 
 static gLoginCore s_LoginCore;
 
@@ -11,7 +12,7 @@ gLoginCore *gLoginCore::GetIF()
 
 gLoginCore::gLoginCore()
 {
-	
+	gMysql::GetIF()->init();
 }
 
 gLoginCore::~gLoginCore()
@@ -21,16 +22,16 @@ gLoginCore::~gLoginCore()
 
 void gLoginCore::Put(char* id,char* pw) 
 {
-	USER* userTemp = new USER;
-	strcpy(userTemp->szID,id);
-	strcpy(userTemp->szPW,pw);
-	userTemp->coreWhere = ECM_NONLOGIN;
-	userTemp->nCoreFlag = 0;
-	m_UserList.push_back(userTemp);
+	//USER* userTemp = new USER;
+	//strcpy(userTemp->szID,id);
+	//strcpy(userTemp->szPW,pw);
+	//m_UserList.push_back(userTemp);
+	gMysql::GetIF()->put(id,pw);
 }
 
 USER* gLoginCore::GetID(char* id)
 {
+	/*
 	USER	*user;
 	for(USER_LIST::iterator it = m_UserList.begin() ; it != m_UserList.end(); it++ ) {
 		user = *it;
@@ -39,6 +40,9 @@ USER* gLoginCore::GetID(char* id)
 		}
 	}
 	return NULL;
+	*/
+	return gMysql::GetIF()->get(id);
+	
 }
 
 
@@ -46,12 +50,12 @@ USER* gLoginCore::GetID(char* id)
 bool gLoginCore::SetUp()
 {
 	//for test. default °èÁ¤
-	//USER*	userTemp;
+	USER*	user;
 	char	buf[1024];
 
 	Put("test1","1111");
 	Put("test2","1111");
-
+/*
 	USER_LIST::iterator it;
 
 	for(it = m_UserList.begin() ; it != m_UserList.end() ; it++)
@@ -60,6 +64,7 @@ bool gLoginCore::SetUp()
 		sprintf(buf,"id : %s\tpw : %s\n", (*it)->szID, (*it)->szPW);
 		OutputDebugString(buf);
 	}
+*/
 
 	return true;
 }
@@ -112,8 +117,9 @@ void gLoginCore::pk_login_ask(PK_DEFAULT *pk, SOCKET sock)
 			rep.error	= ELE_PWERROR;
 		}
 		else {
-			if(user->coreWhere != ECM_NONLOGIN) {
 
+			if(gPlayerContainer::GetIF()->isExistedPlayer(user->szID)) {
+				bSuccess = false;
 				rep.error = ELE_OVERCONNECT;
 			}
 			else {

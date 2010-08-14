@@ -34,7 +34,42 @@ gMainWin* gMainWin::GetIF()
 
 bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 {
-		int		retVal;
+	// Set Up Window
+
+	WNDCLASS WndClass;
+	m_hInst	= hInstance;
+
+	memset(&WndClass, 0, sizeof(WndClass));
+
+	WndClass.hbrBackground	= (HBRUSH)GetStockObject(WHITE_BRUSH);
+	WndClass.hCursor		= LoadCursor(NULL,IDC_ARROW);
+	WndClass.hIcon			= LoadIcon(NULL,IDI_APPLICATION);
+	WndClass.hInstance		= hInstance;
+	WndClass.lpfnWndProc	= (WNDPROC)WndProc;
+	WndClass.lpszClassName	= WNDNAME;
+	WndClass.lpszMenuName	= NULL;
+	WndClass.style			= CS_HREDRAW | CS_VREDRAW;
+	RegisterClass(&WndClass);
+
+	m_hWnd=CreateWindow(WNDNAME, WNDNAME, WNDSTYLE,
+		CW_USEDEFAULT, CW_USEDEFAULT, WNDSIZEW, WNDSIZEH,
+		NULL, (HMENU)NULL, hInstance, NULL);
+
+
+	RECT	rcWin = {0, 0, WNDSIZEW, WNDSIZEH};
+	AdjustWindowRect(&rcWin, WNDSTYLE, false);
+	SetWindowPos(m_hWnd, NULL, 0, 0,
+		rcWin.right - rcWin.left, rcWin.bottom - rcWin.top,
+		SWP_NOMOVE | SWP_NOZORDER);
+
+	MoveWindow(m_hWnd, 0, 0, WNDSIZEW, WNDSIZEH, false);
+
+	ShowWindow(m_hWnd, nCmdShow);
+
+
+	// Setup winsock2
+
+	int		retVal;
 
 	// Winsock 초기화
 	WSADATA	wsa;
@@ -69,55 +104,73 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 	if(retVal == SOCKET_ERROR)
 		err_quit("listen()");
 
+	// setup another class
 	if(!gLoginCore::GetIF()->SetUp())
 		return false;
 
 	if(!gPlayerContainer::GetIF()->SetUp())
 		return false;
 
-
-	// Initialize
-	//memset(this, 0, sizeof(gMainWin));
-/*
-	m_hInst	= hInstance;
-	// Make Window
-	WNDCLASS	WndClass;
-	memset(&WndClass, 0, sizeof(WNDCLASS));
-	WndClass.hbrBackground	= (HBRUSH)GetStockObject(WHITE_BRUSH);
-	WndClass.hCursor		= LoadCursor(NULL, IDC_ARROW);
-	WndClass.hIcon			= LoadIcon(NULL, IDI_APPLICATION);
-	WndClass.hInstance		= hInstance;
-	WndClass.lpfnWndProc	= (WNDPROC)WndProc;
-	WndClass.lpszClassName	= GAMENAME;
-	WndClass.lpszMenuName	= NULL;
-	WndClass.style			= CS_HREDRAW | CS_VREDRAW;
-	RegisterClass(&WndClass);
-	m_hWnd = CreateWindow(GAMENAME, GAMENAME, WNDSTYLE, 
-						CW_USEDEFAULT, CW_USEDEFAULT, WNDSIZEW, WNDSIZEH,
-						NULL, (HMENU)NULL, hInstance, NULL);
-
-	// ReSize Window
-	RECT	rcWin = {0, 0, WNDSIZEW, WNDSIZEH};
-	AdjustWindowRect(&rcWin, WNDSTYLE, false);
-	SetWindowPos(m_hWnd, NULL, 0, 0,
-			rcWin.right - rcWin.left, rcWin.bottom - rcWin.top,
-			SWP_NOMOVE | SWP_NOZORDER);
-
-	MoveWindow();
-	ShowWindow(m_hWnd, nCmdShow);
-	*/
-
 	return true;
 }
 
-/*
-void gMainWin::MoveWindow()
+bool gMainWin::MakeListenThread()
 {
-	SetRect(&m_rcScr, 0, 0, WNDSIZEW, WNDSIZEH);
-	ClientToScreen(m_hWnd, (POINT*)&m_rcScr);
-	ClientToScreen(m_hWnd, (POINT*)&m_rcScr + 1);
+
+	HANDLE		hThread;
+	DWORD		dwThreadID;
+
+	hThread = CreateThread(NULL, 0, Listen, NULL, 0, &dwThreadID);
+
+	if(hThread == NULL) {
+		OutputDebugString("Thread failed\n");
+		return false;
+	}
+	else {
+		CloseHandle(hThread);
+		return true;
+	}
 }
-*/
+
+int gMainWin::Run()
+{
+	MSG			Msg;
+
+	// Mainloop of game
+	while(true)
+	{
+		// 메시지 큐에 메시지 있으면 처리
+		if(PeekMessage(&Msg, NULL, 0, 0, PM_REMOVE))
+		{
+			// ALT 막기
+			if(Msg.message == WM_SYSKEYDOWN)
+				continue;
+			if(Msg.message == WM_QUIT)
+				break;
+
+// 			switch(m_eCoreMode)
+// 			{
+// 			case ECM_LOGIN:
+// 				if(gLoginCore::GetIF()->PreTransMsg(Msg))
+// 					continue;
+// 				break;
+// 			case ECM_BATTLENET:
+// 				if(gBattleNetCore::GetIF()->PreTransMsg(Msg))
+// 					continue;
+// 				break;
+// 			}
+
+			TranslateMessage(&Msg);
+			DispatchMessage(&Msg);
+		}
+		else	// 메시지 큐에 메시지 없을 때
+		{
+			MainLoop();
+		}
+	}
+	return Msg.wParam;
+
+}
 
 void gMainWin::Release()
 {
@@ -127,12 +180,12 @@ void gMainWin::Release()
 }
 
 
-DWORD WINAPI Run(LPVOID prc)
+DWORD WINAPI Listen(LPVOID prc)
 {
 	gMainWin *gmainWin = gMainWin::GetIF();
 
 	
-		SOCKET			client_sock;
+	SOCKET			client_sock;
 	SOCKADDR_IN		clientAddr;
 	int				addrLen;
 //	int				retVal;
@@ -176,33 +229,7 @@ DWORD WINAPI Run(LPVOID prc)
 		else
 			CloseHandle(hThread);
 
-		// 메시지 큐에 메시지 있으면 처리
-		if(PeekMessage(&Msg, NULL, 0, 0, PM_REMOVE))
-		{
-			// ALT 막기
-			if(Msg.message == WM_SYSKEYDOWN)
-				continue;
-			if(Msg.message == WM_QUIT)
-				break;
-/*
-			switch(m_eCoreMode)
-			{
-				case ECM_LOGIN:
-					if(gLoginCore::GetIF()->PreTransMsg(Msg))
-						continue;
-					break;
-			}
-			*/
-
-			TranslateMessage(&Msg);
-			DispatchMessage(&Msg);
-		}
-		else	// 메시지 큐에 메시지 없을 때
-		{
-			gmainWin->MainLoop();
-		}
 	}
-	return Msg.wParam;
 }
 
 void gMainWin::MainLoop()
@@ -348,12 +375,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 	return(DefWindowProc(hWnd, iMsg, wParam, lParam));
 }
 
-/*
-void gMainWin::Exit(HWND hWnd)
+
+void gMainWin::Exit()
 {
-	SendMessage(hWnd, WM_DESTROY, 0, 0);
+	SendMessage(m_hWnd, WM_DESTROY, 0, 0);
 }
-*/
+
 
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 //	private

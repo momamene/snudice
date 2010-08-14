@@ -32,6 +32,7 @@ public:
 	// packet
 
 	void			pk_login_ask(PK_DEFAULT *pk, SOCKET sock);
+	bool			isExistedPlayer(char* id);
 
 	//	void			PrintUserList();
 

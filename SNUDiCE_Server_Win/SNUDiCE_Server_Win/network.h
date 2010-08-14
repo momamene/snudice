@@ -7,7 +7,7 @@
 #define SERVER_PORT				9000
 #define BUFFERSIZE				1024
 
-#define PK_HEADER_SIZE		4
+#define PK_HEADER_SIZE			4
 
 #define CHATMSG_LENGTH			64
 //�ѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤѤ�
@@ -48,8 +48,6 @@ struct USER
 {
 	char		szID[16];
 	char		szPW[16];
-	eCOREMODE	coreWhere;
-	int			nCoreFlag;
 };
 
 struct PLAYER

@@ -183,6 +183,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MysqlDB.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\PlayerContainer.cpp"
 				>
 			</File>
@@ -198,6 +202,10 @@
 			</File>
 			<File
 				RelativePath=".\MainWin.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MysqlDB.h"
 				>
 			</File>
 			<File
