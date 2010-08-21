@@ -1,25 +1,16 @@
 #include "MainWin.h"
 #include "LoginCore.h"
+#include "MessageCore.h"
 #include "PlayerContainer.h"
+#include "MysqlDB.h"
 
-/*
-#include "const.h"
-#include "Mouse.h"
-#include "LoginCore.h"
-#include "Server.h"
-#include "Util.h"
-#include "PopUp.h"
-*/
-
-DWORD WINAPI ProcessClient(LPVOID arg);				// server <-> client 간 통신. 스레드
-static void err_quit(char *msg);					// 소켓 함수 오류 출력후 종료
-static void err_display(char *msg);					// 소켓 함수 오류 출력
+		
 
 static gMainWin	s_MainWin;		// for singleton
 
 gMainWin::gMainWin()
 {
-
+	gMysql::GetIF()->init();
 }
 
 gMainWin::~gMainWin()
@@ -96,6 +87,9 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 	serverAddr.sin_addr.s_addr	= inet_addr(SERVER_IP);
 	retVal = bind(m_listen_sock, (SOCKADDR*)&serverAddr, sizeof(serverAddr));
 	
+
+	gMysql::GetIF()->init();
+
 	if(retVal == SOCKET_ERROR)
 		err_quit("bind()");
 
@@ -103,6 +97,7 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 	retVal = listen(m_listen_sock, SOMAXCONN);
 	if(retVal == SOCKET_ERROR)
 		err_quit("listen()");
+	
 
 	// setup another class
 	if(!gLoginCore::GetIF()->SetUp())
@@ -110,6 +105,8 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 
 	if(!gPlayerContainer::GetIF()->SetUp())
 		return false;
+
+
 
 	return true;
 }
@@ -177,60 +174,12 @@ void gMainWin::Release()
 	closesocket(m_listen_sock);
 	WSACleanup();
 	gLoginCore::GetIF()->Release();
+	gPlayerContainer::GetIF()->Release();
+	gMessageCore::GetIF()->Release();
 }
 
 
-DWORD WINAPI Listen(LPVOID prc)
-{
-	gMainWin *gmainWin = gMainWin::GetIF();
 
-	
-	SOCKET			client_sock;
-	SOCKADDR_IN		clientAddr;
-	int				addrLen;
-//	int				retVal;
-	char			szBuf[BUFFERSIZE + 1];		// 왜 + 1인가??
-	HANDLE			hThread;
-	DWORD			dwThreadID;
-
-	ZeroMemory(&clientAddr, sizeof(SOCKADDR_IN));
-
-		MSG		Msg;
-		char	buf[1024];
-
-	OutputDebugString("Server Start\n");
-
-	while(true)
-	{
-		// accept()
-
-		addrLen = sizeof(clientAddr);
-		client_sock = accept(gmainWin->m_listen_sock, (SOCKADDR*)&clientAddr, &addrLen);
-
-		if(client_sock == INVALID_SOCKET)
-		{
-
-			err_display("accept()");
-			continue;
-		}
-
-
-		sprintf(buf,"\n[TCP Server] Client Connect : IP = %s\t Port = %d\n",
-				inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port));
-
-		OutputDebugString(buf);
-
-		// make thread
-		hThread = CreateThread(NULL, 0, ProcessClient,
-								(LPVOID)client_sock, 0, &dwThreadID);
-
-		if(hThread == NULL) 
-			OutputDebugString("Thread failed\n");
-		else
-			CloseHandle(hThread);
-
-	}
-}
 
 void gMainWin::MainLoop()
 {
@@ -245,7 +194,10 @@ void gMainWin::Recv(PK_DEFAULT *pk, SOCKET sock)
 	{
 		case PL_LOGIN_ASK:
 			gLoginCore::GetIF()->pk_login_ask(pk, sock);
-		break;
+			break;
+		case PL_MESSAGE_ASK:
+			gMessageCore::GetIF()->pk_message_ask(pk, sock);
+			break;
 
 	}
 
@@ -288,92 +240,7 @@ bool gMainWin::Send(DWORD type, DWORD size, void *buf, SOCKET sock)
 	return true;
 }
 
-LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
-{
-	gMainWin	*mw		= gMainWin::GetIF();
 
-	switch(iMsg)
-	{
-
-		/*
-		case WM_MOVE:
-			mw->MoveWindow();
-		break;
-*/
-		case WM_KEYDOWN:
-			if(!mw->m_bActive)
-				return 0;
-
-			mw->m_Keys[wParam] = true;
-			return 0;
-		case WM_KEYUP:
-			if(!mw->m_bActive)
-				return 0;
-
-			mw->m_Keys[wParam] = false;
-			return 0;
-
-		// mouse
-			/*
-		case WM_LBUTTONDOWN:
-			if(!mw->m_bActive)
-				return 0;
-
-			mouse->m_nPosX = LOWORD(lParam);
-			mouse->m_nPosY = HIWORD(lParam);
-			mouse->OnLButtonDown();
-			return 0;
-		case WM_LBUTTONUP:
-			if(!mw->m_bActive)
-				return 0;
-
-			mouse->m_nPosX = LOWORD(lParam);
-			mouse->m_nPosY = HIWORD(lParam);
-			mouse->OnLButtonUp();
-			return 0;
-		case WM_RBUTTONDOWN:
-			if(!mw->m_bActive)
-				return 0;
-
-			mouse->m_nPosX = LOWORD(lParam);
-			mouse->m_nPosY = HIWORD(lParam);
-			mouse->OnRButtonDown();
-			return 0;
-		case WM_MOUSEMOVE:
-			if(!mw->m_bActive)
-				return 0;
-
-			mouse->m_nPosX = LOWORD(lParam);
-			mouse->m_nPosY = HIWORD(lParam);
-			mouse->OnMouseMove();
-			return 0;
-			*/
-
-		// active
-		case WM_ACTIVATE:
-			switch(LOWORD(wParam))
-			{
-				case WA_ACTIVE: case WA_CLICKACTIVE:
-					mw->m_bActive = true;
-					break;
-				case WA_INACTIVE:
-					mw->m_bActive = false;
-					break;
-			}
-			return 0;
-
-		// network
-			/*
-		case WM_SOCKET:
-			gServer::GetIF()->Receive(lParam);
-			return 0;
-			*/
-		case WM_DESTROY:
-			PostQuitMessage(0);
-			return 0;
-	}
-	return(DefWindowProc(hWnd, iMsg, wParam, lParam));
-}
 
 
 void gMainWin::Exit()
@@ -385,6 +252,47 @@ void gMainWin::Exit()
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 //	private
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+
+LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
+{
+	gMainWin	*mw		= gMainWin::GetIF();
+
+	switch(iMsg)
+	{
+	case WM_KEYDOWN:
+		if(!mw->m_bActive)
+			return 0;
+
+		mw->m_Keys[wParam] = true;
+		return 0;
+	case WM_KEYUP:
+		if(!mw->m_bActive)
+			return 0;
+
+		mw->m_Keys[wParam] = false;
+		return 0;
+
+		// active
+	case WM_ACTIVATE:
+		switch(LOWORD(wParam))
+		{
+		case WA_ACTIVE: 
+		case WA_CLICKACTIVE:
+			mw->m_bActive = true;
+			break;
+		case WA_INACTIVE:
+			mw->m_bActive = false;
+			break;
+		}
+		return 0;
+
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		return 0;
+	}
+	return(DefWindowProc(hWnd, iMsg, wParam, lParam));
+}
+
 void err_quit(char *msg)
 {
 	
@@ -450,7 +358,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 		retVal = recv(client_sock, (char*)&pkDefault, PK_HEADER_SIZE, 0);
 		if(retVal == SOCKET_ERROR)
 			continue;
-		if(retVal == 0)
+		if(retVal == 0)		// 보통 종료할 때 이 메세지가 뜨던데?
 			break;
 
 		r1 += PK_HEADER_SIZE;
@@ -484,4 +392,56 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	OutputDebugString (buf);
 
 	return 0;
+}
+
+DWORD WINAPI Listen(LPVOID prc)
+{
+	gMainWin *gmainWin = gMainWin::GetIF();
+
+
+	SOCKET			client_sock;
+	SOCKADDR_IN		clientAddr;
+	int				addrLen;
+	//	int				retVal;
+	char			szBuf[BUFFERSIZE + 1];		// 왜 + 1인가??
+	HANDLE			hThread;
+	DWORD			dwThreadID;
+
+	ZeroMemory(&clientAddr, sizeof(SOCKADDR_IN));
+
+	MSG		Msg;
+	char	buf[1024];
+
+	OutputDebugString("Server Start\n");
+
+	while(true)
+	{
+		// accept()
+
+		addrLen = sizeof(clientAddr);
+		client_sock = accept(gmainWin->m_listen_sock, (SOCKADDR*)&clientAddr, &addrLen);
+
+		if(client_sock == INVALID_SOCKET)
+		{
+
+			err_display("accept()");
+			continue;
+		}
+
+
+		sprintf(buf,"\n[TCP Server] Client Connect : IP = %s\t Port = %d\n",
+			inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port));
+
+		OutputDebugString(buf);
+
+		// make thread
+		hThread = CreateThread(NULL, 0, ProcessClient,
+			(LPVOID)client_sock, 0, &dwThreadID);
+
+		if(hThread == NULL) 
+			OutputDebugString("Thread failed\n");
+		else
+			CloseHandle(hThread);
+
+	}
 }

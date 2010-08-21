@@ -2,7 +2,6 @@
 #include "MainWin.h"
 #include "PlayerContainer.h"
 #include "MysqlDB.h"
-
 static gLoginCore s_LoginCore;
 
 gLoginCore *gLoginCore::GetIF()
@@ -12,7 +11,7 @@ gLoginCore *gLoginCore::GetIF()
 
 gLoginCore::gLoginCore()
 {
-	gMysql::GetIF()->init();
+
 }
 
 gLoginCore::~gLoginCore()
@@ -22,55 +21,34 @@ gLoginCore::~gLoginCore()
 
 void gLoginCore::Put(char* id,char* pw) 
 {
-	//USER* userTemp = new USER;
-	//strcpy(userTemp->szID,id);
-	//strcpy(userTemp->szPW,pw);
-	//m_UserList.push_back(userTemp);
+
 	gMysql::GetIF()->put(id,pw);
 }
 
 USER* gLoginCore::GetID(char* id)
 {
-	/*
-	USER	*user;
-	for(USER_LIST::iterator it = m_UserList.begin() ; it != m_UserList.end(); it++ ) {
-		user = *it;
-		if(strcmp(user->szID,id)==0) {
-			return user;
-		}
-	}
-	return NULL;
-	*/
-	return gMysql::GetIF()->get(id);
-	
+
+	return gMysql::GetIF()->get(id);	
 }
 
 
 
 bool gLoginCore::SetUp()
 {
+
 	//for test. default °èÁ¤
 	USER*	user;
 	char	buf[1024];
 
 	Put("test1","1111");
 	Put("test2","1111");
-/*
-	USER_LIST::iterator it;
-
-	for(it = m_UserList.begin() ; it != m_UserList.end() ; it++)
-	{
-
-		sprintf(buf,"id : %s\tpw : %s\n", (*it)->szID, (*it)->szPW);
-		OutputDebugString(buf);
-	}
-*/
 
 	return true;
 }
 
 void gLoginCore::Release()
 {
+	/*
 	USER	*userTemp;
 
 	for(USER_LIST::iterator it = m_UserList.begin(); it != m_UserList.end(); it++)
@@ -80,6 +58,7 @@ void gLoginCore::Release()
 		userTemp = NULL;
 	}
 	m_UserList.clear();
+	*/
 }
 
 // packet
@@ -134,45 +113,5 @@ void gLoginCore::pk_login_ask(PK_DEFAULT *pk, SOCKET sock)
 		}
 	}
 	
-	
-/*
-	for(USER_LIST::iterator it = m_UserList.begin(); it != m_UserList.end(); it++)
-	{
-		user = *it;
-
-		if(strcmp(user->szID, ask.szID) == 0)
-		{
-			if(strcmp(user->szPW, ask.szPW) == 0)
-			{
-				if(user->coreWhere != ECM_NONLOGIN)
-					rep.error	= ELE_OVERCONNECT;
-				else
-					bSuccess = true;
-					rep.error	= ELE_SUCCESS;
-					strcpy(rep.player.szID, user->szID);
-					rep.player.coreWhere = ECM_BATTLENET;
-					rep.player.nCoreFlag = 0;
-					bFind = true;
-					break;
-			}
-			else
-			{
-				rep.error	= ELE_PWERROR;
-				bFind = true;
-				break;
-			}
-		}
-	}
-
-	if(!bFind)
-		rep.error = ELE_NOID;
-
-	if(bSuccess) 
-	{
-
-		rep.player.sock = sock;
-		gPlayerContainer::GetIF()->AddPlayer(&rep.player);
-	}
-*/
 	gMainWin::GetIF()->Send(PL_LOGIN_REP, sizeof(rep), &rep, sock);
 }

@@ -14,8 +14,8 @@ public:
 	gLoginCore();
 	virtual ~gLoginCore();
 
-public:
-	USER_LIST		m_UserList;
+//public:
+	//USER_LIST		m_UserList;
 
 public:
 	bool			SetUp();

@@ -1,15 +1,26 @@
+//------------------------------------------------------------------------------------
+//	networkconst.h
+//
+//	2010. 08. 04	CoderK	
+//
+//	network 관련 define 및 프로토콜 및 패킷 구조체
+//	ws2_32.lib 추가해야 함
+//------------------------------------------------------------------------------------
 #pragma once
 #include <windows.h>
-#pragma comment(lib, "ws2_32.lib") 
+
+#define WM_SOCKET				WM_USER + 1
 
 #define	WINSOCK_VERSION_2_2		MAKEWORD(2, 2)
-#define SERVER_IP				"127.0.0.1"
+#define SERVER_IP				"211.169.219.71"
 #define SERVER_PORT				9000
 #define BUFFERSIZE				1024
 
 #define PK_HEADER_SIZE			4
 
-#define CHATMSG_LENGTH			64
+#define MSGLENGTH				128
+#define IDLENGTH				16
+
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 //	통신 프로토콜
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
@@ -17,15 +28,15 @@ enum ePROTOCOL
 {
 	PL_LOGIN_ASK,
 	PL_LOGIN_REP,
-	PL_NORMALMSG_ASK,
-	PL_NORMALMSG_REP,
+	PL_MESSAGE_ASK,
+	PL_MESSAGE_REP,
 };
 
 
 enum eCOREMODE
 {
 	ECM_NONLOGIN,			// login 안한상태
-	ECM_LOGIN,				// 얘는 걍 클라이언트에서 로그인 하기 위해 필요한 모드. 네트워크엔 관계없음
+	ECM_LOGIN,
 	ECM_BATTLENET,			// LOGIN 하면 이 모드
 	
 	
@@ -46,13 +57,13 @@ struct PK_DEFAULT
 
 struct USER
 {
-	char		szID[16];
-	char		szPW[16];
+	char		szID[IDLENGTH];
+	char		szPW[IDLENGTH];
 };
 
 struct PLAYER
 {
-	char		szID[16];
+	char		szID[IDLENGTH];
 	eCOREMODE	coreWhere;
 	int			nCoreFlag;
 	SOCKET		sock;
@@ -60,8 +71,8 @@ struct PLAYER
 
 struct PK_LOGIN_ASK
 {
-	char		szID[16];
-	char		szPW[16];
+	char		szID[IDLENGTH];
+	char		szPW[IDLENGTH];
 };
 
 enum LOGIN_ERROR
@@ -80,7 +91,7 @@ struct PK_LOGIN_REP
 
 typedef struct
 {
-	char	szID[16];
-	char	szMsg[CHATMSG_LENGTH];	
+	char	szID[IDLENGTH];
+	char	szMsg[MSGLENGTH];
 
-}	PK_NORMALMSG_ASK,	PK_NORMALMSG_REP;
+} PK_MESSAGE_ASK, PK_MESSAGE_REP;

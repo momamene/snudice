@@ -92,7 +92,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="1"
+			CharacterSet="0"
 			WholeProgramOptimization="1"
 			>
 			<Tool
@@ -183,6 +183,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MessageCore.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\MysqlDB.cpp"
 				>
 			</File>
@@ -202,6 +206,10 @@
 			</File>
 			<File
 				RelativePath=".\MainWin.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MessageCore.h"
 				>
 			</File>
 			<File
