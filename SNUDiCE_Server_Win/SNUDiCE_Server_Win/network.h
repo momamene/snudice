@@ -18,9 +18,6 @@
 
 #define PK_HEADER_SIZE			4
 
-#define MSGLENGTH				128
-#define IDLENGTH				16
-
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 //	통신 프로토콜
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
@@ -38,8 +35,8 @@ enum eCOREMODE
 	ECM_NONLOGIN,			// login 안한상태
 	ECM_LOGIN,
 	ECM_BATTLENET,			// LOGIN 하면 이 모드
-	
-	
+
+
 	ECM_TITLE,				// 타이틀
 	ECM_PSEL,				// 플레이어 고르자
 	ECM_CSEL,				// 캐릭터 고르자
@@ -54,6 +51,10 @@ struct PK_DEFAULT
 	char	strPacket[BUFFERSIZE];
 };
 
+#define MSGLENGTH				128			// 채팅할때 메시지 길이제한
+#define IDLENGTH				16			// ID 길이 제한
+#define CHANNELUSERMAX			10			// 한 채널에 있는 사람 수 최대
+#define CHANNELMAX				6			// 채널 개수
 
 struct USER
 {
@@ -80,13 +81,22 @@ enum LOGIN_ERROR
 	ELE_NOID,			// id 없음
 	ELE_PWERROR,		// pw 에러
 	ELE_OVERCONNECT,	// 중복접속
+	ELE_USEROVER,		// 서버 수용 인원 초과
 	ELE_SUCCESS,		// login 성공
+};
+
+struct CHANNEL
+{
+	int				nChannelNum;
+	int				nUserNum;
+	char			szUserInCh[CHANNELUSERMAX][IDLENGTH];		// 채널에 있는 유저 ID 들
 };
 
 struct PK_LOGIN_REP
 {
 	PLAYER			player;
 	LOGIN_ERROR		error;
+	CHANNEL			channel;
 };
 
 typedef struct

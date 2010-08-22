@@ -2,6 +2,7 @@
 #include "LoginCore.h"
 #include "MessageCore.h"
 #include "PlayerContainer.h"
+#include "ChannelContainer.h"
 #include "MysqlDB.h"
 
 		
@@ -106,6 +107,9 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 	if(!gPlayerContainer::GetIF()->SetUp())
 		return false;
 
+	if(!gChannelContainer::GetIF()->SetUp())
+		return false;
+
 
 
 	return true;
@@ -176,6 +180,7 @@ void gMainWin::Release()
 	gLoginCore::GetIF()->Release();
 	gPlayerContainer::GetIF()->Release();
 	gMessageCore::GetIF()->Release();
+	gChannelContainer::GetIF()->Release();
 }
 
 
@@ -384,7 +389,8 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	}
 
 	// closesocket
-	gPlayerContainer::GetIF()->DeletePlayer(client_sock);
+	char* clientID = gPlayerContainer::GetIF()->DeletePlayer(client_sock);
+	gChannelContainer::GetIF()->DeletePlayer(clientID);
 	closesocket(client_sock);
 	
 	sprintf(buf,"[TCP Server] Client Exit : IP = %s\t Port = %d\n",

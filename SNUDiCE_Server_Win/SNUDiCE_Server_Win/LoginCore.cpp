@@ -2,6 +2,8 @@
 #include "MainWin.h"
 #include "PlayerContainer.h"
 #include "MysqlDB.h"
+#include "ChannelContainer.h"
+
 static gLoginCore s_LoginCore;
 
 gLoginCore *gLoginCore::GetIF()
@@ -81,8 +83,7 @@ void gLoginCore::pk_login_ask(PK_DEFAULT *pk, SOCKET sock)
 
 	PK_LOGIN_REP	rep;
 	USER			*user;
-	bool			bFind = false;
-	bool			bSuccess = false;
+	bool			bCanIn = false;
 
 	user = GetID(ask.szID);
 
@@ -90,25 +91,41 @@ void gLoginCore::pk_login_ask(PK_DEFAULT *pk, SOCKET sock)
 		rep.error = ELE_NOID; 
 	}
 	else { 
-		bFind = true;
 		if(strcmp(user->szPW,ask.szPW)!=0) {
-
 			rep.error	= ELE_PWERROR;
 		}
 		else {
 
 			if(gPlayerContainer::GetIF()->isExistedPlayer(user->szID)) {
-				bSuccess = false;
 				rep.error = ELE_OVERCONNECT;
 			}
 			else {
-				bSuccess = true;
-				rep.error = ELE_SUCCESS;
-				strcpy(rep.player.szID,user->szID);
-				rep.player.coreWhere = ECM_BATTLENET;
-				rep.player.nCoreFlag = 0;
-				rep.player.sock = sock;
-				gPlayerContainer::GetIF()->AddPlayer(&rep.player);
+				// gChannelContainer start
+				bCanIn = gChannelContainer::GetIF()->Join(user->szID);
+
+				if(!bCanIn) {
+					rep.error = ELE_USEROVER;
+				}
+				else {
+					int finded = gChannelContainer::GetIF()->FindPlayer(user->szID);
+					if(finded==-1) {
+						// 만약 finded가 -1이 나온다면 치명적인 오류.
+						// 오류 체킹을 하고 있음.
+						OutputDebugString("aftef USEROVER 치명적인 오류\n");
+					}
+					for(int i = 0 ; i < CHANNELMAX ; i++)
+						gChannelContainer::GetIF()->debuger(i+1);	// 1부터 6까지 물어봐야지.
+					// gChannelContainer end
+					
+					rep.channel = gChannelContainer::GetIF()->m_channelArray[finded-1];
+					
+					rep.error = ELE_SUCCESS;
+					strcpy(rep.player.szID,user->szID);
+					rep.player.coreWhere = ECM_BATTLENET;
+					rep.player.nCoreFlag = 0;
+					rep.player.sock = sock;
+					gPlayerContainer::GetIF()->AddPlayer(&rep.player);
+				}
 			}
 		}
 	}

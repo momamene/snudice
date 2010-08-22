@@ -171,6 +171,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\ChannelContainer.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\LoginCore.cpp"
 				>
 			</File>
@@ -201,6 +205,10 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\ChannelContainer.h"
+				>
+			</File>
+			<File
 				RelativePath=".\LoginCore.h"
 				>
 			</File>
@@ -218,6 +226,10 @@
 			</File>
 			<File
 				RelativePath=".\network.h"
+				>
+			</File>
+			<File
+				RelativePath=".\network3.h"
 				>
 			</File>
 			<File

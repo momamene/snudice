@@ -25,7 +25,7 @@ public:
 
 public:
 	void			AddPlayer(PLAYER* player);
-	void			DeletePlayer(SOCKET sock);
+	char*			DeletePlayer(SOCKET sock);
 	bool			SetUp();
 	void			Release();
 

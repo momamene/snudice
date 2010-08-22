@@ -62,9 +62,10 @@ bool gPlayerContainer::isExistedPlayer(char* id)
 	return false;
 }
 
-void gPlayerContainer::DeletePlayer(SOCKET sock)
+char* gPlayerContainer::DeletePlayer(SOCKET sock)
 {
 	PLAYER*		temp;
+	char		szTemp[IDLENGTH];
 
 	for(PLAYER_LIST::iterator it = m_PlayerList.begin();
 		it != m_PlayerList.end(); it++)
@@ -73,10 +74,13 @@ void gPlayerContainer::DeletePlayer(SOCKET sock)
 
 		if(temp->sock == sock)
 		{
+			strcpy(szTemp,temp->szID);
 			delete temp;
 			temp = NULL;
 			m_PlayerList.erase(it);
-			break;
+			return szTemp;
+			//break;
 		}
 	}
+	return NULL;
 }
