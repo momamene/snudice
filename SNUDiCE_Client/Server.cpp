@@ -4,6 +4,7 @@
 #include "stringconst.h"
 #include "PopUp.h"
 #include "LoginCore.h"
+#include "BattleNetCore.h"
 #include "Chat.h"
 
 static SOCKET		s_sock = NULL;
@@ -72,7 +73,7 @@ bool gServer::SetUp()
 // 				inet_ntoa(s_serverAddr.sin_addr), ntohs(s_serverAddr.sin_port));
 // 	gUtil::DebugMsg(szBuf);
 
-	return m_bConnect;
+	return true;
 }
 
 bool gServer::Send(DWORD type, DWORD size, void *buf)
@@ -182,6 +183,9 @@ void gServer::Recv()
 		break;
 		case PL_MESSAGE_REP:
 			gChat::GetIF()->pk_message_rep((PK_MESSAGE_REP*)m_pkDefault.strPacket);
+		break;
+		case PL_CHANNELREFRESH_REP:
+			gBattleNetCore::GetIF()->pk_channelrefresh_rep((PK_CHANNELREFRESH_REP*)m_pkDefault.strPacket);
 		break;
 	}
 }

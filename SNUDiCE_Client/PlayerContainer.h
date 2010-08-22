@@ -17,7 +17,9 @@ public:
 	virtual ~gPlayerContainer(void);
 public:
 	PLAYER			m_MyPlayer;		// ³ª
+	CHANNEL			m_MyChannel;
 
 public:
-	void			SetMyPlayer(PLAYER* myplayer);
+	void			SetMyPlayer(PK_LOGIN_REP *rep);
+	void			RefreshChannel(PK_CHANNELREFRESH_REP *rep);
 };

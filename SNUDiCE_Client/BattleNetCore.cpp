@@ -1,7 +1,9 @@
+#include "PlayerContainer.h"
 #include "BattleNetCore.h"
 #include "Chat.h"
 #include "Server.h"
 #include "PopUp.h"
+#include "Mouse.h"
 
 static gBattleNetCore	s_BattleNetCore;
 
@@ -23,6 +25,9 @@ gBattleNetCore::~gBattleNetCore()
 bool gBattleNetCore::SetUp()
 {
 	if(!m_ImgBack.Load(BNET_FILE_BACK))
+		return false;
+
+	if(!m_ChannelUI.SetUp())
 		return false;
 
 	return true;
@@ -66,34 +71,58 @@ void gBattleNetCore::Draw()
 {
 	m_ImgBack.Draw();
 	gChat::GetIF()->Draw();
+	m_ChannelUI.Draw();
 	
 }
 
 void gBattleNetCore::Release()
 {
+	m_ChannelUI.Release();
 	m_ImgBack.Release();
-
 }
 
 void gBattleNetCore::OnLButtonDown()
 {
+	gMouse		*mouse = gMouse::GetIF();
 
+	if(m_ChannelUI.isPointInUI(mouse->m_nPosX, mouse->m_nPosY))
+	{
+		m_ChannelUI.OnLButtonDown(mouse->m_nPosX, mouse->m_nPosY);
+		return;
+	}
 }
 
 void gBattleNetCore::OnLButtonUp()
 {
+	gMouse		*mouse = gMouse::GetIF();
 
-
+	if(m_ChannelUI.isPointInUI(mouse->m_nPosX, mouse->m_nPosY))
+	{
+		m_ChannelUI.OnLButtonUp(mouse->m_nPosX, mouse->m_nPosY);
+		return;
+	}
 }
 
 void gBattleNetCore::OnMouseMove()
 {
+	gMouse		*mouse = gMouse::GetIF();
 
+	if(m_ChannelUI.isPointInUI(mouse->m_nPosX, mouse->m_nPosY))
+	{
+		m_ChannelUI.OnMouseMove(mouse->m_nPosX, mouse->m_nPosY);
+		return;
+	}
 }
 
 void gBattleNetCore::OnRButtonDown()
 {
+	gMouse		*mouse = gMouse::GetIF();
 
+	if(m_ChannelUI.isPointInUI(mouse->m_nPosX, mouse->m_nPosY))
+	{
+		m_ChannelUI.OnRButtonDown(mouse->m_nPosX, mouse->m_nPosY);
+		return;
+	}
 }
 
 bool gBattleNetCore::PreTransMsg(MSG &msg)
@@ -132,4 +161,9 @@ bool gBattleNetCore::PreTransMsg(MSG &msg)
 	}
 
 	return false;
+}
+
+void gBattleNetCore::pk_channelrefresh_rep(PK_CHANNELREFRESH_REP* rep)
+{
+	gPlayerContainer::GetIF()->RefreshChannel(rep);
 }

@@ -172,27 +172,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\BattleNetCore.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Chat.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Edit.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\Image.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\ImgButton.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\LoginCore.cpp"
 				>
 			</File>
 			<File
@@ -223,6 +207,34 @@
 				RelativePath=".\Util.cpp"
 				>
 			</File>
+			<Filter
+				Name="Interface"
+				>
+				<File
+					RelativePath=".\ChannelUI.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Chat.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Edit.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Core"
+				>
+				<File
+					RelativePath=".\BattleNetCore.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\LoginCore.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="헤더 파일"
@@ -230,27 +242,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\BattleNetCore.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Chat.h"
-				>
-			</File>
-			<File
 				RelativePath=".\const.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Core.h"
-				>
-			</File>
-			<File
-				RelativePath=".\coreconst.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Edit.h"
 				>
 			</File>
 			<File
@@ -259,10 +251,6 @@
 			</File>
 			<File
 				RelativePath=".\ImgButton.h"
-				>
-			</File>
-			<File
-				RelativePath=".\LoginCore.h"
 				>
 			</File>
 			<File
@@ -301,6 +289,42 @@
 				RelativePath=".\utilconst.h"
 				>
 			</File>
+			<Filter
+				Name="Interface"
+				>
+				<File
+					RelativePath=".\ChannelUI.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Chat.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Edit.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Core"
+				>
+				<File
+					RelativePath=".\BattleNetCore.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Core.h"
+					>
+				</File>
+				<File
+					RelativePath=".\coreconst.h"
+					>
+				</File>
+				<File
+					RelativePath=".\LoginCore.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="리소스 파일"

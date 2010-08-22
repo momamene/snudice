@@ -7,6 +7,7 @@
 #include "Util.h"
 #include "PopUp.h"
 #include "Chat.h"
+#include "ChannelUI.h"
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
@@ -80,7 +81,8 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 	if(!gChat::GetIF()->SetUp())
 		return false;
 
-	gServer::GetIF()->SetUp();
+	if(!gServer::GetIF()->SetUp())
+		return false;
 
 	ShowWindow(m_hWnd, nCmdShow);
 

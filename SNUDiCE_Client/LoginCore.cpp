@@ -90,9 +90,7 @@ bool gLoginCore::SetUp()
 
 bool gLoginCore::PreTransMsg(MSG &msg)
 {
-	char		szTemp[128];
-
-	if(msg.hwnd == m_EditID.m_hEdit)
+		if(msg.hwnd == m_EditID.m_hEdit)
 	{
 		if(!gServer::GetIF()->m_bConnect)
 			return true;
@@ -256,8 +254,6 @@ void gLoginCore::OnLButtonDown()
 
 //	gServer::GetIF()->Send();
 
-	int		i;
-
 	if(m_Btn[ELB_CONNECT].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 		SendLogin();
 }
@@ -298,6 +294,8 @@ void gLoginCore::pk_login_rep(PK_LOGIN_REP *rep)
 	{
 		case ELE_OVERCONNECT:
 			break;
+		case ELE_USEROVER:
+			break;
 		case ELE_NOID:
 			gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_6);
 			m_EditID.SetFocusOn();
@@ -310,7 +308,7 @@ void gLoginCore::pk_login_rep(PK_LOGIN_REP *rep)
 			gMainWin::GetIF()->m_eCoreMode = ECM_BATTLENET;
 			SetFocus(gMainWin::GetIF()->m_hWnd);
 			gChat::GetIF()->m_bShow = true;
-			gPlayerContainer::GetIF()->SetMyPlayer(&rep->player);
+			gPlayerContainer::GetIF()->SetMyPlayer(rep);
 
 			gUtil::DebugMsg("login success\n");
 			break;

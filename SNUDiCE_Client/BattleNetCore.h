@@ -9,6 +9,7 @@
 #include "Core.h"
 #include "coreconst.h"
 #include "Image.h"
+#include "ChannelUI.h"
 
 class gBattleNetCore : Core
 {
@@ -20,6 +21,8 @@ public:
 
 public:
 	gImage		m_ImgBack;
+	
+	gChannelUI	m_ChannelUI;
 	
 public:
 	// overriding
@@ -36,4 +39,6 @@ public:
 	// end overriding
 
 	bool		PreTransMsg(MSG &msg);
+
+	void		pk_channelrefresh_rep(PK_CHANNELREFRESH_REP* rep);
 };
