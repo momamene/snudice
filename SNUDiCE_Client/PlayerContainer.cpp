@@ -21,7 +21,7 @@ void gPlayerContainer::SetMyPlayer(PK_LOGIN_REP* rep)
 	memcpy(&m_MyChannel, &rep->channel, sizeof(CHANNEL));
 }
 
-void gPlayerContainer::RefreshChannel(PK_CHANNELREFRESH_REP *rep)
+void gPlayerContainer::RefreshChannel(CHANNEL *channel)
 {
-	memcpy(&m_MyChannel, &rep->channel, sizeof(CHANNEL));
+	memcpy(&m_MyChannel, channel, sizeof(CHANNEL));
 }

@@ -187,6 +187,9 @@ void gServer::Recv()
 		case PL_CHANNELREFRESH_REP:
 			gBattleNetCore::GetIF()->pk_channelrefresh_rep((PK_CHANNELREFRESH_REP*)m_pkDefault.strPacket);
 		break;
+		case PL_CHANNELCHANGE_REP:
+			gBattleNetCore::GetIF()->pk_channelchange_rep((PK_CHANNELCHANGE_REP*)m_pkDefault.strPacket);
+		break;
 	}
 }
 

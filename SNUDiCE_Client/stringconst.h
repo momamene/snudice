@@ -13,3 +13,4 @@
 #define STR_5			"이미 접속되어 있습니다."
 #define STR_6			"ID가 없습니다."
 #define STR_7			"Password가 일치하지 않습니다."
+#define STR_8			"해당 채널이 꽉 찼습니다."

@@ -31,6 +31,7 @@ enum ePROTOCOL
 	PL_CHANNELREFRESH_REP,
 
 	PL_CHANNELCHANGE_ASK,
+	PL_CHANNELCHANGE_REP,
 };
 
 
@@ -110,14 +111,28 @@ typedef struct
 
 } PK_MESSAGE_ASK, PK_MESSAGE_REP;
 
-struct PK_CHANNELCHANGE_ASK
-{
-	char			szID[IDLENGTH];
-	int				nChannel;
-};
 
 typedef struct
 {
 	CHANNEL			channel;
 
 } PK_CHANNELREFRESH_REP;
+
+enum CH_CHANGE_ERROR
+{
+	ECE_SUCCESS,
+	ECE_CHANNELISOVER,
+};
+
+struct PK_CHANNELCHANGE_ASK
+{
+	char			szID[IDLENGTH];
+	int				nChannel;
+};
+
+struct PK_CHANNELCHANGE_REP
+{
+	CH_CHANGE_ERROR	error;
+	CHANNEL			channel;
+
+};

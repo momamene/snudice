@@ -41,4 +41,5 @@ public:
 	bool		PreTransMsg(MSG &msg);
 
 	void		pk_channelrefresh_rep(PK_CHANNELREFRESH_REP* rep);
+	void		pk_channelchange_rep(PK_CHANNELCHANGE_REP* rep);
 };

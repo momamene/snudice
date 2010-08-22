@@ -293,6 +293,7 @@ void gLoginCore::pk_login_rep(PK_LOGIN_REP *rep)
 	switch(rep->error)
 	{
 		case ELE_OVERCONNECT:
+			gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_5);
 			break;
 		case ELE_USEROVER:
 			break;

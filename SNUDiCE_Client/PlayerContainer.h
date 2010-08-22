@@ -21,5 +21,5 @@ public:
 
 public:
 	void			SetMyPlayer(PK_LOGIN_REP *rep);
-	void			RefreshChannel(PK_CHANNELREFRESH_REP *rep);
+	void			RefreshChannel(CHANNEL	*channel);
 };

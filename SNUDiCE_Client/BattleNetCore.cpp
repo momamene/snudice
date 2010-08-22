@@ -4,6 +4,7 @@
 #include "Server.h"
 #include "PopUp.h"
 #include "Mouse.h"
+#include "stringconst.h"
 
 static gBattleNetCore	s_BattleNetCore;
 
@@ -51,9 +52,9 @@ void gBattleNetCore::MainLoop()
 			case EPOP_DISCONNECT:
 				switch(gPopUp::GetIF()->m_eBtnClk)
 				{
-				case ECLK_OK:
-					gMainWin::GetIF()->Exit();
-					break;
+					case ECLK_OK:
+						gMainWin::GetIF()->Exit();
+						break;
 				}
 				break;
 		}
@@ -165,5 +166,19 @@ bool gBattleNetCore::PreTransMsg(MSG &msg)
 
 void gBattleNetCore::pk_channelrefresh_rep(PK_CHANNELREFRESH_REP* rep)
 {
-	gPlayerContainer::GetIF()->RefreshChannel(rep);
+	gPlayerContainer::GetIF()->RefreshChannel(&rep->channel);
+}
+
+void gBattleNetCore::pk_channelchange_rep(PK_CHANNELCHANGE_REP* rep)
+{
+	switch(rep->error)
+	{
+		case ECE_CHANNELISOVER:
+			gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_8);
+			break;
+		case ECE_SUCCESS:
+			gPlayerContainer::GetIF()->RefreshChannel(&rep->channel);
+			m_ChannelUI.m_eChannel = CM_CHANNEL;
+			break;
+	}
 }
