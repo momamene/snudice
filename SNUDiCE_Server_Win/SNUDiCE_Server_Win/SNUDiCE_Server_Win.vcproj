@@ -175,6 +175,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ChannelCore.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\LoginCore.cpp"
 				>
 			</File>
@@ -206,6 +210,10 @@
 			>
 			<File
 				RelativePath=".\ChannelContainer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ChannelCore.h"
 				>
 			</File>
 			<File

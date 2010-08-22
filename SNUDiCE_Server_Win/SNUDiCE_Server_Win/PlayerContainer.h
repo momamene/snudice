@@ -25,7 +25,7 @@ public:
 
 public:
 	void			AddPlayer(PLAYER* player);
-	char*			DeletePlayer(SOCKET sock);
+	bool			DeletePlayer(SOCKET sock, char clientID[IDLENGTH]);
 	bool			SetUp();
 	void			Release();
 
@@ -33,6 +33,7 @@ public:
 
 	void			pk_login_ask(PK_DEFAULT *pk, SOCKET sock);
 	bool			isExistedPlayer(char* id);
+	bool			FindSocketFromID(char* id, SOCKET* getSock);
 
 	//	void			PrintUserList();
 

@@ -3,6 +3,7 @@
 #include "PlayerContainer.h"
 #include "MysqlDB.h"
 #include "ChannelContainer.h"
+#include "ChannelCore.h"
 
 static gLoginCore s_LoginCore;
 
@@ -44,23 +45,31 @@ bool gLoginCore::SetUp()
 
 	Put("test1","1111");
 	Put("test2","1111");
+	Put("test3","1111");
+	Put("test4","1111");
+	Put("test5","1111");
+	Put("test6","1111");
+	Put("test7","1111");
+	Put("test8","1111");
+	Put("test9","1111");
+	Put("test10","1111");
+	Put("test11","1111");
+	Put("test12","1111");
+	Put("test13","1111");
+	Put("test14","1111");
+	Put("test15","1111");
+	Put("test16","1111");
+	Put("test17","1111");
+	Put("test18","1111");
+	Put("test19","1111");
+	Put("test20","1111");
 
 	return true;
 }
 
 void gLoginCore::Release()
 {
-	/*
-	USER	*userTemp;
 
-	for(USER_LIST::iterator it = m_UserList.begin(); it != m_UserList.end(); it++)
-	{
-		userTemp = (USER*)(*it);
-		delete userTemp;
-		userTemp = NULL;
-	}
-	m_UserList.clear();
-	*/
 }
 
 // packet
@@ -84,6 +93,7 @@ void gLoginCore::pk_login_ask(PK_DEFAULT *pk, SOCKET sock)
 	PK_LOGIN_REP	rep;
 	USER			*user;
 	bool			bCanIn = false;
+	int finded;
 
 	user = GetID(ask.szID);
 
@@ -107,17 +117,17 @@ void gLoginCore::pk_login_ask(PK_DEFAULT *pk, SOCKET sock)
 					rep.error = ELE_USEROVER;
 				}
 				else {
-					int finded = gChannelContainer::GetIF()->FindPlayer(user->szID);
+					finded = gChannelContainer::GetIF()->FindPlayer(user->szID);
 					if(finded==-1) {
 						// 만약 finded가 -1이 나온다면 치명적인 오류.
 						// 오류 체킹을 하고 있음.
 						OutputDebugString("aftef USEROVER 치명적인 오류\n");
 					}
-					for(int i = 0 ; i < CHANNELMAX ; i++)
-						gChannelContainer::GetIF()->debuger(i+1);	// 1부터 6까지 물어봐야지.
+						gChannelContainer::GetIF()->fullDebuger();	// 1부터 6까지 물어봐야지.
 					// gChannelContainer end
+
 					
-					rep.channel = gChannelContainer::GetIF()->m_channelArray[finded-1];
+					rep.channel = gChannelContainer::GetIF()->m_channelArray[finded];
 					
 					rep.error = ELE_SUCCESS;
 					strcpy(rep.player.szID,user->szID);
@@ -125,10 +135,17 @@ void gLoginCore::pk_login_ask(PK_DEFAULT *pk, SOCKET sock)
 					rep.player.nCoreFlag = 0;
 					rep.player.sock = sock;
 					gPlayerContainer::GetIF()->AddPlayer(&rep.player);
+
+					
 				}
 			}
 		}
 	}
-	
+
 	gMainWin::GetIF()->Send(PL_LOGIN_REP, sizeof(rep), &rep, sock);
+	if(rep.error==ELE_SUCCESS)
+		gChannelCore::GetIF()->pk_channelrefresh_rep(rep.channel.nChannelNum-1);
+	
+
+
 }

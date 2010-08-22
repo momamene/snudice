@@ -62,10 +62,9 @@ bool gPlayerContainer::isExistedPlayer(char* id)
 	return false;
 }
 
-char* gPlayerContainer::DeletePlayer(SOCKET sock)
+bool gPlayerContainer::DeletePlayer(SOCKET sock,char clientID[IDLENGTH])
 {
 	PLAYER*		temp;
-	char		szTemp[IDLENGTH];
 
 	for(PLAYER_LIST::iterator it = m_PlayerList.begin();
 		it != m_PlayerList.end(); it++)
@@ -74,13 +73,43 @@ char* gPlayerContainer::DeletePlayer(SOCKET sock)
 
 		if(temp->sock == sock)
 		{
-			strcpy(szTemp,temp->szID);
+			strcpy(clientID,temp->szID);
+
 			delete temp;
 			temp = NULL;
 			m_PlayerList.erase(it);
-			return szTemp;
+			
+			return true;
 			//break;
 		}
 	}
-	return NULL;
+
+	return false;
+}
+
+bool gPlayerContainer::FindSocketFromID(char* id, SOCKET* getSock)
+{
+	PLAYER*		temp;
+
+	for(PLAYER_LIST::iterator it = m_PlayerList.begin();
+		it != m_PlayerList.end(); it++)
+	{
+		temp = *it;
+
+		if(strcmp(temp->szID,id)==0)
+		{
+			*getSock = temp->sock;
+			//strcpy(getID,temp->szID);
+/*
+			delete temp;
+			temp = NULL;
+			m_PlayerList.erase(it);
+*/
+			return true;
+			//break;
+		}
+	}
+
+	return false;
+
 }

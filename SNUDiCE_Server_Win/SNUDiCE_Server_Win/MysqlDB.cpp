@@ -42,9 +42,11 @@ void gMysql::put(char* id,char* pw) {
 	char query[255];
 	int query_stat;
 
-	if(get(id)==NULL) {
+	if(get(id)!=NULL) {
 		fprintf(stderr,"This ID %s is already existed\n",id);
+		return;
 	}
+
 
 	sprintf(query,SQL_INSERT_RECORD,id,pw);
 	query_stat = mysql_query(m_connection,query);

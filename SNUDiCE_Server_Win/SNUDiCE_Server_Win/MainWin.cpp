@@ -4,6 +4,7 @@
 #include "PlayerContainer.h"
 #include "ChannelContainer.h"
 #include "MysqlDB.h"
+#include "ChannelCore.h"
 
 		
 
@@ -181,6 +182,7 @@ void gMainWin::Release()
 	gPlayerContainer::GetIF()->Release();
 	gMessageCore::GetIF()->Release();
 	gChannelContainer::GetIF()->Release();
+	gChannelCore::GetIF()->Release();
 }
 
 
@@ -203,6 +205,9 @@ void gMainWin::Recv(PK_DEFAULT *pk, SOCKET sock)
 		case PL_MESSAGE_ASK:
 			gMessageCore::GetIF()->pk_message_ask(pk, sock);
 			break;
+		case PL_CHANNELCHANGE_ASK:
+			gChannelCore::GetIF()->pk_channelchange_ask(pk,sock);
+			break;
 
 	}
 
@@ -212,9 +217,9 @@ bool gMainWin::Send(DWORD type, DWORD size, void *buf, SOCKET sock)
 {
 	PK_DEFAULT		pk;
 
-	if(!sock)
+	if(!sock) {
 		return false;
-	
+	}
 	char *temp = (char*)buf;
 	
 	pk.dwProtocol = type;
@@ -239,8 +244,9 @@ bool gMainWin::Send(DWORD type, DWORD size, void *buf, SOCKET sock)
 		
 		fail_count++;
 		
-		if(fail_count > 10)
+		if(fail_count > 10) {
 			return false;
+		}
 	}
 	return true;
 }
@@ -389,8 +395,25 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	}
 
 	// closesocket
-	char* clientID = gPlayerContainer::GetIF()->DeletePlayer(client_sock);
-	gChannelContainer::GetIF()->DeletePlayer(clientID);
+	char clientID[IDLENGTH];
+	int bTemp;
+	
+	bTemp = gPlayerContainer::GetIF()->DeletePlayer(client_sock, clientID);
+	int channel = gChannelContainer::GetIF()->FindPlayer(clientID);
+
+	if(bTemp) {
+		gChannelContainer::GetIF()->DeletePlayer(clientID);
+		gChannelCore::GetIF()->pk_channelrefresh_rep(channel);
+		// sangwoo temp
+		OutputDebugString("refresh for delete\n");
+		gChannelContainer::GetIF()->fullDebuger();
+		// end
+	}
+	else {
+		// 에러 처리.
+	}
+	
+	
 	closesocket(client_sock);
 	
 	sprintf(buf,"[TCP Server] Client Exit : IP = %s\t Port = %d\n",
