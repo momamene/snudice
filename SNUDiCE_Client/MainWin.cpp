@@ -3,6 +3,7 @@
 #include "Mouse.h"
 #include "LoginCore.h"
 #include "BattleNetCore.h"
+#include "RoomCore.h"
 #include "Server.h"
 #include "Util.h"
 #include "PopUp.h"
@@ -78,6 +79,9 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 	if(!gBattleNetCore::GetIF()->SetUp())
 		return false;
 
+	if(!gRoomCore::GetIF()->SetUp())
+		return false;
+
 	if(!gChat::GetIF()->SetUp())
 		return false;
 
@@ -109,6 +113,8 @@ void gMainWin::Release()
 	gPopUp::GetIF()->Release();
 	gMouse::GetIF()->Release();
 	gLoginCore::GetIF()->Release();
+	gBattleNetCore::GetIF()->Release();
+	gRoomCore::GetIF()->Release();
 	SAFE_RELEASE(m_lpDDBack);
 	SAFE_RELEASE(m_lpDDPrimary);
 	SAFE_RELEASE(m_lpDD);
@@ -142,6 +148,10 @@ int gMainWin::Run()
 					if(gBattleNetCore::GetIF()->PreTransMsg(Msg))
 						continue;
 					break;
+				case ECM_ROOMMAKE: case ECM_ROOMJOIN: case ECM_ROOM:
+					if(gRoomCore::GetIF()->PreTransMsg(Msg))
+						continue;
+					break;
 			}
 
 			TranslateMessage(&Msg);
@@ -167,6 +177,9 @@ void gMainWin::MainLoop()
 			break;
 		case ECM_BATTLENET:
 			gBattleNetCore::GetIF()->MainLoop();
+			break;
+		case ECM_ROOMMAKE: case ECM_ROOMJOIN: case ECM_ROOM:
+			gRoomCore::GetIF()->MainLoop();
 			break;
 	}
 

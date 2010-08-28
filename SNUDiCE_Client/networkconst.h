@@ -32,6 +32,12 @@ enum ePROTOCOL
 
 	PL_CHANNELCHANGE_ASK,
 	PL_CHANNELCHANGE_REP,
+
+	PL_ROOMMAKER_ASK,
+	PL_ROOMMAKER_REP,
+
+	PL_ROOMLIST_ASK,
+	PL_ROOMLIST_REP,
 };
 
 
@@ -40,6 +46,9 @@ enum eCOREMODE
 	ECM_NONLOGIN,			// login 안한상태
 	ECM_LOGIN,
 	ECM_BATTLENET,			// LOGIN 하면 이 모드
+	ECM_ROOMMAKE,
+	ECM_ROOMJOIN,
+	ECM_ROOM,
 	
 	
 	ECM_TITLE,				// 타이틀
@@ -135,4 +144,51 @@ struct PK_CHANNELCHANGE_REP
 	CH_CHANGE_ERROR	error;
 	CHANNEL			channel;
 
+};
+
+#define MAXROOMFORPAGE		6								// 한 페이지에 표시될 수 있는 방 개수
+#define MAXROOM				100								// 만들 수 있는 방 개수
+#define MAXROOMNAME			32
+#define ROOMPASSWORD		16
+#define ROOMMAXPLAYER		8
+
+struct ROOM
+{
+	bool	isGaming;										// 게임중
+	bool	isPass;
+	char	szRoomName[MAXROOMNAME];
+	char	szRoomPass[ROOMPASSWORD];
+	int		nMaxPlayer;
+	int		nNowPlayer;
+	char	szRoomMaxPlayer[ROOMMAXPLAYER][IDLENGTH];		// 0번째가 방장
+};
+
+struct PK_ROOMMAKER_ASK
+{
+	ROOM	room;
+};
+
+enum ERROR_ROOMMAKE
+{
+	ERM_USINGNAME,		// 방이름 중복
+	ERM_SUCCESS,
+};
+
+struct PK_ROOMMAKER_REP
+{
+	ERROR_ROOMMAKE	result;
+};
+
+struct SIMPLE_ROOMLISTINFO									// 방 들어가기 모드에서, 방 리스트들 room list
+{
+	bool	isGaming;
+	bool	isPass;
+	char	szRoomName[MAXROOMNAME];
+	int		nMaxPlayer;
+	int		nNowPlayer;
+};
+
+struct PK_ROOMLIST_ASK
+{
+	SIMPLE_ROOMLISTINFO		info[MAXROOM];
 };

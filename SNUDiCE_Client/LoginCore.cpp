@@ -90,7 +90,7 @@ bool gLoginCore::SetUp()
 
 bool gLoginCore::PreTransMsg(MSG &msg)
 {
-		if(msg.hwnd == m_EditID.m_hEdit)
+	if(msg.hwnd == m_EditID.m_hEdit)
 	{
 		if(!gServer::GetIF()->m_bConnect)
 			return true;

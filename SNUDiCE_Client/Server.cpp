@@ -5,6 +5,7 @@
 #include "PopUp.h"
 #include "LoginCore.h"
 #include "BattleNetCore.h"
+#include "RoomCore.h"
 #include "Chat.h"
 
 static SOCKET		s_sock = NULL;
@@ -180,16 +181,19 @@ void gServer::Recv()
 	{
 		case PL_LOGIN_REP:
 			gLoginCore::GetIF()->pk_login_rep((PK_LOGIN_REP*)m_pkDefault.strPacket);
-		break;
+			break;
 		case PL_MESSAGE_REP:
 			gChat::GetIF()->pk_message_rep((PK_MESSAGE_REP*)m_pkDefault.strPacket);
-		break;
+			break;
 		case PL_CHANNELREFRESH_REP:
 			gBattleNetCore::GetIF()->pk_channelrefresh_rep((PK_CHANNELREFRESH_REP*)m_pkDefault.strPacket);
-		break;
+			break;
 		case PL_CHANNELCHANGE_REP:
 			gBattleNetCore::GetIF()->pk_channelchange_rep((PK_CHANNELCHANGE_REP*)m_pkDefault.strPacket);
-		break;
+			break;
+		case PL_ROOMMAKER_REP:
+			gRoomCore::GetIF()->pk_roommake_rep((PK_ROOMMAKER_REP*)m_pkDefault.strPacket);
+			break;
 	}
 }
 

@@ -1,5 +1,6 @@
 #include "PlayerContainer.h"
 #include "BattleNetCore.h"
+#include "RoomCore.h"
 #include "Chat.h"
 #include "Server.h"
 #include "PopUp.h"
@@ -30,6 +31,25 @@ bool gBattleNetCore::SetUp()
 
 	if(!m_ChannelUI.SetUp())
 		return false;
+
+	RECT	rcDest;
+
+	SetRect(&rcDest,
+			BNET_BTN_POS_ROOMMAKEX,
+			BNET_BTN_POS_ROOMMAKEY,
+			BNET_BTN_POS_ROOMMAKEX + BNET_BTN_SIZE_ROOMMAKEW,
+			BNET_BTN_POS_ROOMMAKEY + BNET_BTN_SIZE_ROOMMAKEH );
+	if(!m_ImgBtn[BBTN_ROOMMAKE].SetUp(BNET_FILE_ROOMMAKE, false, rcDest))
+		return false;
+
+	SetRect(&rcDest,
+		BNET_BTN_POS_ROOMJOINX,
+		BNET_BTN_POS_ROOMJOINY,
+		BNET_BTN_POS_ROOMJOINX + BNET_BTN_SIZE_ROOMJOINW,
+		BNET_BTN_POS_ROOMJOINY + BNET_BTN_SIZE_ROOMJOINH );
+	if(!m_ImgBtn[BBTN_ROOMJOIN].SetUp(BNET_FILE_ROOMJOIN, false, rcDest))
+		return false;
+
 
 	return true;
 }
@@ -73,6 +93,11 @@ void gBattleNetCore::Draw()
 	m_ImgBack.Draw();
 	gChat::GetIF()->Draw();
 	m_ChannelUI.Draw();
+
+	int			i;
+
+	for(i = 0; i < BBTN_END; i++)
+		m_ImgBtn[i].Draw();
 	
 }
 
@@ -80,6 +105,12 @@ void gBattleNetCore::Release()
 {
 	m_ChannelUI.Release();
 	m_ImgBack.Release();
+
+	int		i;
+
+	for(i = 0; i < BBTN_END; i++)
+		m_ImgBtn[i].Release();
+
 }
 
 void gBattleNetCore::OnLButtonDown()
@@ -89,6 +120,22 @@ void gBattleNetCore::OnLButtonDown()
 	if(m_ChannelUI.isPointInUI(mouse->m_nPosX, mouse->m_nPosY))
 	{
 		m_ChannelUI.OnLButtonDown(mouse->m_nPosX, mouse->m_nPosY);
+		return;
+	}
+
+	if(m_ImgBtn[BBTN_ROOMMAKE].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+	{
+		gMainWin::GetIF()->m_eCoreMode	= ECM_ROOMMAKE;
+		m_ImgBtn[BBTN_ROOMMAKE].m_eBtnMode	= EBM_NONE;
+		return;
+	}
+
+	if(m_ImgBtn[BBTN_ROOMJOIN].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+	{
+		gMainWin::GetIF()->m_eCoreMode	= ECM_ROOMJOIN;
+		m_ImgBtn[BBTN_ROOMJOIN].m_eBtnMode	= EBM_NONE;
+		// get roomlist
+		// send ask_roomlist
 		return;
 	}
 }
@@ -112,6 +159,16 @@ void gBattleNetCore::OnMouseMove()
 	{
 		m_ChannelUI.OnMouseMove(mouse->m_nPosX, mouse->m_nPosY);
 		return;
+	}
+
+	int			i;
+	
+	for(i = 0; i < BBTN_END; i++)
+	{
+		if(m_ImgBtn[i].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+			m_ImgBtn[i].m_eBtnMode = EBM_HOVER;
+		else
+			m_ImgBtn[i].m_eBtnMode = EBM_NONE;
 	}
 }
 

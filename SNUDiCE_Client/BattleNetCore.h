@@ -9,7 +9,29 @@
 #include "Core.h"
 #include "coreconst.h"
 #include "Image.h"
+#include "ImgButton.h"
 #include "ChannelUI.h"
+
+enum BNET_BTN
+{
+	BBTN_ROOMMAKE,
+	BBTN_ROOMJOIN,
+	BBTN_ROOMWAITING,			// 게임 플레이 전, 방 모습. 캐릭터 고르고......
+
+	BBTN_END,
+};
+
+#define	BNET_FILE_ROOMMAKE			".\\Data\\BattleNet\\btn_roommake.img"
+#define BNET_BTN_SIZE_ROOMMAKEW		100
+#define BNET_BTN_SIZE_ROOMMAKEH		30
+#define BNET_BTN_POS_ROOMMAKEX		160
+#define BNET_BTN_POS_ROOMMAKEY		100
+
+#define	BNET_FILE_ROOMJOIN			".\\Data\\BattleNet\\btn_roomjoin.img"
+#define BNET_BTN_SIZE_ROOMJOINW		100
+#define BNET_BTN_SIZE_ROOMJOINH		30
+#define BNET_BTN_POS_ROOMJOINX		160
+#define BNET_BTN_POS_ROOMJOINY		150
 
 class gBattleNetCore : Core
 {
@@ -21,6 +43,7 @@ public:
 
 public:
 	gImage		m_ImgBack;
+	gImgButton	m_ImgBtn[BBTN_END];
 	
 	gChannelUI	m_ChannelUI;
 	

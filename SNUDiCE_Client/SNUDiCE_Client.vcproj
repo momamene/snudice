@@ -199,10 +199,6 @@
 				RelativePath=".\Server.cpp"
 				>
 			</File>
-			<File
-				RelativePath=".\Util.cpp"
-				>
-			</File>
 			<Filter
 				Name="Interface / Util"
 				>
@@ -222,6 +218,10 @@
 					RelativePath=".\PopUp.cpp"
 					>
 				</File>
+				<File
+					RelativePath=".\Util.cpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Core"
@@ -232,6 +232,10 @@
 				</File>
 				<File
 					RelativePath=".\LoginCore.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\RoomCore.cpp"
 					>
 				</File>
 			</Filter>
@@ -322,6 +326,10 @@
 				</File>
 				<File
 					RelativePath=".\LoginCore.h"
+					>
+				</File>
+				<File
+					RelativePath=".\RoomCore.h"
 					>
 				</File>
 			</Filter>
