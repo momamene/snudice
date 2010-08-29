@@ -1,10 +1,14 @@
 #include "MainWin.h"
+#include "MysqlDB.h"
+
 #include "LoginCore.h"
 #include "MessageCore.h"
+#include "ChannelCore.h"
+#include "RoomCore.h"
+
 #include "PlayerContainer.h"
 #include "ChannelContainer.h"
-#include "MysqlDB.h"
-#include "ChannelCore.h"
+
 
 		
 
@@ -208,7 +212,8 @@ void gMainWin::Recv(PK_DEFAULT *pk, SOCKET sock)
 		case PL_CHANNELCHANGE_ASK:
 			gChannelCore::GetIF()->pk_channelchange_ask(pk,sock);
 			break;
-
+		case PL_ROOMMAKER_ASK:
+			gRoomCore::GetIF()->pk_roommaker_ask(pk,sock);
 	}
 
 }
@@ -221,29 +226,29 @@ bool gMainWin::Send(DWORD type, DWORD size, void *buf, SOCKET sock)
 		return false;
 	}
 	char *temp = (char*)buf;
-	
+
 	pk.dwProtocol = type;
-	
+
 	if(size)
 		memcpy(pk.strPacket, temp, size);
-	
+
 	pk.dwSize = PK_HEADER_SIZE + size;
-	
+
 	int		r1 = 0, r2 = 0;
 	int		fail_count = 0;
-	
+
 	while(true)
 	{
 		r2 = send(sock, (char*)&pk, pk.dwSize, 0);
-		
+
 		if(r2 != SOCKET_ERROR)
 			r1 += r2;
-		
+
 		if(r1 == pk.dwSize)
 			break;
-		
+
 		fail_count++;
-		
+
 		if(fail_count > 10) {
 			return false;
 		}
@@ -412,6 +417,8 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	else {
 		// 에러 처리.
 	}
+
+	gRoomCore::GetIF()->ExitTheRoom(clientID);
 	
 	
 	closesocket(client_sock);
