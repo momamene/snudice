@@ -79,6 +79,7 @@ void gChat::DrawMsg()
 {
 	int		index = m_nShowCur;
 	int		i;
+	bool    overend=0;
 
 	if(!m_bShow)
 		return;
@@ -93,7 +94,7 @@ void gChat::DrawMsg()
 		gUtil::BeginText();
 		for(i = SHOW_MAXMSG - m_nSize; i < SHOW_MAXMSG; i++)
 		{
-			if(m_szID[index][0] != 0)
+			if(m_szID[index][0] != 0 && !overend)
 			{
 				//wsprintf(szTemp, "[%s] %s", m_szID[index], m_szMsg[index--]);
 				// 왜 위의 넘으로 한번에 하면, 맨 처음에 제대로 안 나오는지 모르겠음 ;
@@ -108,6 +109,7 @@ void gChat::DrawMsg()
 			if(index < 0)
 				index += MSGSTACKSIZE;
 
+			if(index==m_nCur) overend=1;
 		}
 		gUtil::EndText();
 		return;
@@ -116,7 +118,7 @@ void gChat::DrawMsg()
 	gUtil::BeginText();
 	for(i = 0; i < SHOW_MAXMSG; i++)
 	{
-		if(m_szID[index][0] != 0)
+		if(m_szID[index][0] != 0 && !overend)
 		{
 			//wsprintf(szTemp, "[%s] %s", m_szID[index], m_szMsg[index--]);
 			// 왜 위의 넘으로 한번에 하면, 맨 처음에 제대로 안 나오는지 모르겠음 ;
@@ -131,6 +133,8 @@ void gChat::DrawMsg()
 		if(index < 0)
 			index += MSGSTACKSIZE;
 
+		if(index==m_nCur) overend=1;
+
 	}
 	gUtil::EndText();
 }
@@ -138,17 +142,17 @@ void gChat::DrawMsg()
 void gChat::AddStr(char* szID, char* szMsg)
 {
 	m_nCur++;
-	m_nShowCur = m_nCur;
 
 	if(m_nCur >= MSGSTACKSIZE)
 		m_nCur -= MSGSTACKSIZE;
 
+	m_nShowCur = m_nCur;
 	strcpy(m_szID[m_nCur], szID);
 	strcpy(m_szMsg[m_nCur], szMsg);
 
 	m_nSize++;
 
-	if(m_nSize > MSGSTACKSIZE)
+	if(m_nSize >= MSGSTACKSIZE)
 	{
 		m_nSize		= MSGSTACKSIZE;
 		m_nStart++;
@@ -156,8 +160,10 @@ void gChat::AddStr(char* szID, char* szMsg)
 		if(m_nStart >= MSGSTACKSIZE)
 			m_nStart -= MSGSTACKSIZE;
 	}
+	int a=(m_nShowCur-m_nStart);
+	a=(m_nShowCur<m_nStart) ? a+MSGSTACKSIZE : a; 
 
-	m_scroll.ChangeCursor(m_nShowCur - m_nStart, m_nSize);
+	m_scroll.ChangeCursor(a, m_nShowCur==m_nCur ? a:m_nSize);
 }
 
 void gChat::MsgClear()
@@ -215,6 +221,7 @@ bool gChat::PointInUI(int x, int y)
 
 void gChat::MainLoop()
 {
+	int a;
 	gMouse	*mouse = gMouse::GetIF();
 	static int tick = GetTickCount();
 
@@ -229,15 +236,23 @@ void gChat::MainLoop()
 						return;
 					else
 					{
-						m_nShowCur += CHAT_SCROLL_PER_BTN;
-						if(m_nShowCur - m_nStart >= m_nSize)
-							if(m_nSize == MSGSTACKSIZE)
-								m_nShowCur -= MSGSTACKSIZE;
-							else
-								m_nShowCur = m_nCur;
+						a=(m_nCur-m_nShowCur);
+						if(a<0) a+=MSGSTACKSIZE;
+						//m_nCur과 m_nShowCur 사이의 공간을 a에 임시로 저장하여 공간이 CHAT_SCROLL_PER_BTN(4) 이상 있는지 확인
+						//공간이 확보되어 있을 경우 4 추가
+						if(a >= CHAT_SCROLL_PER_BTN) {
+							m_nShowCur += CHAT_SCROLL_PER_BTN;
+							m_nShowCur %= MSGSTACKSIZE;
+						}
+						//아닐경우 ShowCur는 Cur로 간다.
+						else m_nShowCur=m_nCur;
+
+						a=(m_nShowCur-m_nStart);
+						if(a<=0) a+=MSGSTACKSIZE;
 					}
 					tick = GetTickCount();
-					m_scroll.ChangeCursor(m_nShowCur - m_nStart, m_nSize);
+					//ShowCur과 Cur이 같아지는 경우 끝까지 내려간 것이므로 (a,a)를 줘서 스크롤바를 끝까지 내려가게 표시한다.
+					m_scroll.ChangeCursor(a, m_nShowCur==m_nCur ? a:m_nSize);
 				}
 				break;
 			case SCR_UP:
@@ -247,18 +262,30 @@ void gChat::MainLoop()
 						return;
 					else
 					{
-						m_nShowCur -= CHAT_SCROLL_PER_BTN;
-						if(m_nShowCur < m_nStart)
-							m_nShowCur = m_nStart;
-
-						if(m_nShowCur < 0)
-							if(m_nSize == MSGSTACKSIZE)
-								m_nShowCur += MSGSTACKSIZE;
-							else
-								m_nShowCur = 0;
+						a=(m_nShowCur-m_nStart);
+						if(a<0) a+=MSGSTACKSIZE;
+						//ShowCur과 Start사이의 공간을 계산, Start는 msg가 들어가는 곳이 아니다!
+						//따라서 Cur의 경우가 약간 다르다. 차이점은 if문에서 부등하고 빠진 것을 볼 수 있을 것이다.
+						if(a > CHAT_SCROLL_PER_BTN) {
+							m_nShowCur -= CHAT_SCROLL_PER_BTN;
+							if(m_nShowCur<0) m_nShowCur+=MSGSTACKSIZE;
+						}
 					}
 					tick = GetTickCount();
-					m_scroll.ChangeCursor(m_nShowCur - m_nStart, m_nSize);
+
+					a=(m_nShowCur-m_nStart);
+					if(a<0) a+=MSGSTACKSIZE;
+
+					//표시해야 할 문자열의 개수가 CHAT_SCROLL_PER_BTN보다 작으면,
+					//예를 들면 ShowCur가 Start+2의 위치에 있을 경우.
+
+					//빈칸을 표시하게 되는데, 그게 싫어서 아예 Start+4보다 ShowCur가 작아지는 것을 막았다.
+					if(a<CHAT_SCROLL_PER_BTN) {
+						m_nShowCur = (m_nStart+CHAT_SCROLL_PER_BTN)%MSGSTACKSIZE;
+						a=CHAT_SCROLL_PER_BTN;
+					}
+					//a가 CHAT_SCROLL_PER_BTN일 경우 끝까지 올라간 것이라고 간주한다.
+					m_scroll.ChangeCursor(a>CHAT_SCROLL_PER_BTN ? a:0 , m_nSize);
 				}
 				break;
 			case SCR_BAR:
@@ -274,7 +301,12 @@ void gChat::MainLoop()
 
 					float	fTemp = (float)nCur / nScrollSize;
 
-					m_nShowCur = m_nSize * fTemp;
+					m_nShowCur = (m_nStart + (int)(m_nSize * fTemp)-1)%MSGSTACKSIZE;
+					
+					if((int)(m_nSize * fTemp) <= CHAT_SCROLL_PER_BTN+1) {
+						m_nShowCur=(m_nStart+CHAT_SCROLL_PER_BTN)%MSGSTACKSIZE;
+						return;
+					}
 				}
 				break;
 		}
