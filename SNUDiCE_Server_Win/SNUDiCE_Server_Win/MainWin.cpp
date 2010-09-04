@@ -29,10 +29,8 @@ gMainWin* gMainWin::GetIF()
 	return &s_MainWin;
 }
 
-bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
+void gMainWin::SetUpWindow(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 {
-	// Set Up Window
-
 	WNDCLASS WndClass;
 	m_hInst	= hInstance;
 
@@ -62,10 +60,10 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 	MoveWindow(m_hWnd, 0, 0, WNDSIZEW, WNDSIZEH, false);
 
 	ShowWindow(m_hWnd, nCmdShow);
+}
 
-
-	// Setup winsock2
-
+bool gMainWin::SetUpWinsock()
+{
 	int		retVal;
 
 	// Winsock 초기화
@@ -79,8 +77,8 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 
 	// socket()
 	m_listen_sock = socket(AF_INET, SOCK_STREAM, 0);	// af ; 주소체계, type ; 소켓타입, protocol ; 프로토콜
-													// AF_INET, SOCK_STREAM -> TCP	; 신뢰성, 연결형 프로토콜
-													//			SOCK_DGRAM	-> UDP	; 비신뢰, 비연결	"
+	// AF_INET, SOCK_STREAM -> TCP	; 신뢰성, 연결형 프로토콜
+	//			SOCK_DGRAM	-> UDP	; 비신뢰, 비연결	"
 
 	if(m_listen_sock == INVALID_SOCKET)
 		err_quit("socket()");
@@ -92,7 +90,7 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 	serverAddr.sin_port			= htons(SERVER_PORT);
 	serverAddr.sin_addr.s_addr	= inet_addr(SERVER_IP);
 	retVal = bind(m_listen_sock, (SOCKADDR*)&serverAddr, sizeof(serverAddr));
-	
+
 
 	gMysql::GetIF()->init();
 
@@ -103,9 +101,19 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 	retVal = listen(m_listen_sock, SOMAXCONN);
 	if(retVal == SOCKET_ERROR)
 		err_quit("listen()");
-	
 
-	// setup another class
+	return true;
+
+}
+
+
+
+bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
+{
+	SetUpWindow(hInstance,lpszCmdParam,nCmdShow);
+	if(!SetUpWinsock())
+		return false;
+
 	if(!gLoginCore::GetIF()->SetUp())
 		return false;
 
@@ -114,9 +122,7 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 
 	if(!gChannelContainer::GetIF()->SetUp())
 		return false;
-
-
-
+	
 	return true;
 }
 
@@ -350,9 +356,20 @@ void err_display(char *msg)
 
 // client <-> server 간 통신.
 
+/*
+void gMainWin::ExitPlayer(SOCKET client_sock,char* clientID,SOCKADDR_IN clientAddr)
+{
+
+
+}
+*/
+
 DWORD WINAPI ProcessClient(LPVOID arg)
 {
+	gMainWin *mw = gMainWin::GetIF();
+
 	SOCKET			client_sock = (SOCKET)arg;
+	char			clientID[IDLENGTH];
 	SOCKADDR_IN		clientAddr;
 	char			szBuf[BUFFERSIZE + 1];
 	int				addrLen;
@@ -360,7 +377,6 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	PK_DEFAULT		pkDefault;
 
 
-	char		buf[1024];
 
 	// 클라이언트 정보 얻기
 	addrLen = sizeof(clientAddr);
@@ -400,9 +416,14 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	}
 
 	// closesocket
-	char clientID[IDLENGTH];
+	mw->ExitPlayer(client_sock,clientID,clientAddr);
+
+	char		buf[1024];
+
+
+
 	int bTemp;
-	
+
 	bTemp = gPlayerContainer::GetIF()->DeletePlayer(client_sock, clientID);
 	int channel = gChannelContainer::GetIF()->FindPlayer(clientID);
 
@@ -416,18 +437,20 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	}
 	else {
 		// 에러 처리.
+		OutputDebugString("Exception in function ExitPlayer\n");
 	}
 
 	gRoomCore::GetIF()->ExitTheRoom(clientID);
-	
-	
+
+
 	closesocket(client_sock);
-	
+
 	sprintf(buf,"[TCP Server] Client Exit : IP = %s\t Port = %d\n",
-			inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port));
+		inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port));
 	OutputDebugString (buf);
 
 	return 0;
+
 }
 
 DWORD WINAPI Listen(LPVOID prc)

@@ -25,18 +25,17 @@ public:
 	
 	gMainWin();
 	virtual ~gMainWin();
-	SOCKET		m_listen_sock;
-	
+
+// 변수들
 public:
+	SOCKET		m_listen_sock;
+
 	HINSTANCE	m_hInst;
 	HWND		m_hWnd;
 	BOOL		m_Keys[256];				// keyboard
 	RECT		m_rcScr;					// screen 출력 영역
 	bool		m_bActive;					// 게임(윈도우)가 활성화 되어있나
 	
-//	eCOREMODE	m_eCoreMode;				// 게임이 어떤 모드냐
-	
-
 	bool		Send(DWORD type, DWORD size, void *buf, SOCKET sock);
 	void		Recv(PK_DEFAULT *pk, SOCKET	sock);
 
@@ -47,10 +46,16 @@ public:
 private:
 	char		m_szTempReg[128];	
 	
+// 함수들
 public:
 	bool		MakeListenThread();
 	int			Run();
 	void		MainLoop();
+	//void		ExitPlayer(SOCKET client_sock,char* clientID,SOCKADDR_IN clientAddr);
+
+private:
+	void		SetUpWindow(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow);
+	bool		SetUpWinsock();
 };
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
