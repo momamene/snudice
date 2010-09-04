@@ -3,6 +3,7 @@
 static gChannelContainer s_ChannelContainer;
 
 gChannelContainer *gChannelContainer::GetIF()
+
 {
 	return &s_ChannelContainer;
 }

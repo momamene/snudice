@@ -229,6 +229,7 @@ bool gMainWin::Send(DWORD type, DWORD size, void *buf, SOCKET sock)
 	PK_DEFAULT		pk;
 
 	if(!sock) {
+		OutputDebugString("gMainWin::Send Sock fail error\n");
 		return false;
 	}
 	char *temp = (char*)buf;
@@ -256,6 +257,7 @@ bool gMainWin::Send(DWORD type, DWORD size, void *buf, SOCKET sock)
 		fail_count++;
 
 		if(fail_count > 10) {
+			OutputDebugString("gMainWin::Send fail count error\n");
 			return false;
 		}
 	}
@@ -416,7 +418,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	}
 
 	// closesocket
-	mw->ExitPlayer(client_sock,clientID,clientAddr);
+	//mw->ExitPlayer(client_sock,clientID,clientAddr);
 
 	char		buf[1024];
 
