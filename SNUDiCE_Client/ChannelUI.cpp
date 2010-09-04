@@ -107,10 +107,10 @@ void gChannelUI::Draw()
 	switch(m_eChannel)
 	{
 		case CM_CHANNEL:
-			//DrawChannel();
+			DrawChannel();
 		break;
 		case CM_CHANNELCHANGE:
-			//DrawChannelChange();
+			DrawChannelChange();
 		break;
 	}
 }

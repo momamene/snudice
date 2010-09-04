@@ -13,10 +13,10 @@
 #include "networkconst.h"
 
 #define CH_FILE_BACK			".\\Data\\Interface\\channel_back.img"
-#define CH_SIZE_W				220
-#define CH_SIZE_H				120
-#define CH_POS_X				0
-#define CH_POS_Y				(WNDSIZEH - CH_SIZE_H)
+#define CH_SIZE_W				160
+#define CH_SIZE_H				420
+#define CH_POS_X				480
+#define CH_POS_Y				60
 
 #define CH_SIZE_MODEBTNW		50
 #define CH_SIZE_MODEBTNH		20

@@ -33,6 +33,13 @@ enum BNET_BTN
 #define BNET_BTN_POS_ROOMJOINX		160
 #define BNET_BTN_POS_ROOMJOINY		150
 
+#define BNET_FILE_OUTLINE			".\\Data\\BattleNet\\outline.img"
+#define BNET_POS_OUTLINE_X			0
+#define BNET_POS_OUTLINE_Y			60
+#define BNET_POS_OUTLINE_W			480
+#define BNET_POS_OUTLINE_H			300
+
+
 class gBattleNetCore : Core
 {
 public:
@@ -42,6 +49,7 @@ public:
 	virtual ~gBattleNetCore();
 
 public:
+	gImage		m_ImgOutline;
 	gImage		m_ImgBack;
 	gImgButton	m_ImgBtn[BBTN_END];
 	

@@ -51,6 +51,8 @@ bool gBattleNetCore::SetUp()
 	if(!m_ImgBtn[BBTN_ROOMJOIN].SetUp(BNET_FILE_ROOMJOIN, false, rcDest))
 		return false;
 
+	if(!m_ImgOutline.Load(BNET_FILE_OUTLINE))
+		return false;
 
 	return true;
 }
@@ -94,6 +96,7 @@ void gBattleNetCore::MainLoop()
 void gBattleNetCore::Draw()
 {
 	m_ImgBack.Draw();
+	m_ImgOutline.Draw(BNET_POS_OUTLINE_X, BNET_POS_OUTLINE_Y);
 
 	gTopUI::GetIF()->Draw();
 	gChat::GetIF()->Draw();
@@ -110,6 +113,7 @@ void gBattleNetCore::Release()
 {
 	m_ChannelUI.Release();
 	m_ImgBack.Release();
+	m_ImgOutline.Release();
 
 	int		i;
 
