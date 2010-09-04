@@ -37,6 +37,8 @@ public:
 	char*		m_szEdit;
 	int			m_nStrSize;			// 에디트박스 maximum length
 
+	bool		m_bImg;				// 이미지를 사용하냐
+
 public:
 	bool		isKorean();			// 입력모드가 한글이냐 영어냐
 	void		Draw();

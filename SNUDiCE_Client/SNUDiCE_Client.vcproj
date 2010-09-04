@@ -219,6 +219,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Scrollbar.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\TopUI.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Util.cpp"
 					>
 				</File>
@@ -298,6 +306,14 @@
 				</File>
 				<File
 					RelativePath=".\PopUp.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Scrollbar.h"
+					>
+				</File>
+				<File
+					RelativePath=".\TopUI.h"
 					>
 				</File>
 				<File

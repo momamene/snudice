@@ -28,8 +28,15 @@ bool gEdit::SetUp(RECT rcPos, char *img, int strsize, EDITTYPE type)
 {
 	static int id = EDITID_START;
 
-	if(!m_ImgEdit.Load(img))
-		return false;
+	if(img)
+	{
+		if(!m_ImgEdit.Load(img))
+			return false;
+
+		m_bImg = true;
+	}
+	else
+		m_bImg = false;
 
 	m_nEditID = id;
 
@@ -58,7 +65,8 @@ bool gEdit::SetUp(RECT rcPos, char *img, int strsize, EDITTYPE type)
 
 void gEdit::Release()
 {
-	m_ImgEdit.Release();
+	if(m_bImg)
+		m_ImgEdit.Release();
 
 	if(m_szEdit)
 		delete [] m_szEdit;
@@ -67,15 +75,19 @@ void gEdit::Release()
 
 void gEdit::Draw()
 {
-	RECT	rcSour;
+	if(m_bImg)
+	{
+		RECT	rcSour;
 
-	SetRect(&rcSour,
-			0, 0, m_ImgEdit.m_nWidth, m_ImgEdit.m_nHeight / 2);
+		SetRect(&rcSour,
+				0, 0, m_ImgEdit.m_nWidth, m_ImgEdit.m_nHeight / 2);
 
-	if(!isFocus())
-		OffsetRect(&rcSour, 0, m_ImgEdit.m_nHeight / 2);
+		if(!isFocus())
+			OffsetRect(&rcSour, 0, m_ImgEdit.m_nHeight / 2);
 
-	m_ImgEdit.Draw(m_rcPos, rcSour, false);
+		m_ImgEdit.Draw(m_rcPos, rcSour, false);
+	}
+
 	GetWindowText(m_hEdit, m_szEdit, m_nStrSize);
 
 	char	szTemp[256];

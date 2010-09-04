@@ -6,6 +6,7 @@
 #include "PopUp.h"
 #include "Mouse.h"
 #include "stringconst.h"
+#include "TopUI.h"
 
 static gBattleNetCore	s_BattleNetCore;
 
@@ -86,11 +87,15 @@ void gBattleNetCore::MainLoop()
 		gChat::GetIF()->m_Edit.SetFocusOn();
 		gMainWin::GetIF()->m_Keys[VK_RETURN] = false;
 	}
+
+	gChat::GetIF()->MainLoop();
 }
 
 void gBattleNetCore::Draw()
 {
 	m_ImgBack.Draw();
+
+	gTopUI::GetIF()->Draw();
 	gChat::GetIF()->Draw();
 	m_ChannelUI.Draw();
 
@@ -115,7 +120,14 @@ void gBattleNetCore::Release()
 
 void gBattleNetCore::OnLButtonDown()
 {
-	gMouse		*mouse = gMouse::GetIF();
+	gMouse		*mouse	= gMouse::GetIF();
+	gChat		*chat	= gChat::GetIF();
+
+	if(chat->PointInUI(mouse->m_nPosX, mouse->m_nPosY))
+	{
+		chat->OnLbuttonDown(mouse->m_nPosX, mouse->m_nPosY);
+		return;
+	}
 
 	if(m_ChannelUI.isPointInUI(mouse->m_nPosX, mouse->m_nPosY))
 	{
@@ -143,6 +155,13 @@ void gBattleNetCore::OnLButtonDown()
 void gBattleNetCore::OnLButtonUp()
 {
 	gMouse		*mouse = gMouse::GetIF();
+	gChat		*chat	= gChat::GetIF();
+
+	if(chat->PointInUI(mouse->m_nPosX, mouse->m_nPosY))
+	{
+		chat->OnLbuttonUp(mouse->m_nPosX, mouse->m_nPosY);
+		return;
+	}
 
 	if(m_ChannelUI.isPointInUI(mouse->m_nPosX, mouse->m_nPosY))
 	{
@@ -154,6 +173,13 @@ void gBattleNetCore::OnLButtonUp()
 void gBattleNetCore::OnMouseMove()
 {
 	gMouse		*mouse = gMouse::GetIF();
+	gChat		*chat	= gChat::GetIF();
+
+	if(chat->PointInUI(mouse->m_nPosX, mouse->m_nPosY))
+	{
+		chat->OnMouseMove(mouse->m_nPosX, mouse->m_nPosY);
+		return;
+	}
 
 	if(m_ChannelUI.isPointInUI(mouse->m_nPosX, mouse->m_nPosY))
 	{

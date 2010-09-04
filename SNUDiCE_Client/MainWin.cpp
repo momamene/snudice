@@ -9,6 +9,7 @@
 #include "PopUp.h"
 #include "Chat.h"
 #include "ChannelUI.h"
+#include "TopUI.h"
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
@@ -79,6 +80,9 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 	if(!gBattleNetCore::GetIF()->SetUp())
 		return false;
 
+	if(!gTopUI::GetIF()->SetUp())
+		return false;
+
 	if(!gRoomCore::GetIF()->SetUp())
 		return false;
 
@@ -115,6 +119,7 @@ void gMainWin::Release()
 	gLoginCore::GetIF()->Release();
 	gBattleNetCore::GetIF()->Release();
 	gRoomCore::GetIF()->Release();
+	gTopUI::GetIF()->Release();
 	SAFE_RELEASE(m_lpDDBack);
 	SAFE_RELEASE(m_lpDDPrimary);
 	SAFE_RELEASE(m_lpDD);
