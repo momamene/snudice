@@ -46,7 +46,7 @@ bool gChat::SetUp()
 	if(!m_Edit.SetUp(rcPos, NULL, MSGLENGTH, EDIT_STRING))
 		return false;
 
-	m_nCur		= SHOW_MAXMSG - 1;
+	m_nCur		= 0;//SHOW_MAXMSG - 1;
 	m_nSize		= 0;
 	m_nShowCur	= m_nCur;
 	m_nStart	= m_nCur;
