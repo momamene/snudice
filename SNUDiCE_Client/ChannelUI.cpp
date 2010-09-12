@@ -22,6 +22,9 @@ bool gChannelUI::SetUp()
 			CH_POS_X + CH_SIZE_W,
 			CH_POS_Y + CH_SIZE_H);
 
+	if(!m_scroll.SetUp(CH_SCROLL_POS_CH_X,CH_SCROLL_POS_CH_Y,CH_SCROLL_POS_CH_H, CH_SCROLL_FILE_CH, true))
+		return false;
+
 	RECT	btnPos;
 
 	/*
@@ -115,6 +118,7 @@ void gChannelUI::DrawChannel()
 	int		i;
 
 	m_ImgBack.Draw(m_rcPos.left, m_rcPos.top);
+	m_scroll.Draw();
 
 	//for(i = 0; i < CM_END; i++)
 	//	m_BtnMode[i].Draw();
@@ -210,6 +214,7 @@ void gChannelUI::OnLButtonDown(int x, int y)
 {
 	int			i;
 
+	m_scroll.OnLbuttonDown(x, y);
 	for(i = 0; i < CM_END; i++)
 	{
 		if(m_BtnMode[i].PointInButton(x, y))
@@ -253,13 +258,14 @@ void gChannelUI::OnLButtonDown(int x, int y)
 
 void gChannelUI::OnLButtonUp(int x, int y)
 {
-
+	m_scroll.OnLbuttonUp(x, y);
 }
 
 void gChannelUI::OnMouseMove(int x, int y)
 {
 	int		i;
 
+	m_scroll.OnMouseMove(x, y);
 	switch(m_eChannel)
 	{
 		case CM_CHANNEL:

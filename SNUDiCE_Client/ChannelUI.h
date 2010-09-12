@@ -10,6 +10,7 @@
 #include <windows.h>
 #include "Image.h"
 #include "ImgButton.h"
+#include "Scrollbar.h"
 #include "networkconst.h"
 
 #define CH_FILE_BACK			".\\Data\\Interface\\channel_back.img"
@@ -62,6 +63,12 @@
 //#define CH_BTN_CHNAME_XTERM		10
 #define CH_BTN_CHNAME_YTERM		30
 
+#define CH_SCROLL_FILE_CH		".\\Data\\Interface\\scroll_channel.img"
+#define CH_SCROLL_POS_CH_X		621
+#define CH_SCROLL_POS_CH_Y		110
+#define CH_SCROLL_POS_CH_H		360
+
+
 enum CHANNELMODE
 {
 	CM_CHANNEL,
@@ -100,6 +107,8 @@ public:
 
 	gImage			m_ImgChName;
 	gImgButton		m_BtnChChange[CCB_END];
+
+	gScrollbar		m_scroll;
 
 public:
 	bool			SetUp();
