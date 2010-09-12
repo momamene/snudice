@@ -51,6 +51,14 @@ bool gBattleNetCore::SetUp()
 	if(!m_ImgBtn[BBTN_ROOMJOIN].SetUp(BNET_FILE_ROOMJOIN, false, rcDest))
 		return false;
 
+	SetRect(&rcDest,
+		BNET_BTN_POS_DEVEL_X,
+		BNET_BTN_POS_DEVEL_Y,
+		BNET_BTN_POS_DEVEL_X + BNET_BTN_SIZE_DEVEL_W,
+		BNET_BTN_POS_DEVEL_Y + BNET_BTN_SIZE_DEVEL_H );
+	if(!m_ImgBtn[BBTN_DEVELOPER].SetUp(BNET_FILE_DEVEL, false, rcDest))
+		return false;
+
 	if(!m_ImgOutline.Load(BNET_FILE_OUTLINE))
 		return false;
 
@@ -95,7 +103,7 @@ void gBattleNetCore::MainLoop()
 
 void gBattleNetCore::Draw()
 {
-	m_ImgBack.Draw();
+	m_ImgBack.Draw(BNET_POS_BACK_X, BNET_POS_BACK_Y);
 	m_ImgOutline.Draw(BNET_POS_OUTLINE_X, BNET_POS_OUTLINE_Y);
 
 	gTopUI::GetIF()->Draw();
@@ -215,7 +223,7 @@ void gBattleNetCore::OnRButtonDown()
 
 bool gBattleNetCore::PreTransMsg(MSG &msg)
 {
-	char		szTemp[128];
+//	char		szTemp[128];
 	HWND		hChat = gChat::GetIF()->m_Edit.m_hEdit;
 
 	if(msg.hwnd == hChat)

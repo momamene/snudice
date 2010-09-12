@@ -30,22 +30,23 @@
 #define CH_BTN_CLAN_POS_X		10		// 채널 UI 내에서의 위치
 #define CH_BTN_CLAN_POS_Y		70
 
+// channel mode
 #define CH_FILE_CHNAME			".\\Data\\Interface\\channel_name.img"
-#define CH_SIZE_CHNAMEW			55
-#define CH_SIZE_CHNAMEH			20
-#define CH_POS_CHNAMEX			80
-#define CH_POS_CHNAMEY			10
+#define CH_SIZE_CHNAMEW			50
+#define CH_SIZE_CHNAMEH			17
+#define CH_POS_CHNAMEX			50
+#define CH_POS_CHNAMEY			12
 
-#define CH_POS_PLAYERNAMEX		80
-#define CH_POS_PLAYERNAMEY		40
-#define CH_POS_PLAYERNAMETERM	80
+#define CH_POS_PLAYERNAMEX		20
+#define CH_POS_PLAYERNAMEY		60
+#define CH_POS_PLAYERNAMETERM	20
 
 #define CH_FILE_CHCHANGE		".\\Data\\Interface\\channel_btn_chchange.img"
-#define CH_FILE_CHCHANGECANCEL	".\\Data\\Interface\\channel_btn_chcancel.img"
+//#define CH_FILE_CHCHANGECANCEL	".\\Data\\Interface\\channel_btn_chcancel.img"
 #define CH_BTN_SIZE_CHCHANGEW	50
 #define CH_BTN_SIZE_CHCHANGEH	20
-#define CH_BTN_POS_CHCHANGEX	160
-#define CH_BTN_POS_CHCHANGEY	10
+#define CH_BTN_POS_CHCHANGEX	105
+#define CH_BTN_POS_CHCHANGEY	12
 
 #define CH_BTN_FILE_CH1			".\\Data\\Interface\\channel_btn_ch1.img"
 #define CH_BTN_FILE_CH2			".\\Data\\Interface\\channel_btn_ch2.img"
@@ -53,13 +54,13 @@
 #define CH_BTN_FILE_CH4			".\\Data\\Interface\\channel_btn_ch4.img"
 #define CH_BTN_FILE_CH5			".\\Data\\Interface\\channel_btn_ch5.img"
 #define CH_BTN_FILE_CH6			".\\Data\\Interface\\channel_btn_ch6.img"
-#define CH_BTN_SIZE_CHNAMEW		60
-#define CH_BTN_SIZE_CHNAMEH		20
-#define CH_BTN_POS_CHNAMEX		80
-#define CH_BTN_POS_CHNAMEY		40
-#define CH_BTN_CHNAME_XTERM		10
-#define CH_BTN_CHNAME_YTERM		5
 
+#define CH_BTN_SIZE_CHNAMEW		125
+#define CH_BTN_SIZE_CHNAMEH		30
+#define CH_BTN_POS_CHNAMEX		10
+#define CH_BTN_POS_CHNAMEY		50
+//#define CH_BTN_CHNAME_XTERM		10
+#define CH_BTN_CHNAME_YTERM		30
 
 enum CHANNELMODE
 {

@@ -33,4 +33,6 @@
 
 
 // ECM_BATTLENET
-#define BNET_FILE_BACK				".\\Data\\BattleNet\\battlebg.img"
+#define BNET_FILE_BACK				".\\Data\\BattleNet\\bnet_back.img"
+#define BNET_POS_BACK_X				6
+#define BNET_POS_BACK_Y				64

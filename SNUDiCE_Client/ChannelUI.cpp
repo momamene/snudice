@@ -24,6 +24,7 @@ bool gChannelUI::SetUp()
 
 	RECT	btnPos;
 
+	/*
 	SetRect(&btnPos,
 			CH_BTN_CHANNEL_POS_X,
 			CH_BTN_CHANNEL_POS_Y,
@@ -47,6 +48,7 @@ bool gChannelUI::SetUp()
 		CH_BTN_CLAN_POS_Y + CH_SIZE_MODEBTNH);
 	OffsetRect(&btnPos, m_rcPos.left, m_rcPos.top);
 	m_BtnMode[CM_CLAN].SetUp(CH_BTN_FILE_CLAN, false, btnPos);
+	*/
 	
 	m_eChannel = CM_CHANNEL;
 	m_BtnMode[m_eChannel].m_eBtnMode = EBM_CLICK;
@@ -62,8 +64,6 @@ bool gChannelUI::SetUp()
 	OffsetRect(&btnPos, m_rcPos.left, m_rcPos.top);
 	if(!m_BtnChChange[CCB_CHANGE].SetUp(CH_FILE_CHCHANGE, false, btnPos))
 		return false;
-	if(!m_BtnChChange[CCB_CANCEL].SetUp(CH_FILE_CHCHANGECANCEL, false, btnPos))
-		return false;
 
 	SetRect(&btnPos,
 		CH_BTN_POS_CHNAMEX,
@@ -74,28 +74,23 @@ bool gChannelUI::SetUp()
 	if(!m_BtnChChange[CCB_CH1].SetUp(CH_BTN_FILE_CH1, false, btnPos))
 		return false;
 
-	OffsetRect(&btnPos, 0, CH_BTN_SIZE_CHCHANGEH + CH_BTN_CHNAME_YTERM);
-	if(!m_BtnChChange[CCB_CH3].SetUp(CH_BTN_FILE_CH3, false, btnPos))
-		return false;
-
-	OffsetRect(&btnPos, 0, CH_BTN_SIZE_CHCHANGEH + CH_BTN_CHNAME_YTERM);
-	if(!m_BtnChChange[CCB_CH5].SetUp(CH_BTN_FILE_CH5, false, btnPos))
-		return false;
-
-	SetRect(&btnPos,
-		CH_BTN_POS_CHNAMEX,
-		CH_BTN_POS_CHNAMEY,
-		CH_BTN_POS_CHNAMEX + CH_BTN_SIZE_CHNAMEW,
-		CH_BTN_POS_CHNAMEY + CH_BTN_SIZE_CHNAMEH );
-	OffsetRect(&btnPos, m_rcPos.left + CH_BTN_CHNAME_XTERM + CH_BTN_SIZE_CHNAMEW, m_rcPos.top);
+	OffsetRect(&btnPos, 0, CH_BTN_CHNAME_YTERM);
 	if(!m_BtnChChange[CCB_CH2].SetUp(CH_BTN_FILE_CH2, false, btnPos))
 		return false;
 
-	OffsetRect(&btnPos, 0, CH_BTN_SIZE_CHCHANGEH + CH_BTN_CHNAME_YTERM);
+	OffsetRect(&btnPos, 0, CH_BTN_CHNAME_YTERM);
+	if(!m_BtnChChange[CCB_CH3].SetUp(CH_BTN_FILE_CH3, false, btnPos))
+		return false;
+
+	OffsetRect(&btnPos, 0, CH_BTN_CHNAME_YTERM);
 	if(!m_BtnChChange[CCB_CH4].SetUp(CH_BTN_FILE_CH4, false, btnPos))
 		return false;
 
-	OffsetRect(&btnPos, 0, CH_BTN_SIZE_CHCHANGEH + CH_BTN_CHNAME_YTERM);
+	OffsetRect(&btnPos, 0, CH_BTN_CHNAME_YTERM);
+	if(!m_BtnChChange[CCB_CH5].SetUp(CH_BTN_FILE_CH5, false, btnPos))
+		return false;
+
+	OffsetRect(&btnPos, 0, CH_BTN_CHNAME_YTERM);
 	if(!m_BtnChChange[CCB_CH6].SetUp(CH_BTN_FILE_CH6, false, btnPos))
 		return false;
 
@@ -121,8 +116,10 @@ void gChannelUI::DrawChannel()
 
 	m_ImgBack.Draw(m_rcPos.left, m_rcPos.top);
 
-	for(i = 0; i < CM_END; i++)
-		m_BtnMode[i].Draw();
+	//for(i = 0; i < CM_END; i++)
+	//	m_BtnMode[i].Draw();
+
+	m_BtnChChange[CCB_CHANGE].Draw();
 
 	RECT	rcSour, rcDest;
 
@@ -147,23 +144,10 @@ void gChannelUI::DrawChannel()
 	m_BtnChChange[CCB_CHANGE].Draw();
 
 	gUtil::BeginText();
-	bool	first = true;		// true 면 왼쪽      false면 오른쪽
 	for(i = 0; i < channel->nUserNum; i++)
 	{
-		if(first)
-		{
-			gUtil::Text(m_rcPos.left + CH_POS_PLAYERNAMEX,
-				m_rcPos.top + CH_POS_PLAYERNAMEY + 20 * (i / 2), channel->szUserInCh[i]);
-			first = false;
-
-		}
-		else
-		{
-			gUtil::Text(m_rcPos.left + CH_POS_PLAYERNAMEX + CH_POS_PLAYERNAMETERM,
-				m_rcPos.top + CH_POS_PLAYERNAMEY + 20 * (i / 2), channel->szUserInCh[i]);
-			first = true;
-
-		}
+		gUtil::Text(m_rcPos.left + CH_POS_PLAYERNAMEX,
+			m_rcPos.top + CH_POS_PLAYERNAMEY + CH_POS_PLAYERNAMETERM * i, channel->szUserInCh[i]);
 	}
 	gUtil::EndText();
 }

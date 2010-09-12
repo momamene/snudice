@@ -32,6 +32,7 @@ public:
 
 	int			m_nEditID;
 	HWND		m_hEdit;
+
 	RECT		m_rcPos;
 	gImage		m_ImgEdit;
 	char*		m_szEdit;
