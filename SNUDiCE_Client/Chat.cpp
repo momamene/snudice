@@ -43,7 +43,7 @@ bool gChat::SetUp()
 			CHAT_POS_MSGX + CHAT_SIZE_MSGW,
 			CHAT_POS_MSGY + CHAT_SIZE_MSGH);
 
-	if(!m_Edit.SetUp(rcPos, NULL, MSGLENGTH, EDIT_STRING))
+	if(!m_Edit.SetUp(rcPos, NULL, MSGLENGTH, EDIT_AVAILSPACESTRING))
 		return false;
 
 	m_nCur		= 0;//SHOW_MAXMSG - 1;
@@ -168,8 +168,7 @@ void gChat::AddStr(char* szID, char* szMsg)
 
 void gChat::MsgClear()
 {
-	strcpy(m_Edit.m_szEdit, "");
-	SendMessage(m_Edit.m_hEdit, WM_SETTEXT, (WPARAM)m_Edit.m_szEdit, 0);
+	m_Edit.Clear();
 }
 
 void gChat::SendMsg()

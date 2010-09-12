@@ -34,7 +34,7 @@
 #define CH_FILE_CHNAME			".\\Data\\Interface\\channel_name.img"
 #define CH_SIZE_CHNAMEW			50
 #define CH_SIZE_CHNAMEH			17
-#define CH_POS_CHNAMEX			50
+#define CH_POS_CHNAMEX			47
 #define CH_POS_CHNAMEY			12
 
 #define CH_POS_PLAYERNAMEX		20

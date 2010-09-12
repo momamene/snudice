@@ -19,6 +19,9 @@ enum EDITTYPE
 	EDIT_AVAILSPACESTRING,			// 문자열(띄어쓰기포함)
 };
 
+// 저거 space포함하냐 포함 안하나 여부는.. 여기서 지정못하고
+// PreTransMsg로 일일히 처리해 줘야함...
+
 #define	EDITID_START			100
 
 class gEdit
@@ -49,4 +52,5 @@ public:
 	void		Release();
 	bool		isPointInEdit(int nX, int nY);
 	int			GetszLength();
+	void		Clear();
 };

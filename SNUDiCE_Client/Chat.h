@@ -26,7 +26,7 @@
 #define CHAT_SIZE_MSGW		330
 #define CHAT_SIZE_MSGH		20
 #define CHAT_POS_MSGX		(CHAT_POS_X + 20)
-#define CHAT_POS_MSGY		(WNDSIZEH - 27)
+#define CHAT_POS_MSGY		(WNDSIZEH - 26)
 
 #define CHAT_INTERVALY		17		// 채팅메시지 y축 간격
 #define CHAT_MSG_X			(CHAT_POS_X + 30)		// 채팅창. 내가 메시지 치는 부분 말고

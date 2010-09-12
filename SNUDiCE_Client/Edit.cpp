@@ -137,3 +137,9 @@ int	gEdit::GetszLength()
 {
 	return strlen(m_szEdit);
 }
+
+void gEdit::Clear()
+{
+	strcpy(m_szEdit, "");
+	SendMessage(m_hEdit, WM_SETTEXT, (WPARAM)m_szEdit, 0);
+}
