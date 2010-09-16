@@ -157,8 +157,9 @@ void gBattleNetCore::OnLButtonDown()
 	}
 	else if(m_ImgBtn[BBTN_ROOMJOIN].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 	{
-		//gMainWin::GetIF()->m_eCoreMode	= ECM_ROOMJOIN;
-		//m_ImgBtn[BBTN_ROOMJOIN].m_eBtnMode	= EBM_NONE;
+		gMainWin::GetIF()->m_eCoreMode	= ECM_ROOMJOIN;
+		gRoomCore::GetIF()->m_eRoom		= ERM_JOIN;
+		m_ImgBtn[BBTN_ROOMJOIN].m_eBtnMode	= EBM_NONE;
 		// get roomlist
 		// send ask_roomlist
 		return;

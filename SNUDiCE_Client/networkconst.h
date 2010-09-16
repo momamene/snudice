@@ -14,7 +14,7 @@
 #define	WINSOCK_VERSION_2_2		MAKEWORD(2, 2)
 #define SERVER_IP				"211.169.219.71"
 #define SERVER_PORT				9000
-#define BUFFERSIZE				1024
+#define BUFFERSIZE				2048
 
 #define PK_HEADER_SIZE			4
 
@@ -38,6 +38,9 @@ enum ePROTOCOL
 
 	PL_ROOMLIST_ASK,
 	PL_ROOMLIST_REP,
+
+	PL_ROOMJOIN_ASK,
+	PL_ROOMJOIN_REP,
 };
 
 
@@ -146,18 +149,18 @@ struct PK_CHANNELCHANGE_REP
 
 };
 
-#define MAXROOMFORPAGE		6								// 한 페이지에 표시될 수 있는 방 개수
-#define MAXROOM				100								// 만들 수 있는 방 개수
+#define MAXROOMFORPAGE		8								// 한 페이지에 표시될 수 있는 방 개수
+#define MAXROOM				40								// 만들 수 있는 방 개수
 #define MAXROOMNAME			32
-#define ROOMPASSWORD		16
-#define ROOMMAXPLAYER		8
+#define MAXROOMPASS			16
+#define ROOMMAXPLAYER		6
 
 struct ROOM
 {
 	bool	isGaming;										// 게임중
 	bool	isPass;
 	char	szRoomName[MAXROOMNAME];
-	char	szRoomPass[ROOMPASSWORD];
+	char	szRoomPass[MAXROOMPASS];
 	int		nMaxPlayer;
 	int		nNowPlayer;
 	char	szRoomMaxPlayer[ROOMMAXPLAYER][IDLENGTH];		// 0번째가 방장
@@ -165,7 +168,8 @@ struct ROOM
 
 struct PK_ROOMMAKER_ASK
 {
-	ROOM	room;
+	char		szID[IDLENGTH];
+	ROOM		room;
 };
 
 enum ERROR_ROOMMAKE
@@ -179,16 +183,35 @@ struct PK_ROOMMAKER_REP
 	ERROR_ROOMMAKE	result;
 };
 
-struct SIMPLE_ROOMLISTINFO									// 방 들어가기 모드에서, 방 리스트들 room list
-{
-	bool	isGaming;
-	bool	isPass;
-	char	szRoomName[MAXROOMNAME];
-	int		nMaxPlayer;
-	int		nNowPlayer;
-};
-
 struct PK_ROOMLIST_ASK
 {
-	SIMPLE_ROOMLISTINFO		info[MAXROOM];
+	char		szID[IDLENGTH];
+	int			nPage;
+};
+
+struct PK_ROOMLIST_REP
+{
+	int			nPage;
+	ROOM		roomlist[MAXROOMFORPAGE];
+};
+
+struct PK_ROOMJOIN_ASK
+{
+	int			nPage;					// 페이지
+	int			nIdx;					// 페이지에서 몇번째냐
+	char		szPass[MAXROOMPASS];
+};
+
+enum ERROR_ROOMJOIN
+{
+	ERJ_SUCCESS,
+	ERJ_PASSWRONG,
+	ERJ_FULL,			//	얘랑 밑에꺼는 클라에서 일단 막아놓을듯
+	ERJ_PLAYING,		//
+};
+
+struct PK_ROOMJOIN_REP
+{
+	ERROR_ROOMJOIN		result;
+	ROOM				joinroom;
 };

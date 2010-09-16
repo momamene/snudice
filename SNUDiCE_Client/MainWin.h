@@ -12,6 +12,7 @@
 #include "networkconst.h"
 
 //#define FULLSCREEN		//	define 풀었다 해제하면서 fullscreen 체크
+
 #define BIT				32
 #define	WNDSIZEW		640
 #define WNDSIZEH		480

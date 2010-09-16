@@ -21,7 +21,7 @@ gChat::~gChat(void)
 
 bool gChat::SetUp()
 {
-	memset(this, 0, sizeof(gChat));
+	MsgStackClear();
 
 	SetRect(&m_rcPos,
 			CHAT_POS_X,
@@ -45,11 +45,6 @@ bool gChat::SetUp()
 
 	if(!m_Edit.SetUp(rcPos, NULL, MSGLENGTH, EDIT_AVAILSPACESTRING))
 		return false;
-
-	m_nCur		= 0;//SHOW_MAXMSG - 1;
-	m_nSize		= 0;
-	m_nShowCur	= m_nCur;
-	m_nStart	= m_nCur;
 
 	return true;
 
@@ -313,4 +308,15 @@ void gChat::MainLoop()
 	if(m_scroll.m_ImgBtn[SCR_UP].m_eBtnMode != EBM_CLICK
 		&& m_scroll.m_ImgBtn[SCR_DOWN].m_eBtnMode != EBM_CLICK)
 		tick = 1001;
+}
+
+void gChat::MsgStackClear()
+{
+	m_nCur		= 0;//SHOW_MAXMSG - 1;
+	m_nSize		= 0;
+	m_nShowCur	= m_nCur;
+	m_nStart	= m_nCur;
+
+	memset(m_szID, 0, MSGSTACKSIZE * IDLENGTH );
+	memset(m_szMsg, 0, MSGSTACKSIZE * MSGLENGTH );
 }

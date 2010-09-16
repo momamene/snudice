@@ -7,6 +7,48 @@
 #include "TopUI.h"
 #include "Chat.h"
 
+#define ROOM_FILE_BACK				".\\Data\\Room\\room_back.img"
+
+// make
+#define	ROOM_FILE_MAKE_BACK			".\\Data\\Room\\make_back.img" 
+#define ROOM_POS_MAKE_X				0
+#define ROOM_POS_MAKE_Y				60
+
+#define ROOM_FILE_BTN_OK			".\\Data\\Room\\make_btn_ok.img"
+#define ROOM_BTN_SIZE_OK_W			99
+#define	ROOM_BTN_SIZE_OK_H			40
+#define ROOM_BTN_POS_OK_X			322
+#define ROOM_BTN_POS_OK_Y			410
+
+#define ROOM_FILE_BTN_CANCEL		".\\Data\\Room\\make_btn_cancel.img"
+#define ROOM_BTN_SIZE_CANCEL_W		99
+#define	ROOM_BTN_SIZE_CANCEL_H		40
+#define ROOM_BTN_POS_CANCEL_X		475
+#define ROOM_BTN_POS_CANCEL_Y		410
+
+#define ROOM_EDIT_LEN_ID			26
+#define ROOM_EDIT_SIZE_ID_W			190
+#define ROOM_EDIT_SIZE_ID_H			15
+#define ROOM_EDIT_POS_ID_X			33
+#define ROOM_EDIT_POS_ID_Y			167
+
+#define ROOM_EDIT_LEN_PW			16
+#define ROOM_EDIT_SIZE_PW_W			110
+#define ROOM_EDIT_SIZE_PW_H			15
+#define ROOM_EDIT_POS_PW_X			98
+#define ROOM_EDIT_POS_PW_Y			388
+
+// join
+#define ROOM_FILE_JOIN_BACK			".\\Data\\Room\\join_back.img"
+#define ROOM_POS_JOIN_X				0
+#define ROOM_POS_JOIN_Y				60
+
+// room
+#define ROOM_FILE_ROOM_BACK			".\\Data\\Room\\room_back.img"
+#define ROOM_POS_ROOM_X				0
+#define ROOM_POS_ROOM_Y				60
+
+
 static gRoomCore s_RoomCore;
 
 gRoomCore *gRoomCore::GetIF()
@@ -26,6 +68,10 @@ bool gRoomCore::SetUp()
 {
 	if(!SetUp_Make())
 		return false;
+	if(!SetUp_Join())
+		return false;
+	if(!SetUp_Room())
+		return false;
 
 	return true;
 }
@@ -36,6 +82,12 @@ void gRoomCore::MainLoop()
 	{
 		case ERM_MAKE:
 			MainLoop_Make();			
+			break;
+		case ERM_JOIN:
+			MainLoop_Join();
+			break;
+		case ERM_ROOM:
+			MainLoop_Room();
 			break;
 	}
 }
@@ -117,13 +169,16 @@ bool gRoomCore::PreTransMsg(MSG &msg)
 			switch(msg.wParam)
 			{
 			case VK_RETURN:
-				m_EditPass.SetFocusOn();
-				return true;
-			case VK_TAB:
-				m_EditPass.SetFocusOn();
-				return true;
-			case VK_ESCAPE:
-				return true;
+					m_EditPass.SetFocusOn();
+					return true;
+				case VK_TAB:
+					m_EditPass.SetFocusOn();
+					return true;
+				case VK_ESCAPE:
+					{
+						Cancel_Make();
+					}
+					return true;
 			}
 		}
 	}
@@ -143,16 +198,20 @@ bool gRoomCore::PreTransMsg(MSG &msg)
 			}
 
 			switch(msg.wParam)
-			{
-			case VK_RETURN:
-				SendRoomMake();
-				return true;
-			case VK_TAB:
-				//m_EditRoom.SetFocusOn();
-				return true;
-			case VK_SPACE:
-			case VK_ESCAPE:
-				return true;
+				{
+				case VK_RETURN:
+					SendRoomMake();
+					return true;
+				case VK_TAB:
+					m_EditRoom.SetFocusOn();
+					return true;
+				case VK_SPACE:
+					return true;
+				case VK_ESCAPE:
+					{
+						Cancel_Make();
+					}
+					return true;
 			}
 		}
 	}
@@ -165,7 +224,7 @@ void gRoomCore::SendRoomMake()
 	PK_ROOMMAKER_ASK	ask;
 
 	memset(&ask, 0, sizeof(ask));
-	ask.room.nMaxPlayer = 8;
+	ask.room.nMaxPlayer = 6;
 	strcpy(ask.room.szRoomMaxPlayer[0], gPlayerContainer::GetIF()->m_MyPlayer.szID);
 	strcpy(ask.room.szRoomName, m_EditRoom.m_szEdit);
 	if(strlen(m_EditPass.m_szEdit) == 0)
@@ -190,6 +249,7 @@ void gRoomCore::pk_roommake_rep(PK_ROOMMAKER_REP *rep)
 	else
 	{
 		gUtil::DebugMsg("Success\n");
+		m_eRoom = ERM_ROOM;
 	}
 }
 
@@ -216,7 +276,6 @@ bool gRoomCore::SetUp_Make()
 		ROOM_BTN_POS_CANCEL_Y + ROOM_BTN_SIZE_CANCEL_H );
 	if(!m_MakeBtn[BMM_CANCEL].SetUp(ROOM_FILE_BTN_CANCEL, false, rcDest))
 		return false;
-
 
 	// edit
 	SetRect(&rcDest,
@@ -269,15 +328,16 @@ void gRoomCore::OnLButtonDown_Make()
 
 	if(m_MakeBtn[BMM_OK].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 	{
-
+		if(strlen(m_EditRoom.m_szEdit) > 0)
+		{
+			SendRoomMake();
+		}
+		return;
 	}
 	else if(m_MakeBtn[BMM_CANCEL].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 	{
-		gMainWin::GetIF()->m_eCoreMode = ECM_BATTLENET;
-		SetFocus(gMainWin::GetIF()->m_hWnd);
-		Clear_Make();
-		for(i = 0; i < BMM_END; i++)
-			m_MakeBtn[i].m_eBtnMode = EBM_NONE;
+		Cancel_Make();
+		return;
 	}
 
 	if(m_EditRoom.isPointInEdit(mouse->m_nPosX, mouse->m_nPosY))
@@ -311,4 +371,53 @@ void gRoomCore::Clear_Make()
 {
 	m_EditRoom.Clear();
 	m_EditPass.Clear();
+}
+
+void gRoomCore::Cancel_Make()
+{
+	int			i;
+
+	gMainWin::GetIF()->m_eCoreMode = ECM_BATTLENET;
+	SetFocus(gMainWin::GetIF()->m_hWnd);
+
+	Clear_Make();
+	for(i = 0; i < BMM_END; i++)
+		m_MakeBtn[i].m_eBtnMode = EBM_NONE;
+
+}
+
+bool gRoomCore::SetUp_Join()
+{
+	if(!m_ImgBack[ERM_JOIN].Load(ROOM_FILE_JOIN_BACK))
+		return false;
+
+	return true;
+}
+
+void gRoomCore::MainLoop_Join()
+{
+	Draw_Join();
+}
+
+void gRoomCore::Draw_Join()
+{
+	m_ImgBack[ERM_JOIN].Draw(ROOM_POS_JOIN_X, ROOM_POS_JOIN_Y);
+}
+
+bool gRoomCore::SetUp_Room()
+{
+	if(!m_ImgBack[ERM_ROOM].Load(ROOM_FILE_ROOM_BACK))
+		return false;
+
+	return true;
+}
+
+void gRoomCore::MainLoop_Room()
+{
+	Draw_Room();
+}
+
+void gRoomCore::Draw_Room()
+{
+	m_ImgBack[ERM_ROOM].Draw(ROOM_POS_ROOM_X, ROOM_POS_ROOM_Y);
 }

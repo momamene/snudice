@@ -70,6 +70,8 @@ public:
 	void		MsgClear();					// 메시지 입력 창 클리어
 	void		SendMsg();
 	bool		PointInUI(int x, int y);
+
+	void		MsgStackClear();			// 채팅 메시지 클리어
 	
 	void		MainLoop();
 
