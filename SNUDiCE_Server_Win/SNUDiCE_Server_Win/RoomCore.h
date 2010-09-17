@@ -1,7 +1,7 @@
 #pragma once
 #include "network.h"
 
-#define MAXROOMNUM	10
+//#define MAXROOMNUM	10
 
 
 class gRoomCore
@@ -9,8 +9,8 @@ class gRoomCore
 public:
 	static gRoomCore *GetIF();
 
-	bool			m_isRoom[MAXROOMNUM]; // 방은 0-9 까지!
-	ROOM			m_rooms[MAXROOMNUM];
+	bool			m_isRoom[MAXROOM]; // 방은 0-9 까지!
+	ROOM			m_rooms[MAXROOM];
 
 
 public:
@@ -20,6 +20,8 @@ public:
 
 	// packet function
 	void			pk_roommaker_ask(PK_DEFAULT *pk, SOCKET sock);
+	void			pk_roomlist_ask(PK_DEFAULT *pk, SOCKET sock);
+	void			pk_roomjoin_ask(PK_DEFAULT *pk, SOCKET sock);
 	void			ExitTheRoom (char* szID);
 
 private:

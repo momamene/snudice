@@ -37,6 +37,7 @@ public:
 	bool		m_bActive;					// 게임(윈도우)가 활성화 되어있나
 	
 	bool		Send(DWORD type, DWORD size, void *buf, SOCKET sock);
+	bool		Send(DWORD type, DWORD size, void *buf, char* szID);
 	void		Recv(PK_DEFAULT *pk, SOCKET	sock);
 
 	bool		SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow);

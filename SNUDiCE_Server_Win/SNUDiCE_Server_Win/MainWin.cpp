@@ -220,8 +220,21 @@ void gMainWin::Recv(PK_DEFAULT *pk, SOCKET sock)
 			break;
 		case PL_ROOMMAKER_ASK:
 			gRoomCore::GetIF()->pk_roommaker_ask(pk,sock);
+			break;
+		case PL_ROOMLIST_ASK:
+			gRoomCore::GetIF()->pk_roomlist_ask(pk,sock);
+			break;
 	}
 
+}
+
+bool gMainWin::Send(DWORD type, DWORD size, void *buf ,char* szID)
+{
+	SOCKET sock;
+	if(gPlayerContainer::GetIF()->FindSocketFromID(szID,&sock))
+		return Send(type,size,buf,sock);
+	else
+		return false;
 }
 
 bool gMainWin::Send(DWORD type, DWORD size, void *buf, SOCKET sock)
@@ -390,8 +403,10 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 		int		fail_count = 0;
 		
 		retVal = recv(client_sock, (char*)&pkDefault, PK_HEADER_SIZE, 0);
-		if(retVal == SOCKET_ERROR)
-			continue;
+		OutputDebugString("a.");
+		if(retVal == SOCKET_ERROR)	// 임시방편
+			break;
+		//	continue;
 		if(retVal == 0)		// 보통 종료할 때 이 메세지가 뜨던데?
 			break;
 
@@ -400,6 +415,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 		while(true)
 		{
 			r2 = recv(client_sock, pkDefault.strPacket, pkDefault.dwSize - PK_HEADER_SIZE, 0);
+			OutputDebugString("b\n");
 			
 			if(r2 != SOCKET_ERROR)
 				r1 += r2;

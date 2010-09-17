@@ -56,7 +56,6 @@ void gChannelCore::pk_channelchange_ask (PK_DEFAULT *pk, SOCKET sock)
 	PK_CHANNELCHANGE_ASK		ask;		//from client
 	PK_CHANNELCHANGE_REP		rep;		//from client
 
-
 	// for print (무슨 말이여 이게)
 	SOCKADDR_IN			clientAddr;
 	int					addrLen;
@@ -87,6 +86,9 @@ void gChannelCore::pk_channelchange_ask (PK_DEFAULT *pk, SOCKET sock)
 			rep.channel = gChannelContainer::GetIF()->m_channelArray[ask.nChannel-1];
 			pk_channelrefresh_rep (channelBefore);
 			pk_channelrefresh_rep (ask.nChannel-1);
+			gPlayerContainer::GetIF()->PutMode(ask.szID,ECM_BATTLENET);
+			gPlayerContainer::GetIF()->PutCoreFlag(ask.szID,ask.nChannel-1);
+
 		}
 	}	
 	gMainWin::GetIF()->Send(PL_CHANNELCHANGE_REP, sizeof(rep), &rep, sock);

@@ -29,11 +29,16 @@ public:
 	bool			SetUp();
 	void			Release();
 
+	bool			PutMode(char* id, eCOREMODE mode);
+	bool			PutCoreFlag(char* id, int flag);
+
 	// packet
 
 	void			pk_login_ask(PK_DEFAULT *pk, SOCKET sock);
 	bool			isExistedPlayer(char* id);
 	bool			FindSocketFromID(char* id, SOCKET* getSock);
+
+	void			SendSelect (ePROTOCOL prot,int pkSize,void *pk,eCOREMODE mode,int nPage);	// Player 중에서 nPage인 사람들 대상으로 Send하는 특수함수.
 
 	//	void			PrintUserList();
 
