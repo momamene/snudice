@@ -23,6 +23,7 @@ enum EDITTYPE
 // PreTransMsg肺 老老洒 贸府秦 拎具窃...
 
 #define	EDITID_START			100
+#define CURSOR_TIME				1000
 
 class gEdit
 {
@@ -53,4 +54,5 @@ public:
 	bool		isPointInEdit(int nX, int nY);
 	int			GetszLength();
 	void		Clear();
+
 };

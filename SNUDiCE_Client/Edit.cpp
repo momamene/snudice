@@ -2,7 +2,6 @@
 #include "Util.h"
 #include "MainWin.h"
 
-
 gEdit::gEdit()
 {
 	m_hEdit = NULL;
@@ -26,7 +25,7 @@ void gEdit::SetFocusOn()
 
 bool gEdit::SetUp(RECT rcPos, char *img, int strsize, EDITTYPE type)
 {
-	static int id = EDITID_START;
+	static int	id = EDITID_START;
 
 	if(img)
 	{
@@ -49,13 +48,14 @@ bool gEdit::SetUp(RECT rcPos, char *img, int strsize, EDITTYPE type)
 			1000, 0,
 			640, 20,
 			gMainWin::GetIF()->m_hWnd, (HMENU)id++, gMainWin::GetIF()->m_hInst, NULL);
-
+	
 //	SetWindowLong(m_hEdit, GWL_WNDPROC, (LONG)EditHook);
 
 	m_eType		= type;
 	m_rcPos		= rcPos;
 
 	m_szEdit	= new char[strsize + 1];
+	memset(m_szEdit, 0, sizeof(m_szEdit));
 	m_nStrSize	= strsize + 1;
 
 	SendMessage(m_hEdit, EM_LIMITTEXT, (WPARAM)strsize, 0);
@@ -70,11 +70,12 @@ void gEdit::Release()
 
 	if(m_szEdit)
 		delete [] m_szEdit;
-
 }
 
 void gEdit::Draw()
 {
+	int		t = (DWORD)GetTickCount();
+
 	if(m_bImg)
 	{
 		RECT	rcSour;
@@ -91,6 +92,7 @@ void gEdit::Draw()
 	GetWindowText(m_hEdit, m_szEdit, m_nStrSize);
 
 	char	szTemp[256];
+	char	PrintTemp[256]={0,};
 	if(m_eType == EDIT_PASSWORD)
 	{
 		int		i;
@@ -102,8 +104,16 @@ void gEdit::Draw()
 		}
 	}
 
+	int m_CurPoint=(WORD)SendMessage(m_hEdit,EM_GETSEL,0,0);
+	if(isFocus()) {
+		strncpy(PrintTemp,m_szEdit,m_CurPoint);
+		if(t%1000 <= 500) strcat(PrintTemp,"|");
+		else strcat(PrintTemp," ");
+		strcat(PrintTemp,m_szEdit+m_CurPoint);
+	}
+	else strcpy(PrintTemp,m_szEdit);
 	gUtil::BeginText();
-		gUtil::Text(m_rcPos.left + 5, m_rcPos.top + 4, m_szEdit);
+		gUtil::Text(m_rcPos.left + 5, m_rcPos.top + 4, PrintTemp);
 	gUtil::EndText();
 
 	if(m_eType == EDIT_PASSWORD)
