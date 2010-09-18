@@ -25,3 +25,8 @@ void gPlayerContainer::RefreshChannel(CHANNEL *channel)
 {
 	memcpy(&m_MyChannel, channel, sizeof(CHANNEL));
 }
+
+void gPlayerContainer::SetMyRoom(ROOM *room)
+{
+	memcpy(&m_MyRoom, room, sizeof(ROOM));
+}

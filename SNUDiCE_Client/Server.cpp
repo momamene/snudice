@@ -182,17 +182,28 @@ void gServer::Recv()
 		case PL_LOGIN_REP:
 			gLoginCore::GetIF()->pk_login_rep((PK_LOGIN_REP*)m_pkDefault.strPacket);
 			break;
+
 		case PL_MESSAGE_REP:
 			gChat::GetIF()->pk_message_rep((PK_MESSAGE_REP*)m_pkDefault.strPacket);
 			break;
+
 		case PL_CHANNELREFRESH_REP:
 			gBattleNetCore::GetIF()->pk_channelrefresh_rep((PK_CHANNELREFRESH_REP*)m_pkDefault.strPacket);
 			break;
 		case PL_CHANNELCHANGE_REP:
 			gBattleNetCore::GetIF()->pk_channelchange_rep((PK_CHANNELCHANGE_REP*)m_pkDefault.strPacket);
 			break;
+
 		case PL_ROOMMAKER_REP:
 			gRoomCore::GetIF()->pk_roommake_rep((PK_ROOMMAKER_REP*)m_pkDefault.strPacket);
+			break;
+
+		case PL_ROOMLIST_REP:
+			gRoomCore::GetIF()->pk_roomlist_rep((PK_ROOMLIST_REP*)m_pkDefault.strPacket);
+			break;
+
+		case PL_ROOMJOIN_REP:
+			gRoomCore::GetIF()->pk_roomjoin_rep((PK_ROOMJOIN_REP*)m_pkDefault.strPacket);
 			break;
 	}
 }

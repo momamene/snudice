@@ -27,7 +27,38 @@ enum BTNMAKEMODE
 {
 	BMM_OK,
 	BMM_CANCEL,
+
+	BMM_LIST,		//	게임 인원 리스트 버튼
+	BMM_NUM2,
+	BMM_NUM3,
+	BMM_NUM4,
+	BMM_NUM5,
+	BMM_NUM6,
+	BMM_NUM7,
+	BMM_NUM8,
+
 	BMM_END,
+};
+
+enum BTNJOINMODE
+{
+	BJM_ROOM1,
+	BJM_ROOM2,
+	BJM_ROOM3,
+	BJM_ROOM4,
+	BJM_ROOM5,
+	BJM_ROOM6,
+	BJM_ROOM7,
+	BJM_ROOM8,
+
+	BJM_PREV,
+	BJM_NEXT,
+
+	BJM_JOIN,
+
+	BJM_PASS,
+	
+	BJM_END,
 };
 
 class gRoomCore : Core
@@ -45,10 +76,25 @@ public:
 
 	// make
 	gImgButton	m_MakeBtn[BMM_END];
-
-
+	gImage		m_ImgNum;
+	gImage		m_ImgPass;
+	int			m_nPlayer;				// 몇명이 하냐
+	bool		m_bIsPull;				// 게임인원 리스트 박스 열려있냐
 	gEdit		m_EditRoom;
 	gEdit		m_EditPass;
+
+	// join
+	gImage		m_ImgRoomName;
+	gImgButton	m_JoinBtn[BJM_END];
+	int			m_nSelected;
+	int			m_nPage;
+	ROOM		m_Room[MAXROOMFORPAGE];
+	bool		m_bEnteringPass;		// 패스워드 입력모드냐
+	gImage		m_ImgPassBack;
+	POINT		m_ptPass;				// ImgPass 출력 좌표		
+	gEdit		m_EditPassEnter;		// 들어갈때 비번 입력창
+
+
 
 public:
 	// overridng from Core 인터페이스
@@ -68,8 +114,11 @@ public:
 	bool		PreTransMsg(MSG &msg);
 
 	void		pk_roommake_rep(PK_ROOMMAKER_REP *rep);
+	void		pk_roomlist_rep(PK_ROOMLIST_REP *rep);
+	void		pk_roomjoin_rep(PK_ROOMJOIN_REP *rep);
 
 private:
+	// make
 	bool		SetUp_Make();
 	void		MainLoop_Make();
 	void		Draw_Make();
@@ -79,12 +128,20 @@ private:
 	void		Cancel_Make();
 	void		SendRoomMake();
 
+	// join
 	bool		SetUp_Join();
 	void		MainLoop_Join();
 	void		Draw_Join();
+	void		OnLButtonDown_Join();
+	void		OnMouseMove_Join();
+	void		SendRoomJoin();
 
+	// room
 	bool		SetUp_Room();
 	void		MainLoop_Room();
 	void		Draw_Room();
+	void		OnLButtonDown_Room();
+	void		OnMouseMove_Room();
+	void		OnLbuttonUp_Room();
 
 };

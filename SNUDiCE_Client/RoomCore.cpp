@@ -6,6 +6,7 @@
 #include "Util.h"
 #include "TopUI.h"
 #include "Chat.h"
+#include "stringconst.h"
 
 #define ROOM_FILE_BACK				".\\Data\\Room\\room_back.img"
 
@@ -26,11 +27,11 @@
 #define ROOM_BTN_POS_CANCEL_X		475
 #define ROOM_BTN_POS_CANCEL_Y		410
 
-#define ROOM_EDIT_LEN_ID			26
+#define ROOM_EDIT_LEN_ID			26					// 방이름...
 #define ROOM_EDIT_SIZE_ID_W			190
 #define ROOM_EDIT_SIZE_ID_H			15
 #define ROOM_EDIT_POS_ID_X			33
-#define ROOM_EDIT_POS_ID_Y			167
+#define ROOM_EDIT_POS_ID_Y			166
 
 #define ROOM_EDIT_LEN_PW			16
 #define ROOM_EDIT_SIZE_PW_W			110
@@ -38,10 +39,93 @@
 #define ROOM_EDIT_POS_PW_X			98
 #define ROOM_EDIT_POS_PW_Y			388
 
+#define ROOM_FILE_BTN_LIST			".\\Data\\Room\\make_btn_list.img"
+#define ROOM_BTN_SIZE_LIST_W		20
+#define ROOM_BTN_SIZE_LIST_H		20
+#define ROOM_BTN_POS_LIST_X			185
+#define ROOM_BTN_POS_LIST_Y			215
+
+#define ROOM_FILE_BTN_2				".\\Data\\Room\\make_btn_2.img"
+#define ROOM_FILE_BTN_3				".\\Data\\Room\\make_btn_3.img"
+#define ROOM_FILE_BTN_4				".\\Data\\Room\\make_btn_4.img"
+#define ROOM_FILE_BTN_5				".\\Data\\Room\\make_btn_5.img"
+#define ROOM_FILE_BTN_6				".\\Data\\Room\\make_btn_6.img"
+#define ROOM_FILE_BTN_7				".\\Data\\Room\\make_btn_7.img"
+#define ROOM_FILE_BTN_8				".\\Data\\Room\\make_btn_8.img"
+#define ROOM_BTN_SIZE_NUM_W			98
+#define ROOM_BTN_SIZE_NUM_H			22
+#define ROOM_BTN_POS_NUM_X			105
+#define ROOM_BTN_POS_NUM_Y			235
+
+#define ROOM_FILE_NUMS				".\\Data\\Room\\make_listnum.img"
+#define ROOM_SIZE_NUM_W				16
+#define ROOM_SIZE_NUM_H				16
+#define ROOM_POS_NUM_X				142
+#define ROOM_POS_NUM_Y				217
+
+#define ROOM_FILE_PASS				".\\Data\\Room\\make_pass.img"
+#define ROOM_SIZE_PASS_W			20
+#define ROOM_SIZE_PASS_H			20
+#define ROOM_POS_PASS_X				95
+#define ROOM_POS_PASS_Y				335
+
 // join
 #define ROOM_FILE_JOIN_BACK			".\\Data\\Room\\join_back.img"
 #define ROOM_POS_JOIN_X				0
 #define ROOM_POS_JOIN_Y				60
+
+#define JOIN_BTN_FILE_RNAME			".\\Data\\Room\\join_btn_rname.img"
+#define JOIN_FILE_RNAME				".\\Data\\Room\\join_roomname.img"
+#define JOIN_SIZE_RNAME_W			220
+#define JOIN_SIZE_RNAME_H			80
+#define JOIN_POS_RNAME_X			12
+#define JOIN_POS_RNAME_Y			72
+#define JOIN_TERM_RNAME_X			15
+#define JOIN_TERM_RNAME_Y			6
+#define JOIN_TERM_RNAMETEXT_X		20
+#define JOIN_TERM_RNAMETEXT_Y		18
+#define JOIN_TERM_PLAYERNUM_X		39
+#define JOIN_TERM_PLAYERNUM_Y		53
+
+#define JOIN_POS_PAGE_X				226
+#define JOIN_POS_PAGE_Y				440
+
+#define JOIN_POS_MAKERNAME_X		500
+#define JOIN_POS_MAKERNAME_Y		130
+#define JOIN_POS_ROOMUSER_X			505
+#define JOIN_POS_ROOMUSER_Y			170
+#define JOIN_TERM_ROOMUSER_Y		20
+
+#define JOIN_BTN_FILE_PREV			".\\Data\\Room\\join_btn_prev.img"
+#define JOIN_BTN_FILE_NEXT			".\\Data\\Room\\join_btn_next.img"
+#define JOIN_BTN_SIZE_PREV_W		13
+#define JOIN_BTN_SIZE_PREV_H		20
+#define JOIN_BTN_POS_PREV_X			178
+#define JOIN_BTN_POS_PREV_Y			435
+#define JOIN_BTN_POS_NEXT_X			287
+#define JOIN_BTN_POS_NEXT_Y			435
+
+#define JOIN_BTN_FILE_JOIN			".\\Data\\Room\\join_btn_join.img"
+#define JOIN_BTN_SIZE_JOIN_W		120
+#define JOIN_BTN_SIZE_JOIN_H		120
+#define JOIN_BTN_POS_JOIN_X			500
+#define JOIN_BTN_POS_JOIN_Y			340
+
+#define JOIN_FILE_PASSBACK			".\\Data\\Room\\join_pass_back.img"
+#define JOIN_SIZE_PASSBACK_W		200
+#define JOIN_SIZE_PASSBACK_H		60
+
+#define JOIN_BTN_FILE_PASS			".\\Data\\Room\\join_btn_pass.img"
+#define JOIN_BTN_SIZE_PASS_W		20
+#define JOIN_BTN_SIZE_PASS_H		20
+
+#define JOIN_TERM_PASS_X			30
+#define JOIN_TERM_PASS_Y			30
+#define JOIN_TERM_BTN_PASS_X		170
+#define JOIN_TERM_BTN_PASS_Y		26
+#define JOIN_TERM_EDIT_PASS_X		20
+#define JOIN_TERM_EDIT_PASS_Y		30
+
 
 // room
 #define ROOM_FILE_ROOM_BACK			".\\Data\\Room\\room_back.img"
@@ -121,12 +205,27 @@ void gRoomCore::OnLButtonDown()
 		case ERM_MAKE:
 			OnLButtonDown_Make();
 			break;
+		case ERM_JOIN:
+			OnLButtonDown_Join();
+			break;
+		case ERM_ROOM:
+			OnLButtonDown_Room();
+			break;
 	}
 }
 
 void gRoomCore::OnLButtonUp()
 {
-
+	switch(m_eRoom)
+	{
+		case ERM_MAKE:
+			break;
+		case ERM_JOIN:
+			break;
+		case ERM_ROOM:
+			OnLbuttonUp_Room();
+			break;
+	}
 }
 
 void gRoomCore::OnMouseMove()
@@ -135,6 +234,12 @@ void gRoomCore::OnMouseMove()
 	{
 		case ERM_MAKE:
 			OnMouseMove_Make();
+			break;
+		case ERM_JOIN:
+			OnMouseMove_Join();
+			break;
+		case ERM_ROOM:
+			OnMouseMove_Room();
 			break;
 	}
 }
@@ -151,69 +256,147 @@ void gRoomCore::OnRButtonDown()
 
 bool gRoomCore::PreTransMsg(MSG &msg)
 {
-	if(msg.hwnd == m_EditRoom.m_hEdit)
+	switch(m_eRoom)
 	{
-		if(!gServer::GetIF()->m_bConnect)
-			return true;
-
-		if(msg.message == WM_KEYDOWN)
-		{
-			if(gPopUp::GetIF()->isPopUp())
+		case ERM_MAKE:
 			{
-				if(msg.wParam == VK_RETURN)
-					gPopUp::GetIF()->DoEnter();
-
-				return true;
-			}
-
-			switch(msg.wParam)
-			{
-			case VK_RETURN:
-					m_EditPass.SetFocusOn();
-					return true;
-				case VK_TAB:
-					m_EditPass.SetFocusOn();
-					return true;
-				case VK_ESCAPE:
-					{
-						Cancel_Make();
-					}
-					return true;
-			}
-		}
-	}
-	else if(msg.hwnd == m_EditPass.m_hEdit)
-	{
-		if(!gServer::GetIF()->m_bConnect)
-			return true;
-
-		if(msg.message == WM_KEYDOWN)
-		{
-			if(gPopUp::GetIF()->isPopUp())
-			{
-				if(msg.wParam == VK_RETURN)
-					gPopUp::GetIF()->DoEnter();
-
-				return true;
-			}
-
-			switch(msg.wParam)
+				if(msg.hwnd == m_EditRoom.m_hEdit)
 				{
-				case VK_RETURN:
-					SendRoomMake();
-					return true;
-				case VK_TAB:
-					m_EditRoom.SetFocusOn();
-					return true;
-				case VK_SPACE:
-					return true;
-				case VK_ESCAPE:
+					if(!gServer::GetIF()->m_bConnect)
+						return true;
+
+					if(msg.message == WM_KEYDOWN)
 					{
-						Cancel_Make();
+						if(gPopUp::GetIF()->isPopUp())
+						{
+							if(msg.wParam == VK_RETURN)
+								gPopUp::GetIF()->DoEnter();
+
+							return true;
+						}
+
+						switch(msg.wParam)
+						{
+						case VK_RETURN:
+							m_EditPass.SetFocusOn();
+							return true;
+						case VK_TAB:
+							m_EditPass.SetFocusOn();
+							return true;
+						case VK_ESCAPE:
+							{
+								Cancel_Make();
+							}
+							return true;
+						}
 					}
-					return true;
+				}
+				else if(msg.hwnd == m_EditPass.m_hEdit)
+				{
+					if(!gServer::GetIF()->m_bConnect)
+						return true;
+
+					if(msg.message == WM_KEYDOWN)
+					{
+						if(gPopUp::GetIF()->isPopUp())
+						{
+							if(msg.wParam == VK_RETURN)
+								gPopUp::GetIF()->DoEnter();
+
+							return true;
+						}
+
+						switch(msg.wParam)
+						{
+						case VK_RETURN:
+							SendRoomMake();
+							return true;
+						case VK_TAB:
+							m_EditRoom.SetFocusOn();
+							return true;
+						case VK_SPACE:
+							return true;
+						case VK_ESCAPE:
+							{
+								Cancel_Make();
+							}
+							return true;
+						}
+					}
+				}
 			}
-		}
+			break;
+
+
+		case ERM_JOIN:
+			{
+				if(msg.hwnd == m_EditPassEnter.m_hEdit)
+				{
+					if(!gServer::GetIF()->m_bConnect)
+						return true;
+
+					if(msg.message == WM_KEYDOWN)
+					{
+						if(gPopUp::GetIF()->isPopUp())
+						{
+							if(msg.wParam == VK_RETURN)
+								gPopUp::GetIF()->DoEnter();
+
+							return true;
+						}
+
+						switch(msg.wParam)
+						{
+							case VK_RETURN:
+								SendRoomJoin();
+								return true;
+							case VK_TAB:
+							case VK_SPACE:
+								return true;
+							case VK_ESCAPE:
+								{
+									m_bEnteringPass = false;
+									SetFocus(gMainWin::GetIF()->m_hWnd);
+								}
+								return true;
+						}
+					}
+				}
+			}
+			break;
+		case ERM_ROOM:
+			{
+				if(msg.hwnd == gChat::GetIF()->m_Edit.m_hEdit)
+				{
+					if(!gServer::GetIF()->m_bConnect)
+						return true;
+
+					if(msg.message == WM_KEYDOWN)
+					{
+						if(gPopUp::GetIF()->isPopUp())
+						{
+							if(msg.wParam == VK_RETURN)
+								gPopUp::GetIF()->DoEnter();
+
+							return true;
+						}
+
+						switch(msg.wParam)
+						{
+						case VK_RETURN:
+							SetFocus(gMainWin::GetIF()->m_hWnd);
+							gChat::GetIF()->SendMsg();
+							return true;
+						case VK_TAB:
+							return true;
+						case VK_ESCAPE:
+							SetFocus(gMainWin::GetIF()->m_hWnd);
+							return true;
+						}
+					}
+				}
+			}
+			break;
 	}
 
 	return false;
@@ -224,7 +407,13 @@ void gRoomCore::SendRoomMake()
 	PK_ROOMMAKER_ASK	ask;
 
 	memset(&ask, 0, sizeof(ask));
-	ask.room.nMaxPlayer = 6;
+
+
+	strcpy(ask.szID, gPlayerContainer::GetIF()->m_MyPlayer.szID);
+
+	ask.room.nMaxPlayer = m_nPlayer;
+	ask.room.nNowPlayer	= 1;
+
 	strcpy(ask.room.szRoomMaxPlayer[0], gPlayerContainer::GetIF()->m_MyPlayer.szID);
 	strcpy(ask.room.szRoomName, m_EditRoom.m_szEdit);
 	if(strlen(m_EditPass.m_szEdit) == 0)
@@ -245,11 +434,14 @@ void gRoomCore::pk_roommake_rep(PK_ROOMMAKER_REP *rep)
 	if(rep->result == ERM_USINGNAME)
 	{
 		gUtil::DebugMsg("Using Name\n");
+		gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_9);
 	}
 	else
 	{
 		gUtil::DebugMsg("Success\n");
 		m_eRoom = ERM_ROOM;
+		gPlayerContainer::GetIF()->SetMyRoom(&rep->room);
+		gChat::GetIF()->MsgStackClear();
 	}
 }
 
@@ -257,6 +449,11 @@ bool gRoomCore::SetUp_Make()
 {
 	if(!m_ImgBack[ERM_MAKE].Load(ROOM_FILE_MAKE_BACK))
 		return false;
+
+	// pass check
+	if(!m_ImgPass.Load(ROOM_FILE_PASS))
+		return false;
+
 
 	RECT	rcDest;
 
@@ -276,6 +473,68 @@ bool gRoomCore::SetUp_Make()
 		ROOM_BTN_POS_CANCEL_Y + ROOM_BTN_SIZE_CANCEL_H );
 	if(!m_MakeBtn[BMM_CANCEL].SetUp(ROOM_FILE_BTN_CANCEL, false, rcDest))
 		return false;
+
+	// list
+	if(!m_ImgNum.Load(ROOM_FILE_NUMS))
+		return false;
+
+	m_nPlayer = 2;
+
+	// list btn
+	SetRect(&rcDest,
+		ROOM_BTN_POS_LIST_X,
+		ROOM_BTN_POS_LIST_Y,
+		ROOM_BTN_POS_LIST_X + ROOM_BTN_SIZE_LIST_W,
+		ROOM_BTN_POS_LIST_Y + ROOM_BTN_SIZE_LIST_H );
+
+	if(!m_MakeBtn[BMM_LIST].SetUp(ROOM_FILE_BTN_LIST, false, rcDest))
+		return false;
+
+	SetRect(&rcDest,
+		ROOM_BTN_POS_NUM_X,
+		ROOM_BTN_POS_NUM_Y,
+		ROOM_BTN_POS_NUM_X + ROOM_BTN_SIZE_NUM_W,
+		ROOM_BTN_POS_NUM_Y + ROOM_BTN_SIZE_NUM_H );
+
+	for(int i = BMM_NUM2; i <= BMM_NUM8; i++)
+	{
+		RECT	rcTemp = rcDest;
+		OffsetRect(&rcTemp, 0, ROOM_BTN_SIZE_NUM_H * (i - BMM_NUM2) );
+
+		switch(i)
+		{
+			case BMM_NUM2:
+				if(!m_MakeBtn[i].SetUp(ROOM_FILE_BTN_2, false, rcTemp))
+					return false;
+				break;
+			case BMM_NUM3:
+				if(!m_MakeBtn[i].SetUp(ROOM_FILE_BTN_3, false, rcTemp))
+					return false;
+				break;
+			case BMM_NUM4:
+				if(!m_MakeBtn[i].SetUp(ROOM_FILE_BTN_4, false, rcTemp))
+					return false;
+				break;
+			case BMM_NUM5:
+				if(!m_MakeBtn[i].SetUp(ROOM_FILE_BTN_5, false, rcTemp))
+					return false;
+				break;
+			case BMM_NUM6:
+				if(!m_MakeBtn[i].SetUp(ROOM_FILE_BTN_6, false, rcTemp))
+					return false;
+				break;
+			case BMM_NUM7:
+				if(!m_MakeBtn[i].SetUp(ROOM_FILE_BTN_7, false, rcTemp))
+					return false;
+				break;
+			case BMM_NUM8:
+				if(!m_MakeBtn[i].SetUp(ROOM_FILE_BTN_8, false, rcTemp))
+					return false;
+				break;
+		}
+	}
+
+	m_bIsPull = false;
 
 	// edit
 	SetRect(&rcDest,
@@ -304,16 +563,67 @@ bool gRoomCore::SetUp_Make()
 void gRoomCore::MainLoop_Make()
 {
 	Draw_Make();
+
+	// popup 창 처리
+	if(gPopUp::GetIF()->isPopUp())
+	{
+		gPopUp::GetIF()->MainLoop();
+		return;
+	}
+
+	if(gPopUp::GetIF()->m_bReturn)
+	{
+		switch(gPopUp::GetIF()->m_ePop)
+		{
+			case EPOP_DISCONNECT:
+				switch(gPopUp::GetIF()->m_eBtnClk)
+				{
+					case ECLK_OK:
+						gMainWin::GetIF()->Exit();
+						break;
+				}
+				break;
+		}
+		gPopUp::GetIF()->m_bReturn = false;
+	}
 }
 
 void gRoomCore::Draw_Make()
 {
 	m_ImgBack[ERM_MAKE].Draw(ROOM_POS_MAKE_X, ROOM_POS_MAKE_Y);
 
+	if(strlen(m_EditPass.m_szEdit) > 0)
+	{
+		m_ImgPass.Draw(ROOM_POS_PASS_X, ROOM_POS_PASS_Y);
+	}
+
 	int		i;
 
-	for(i = 0; i < BMM_END; i++)
-		m_MakeBtn[i].Draw();
+	RECT	rcDest, rcSour;
+
+	SetRect(&rcDest,
+			ROOM_POS_NUM_X,
+			ROOM_POS_NUM_Y,
+			ROOM_POS_NUM_X + ROOM_SIZE_NUM_W,
+			ROOM_POS_NUM_Y + ROOM_SIZE_NUM_H );
+	SetRect(&rcSour,
+			0, 0, ROOM_SIZE_NUM_W, ROOM_SIZE_NUM_H );
+
+	OffsetRect(&rcSour, (m_nPlayer - 2) * ROOM_SIZE_NUM_W, 0);
+
+	m_ImgNum.Draw(rcDest, rcSour, false);
+
+
+	if(m_bIsPull)
+	{
+		for(i = 0; i < BMM_END; i++)
+			m_MakeBtn[i].Draw();
+	}
+	else
+	{
+		for(i = 0; i < BMM_NUM2; i++)
+			m_MakeBtn[i].Draw();
+	}
 
 	gTopUI::GetIF()->Draw();
 
@@ -326,18 +636,45 @@ void gRoomCore::OnLButtonDown_Make()
 	gMouse	*mouse = gMouse::GetIF();
 	int		i;
 
-	if(m_MakeBtn[BMM_OK].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+	if(m_bIsPull)
 	{
-		if(strlen(m_EditRoom.m_szEdit) > 0)
+		if(m_MakeBtn[BMM_LIST].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 		{
-			SendRoomMake();
+			m_bIsPull = !m_bIsPull;
+			return;
+		}
+
+		for(i = BMM_NUM2; i <= BMM_NUM8; i++)
+		{
+			if(m_MakeBtn[i].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+			{
+				m_nPlayer = i - BMM_NUM2 + 2;
+				m_bIsPull = false;
+				return;
+			}
 		}
 		return;
 	}
-	else if(m_MakeBtn[BMM_CANCEL].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+	else
 	{
-		Cancel_Make();
-		return;
+		if(m_MakeBtn[BMM_OK].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+		{
+			if(strlen(m_EditRoom.m_szEdit) > 0)
+			{
+				SendRoomMake();
+			}
+			return;
+		}
+		else if(m_MakeBtn[BMM_CANCEL].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+		{
+			Cancel_Make();
+			return;
+		}
+		else if(m_MakeBtn[BMM_LIST].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+		{
+			m_bIsPull = !m_bIsPull;
+			return;
+		}
 	}
 
 	if(m_EditRoom.isPointInEdit(mouse->m_nPosX, mouse->m_nPosY))
@@ -358,12 +695,25 @@ void gRoomCore::OnMouseMove_Make()
 
 	int		i;
 
-	for(i = 0; i < BMM_END; i++)
+	if(m_bIsPull)
 	{
-		if(m_MakeBtn[i].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
-			m_MakeBtn[i].m_eBtnMode = EBM_HOVER;
-		else
-			m_MakeBtn[i].m_eBtnMode = EBM_NONE;
+		for(i = 0; i < BMM_END; i++)
+		{
+			if(m_MakeBtn[i].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+				m_MakeBtn[i].m_eBtnMode = EBM_HOVER;
+			else
+				m_MakeBtn[i].m_eBtnMode = EBM_NONE;
+		}
+	}
+	else
+	{
+		for(i = 0; i < BMM_NUM2; i++)
+		{
+			if(m_MakeBtn[i].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+				m_MakeBtn[i].m_eBtnMode = EBM_HOVER;
+			else
+				m_MakeBtn[i].m_eBtnMode = EBM_NONE;
+		}
 	}
 }
 
@@ -388,8 +738,81 @@ void gRoomCore::Cancel_Make()
 
 bool gRoomCore::SetUp_Join()
 {
+	int		i;
+
 	if(!m_ImgBack[ERM_JOIN].Load(ROOM_FILE_JOIN_BACK))
 		return false;
+
+	if(!m_ImgRoomName.Load(JOIN_FILE_RNAME))
+		return false;
+
+	if(!m_ImgPassBack.Load(JOIN_FILE_PASSBACK))
+		return false;
+
+	m_nSelected		= -1;
+	m_bEnteringPass	= false;
+
+	// btn
+	RECT	rcDest, rcTemp;
+
+	SetRect(&rcTemp, 
+			JOIN_POS_RNAME_X,
+			JOIN_POS_RNAME_Y,
+			JOIN_POS_RNAME_X + JOIN_SIZE_RNAME_W,
+			JOIN_POS_RNAME_Y + JOIN_SIZE_RNAME_H );
+
+	for(i = BJM_ROOM1; i <= BJM_ROOM8; i++)
+	{
+		rcDest = rcTemp;
+		OffsetRect(&rcDest,
+				((i - BJM_ROOM1) % 2) * (JOIN_SIZE_RNAME_W + JOIN_TERM_RNAME_X) , 
+				((i - BJM_ROOM1) / 2) * (JOIN_SIZE_RNAME_H + JOIN_TERM_RNAME_Y) );
+		if(!m_JoinBtn[i].SetUp(JOIN_BTN_FILE_RNAME, false, rcDest))
+			return false;
+	}
+
+	// prev, next
+	SetRect(&rcDest,
+			JOIN_BTN_POS_PREV_X,
+			JOIN_BTN_POS_PREV_Y,
+			JOIN_BTN_POS_PREV_X + JOIN_BTN_SIZE_PREV_W,
+			JOIN_BTN_POS_PREV_Y + JOIN_BTN_SIZE_PREV_H );
+	if(!m_JoinBtn[BJM_PREV].SetUp(JOIN_BTN_FILE_PREV, false, rcDest))
+		return false;
+
+	SetRect(&rcDest,
+		JOIN_BTN_POS_NEXT_X,
+		JOIN_BTN_POS_NEXT_Y,
+		JOIN_BTN_POS_NEXT_X + JOIN_BTN_SIZE_PREV_W,
+		JOIN_BTN_POS_NEXT_Y + JOIN_BTN_SIZE_PREV_H );
+	if(!m_JoinBtn[BJM_NEXT].SetUp(JOIN_BTN_FILE_NEXT, false, rcDest))
+		return false;
+
+	// join
+	SetRect(&rcDest,
+			JOIN_BTN_POS_JOIN_X,
+			JOIN_BTN_POS_JOIN_Y,
+			JOIN_BTN_POS_JOIN_X + JOIN_BTN_SIZE_JOIN_W,
+			JOIN_BTN_POS_JOIN_Y + JOIN_BTN_SIZE_JOIN_H );
+	if(!m_JoinBtn[BJM_JOIN].SetUp(JOIN_BTN_FILE_JOIN, false, rcDest))
+		return false;
+
+	// pass
+	// 이넘은 위치 셋팅 나중에
+	if(!m_JoinBtn[BJM_PASS].SetUp(JOIN_BTN_FILE_PASS, false, rcDest))
+		return false;
+
+	// edit
+	// 이넘도 위치 바뀐다. 대충 셋팅
+	SetRect(&rcDest,
+			ROOM_EDIT_POS_ID_X,
+			ROOM_EDIT_POS_ID_Y,
+			ROOM_EDIT_POS_ID_X + ROOM_EDIT_SIZE_ID_W,
+			ROOM_EDIT_POS_ID_Y + ROOM_EDIT_SIZE_ID_H );
+
+	if(!m_EditPassEnter.SetUp(rcDest, NULL, ROOM_EDIT_LEN_ID, EDIT_PASSWORD))
+		return false;
+
 
 	return true;
 }
@@ -397,11 +820,134 @@ bool gRoomCore::SetUp_Join()
 void gRoomCore::MainLoop_Join()
 {
 	Draw_Join();
+
+	// popup 창 처리
+	if(gPopUp::GetIF()->isPopUp())
+	{
+		gPopUp::GetIF()->MainLoop();
+		return;
+	}
+
+	if(gPopUp::GetIF()->m_bReturn)
+	{
+		switch(gPopUp::GetIF()->m_ePop)
+		{
+			case EPOP_DISCONNECT:
+				switch(gPopUp::GetIF()->m_eBtnClk)
+				{
+					case ECLK_OK:
+						gMainWin::GetIF()->Exit();
+						break;
+				}
+				break;
+		}
+		gPopUp::GetIF()->m_bReturn = false;
+	}
 }
 
 void gRoomCore::Draw_Join()
 {
 	m_ImgBack[ERM_JOIN].Draw(ROOM_POS_JOIN_X, ROOM_POS_JOIN_Y);
+
+	int			i, j;
+
+	RECT		rcSour;
+
+
+	for(i = BJM_ROOM1; i <= BJM_ROOM8; i++)
+	{
+		SetRect(&rcSour,
+			0, 0, JOIN_SIZE_RNAME_W, JOIN_SIZE_RNAME_H);
+
+		int		nRoomIdx = i - BJM_ROOM1;
+
+		if(strlen(m_Room[nRoomIdx].szRoomName) == 0)
+		{
+
+		}
+		else if(m_Room[nRoomIdx].isPass)
+		{
+			OffsetRect(&rcSour, 0, JOIN_SIZE_RNAME_H);
+		}
+		else if(!m_Room[nRoomIdx].isGaming)		// wait
+		{
+			OffsetRect(&rcSour, 0, JOIN_SIZE_RNAME_H * 2);
+		}
+		else if(m_Room[nRoomIdx].isGaming)			// playing
+		{
+			OffsetRect(&rcSour, 0, JOIN_SIZE_RNAME_H * 3);
+		}
+		else if(m_Room[nRoomIdx].nNowPlayer == m_Room[nRoomIdx].nMaxPlayer)	//full
+		{
+			OffsetRect(&rcSour, 0, JOIN_SIZE_RNAME_H * 4);
+		}
+
+		m_ImgRoomName.Draw(m_JoinBtn[nRoomIdx].m_rcPos, rcSour, false);
+	}
+	for(i = BJM_PREV; i <= BJM_JOIN;i ++)
+	{
+		m_JoinBtn[i].Draw();
+	}
+
+	if(m_nSelected != -1)
+	{
+		m_JoinBtn[m_nSelected + BJM_ROOM1].Draw();
+	}
+
+	char	szBuf[128];
+	gUtil::BeginText();
+		// page
+		wsprintf(szBuf, "%d / %d", m_nPage + 1, MAXPAGE);
+		gUtil::Text(JOIN_POS_PAGE_X, JOIN_POS_PAGE_Y, szBuf);
+
+		// roomname
+		int		nRoomIdx;
+		int		nRoomArrIdx;
+		for(i = 0; i < MAXROOMFORPAGE; i++)
+		{
+			nRoomArrIdx	= i + BJM_ROOM1;
+
+			if(strlen(m_Room[i].szRoomName) == 0)
+				continue;
+
+			nRoomIdx	= (m_nPage * MAXROOMFORPAGE) + i + 1;
+
+			if(nRoomIdx > 10)
+				wsprintf(szBuf, "[0%d] ", nRoomIdx);
+			else
+				wsprintf(szBuf, "[00%d] ", nRoomIdx);
+
+			strcat(szBuf, m_Room[i].szRoomName);
+
+			gUtil::Text(m_JoinBtn[nRoomArrIdx].m_rcPos.left + JOIN_TERM_RNAMETEXT_X, 
+						m_JoinBtn[nRoomArrIdx].m_rcPos.top + JOIN_TERM_RNAMETEXT_Y,	szBuf);
+
+			wsprintf(szBuf, "%d / %d", m_Room[i].nNowPlayer, m_Room[i].nMaxPlayer);
+
+			gUtil::Text(m_JoinBtn[nRoomArrIdx].m_rcPos.left + JOIN_TERM_PLAYERNUM_X,
+						m_JoinBtn[nRoomArrIdx].m_rcPos.top + JOIN_TERM_PLAYERNUM_Y, szBuf);
+
+		}
+
+		// selected room
+		if(m_nSelected != -1)
+		{
+			gUtil::Text(JOIN_POS_MAKERNAME_X, JOIN_POS_MAKERNAME_Y, m_Room[m_nSelected].szRoomMaxPlayer[0]);
+
+			for(j = 0; j < m_Room[m_nSelected].nMaxPlayer; j++)
+			{
+				gUtil::Text(JOIN_POS_ROOMUSER_X, JOIN_POS_ROOMUSER_Y + JOIN_TERM_ROOMUSER_Y * j, m_Room[m_nSelected].szRoomMaxPlayer[j]);
+			}
+		}
+
+	gUtil::EndText();
+
+	if(m_bEnteringPass)
+	{
+		m_ImgPassBack.Draw(m_ptPass.x, m_ptPass.y);
+		m_JoinBtn[BJM_PASS].Draw();
+		m_EditPassEnter.Draw();
+	}
 }
 
 bool gRoomCore::SetUp_Room()
@@ -415,9 +961,247 @@ bool gRoomCore::SetUp_Room()
 void gRoomCore::MainLoop_Room()
 {
 	Draw_Room();
+
+	// popup 창 처리
+	if(gPopUp::GetIF()->isPopUp())
+	{
+		gPopUp::GetIF()->MainLoop();
+		return;
+	}
+
+	if(gPopUp::GetIF()->m_bReturn)
+	{
+		switch(gPopUp::GetIF()->m_ePop)
+		{
+			case EPOP_DISCONNECT:
+				switch(gPopUp::GetIF()->m_eBtnClk)
+				{
+					case ECLK_OK:
+						gMainWin::GetIF()->Exit();
+						break;
+				}
+				break;
+		}
+		gPopUp::GetIF()->m_bReturn = false;
+	}
+
+	if(gMainWin::GetIF()->m_Keys[VK_RETURN])
+	{
+		gChat::GetIF()->m_Edit.SetFocusOn();
+		gMainWin::GetIF()->m_Keys[VK_RETURN] = false;
+	}
+
+	gChat::GetIF()->MainLoop();
 }
 
 void gRoomCore::Draw_Room()
 {
 	m_ImgBack[ERM_ROOM].Draw(ROOM_POS_ROOM_X, ROOM_POS_ROOM_Y);
+
+	gChat::GetIF()->Draw();
+}
+
+
+void gRoomCore::pk_roomlist_rep(PK_ROOMLIST_REP *rep)
+{
+	memcpy(m_Room, rep->roomlist, sizeof(ROOM) * MAXROOMFORPAGE );
+	m_nPage	= rep->nPage;
+}
+
+void gRoomCore::OnLButtonDown_Join()
+{
+	gMouse		*mouse = gMouse::GetIF();
+
+	int			i;
+
+	if(m_bEnteringPass)
+	{
+		if(m_JoinBtn[BJM_PASS].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+		{
+			SendRoomJoin();
+		}
+		else if(gUtil::PointInRect(mouse->m_nPosX, mouse->m_nPosY, m_EditPassEnter.m_rcPos))
+		{
+			m_EditPassEnter.SetFocusOn();
+		}
+	}
+	else
+	{
+		for(i = BJM_ROOM1; i <= BJM_ROOM8; i++)
+		{
+			if(m_JoinBtn[i].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+			{
+				if(strlen(m_Room[i - BJM_ROOM1].szRoomName) > 0)
+				{
+					m_JoinBtn[i].m_eBtnMode = EBM_CLICK;
+					m_nSelected = i - BJM_ROOM1;
+					return;
+				}
+			}
+		}
+
+		if(m_JoinBtn[BJM_PREV].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+		{
+			if(m_nPage == 0)
+				return;
+			else
+			{
+				PK_ROOMLIST_ASK			ask;
+
+				ask.nPage	= m_nPage - 1;
+				strcpy(ask.szID, gPlayerContainer::GetIF()->m_MyPlayer.szID);
+				
+				gServer::GetIF()->Send(PL_ROOMLIST_ASK, sizeof(ask), &ask);
+				return;
+			}
+		}
+		else if(m_JoinBtn[BJM_NEXT].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+		{
+			if(m_nPage == MAXPAGE - 1)
+				return;
+			else
+			{
+				PK_ROOMLIST_ASK			ask;
+
+				ask.nPage = m_nPage + 1;
+				strcpy(ask.szID, gPlayerContainer::GetIF()->m_MyPlayer.szID);
+
+				gServer::GetIF()->Send(PL_ROOMLIST_ASK, sizeof(ask), &ask);
+				return;
+			}
+		}
+		else if(m_JoinBtn[BJM_JOIN].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+		{
+			if(m_Room[m_nSelected].isPass)
+			{
+				m_ptPass.x = m_JoinBtn[m_nSelected + BJM_ROOM1].m_rcPos.left + JOIN_TERM_PASS_X;
+				m_ptPass.y = m_JoinBtn[m_nSelected + BJM_ROOM1].m_rcPos.top + JOIN_TERM_PASS_Y;
+				SetRect(&m_JoinBtn[BJM_PASS].m_rcPos,
+						m_ptPass.x + JOIN_TERM_BTN_PASS_X,
+						m_ptPass.y + JOIN_TERM_BTN_PASS_Y,
+						m_ptPass.x + JOIN_TERM_BTN_PASS_X + JOIN_BTN_SIZE_PASS_W,
+						m_ptPass.y + JOIN_TERM_BTN_PASS_Y + JOIN_BTN_SIZE_PASS_H );
+
+				m_EditPassEnter.SetFocusOn();
+				m_EditPassEnter.Clear();
+				SetRect(&m_EditPassEnter.m_rcPos,
+						m_ptPass.x + JOIN_TERM_EDIT_PASS_X,
+						m_ptPass.y + JOIN_TERM_EDIT_PASS_Y,
+						m_ptPass.x + JOIN_TERM_EDIT_PASS_X + ROOM_EDIT_SIZE_ID_W,
+						m_ptPass.y + JOIN_TERM_EDIT_PASS_Y + ROOM_EDIT_SIZE_ID_H );
+
+				m_bEnteringPass = true;
+				return;
+			}
+			else
+			{
+				SendRoomJoin();
+			}
+		}
+	}
+}
+
+void gRoomCore::OnMouseMove_Join()
+{
+	gMouse*		mouse = gMouse::GetIF();
+
+	int		i;
+
+	if(m_bEnteringPass)
+	{
+		if(m_JoinBtn[BJM_PASS].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+			m_JoinBtn[BJM_PASS].m_eBtnMode = EBM_HOVER;
+		else
+			m_JoinBtn[BJM_PASS].m_eBtnMode = EBM_NONE;
+	}
+	else
+	{
+		for(i = BJM_PREV; i < BJM_END; i++)
+		{
+			if(m_JoinBtn[i].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+				m_JoinBtn[i].m_eBtnMode = EBM_HOVER;
+			else
+				m_JoinBtn[i].m_eBtnMode = EBM_NONE;
+		}
+	}
+}
+
+void gRoomCore::SendRoomJoin()
+{
+	PK_ROOMJOIN_ASK			ask;
+
+	ask.nIdx	= m_nSelected;
+	ask.nPage	= m_nPage;
+	strcpy(ask.szID, gPlayerContainer::GetIF()->m_MyPlayer.szID);
+	if(m_bEnteringPass)
+		strcpy(ask.szPass, m_EditPassEnter.m_szEdit);
+
+	gServer::GetIF()->Send(PL_ROOMJOIN_ASK, sizeof ask, &ask);
+}
+
+void gRoomCore::pk_roomjoin_rep(PK_ROOMJOIN_REP *rep)
+{
+	switch(rep->result)
+	{
+		case ERJ_SUCCESS:
+			{
+				m_bEnteringPass = false;
+				SetFocus(gMainWin::GetIF()->m_hWnd);
+				m_eRoom = ERM_ROOM;
+				gPlayerContainer::GetIF()->SetMyRoom(&rep->joinroom);
+				gChat::GetIF()->MsgStackClear();
+			}
+			break;
+		case ERJ_PASSWRONG:
+			{
+				gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_10);
+			}
+			break;
+		case ERJ_FULL:
+			{
+				gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_11);
+			}
+			break;
+		case ERJ_PLAYING:
+			{
+				gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_12);
+			}
+			break;
+	}
+}
+
+void gRoomCore::OnLButtonDown_Room()
+{
+	gMouse		*mouse	= gMouse::GetIF();
+	gChat		*chat	= gChat::GetIF();
+
+	if(chat->PointInUI(mouse->m_nPosX, mouse->m_nPosY))
+	{
+		chat->OnLbuttonDown(mouse->m_nPosX, mouse->m_nPosY);
+		return;
+	}
+}
+
+void gRoomCore::OnMouseMove_Room()
+{
+	gMouse		*mouse	= gMouse::GetIF();
+	gChat		*chat	= gChat::GetIF();
+
+	if(chat->PointInUI(mouse->m_nPosX, mouse->m_nPosY))
+	{
+		chat->OnMouseMove(mouse->m_nPosX, mouse->m_nPosY);
+		return;
+	}
+}
+
+void gRoomCore::OnLbuttonUp_Room()
+{
+	gMouse		*mouse	= gMouse::GetIF();
+	gChat		*chat	= gChat::GetIF();
+
+	if(chat->PointInUI(mouse->m_nPosX, mouse->m_nPosY))
+	{
+		chat->OnLbuttonUp(mouse->m_nPosX, mouse->m_nPosY);
+		return;
+	}
 }

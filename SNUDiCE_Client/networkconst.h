@@ -153,7 +153,8 @@ struct PK_CHANNELCHANGE_REP
 #define MAXROOM				40								// 만들 수 있는 방 개수
 #define MAXROOMNAME			32
 #define MAXROOMPASS			16
-#define ROOMMAXPLAYER		6
+#define ROOMMAXPLAYER		8
+#define MAXPAGE				(MAXROOM / MAXROOMFORPAGE)
 
 struct ROOM
 {
@@ -181,6 +182,7 @@ enum ERROR_ROOMMAKE
 struct PK_ROOMMAKER_REP
 {
 	ERROR_ROOMMAKE	result;
+	ROOM		room;
 };
 
 struct PK_ROOMLIST_ASK
@@ -197,6 +199,7 @@ struct PK_ROOMLIST_REP
 
 struct PK_ROOMJOIN_ASK
 {
+	char		szID[IDLENGTH];
 	int			nPage;					// 페이지
 	int			nIdx;					// 페이지에서 몇번째냐
 	char		szPass[MAXROOMPASS];
@@ -206,8 +209,8 @@ enum ERROR_ROOMJOIN
 {
 	ERJ_SUCCESS,
 	ERJ_PASSWRONG,
-	ERJ_FULL,			//	얘랑 밑에꺼는 클라에서 일단 막아놓을듯
-	ERJ_PLAYING,		//
+	ERJ_FULL,
+	ERJ_PLAYING,
 };
 
 struct PK_ROOMJOIN_REP

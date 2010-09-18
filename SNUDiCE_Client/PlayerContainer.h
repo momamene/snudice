@@ -18,8 +18,10 @@ public:
 public:
 	PLAYER			m_MyPlayer;		// ³ª
 	CHANNEL			m_MyChannel;
+	ROOM			m_MyRoom;
 
 public:
 	void			SetMyPlayer(PK_LOGIN_REP *rep);
-	void			RefreshChannel(CHANNEL	*channel);
+	void			RefreshChannel(CHANNEL *channel);
+	void			SetMyRoom(ROOM *room);
 };
