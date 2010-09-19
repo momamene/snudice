@@ -9,7 +9,8 @@
 #include "PlayerContainer.h"
 #include "ChannelContainer.h"
 
-
+#include "SubjectContainer.h"
+#include "TileContainer.h"
 		
 
 static gMainWin	s_MainWin;		// for singleton
@@ -117,11 +118,30 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 	if(!gLoginCore::GetIF()->SetUp())
 		return false;
 
+	// a
+	if(!gMessageCore::GetIF()->SetUp())
+		return false;
+//	if(!gChannelCore::GetIF()->SetUp()) // SetUp 이 필요 없었던 경우.
+//		return false;
+
+	if(!gRoomCore::GetIF()->SetUp())
+		return false;
+
 	if(!gPlayerContainer::GetIF()->SetUp())
 		return false;
 
 	if(!gChannelContainer::GetIF()->SetUp())
 		return false;
+
+	// a
+	if(!gPlayerContainer::GetIF()->SetUp())
+		return false;
+
+	// b
+//	if(!gSubjectContainer::GetIF()->SetUp()) // SetUp 이 필요 없었던 경우.
+//		return false;
+//	if(!gTileContainer::GetIF()->Setup())
+//		return false;
 	
 	return true;
 }
@@ -224,6 +244,8 @@ void gMainWin::Recv(PK_DEFAULT *pk, SOCKET sock)
 		case PL_ROOMLIST_ASK:
 			gRoomCore::GetIF()->pk_roomlist_ask(pk,sock);
 			break;
+		case PL_ROOMJOIN_ASK:
+			gRoomCore::GetIF()->pk_roomjoin_ask(pk,sock);
 	}
 
 }
@@ -378,13 +400,44 @@ void gMainWin::ExitPlayer(SOCKET client_sock,char* clientID,SOCKADDR_IN clientAd
 
 }
 */
+void gMainWin::UserRelease(SOCKET client_sock,SOCKADDR_IN clientAddr) {
+	char			clientID[IDLENGTH];
+
+	char		buf[1024];
+	int bTemp;
+
+	bTemp = gPlayerContainer::GetIF()->DeletePlayer(client_sock, clientID);
+	int channel = gChannelContainer::GetIF()->FindPlayer(clientID);
+
+	if(bTemp) {
+		gChannelContainer::GetIF()->DeletePlayer(clientID);
+		gChannelCore::GetIF()->pk_channelrefresh_rep(channel);
+		// sangwoo temp
+		OutputDebugString("refresh for delete\n");
+		gChannelContainer::GetIF()->fullDebuger();
+		// end
+	}
+	else {
+		// 에러 처리.
+		OutputDebugString("Exception in function ExitPlayer\n");
+	}
+
+	gRoomCore::GetIF()->ExitTheRoom(clientID);
+
+	closesocket(client_sock);
+
+	sprintf(buf,"[TCP Server] Client Exit : IP = %s\t Port = %d\n",
+		inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port));
+	OutputDebugString (buf);
+}
+
 
 DWORD WINAPI ProcessClient(LPVOID arg)
 {
 	gMainWin *mw = gMainWin::GetIF();
 
 	SOCKET			client_sock = (SOCKET)arg;
-	char			clientID[IDLENGTH];
+
 	SOCKADDR_IN		clientAddr;
 	char			szBuf[BUFFERSIZE + 1];
 	int				addrLen;
@@ -436,39 +489,11 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	// closesocket
 	//mw->ExitPlayer(client_sock,clientID,clientAddr);
 
-	char		buf[1024];
+	mw->UserRelease(client_sock,clientAddr);
 
 
-
-	int bTemp;
-
-	bTemp = gPlayerContainer::GetIF()->DeletePlayer(client_sock, clientID);
-	int channel = gChannelContainer::GetIF()->FindPlayer(clientID);
-
-	if(bTemp) {
-		gChannelContainer::GetIF()->DeletePlayer(clientID);
-		gChannelCore::GetIF()->pk_channelrefresh_rep(channel);
-		// sangwoo temp
-		OutputDebugString("refresh for delete\n");
-		gChannelContainer::GetIF()->fullDebuger();
-		// end
-	}
-	else {
-		// 에러 처리.
-		OutputDebugString("Exception in function ExitPlayer\n");
-	}
-
-	gRoomCore::GetIF()->ExitTheRoom(clientID);
-
-
-	closesocket(client_sock);
-
-	sprintf(buf,"[TCP Server] Client Exit : IP = %s\t Port = %d\n",
-		inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port));
-	OutputDebugString (buf);
 
 	return 0;
-
 }
 
 DWORD WINAPI Listen(LPVOID prc)

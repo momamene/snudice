@@ -130,13 +130,15 @@ void gLoginCore::pk_login_ask(PK_DEFAULT *pk, SOCKET sock)
 					rep.channel = gChannelContainer::GetIF()->m_channelArray[finded];
 					
 					rep.error = ELE_SUCCESS;
+
 					strcpy(rep.player.szID,user->szID);
+					rep.player.classtype = CLASS_NONE;
 					rep.player.coreWhere = ECM_BATTLENET;
 					rep.player.nCoreFlag = 0;
 					rep.player.sock = sock;
+					
 					gPlayerContainer::GetIF()->AddPlayer(&rep.player);
 
-					
 				}
 			}
 		}

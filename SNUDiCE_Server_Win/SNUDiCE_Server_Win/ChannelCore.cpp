@@ -1,4 +1,5 @@
 #include "ChannelCore.h"
+#include "RoomCore.h"
 #include "ChannelContainer.h"
 #include "PlayerContainer.h"
 #include "MainWin.h"
@@ -77,6 +78,7 @@ void gChannelCore::pk_channelchange_ask (PK_DEFAULT *pk, SOCKET sock)
 		int channelBefore = gChannelContainer::GetIF()->FindPlayer(ask.szID);
 		if(channelBefore == -1) {
 			// 에러 처리
+			OutputDebugString("(f)[pk_channelchange_ask] Cannot Find Player Error\n");
 		}
 		else {
 			rep.error = ECE_SUCCESS;
@@ -88,6 +90,7 @@ void gChannelCore::pk_channelchange_ask (PK_DEFAULT *pk, SOCKET sock)
 			pk_channelrefresh_rep (ask.nChannel-1);
 			gPlayerContainer::GetIF()->PutMode(ask.szID,ECM_BATTLENET);
 			gPlayerContainer::GetIF()->PutCoreFlag(ask.szID,ask.nChannel-1);
+			gRoomCore::GetIF()->SendRoomListCauseChange(ask.nChannel-1);
 
 		}
 	}	

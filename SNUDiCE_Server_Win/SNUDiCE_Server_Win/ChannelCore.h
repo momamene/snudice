@@ -23,7 +23,7 @@ public:
 
 	// packet
 
-	void			pk_channelchange_ask (PK_DEFAULT *pk, SOCKET sock);
+	void			pk_channelchange_ask (PK_DEFAULT *pk, SOCKET sock); // 방을 나갈때도 이 패킷을 쏜다는 점이 중요!
 	void			pk_channelrefresh_rep (int channel);
 
 

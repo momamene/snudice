@@ -206,6 +206,22 @@
 				RelativePath=".\RoomCore.cpp"
 				>
 			</File>
+			<Filter
+				Name="NewFilter1"
+				>
+				<File
+					RelativePath=".\SubjectContainer.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\TILE.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\TileContainer.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="헤더 파일"
@@ -248,6 +264,22 @@
 				RelativePath=".\RoomCore.h"
 				>
 			</File>
+			<Filter
+				Name="NewFilter1"
+				>
+				<File
+					RelativePath=".\SubjectContainer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\TILE.h"
+					>
+				</File>
+				<File
+					RelativePath=".\TileContainer.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="리소스 파일"

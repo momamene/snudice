@@ -41,6 +41,8 @@ enum ePROTOCOL
 
 	PL_ROOMJOIN_ASK,
 	PL_ROOMJOIN_REP,
+
+	PL_ROOMREFRESH_REP,
 };
 
 
@@ -79,12 +81,44 @@ struct USER
 	char		szPW[IDLENGTH];
 };
 
+enum CLASSTYPE
+{
+	CLASS_NONE = -1,		// 선택안된거
+	// 언어
+	CLASS_LITERAL,			// 인문
+	CLASS_SOCIAL,			// 사회
+	CLASS_MANAGE,			// 경영
+	CLASS_LAW,				// 법
+	CLASS_LIFE,				// 생활과학
+	CLASS_TEACH,			// 사범대
+	CLASS_FREE,				// 자유전공
+
+	// 수리
+	CLASS_ENGINE,			// 공
+	CLASS_NATURE,			// 자연
+	CLASS_DOCTOR,			// 의사
+	CLASS_ANIMAL,			// 수의사
+	CLASS_DRUG,				// 약
+	CLASS_NURSE,			// 간호
+	CLASS_FARM,				// 농
+
+	// 예술
+	CLASS_MUSIC,			// 음
+	CLASS_ART,				// 미
+
+	CLASS_END,
+
+};
+
 struct PLAYER
 {
 	char		szID[IDLENGTH];
 	eCOREMODE	coreWhere;
 	int			nCoreFlag;
 	SOCKET		sock;
+
+	// 게임관련 정보
+	CLASSTYPE	classtype;
 };
 
 struct PK_LOGIN_ASK
@@ -153,7 +187,8 @@ struct PK_CHANNELCHANGE_REP
 #define MAXROOM				40								// 만들 수 있는 방 개수
 #define MAXROOMNAME			32
 #define MAXROOMPASS			16
-#define ROOMMAXPLAYER		6
+#define ROOMMAXPLAYER		8
+#define MAXPAGE				(MAXROOM / MAXROOMFORPAGE)
 
 struct ROOM
 {
@@ -163,7 +198,8 @@ struct ROOM
 	char	szRoomPass[MAXROOMPASS];
 	int		nMaxPlayer;
 	int		nNowPlayer;
-	char	szRoomMaxPlayer[ROOMMAXPLAYER][IDLENGTH];		// 0번째가 방장
+	int		nMakerIndex;									// 방장의index
+	char	szRoomMaxPlayer[ROOMMAXPLAYER][IDLENGTH];		// 기본적으로 0번째가 방장
 };
 
 struct PK_ROOMMAKER_ASK
@@ -181,6 +217,7 @@ enum ERROR_ROOMMAKE
 struct PK_ROOMMAKER_REP
 {
 	ERROR_ROOMMAKE	result;
+	ROOM		room;
 };
 
 struct PK_ROOMLIST_ASK
@@ -207,12 +244,20 @@ enum ERROR_ROOMJOIN
 {
 	ERJ_SUCCESS,
 	ERJ_PASSWRONG,
-	ERJ_FULL,			//	얘랑 밑에꺼는 클라에서 일단 막아놓을듯
-	ERJ_PLAYING,		//
+	ERJ_FULL,
+	ERJ_PLAYING,
+	ERJ_NOROOM,
 };
 
 struct PK_ROOMJOIN_REP
 {
 	ERROR_ROOMJOIN		result;
 	ROOM				joinroom;
+	PLAYER				playerlist[ROOMMAXPLAYER];
+};
+
+struct PK_ROOMREFRESH_REP
+{
+	ROOM				room;
+	PLAYER				playerlist[ROOMMAXPLAYER];
 };

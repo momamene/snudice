@@ -23,6 +23,7 @@ public:
 	void			pk_roomlist_ask(PK_DEFAULT *pk, SOCKET sock);
 	void			pk_roomjoin_ask(PK_DEFAULT *pk, SOCKET sock);
 	void			ExitTheRoom (char* szID);
+	void			SendRoomListCauseChange(int nPage);
 
 private:
 	int				FindFirstEmptyRoom ();
@@ -31,5 +32,7 @@ private:
 	void			EnterTheRoom (int index,char* szID);
 	void			DeleteTheRoom (int index);
 	
-
+	bool			isRoomInPage(int nPage);
+	bool			ChangeMakerToFirstUser(int roomIndex);
+	void			FindPlayersFromIDs_RMP(int roomIndex,PLAYER* getPlayerlist);
 };

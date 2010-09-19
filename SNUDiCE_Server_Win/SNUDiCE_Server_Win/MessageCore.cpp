@@ -52,7 +52,33 @@ void gMessageCore::pk_message_ask(PK_DEFAULT *pk, SOCKET sock)
 	OutputDebugString(buf);
 
 	PK_MESSAGE_REP	rep;
+	eCOREMODE mode;
+	int flag;
 
+	mode = gPC->GetMode(ask.szID);
+	flag = gPC->GetCoreFlag(ask.szID);
+	if( mode==-1 || flag==-1 ) {
+		// error
+	}
+	else if(mode==ECM_BATTLENET || mode==ECM_ROOM) {
+		//int nChannelIndex = gCC->FindPlayer(ask.szID);
+		strcpy(rep.szID,ask.szID);
+		strcpy(rep.szMsg,ask.szMsg);
+		gPC->SendSelect(PL_MESSAGE_REP,sizeof(PK_MESSAGE_REP),&rep,mode,flag);
+	}
+	/*
+	else if(mode==ECM_ROOM) {
+		strcpy(rep.szID,ask.szID);
+		strcpy(rep.szMsg,ask.szMsg);
+		gPC->SendSelect(PL_MESSAGE_REP,sizeof(PK_MESSAGE_REP),&rep,ECM_ROOM,flag);
+	}
+	*/
+	else {
+		// error
+		OutputDebugString("(f)[pk_message_ask] Error in mode Problem\n");
+	}
+		
+/*
 	int nRoomIndex = gCC->FindPlayer(ask.szID);
 	SOCKET socketOne;
 	bool bTemp;
@@ -74,7 +100,6 @@ void gMessageCore::pk_message_ask(PK_DEFAULT *pk, SOCKET sock)
 		}
 
 	}
-	/*
 	for(PLAYER_LIST::iterator it = gPC->m_PlayerList.begin(); it != gPC->m_PlayerList.end(); it++) {
 			//if(strcmp(it->szID,ask->szID)==0) continue;
 		temp = *it;

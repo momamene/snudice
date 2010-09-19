@@ -40,6 +40,8 @@ public:
 	bool		Send(DWORD type, DWORD size, void *buf, char* szID);
 	void		Recv(PK_DEFAULT *pk, SOCKET	sock);
 
+	void		UserRelease(SOCKET client_sock, SOCKADDR_IN clientAddr);
+
 	bool		SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow);
 	void		Release();
 	void		Exit();

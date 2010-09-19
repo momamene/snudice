@@ -145,6 +145,53 @@ bool gPlayerContainer::PutCoreFlag (char* id,int flag)
 	return false;
 }
 
+int gPlayerContainer::GetCoreFlag(char* id) {
+	PLAYER*		temp;
+	for(PLAYER_LIST::iterator it = m_PlayerList.begin() ; 
+		it != m_PlayerList.end() ; it++)
+	{
+		temp = *it;
+		if(strcmp(temp->szID,id)==0)
+		{
+			return temp->nCoreFlag;
+		}
+	}
+	return -1;
+}
+
+eCOREMODE gPlayerContainer::GetMode(char* id) {
+	PLAYER*		temp;
+	for(PLAYER_LIST::iterator it = m_PlayerList.begin() ; 
+		it != m_PlayerList.end() ; it++)
+	{
+		temp = *it;
+		if(strcmp(temp->szID,id)==0)
+		{
+			return temp->coreWhere;
+		}
+	}
+	return (eCOREMODE)-1;
+}
+
+PLAYER gPlayerContainer::GetPlayerFromID(char* szID) {
+	PLAYER*		temp;
+	PLAYER		player;
+	memset(&player,0,sizeof(PLAYER));
+	
+	for(PLAYER_LIST::iterator it = m_PlayerList.begin() ; 
+		it != m_PlayerList.end() ; it++)
+		{
+			temp = *it;
+			if(strcmp(temp->szID,szID)==0)
+			{
+				player = *temp; 
+				break;
+			}
+		}
+	
+	return player;
+} 
+
 void gPlayerContainer::SendSelect (ePROTOCOL prot,int pkSize,void *pk,eCOREMODE mode,int nPage)
 {
 	PLAYER*		temp;
