@@ -61,6 +61,14 @@ enum BTNJOINMODE
 	BJM_END,
 };
 
+enum BTNWAITMODE
+{
+	BWM_READY,
+	BWM_START,
+
+	BWM_END,
+};
+
 class gRoomCore : Core
 {
 public:
@@ -94,6 +102,12 @@ public:
 	POINT		m_ptPass;				// ImgPass 출력 좌표		
 	gEdit		m_EditPassEnter;		// 들어갈때 비번 입력창
 
+	// room == wait
+	gImage		m_ImgCharBack;
+	gImgButton	m_WaitBtn[BWM_END];
+	gImage		m_ImgSelBack;
+	bool		m_bCharSel;				// 캐릭터 고르고 있냐
+	int			m_nSelUser;				// 선택된 유저
 
 
 public:
@@ -116,6 +130,7 @@ public:
 	void		pk_roommake_rep(PK_ROOMMAKER_REP *rep);
 	void		pk_roomlist_rep(PK_ROOMLIST_REP *rep);
 	void		pk_roomjoin_rep(PK_ROOMJOIN_REP *rep);
+	void		pk_roomrefresh_rep(PK_ROOMREFRESH_REP *rep);
 
 private:
 	// make
@@ -142,6 +157,7 @@ private:
 	void		Draw_Room();
 	void		OnLButtonDown_Room();
 	void		OnMouseMove_Room();
-	void		OnLbuttonUp_Room();
+	void		OnLButtonUp_Room();
+	void		OnRButtonDown_Room();
 
 };

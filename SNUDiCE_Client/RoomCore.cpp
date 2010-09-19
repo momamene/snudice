@@ -37,7 +37,7 @@
 #define ROOM_EDIT_SIZE_PW_W			110
 #define ROOM_EDIT_SIZE_PW_H			15
 #define ROOM_EDIT_POS_PW_X			98
-#define ROOM_EDIT_POS_PW_Y			388
+#define ROOM_EDIT_POS_PW_Y			387
 
 #define ROOM_FILE_BTN_LIST			".\\Data\\Room\\make_btn_list.img"
 #define ROOM_BTN_SIZE_LIST_W		20
@@ -122,15 +122,43 @@
 #define JOIN_TERM_PASS_X			30
 #define JOIN_TERM_PASS_Y			30
 #define JOIN_TERM_BTN_PASS_X		170
-#define JOIN_TERM_BTN_PASS_Y		26
+#define JOIN_TERM_BTN_PASS_Y		27
 #define JOIN_TERM_EDIT_PASS_X		20
-#define JOIN_TERM_EDIT_PASS_Y		30
+#define JOIN_TERM_EDIT_PASS_Y		28
 
 
 // room
 #define ROOM_FILE_ROOM_BACK			".\\Data\\Room\\room_back.img"
 #define ROOM_POS_ROOM_X				0
 #define ROOM_POS_ROOM_Y				60
+
+#define WAIT_POS_USER_X				498
+#define WAIT_POS_USER_Y				108
+#define WAIT_TERM_USER_Y			20
+
+#define WAIT_BTN_FILE_READY			".\\Data\\Room\\wait_btn_ready.img"
+#define WAIT_BTN_FILE_START			".\\Data\\Room\\wait_btn_start.img"
+#define WAIT_BTN_SIZE_READY_W		120
+#define WAIT_BTN_SIZE_READY_H		120
+#define WAIT_BTN_POS_READY_X		500
+#define WAIT_BTN_POS_READY_Y		340
+
+#define WAIT_FILE_CHARBACK			".\\Data\\Room\\wait_char_back.img"
+#define WAIT_SIZE_CHARBACK_W		110
+#define WAIT_SIZE_CHARBACK_H		140
+#define WAIT_POS_CHARBACK_X			11
+#define WAIT_POS_CHARBACK_Y			68
+#define WAIT_TERM_CHARBACK_X		6
+#define WAIT_TERM_CHARBACK_Y		4
+#define WAIT_TERM_CHARNAMEBACK_X	10
+#define WAIT_TERM_CHARNAMEBACK_Y	10
+
+#define WAIT_FILE_SELBACK			".\\Data\\Room\\wait_charselback.img"
+#define WAIT_SIZE_SELBACK_W			265
+#define WAIT_SIZE_SELBACK_H			445
+#define WAIT_POS_SELBACK_X			360
+#define WAIT_POS_SELBACK_Y			20
+
 
 
 static gRoomCore s_RoomCore;
@@ -188,11 +216,32 @@ void gRoomCore::Release()
 	for(i = 0; i < ERM_END; i++)
 		m_ImgBack[i].Release();
 
+	// make
 	for(i = 0; i < BMM_END; i++)
 		m_MakeBtn[i].Release();
 
+	m_ImgNum.Release();
+	m_ImgPass.Release();
+
 	m_EditRoom.Release();
 	m_EditPass.Release();
+
+	// join
+	m_ImgRoomName.Release();
+
+	for(i = 0; i < BJM_END; i++)
+		m_JoinBtn[i].Release();
+
+	m_ImgPassBack.Release();
+	m_EditPassEnter.Release();
+
+	// room == wait
+	for(i = 0; i < BWM_END; i++)
+		m_WaitBtn[i].Release();
+
+	m_ImgSelBack.Release();
+	m_ImgCharBack.Release();
+
 }
 
 void gRoomCore::OnLButtonDown()
@@ -223,7 +272,7 @@ void gRoomCore::OnLButtonUp()
 		case ERM_JOIN:
 			break;
 		case ERM_ROOM:
-			OnLbuttonUp_Room();
+			OnLButtonUp_Room();
 			break;
 	}
 }
@@ -248,8 +297,8 @@ void gRoomCore::OnRButtonDown()
 {
 	switch(m_eRoom)
 	{
-		case ERM_MAKE:
-			OnLButtonDown_Make();
+		case ERM_ROOM:
+			OnRButtonDown_Room();
 		break;
 	}
 }
@@ -441,6 +490,7 @@ void gRoomCore::pk_roommake_rep(PK_ROOMMAKER_REP *rep)
 		gUtil::DebugMsg("Success\n");
 		m_eRoom = ERM_ROOM;
 		gPlayerContainer::GetIF()->SetMyRoom(&rep->room);
+		SetFocus(gMainWin::GetIF()->m_hWnd);
 		gChat::GetIF()->MsgStackClear();
 	}
 }
@@ -810,7 +860,7 @@ bool gRoomCore::SetUp_Join()
 			ROOM_EDIT_POS_ID_X + ROOM_EDIT_SIZE_ID_W,
 			ROOM_EDIT_POS_ID_Y + ROOM_EDIT_SIZE_ID_H );
 
-	if(!m_EditPassEnter.SetUp(rcDest, NULL, ROOM_EDIT_LEN_ID, EDIT_PASSWORD))
+	if(!m_EditPassEnter.SetUp(rcDest, NULL, ROOM_EDIT_LEN_PW, EDIT_PASSWORD))
 		return false;
 
 
@@ -848,6 +898,7 @@ void gRoomCore::MainLoop_Join()
 void gRoomCore::Draw_Join()
 {
 	m_ImgBack[ERM_JOIN].Draw(ROOM_POS_JOIN_X, ROOM_POS_JOIN_Y);
+	gTopUI::GetIF()->Draw();
 
 	int			i, j;
 
@@ -869,7 +920,8 @@ void gRoomCore::Draw_Join()
 		{
 			OffsetRect(&rcSour, 0, JOIN_SIZE_RNAME_H);
 		}
-		else if(!m_Room[nRoomIdx].isGaming)		// wait
+		else if(!m_Room[nRoomIdx].isGaming &&
+				m_Room[nRoomIdx].nNowPlayer != m_Room[nRoomIdx].nMaxPlayer)		// wait
 		{
 			OffsetRect(&rcSour, 0, JOIN_SIZE_RNAME_H * 2);
 		}
@@ -932,11 +984,17 @@ void gRoomCore::Draw_Join()
 		// selected room
 		if(m_nSelected != -1)
 		{
-			gUtil::Text(JOIN_POS_MAKERNAME_X, JOIN_POS_MAKERNAME_Y, m_Room[m_nSelected].szRoomMaxPlayer[0]);
+			gUtil::Text(JOIN_POS_MAKERNAME_X, JOIN_POS_MAKERNAME_Y,
+								m_Room[m_nSelected].szRoomMaxPlayer[ m_Room[m_nSelected].nMakerIndex ]);
 
+			int			k = 0;
 			for(j = 0; j < m_Room[m_nSelected].nMaxPlayer; j++)
 			{
-				gUtil::Text(JOIN_POS_ROOMUSER_X, JOIN_POS_ROOMUSER_Y + JOIN_TERM_ROOMUSER_Y * j, m_Room[m_nSelected].szRoomMaxPlayer[j]);
+				if(j == m_Room[m_nSelected].nMakerIndex)
+					continue;
+
+				gUtil::Text(JOIN_POS_ROOMUSER_X, JOIN_POS_ROOMUSER_Y + JOIN_TERM_ROOMUSER_Y * k, m_Room[m_nSelected].szRoomMaxPlayer[j]);
+				k++;
 			}
 		}
 
@@ -954,6 +1012,29 @@ bool gRoomCore::SetUp_Room()
 {
 	if(!m_ImgBack[ERM_ROOM].Load(ROOM_FILE_ROOM_BACK))
 		return false;
+
+	if(!m_ImgCharBack.Load(WAIT_FILE_CHARBACK))
+		return false;
+
+	int			i;
+
+	RECT		rcDest;
+
+	SetRect(&rcDest,
+			WAIT_BTN_POS_READY_X,
+			WAIT_BTN_POS_READY_Y,
+			WAIT_BTN_POS_READY_X + WAIT_BTN_SIZE_READY_W,
+			WAIT_BTN_POS_READY_Y + WAIT_BTN_SIZE_READY_H );
+	if(!m_WaitBtn[BWM_READY].SetUp(WAIT_BTN_FILE_READY, false, rcDest))
+		return false;
+	if(!m_WaitBtn[BWM_START].SetUp(WAIT_BTN_FILE_START, false, rcDest))
+		return false;
+
+	if(!m_ImgSelBack.Load(WAIT_FILE_SELBACK))
+		return false;
+
+	m_bCharSel	= false;
+	m_nSelUser	= -1;
 
 	return true;
 }
@@ -997,8 +1078,67 @@ void gRoomCore::MainLoop_Room()
 void gRoomCore::Draw_Room()
 {
 	m_ImgBack[ERM_ROOM].Draw(ROOM_POS_ROOM_X, ROOM_POS_ROOM_Y);
+	gTopUI::GetIF()->Draw();
+
+	int			i;
+
+	ROOM	*room = &gPlayerContainer::GetIF()->m_MyRoom;
+
+
+	// 뒤에 캐릭터정보 배경
+	for(i = 0; i < room->nMaxPlayer; i++)
+	{
+		RECT		rcDest, rcSour;
+
+		SetRect(&rcDest,
+				WAIT_POS_CHARBACK_X,
+				WAIT_POS_CHARBACK_Y,
+				WAIT_POS_CHARBACK_X + WAIT_SIZE_CHARBACK_W,
+				WAIT_POS_CHARBACK_Y + WAIT_SIZE_CHARBACK_H );
+		OffsetRect(&rcDest,
+			(i % 4) * (WAIT_TERM_CHARBACK_X + WAIT_SIZE_CHARBACK_W), (i / 4) * (WAIT_TERM_CHARBACK_Y + WAIT_SIZE_CHARBACK_H));
+
+		SetRect(&rcSour,
+				0, 0, WAIT_SIZE_CHARBACK_W, WAIT_SIZE_CHARBACK_H);
+		if(strlen(room->szRoomMaxPlayer[i]) > 0)
+		{
+			OffsetRect(&rcSour, WAIT_SIZE_CHARBACK_W, 0);
+		}
+		m_ImgCharBack.Draw(rcDest, rcSour);
+	}
+
+	// 내가 방장
+	if(strcmp(room->szRoomMaxPlayer[room->nMakerIndex], gPlayerContainer::GetIF()->m_MyPlayer.szID) == 0)
+	{
+		m_WaitBtn[BWM_START].Draw();
+	}
+	else
+	{
+		m_WaitBtn[BWM_READY].Draw();
+	}
+
+	// 캐릭터 이름
+	gUtil::BeginText();
+	for(i = 0; i < room->nMaxPlayer; i++)
+	{
+		if(strlen(room->szRoomMaxPlayer[i]) > 0)
+		{
+			int		x, y;
+
+			x = WAIT_POS_CHARBACK_X + (i % 4) * (WAIT_TERM_CHARBACK_X + WAIT_SIZE_CHARBACK_W) + WAIT_TERM_CHARNAMEBACK_X;
+			y = WAIT_POS_CHARBACK_Y + (i / 4) * (WAIT_TERM_CHARBACK_Y + WAIT_SIZE_CHARBACK_H) + WAIT_TERM_CHARNAMEBACK_Y;
+
+			gUtil::Text(x, y, room->szRoomMaxPlayer[i]);
+		}
+	}
+	gUtil::EndText();
 
 	gChat::GetIF()->Draw();
+
+	if(m_bCharSel)
+	{
+		m_ImgSelBack.Draw(WAIT_POS_SELBACK_X, WAIT_POS_SELBACK_Y);
+	}
 }
 
 
@@ -1149,6 +1289,7 @@ void gRoomCore::pk_roomjoin_rep(PK_ROOMJOIN_REP *rep)
 				SetFocus(gMainWin::GetIF()->m_hWnd);
 				m_eRoom = ERM_ROOM;
 				gPlayerContainer::GetIF()->SetMyRoom(&rep->joinroom);
+				gPlayerContainer::GetIF()->SetPlayerList(rep->playerlist);
 				gChat::GetIF()->MsgStackClear();
 			}
 			break;
@@ -1180,6 +1321,37 @@ void gRoomCore::OnLButtonDown_Room()
 		chat->OnLbuttonDown(mouse->m_nPosX, mouse->m_nPosY);
 		return;
 	}
+
+	ROOM	*room = &gPlayerContainer::GetIF()->m_MyRoom;
+	int		i;
+
+	// 뒤에 캐릭터정보 배경
+	for(i = 0; i < room->nMaxPlayer; i++)
+	{
+		RECT		rcDest;
+
+		SetRect(&rcDest,
+			WAIT_POS_CHARBACK_X,
+			WAIT_POS_CHARBACK_Y,
+			WAIT_POS_CHARBACK_X + WAIT_SIZE_CHARBACK_W,
+			WAIT_POS_CHARBACK_Y + WAIT_SIZE_CHARBACK_H );
+		OffsetRect(&rcDest,
+			(i % 4) * (WAIT_TERM_CHARBACK_X + WAIT_SIZE_CHARBACK_W), (i / 4) * (WAIT_TERM_CHARBACK_Y + WAIT_SIZE_CHARBACK_H));
+
+		if(strlen(room->szRoomMaxPlayer[i]) > 0)
+		{
+			if(gUtil::PointInRect(mouse->m_nPosX, mouse->m_nPosY, rcDest))
+			{
+				if( strcmp(gPlayerContainer::GetIF()->m_MyPlayer.szID, room->szRoomMaxPlayer[i]) == 0 
+					&& m_nSelUser == i)
+				{
+					m_bCharSel = true;
+				}
+				m_nSelUser = i;
+				break;
+			}
+		}
+	}
 }
 
 void gRoomCore::OnMouseMove_Room()
@@ -1192,9 +1364,22 @@ void gRoomCore::OnMouseMove_Room()
 		chat->OnMouseMove(mouse->m_nPosX, mouse->m_nPosY);
 		return;
 	}
+
+	ROOM	*room = &gPlayerContainer::GetIF()->m_MyRoom;
+
+	int		i;
+
+	for(i = 0; i < BWM_END; i++)
+	{
+		if(!m_WaitBtn[i].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+			m_WaitBtn[i].m_eBtnMode = EBM_NONE;
+		else
+			m_WaitBtn[i].m_eBtnMode = EBM_HOVER;
+
+	}
 }
 
-void gRoomCore::OnLbuttonUp_Room()
+void gRoomCore::OnLButtonUp_Room()
 {
 	gMouse		*mouse	= gMouse::GetIF();
 	gChat		*chat	= gChat::GetIF();
@@ -1204,4 +1389,17 @@ void gRoomCore::OnLbuttonUp_Room()
 		chat->OnLbuttonUp(mouse->m_nPosX, mouse->m_nPosY);
 		return;
 	}
+}
+
+void gRoomCore::pk_roomrefresh_rep(PK_ROOMREFRESH_REP *rep)
+{
+	gPlayerContainer::GetIF()->SetMyRoom(&rep->room);
+	gPlayerContainer::GetIF()->SetPlayerList(rep->playerlist);
+}
+
+void gRoomCore::OnRButtonDown_Room()
+{
+	gMouse		*mouser = gMouse::GetIF();
+
+	m_bCharSel = false;
 }

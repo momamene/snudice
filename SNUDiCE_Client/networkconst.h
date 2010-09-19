@@ -41,6 +41,13 @@ enum ePROTOCOL
 
 	PL_ROOMJOIN_ASK,
 	PL_ROOMJOIN_REP,
+
+	PL_ROOMREFRESH_REP,
+
+	PL_CHARSELECT_ASK,
+	PL_GAMEREADY_ASK,
+	PL_GAMESTART_ASK,
+	PL_GAMESTART_REP,
 };
 
 
@@ -79,12 +86,64 @@ struct USER
 	char		szPW[IDLENGTH];
 };
 
+enum CLASSTYPE
+{
+	CLASS_NONE = -1,		// 선택안된거
+	// 언어
+	CLASS_LITERAL,			// 인문
+	CLASS_SOCIAL,			// 사회
+	CLASS_MANAGE,			// 경영
+	CLASS_LAW,				// 법
+	CLASS_LIFE,				// 생활과학
+	CLASS_TEACH,			// 사범대
+	CLASS_FREE,				// 자유전공
+
+	// 수리
+	CLASS_ENGINE,			// 공
+	CLASS_NATURE,			// 자연
+	CLASS_DOCTOR,			// 의사
+	CLASS_ANIMAL,			// 수의사
+	CLASS_DRUG,				// 약
+	CLASS_NURSE,			// 간호
+	CLASS_FARM,				// 농
+
+	// 예술
+	CLASS_MUSIC,			// 음
+	CLASS_ART,				// 미
+
+	CLASS_END,
+
+};
+
+#define CHARNAMELENGTH		16
+#define CHARCOLLEGENAME		16
+#define MAXCHARNUM			16		// 캐릭터 갯수
+
+struct CHARINFO
+{
+	char		szName[CHARNAMELENGTH];
+	char		szCollege[CHARCOLLEGENAME];
+	bool		bMale;
+	// 학습력
+	int			nLang;
+	int			nMath;
+	int			nArt;
+	// 체력
+	int			nStamina;
+	// 이동력
+	int			nDice4;
+	int			nDIce6;
+};
+
 struct PLAYER
 {
 	char		szID[IDLENGTH];
 	eCOREMODE	coreWhere;
 	int			nCoreFlag;
 	SOCKET		sock;
+
+	// 게임관련 정보
+	CLASSTYPE	classtype;
 };
 
 struct PK_LOGIN_ASK
@@ -164,7 +223,8 @@ struct ROOM
 	char	szRoomPass[MAXROOMPASS];
 	int		nMaxPlayer;
 	int		nNowPlayer;
-	char	szRoomMaxPlayer[ROOMMAXPLAYER][IDLENGTH];		// 0번째가 방장
+	int		nMakerIndex;									// 방장의index
+	char	szRoomMaxPlayer[ROOMMAXPLAYER][IDLENGTH];		// 기본적으로 0번째가 방장
 };
 
 struct PK_ROOMMAKER_ASK
@@ -211,10 +271,31 @@ enum ERROR_ROOMJOIN
 	ERJ_PASSWRONG,
 	ERJ_FULL,
 	ERJ_PLAYING,
+	ERJ_NOROOM,
 };
 
 struct PK_ROOMJOIN_REP
 {
 	ERROR_ROOMJOIN		result;
 	ROOM				joinroom;
+	PLAYER				playerlist[ROOMMAXPLAYER];
 };
+
+struct PK_ROOMREFRESH_REP
+{
+	ROOM				room;
+	PLAYER				playerlist[ROOMMAXPLAYER];
+};
+
+struct PK_CHARSELECT_ASK
+{
+	char				szID[IDLENGTH];
+	CLASSTYPE			classtype;
+};
+
+typedef struct
+{
+	char				szID[IDLENGTH];
+	bool				bReady;
+
+} PK_GAMEREADY_ASK, PK_GAMESTART_ASK;

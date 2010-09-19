@@ -250,7 +250,7 @@ void gChat::MainLoop()
 				}
 				break;
 			case SCR_UP:
-				if(GetTickCount() - tick > 1000)
+				if(GetTickCount() - tick > 500)
 				{
 					if(CHAT_SCROLL_PER_BTN > m_nSize)
 						return;
@@ -307,7 +307,7 @@ void gChat::MainLoop()
 	}
 	if(m_scroll.m_ImgBtn[SCR_UP].m_eBtnMode != EBM_CLICK
 		&& m_scroll.m_ImgBtn[SCR_DOWN].m_eBtnMode != EBM_CLICK)
-		tick = 1001;
+		tick = 501;
 }
 
 void gChat::MsgStackClear()

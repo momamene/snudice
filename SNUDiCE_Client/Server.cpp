@@ -205,6 +205,10 @@ void gServer::Recv()
 		case PL_ROOMJOIN_REP:
 			gRoomCore::GetIF()->pk_roomjoin_rep((PK_ROOMJOIN_REP*)m_pkDefault.strPacket);
 			break;
+
+		case PL_ROOMREFRESH_REP:
+			gRoomCore::GetIF()->pk_roomrefresh_rep((PK_ROOMREFRESH_REP*)m_pkDefault.strPacket);
+			break;
 	}
 }
 
