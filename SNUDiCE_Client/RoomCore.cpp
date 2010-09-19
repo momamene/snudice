@@ -153,13 +153,25 @@
 #define WAIT_TERM_CHARNAMEBACK_X	10
 #define WAIT_TERM_CHARNAMEBACK_Y	10
 
+// room - select
 #define WAIT_FILE_SELBACK			".\\Data\\Room\\wait_charselback.img"
 #define WAIT_SIZE_SELBACK_W			265
 #define WAIT_SIZE_SELBACK_H			445
 #define WAIT_POS_SELBACK_X			360
 #define WAIT_POS_SELBACK_Y			20
 
+#define SEL_FILE_STUDY				".\\Data\\Room\\wait_bar_study.img"
+#define SEL_FILE_STAMINA			".\\Data\\Room\\wait_bar_stamina.img"
+#define SEL_FILE_MOVE				".\\Data\\Room\\wait_bar_move.img"
+#define SEL_SIZE_BAR_W				120
+#define SEL_SIZE_BAR_H				12
 
+#define SEL_POS_BAR_X				(WAIT_POS_SELBACK_X + 142)
+#define SEL_POS_LANG_Y				(WAIT_POS_SELBACK_Y + 278)
+#define SEL_POS_MATH_Y				(WAIT_POS_SELBACK_Y + 296)
+#define SEL_POS_ART_Y				(WAIT_POS_SELBACK_Y + 314)
+#define SEL_POS_STAMINA_Y			(WAIT_POS_SELBACK_Y + 348)
+#define SEL_POS_MOVE_Y				(WAIT_POS_SELBACK_Y + 366)
 
 static gRoomCore s_RoomCore;
 
@@ -241,6 +253,10 @@ void gRoomCore::Release()
 
 	m_ImgSelBack.Release();
 	m_ImgCharBack.Release();
+
+	m_ImgBarStudy.Release();
+	m_ImgBarStamina.Release();
+	m_ImgBarMove.Release();
 
 }
 
@@ -1016,6 +1032,13 @@ bool gRoomCore::SetUp_Room()
 	if(!m_ImgCharBack.Load(WAIT_FILE_CHARBACK))
 		return false;
 
+	if(!m_ImgBarStudy.Load(SEL_FILE_STUDY))
+		return false;
+	if(!m_ImgBarStamina.Load(SEL_FILE_STAMINA))
+		return false;
+	if(!m_ImgBarMove.Load(SEL_FILE_MOVE))
+		return false;
+
 	int			i;
 
 	RECT		rcDest;
@@ -1322,33 +1345,41 @@ void gRoomCore::OnLButtonDown_Room()
 		return;
 	}
 
-	ROOM	*room = &gPlayerContainer::GetIF()->m_MyRoom;
 	int		i;
 
-	// 뒤에 캐릭터정보 배경
-	for(i = 0; i < room->nMaxPlayer; i++)
+	if(m_bCharSel)
 	{
-		RECT		rcDest;
 
-		SetRect(&rcDest,
-			WAIT_POS_CHARBACK_X,
-			WAIT_POS_CHARBACK_Y,
-			WAIT_POS_CHARBACK_X + WAIT_SIZE_CHARBACK_W,
-			WAIT_POS_CHARBACK_Y + WAIT_SIZE_CHARBACK_H );
-		OffsetRect(&rcDest,
-			(i % 4) * (WAIT_TERM_CHARBACK_X + WAIT_SIZE_CHARBACK_W), (i / 4) * (WAIT_TERM_CHARBACK_Y + WAIT_SIZE_CHARBACK_H));
-
-		if(strlen(room->szRoomMaxPlayer[i]) > 0)
+	}
+	else
+	{
+		ROOM	*room = &gPlayerContainer::GetIF()->m_MyRoom;
+		
+		// 뒤에 캐릭터정보 배경
+		for(i = 0; i < room->nMaxPlayer; i++)
 		{
-			if(gUtil::PointInRect(mouse->m_nPosX, mouse->m_nPosY, rcDest))
+			RECT		rcDest;
+
+			SetRect(&rcDest,
+				WAIT_POS_CHARBACK_X,
+				WAIT_POS_CHARBACK_Y,
+				WAIT_POS_CHARBACK_X + WAIT_SIZE_CHARBACK_W,
+				WAIT_POS_CHARBACK_Y + WAIT_SIZE_CHARBACK_H );
+			OffsetRect(&rcDest,
+				(i % 4) * (WAIT_TERM_CHARBACK_X + WAIT_SIZE_CHARBACK_W), (i / 4) * (WAIT_TERM_CHARBACK_Y + WAIT_SIZE_CHARBACK_H));
+
+			if(strlen(room->szRoomMaxPlayer[i]) > 0)
 			{
-				if( strcmp(gPlayerContainer::GetIF()->m_MyPlayer.szID, room->szRoomMaxPlayer[i]) == 0 
-					&& m_nSelUser == i)
+				if(gUtil::PointInRect(mouse->m_nPosX, mouse->m_nPosY, rcDest))
 				{
-					m_bCharSel = true;
+					if( strcmp(gPlayerContainer::GetIF()->m_MyPlayer.szID, room->szRoomMaxPlayer[i]) == 0 
+						&& m_nSelUser == i)
+					{
+						m_bCharSel = true;
+					}
+					m_nSelUser = i;
+					break;
 				}
-				m_nSelUser = i;
-				break;
 			}
 		}
 	}
@@ -1364,18 +1395,23 @@ void gRoomCore::OnMouseMove_Room()
 		chat->OnMouseMove(mouse->m_nPosX, mouse->m_nPosY);
 		return;
 	}
-
-	ROOM	*room = &gPlayerContainer::GetIF()->m_MyRoom;
-
+	
 	int		i;
 
-	for(i = 0; i < BWM_END; i++)
+	if(m_bCharSel)
 	{
-		if(!m_WaitBtn[i].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
-			m_WaitBtn[i].m_eBtnMode = EBM_NONE;
-		else
-			m_WaitBtn[i].m_eBtnMode = EBM_HOVER;
 
+	}
+	else
+	{
+		for(i = 0; i < BWM_END; i++)
+		{
+			if(!m_WaitBtn[i].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+				m_WaitBtn[i].m_eBtnMode = EBM_NONE;
+			else
+				m_WaitBtn[i].m_eBtnMode = EBM_HOVER;
+
+		}
 	}
 }
 
@@ -1399,7 +1435,7 @@ void gRoomCore::pk_roomrefresh_rep(PK_ROOMREFRESH_REP *rep)
 
 void gRoomCore::OnRButtonDown_Room()
 {
-	gMouse		*mouser = gMouse::GetIF();
+	gMouse		*mouse = gMouse::GetIF();
 
 	m_bCharSel = false;
 }

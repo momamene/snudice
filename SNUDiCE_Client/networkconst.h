@@ -243,6 +243,7 @@ struct PK_ROOMMAKER_REP
 {
 	ERROR_ROOMMAKE	result;
 	ROOM		room;
+	PLAYER		playerlist[ROOMMAXPLAYER];
 };
 
 struct PK_ROOMLIST_ASK

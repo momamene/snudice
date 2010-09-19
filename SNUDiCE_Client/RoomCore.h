@@ -69,6 +69,34 @@ enum BTNWAITMODE
 	BWM_END,
 };
 
+enum BTNSELMODE
+{
+	BSM_LITERAL,		// 인문
+	BSM_SOCIAL,			// 사회
+	BSM_MANAGE,			// 경영
+	BSM_LAW,			// 법
+	BSM_LIFE,			// 생활과학
+	BSM_TEACH,			// 사범대
+	BSM_FREE,			// 자유전공
+
+	// 수리
+	BSM_ENGINE,			// 공
+	BSM_NATURE,			// 자연
+	BSM_DOCTOR,			// 의사
+	BSM_ANIMAL,			// 수의사
+	BSM_DRUG,			// 약
+	BSM_NURSE,			// 간호
+	BSM_FARM,			// 농
+
+	// 예술
+	BSM_MUSIC,			// 음
+	BSM_ART,			// 미
+
+	BSM_SELECT,
+
+	BSM_END,
+};
+
 class gRoomCore : Core
 {
 public:
@@ -108,6 +136,11 @@ public:
 	gImage		m_ImgSelBack;
 	bool		m_bCharSel;				// 캐릭터 고르고 있냐
 	int			m_nSelUser;				// 선택된 유저
+
+	// room - select
+	gImage		m_ImgBarStudy;
+	gImage		m_ImgBarStamina;
+	gImage		m_ImgBarMove;
 
 
 public:
