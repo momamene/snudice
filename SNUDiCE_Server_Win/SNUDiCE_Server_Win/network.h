@@ -43,6 +43,8 @@ enum ePROTOCOL
 	PL_ROOMJOIN_REP,
 
 	PL_ROOMREFRESH_REP,
+
+	PL_CHARSELECT_ASK,
 };
 
 
@@ -218,6 +220,7 @@ struct PK_ROOMMAKER_REP
 {
 	ERROR_ROOMMAKE	result;
 	ROOM		room;
+	PLAYER		playerlist[ROOMMAXPLAYER];
 };
 
 struct PK_ROOMLIST_ASK
@@ -260,4 +263,10 @@ struct PK_ROOMREFRESH_REP
 {
 	ROOM				room;
 	PLAYER				playerlist[ROOMMAXPLAYER];
+};
+
+struct PK_CHARSELECT_ASK 
+{
+	char szID[IDLENGTH];
+	CLASSTYPE classtype;
 };

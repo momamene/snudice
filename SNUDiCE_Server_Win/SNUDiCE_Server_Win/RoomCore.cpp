@@ -109,6 +109,7 @@ void gRoomCore::FindPlayersFromIDs_RMP(int roomIndex,PLAYER* getPlayerlist) {
 	for(int j = 0 ; j < ROOMMAXPLAYER ; j++) {
 		if(m_rooms[roomIndex].szRoomMaxPlayer[j][0]=='\0') {
 			memset(&getPlayerlist[j],0,sizeof(PLAYER));
+			getPlayerlist[j].classtype = CLASS_NONE;
 		}
 		else {
 			getPlayerlist[j] = gPC->GetPlayerFromID(m_rooms[roomIndex].szRoomMaxPlayer[j]);
@@ -174,15 +175,15 @@ void gRoomCore::pk_roommaker_ask(PK_DEFAULT *pk, SOCKET sock)
 		rep.result = ERM_USINGNAME;
 	}
 	else {
-		// 이것이 방 만들기 함수로 들어가야 좀 더 깔끔한 함순데 일단 기억이나 하고 있자.
-		// Put 함수로 넣었다가 지운 흔적이 있네 ㅇㅇ
+	
 		m_isRoom[emptyRoom] = true;
 		m_rooms[emptyRoom] = ask.room;
 		gPC->PutMode(ask.szID,ECM_ROOM);
 		gPC->PutCoreFlag(ask.szID,emptyRoom);
-		gCCt->DeletePlayer(ask.szID); // 추가 코드
+		gCCt->DeletePlayer(ask.szID); 
 		rep.result = ERM_SUCCESS;
 		rep.room = m_rooms[emptyRoom];
+		FindPlayersFromIDs_RMP(emptyRoom,rep.playerlist);	// 추가 코드
 		wsprintf(buf,"[PK_ROOMMAKER_REP] Index : %d 성공! \n",emptyRoom);
 		OutputDebugString(buf);
 
@@ -220,6 +221,39 @@ void gRoomCore::pk_roomlist_ask(PK_DEFAULT *pk, SOCKET sock)
 	}
 }
 
+void gRoomCore::pk_charselect_ask(PK_DEFAULT *pk, SOCKET sock)
+{
+	gPlayerContainer *gPC = gPlayerContainer::GetIF();
+
+	PK_CHARSELECT_ASK ask;
+
+	SOCKADDR_IN			clientAddr;
+	int					addrLen;
+	char				buf [1024];
+
+	addrLen = sizeof(clientAddr);
+	getpeername(sock, (SOCKADDR*)&clientAddr, &addrLen);
+
+	ask = *((PK_CHARSELECT_ASK*)pk->strPacket);
+
+	wsprintf(buf,"[PK_CHARSELECT_ASK] %s\t player : %s\n", inet_ntoa(clientAddr.sin_addr), ask.szID);
+	OutputDebugString(buf);
+
+	PK_ROOMREFRESH_REP rep;
+
+	int nRoomIndex = gPC->GetCoreFlag(ask.szID);
+	if(flag<0) return;
+
+	if(!gPC->isClasstypeExistedInRoom(nRoomIndex,ask.classtype)) {
+		gPC->PutClassType(ask.szID,ask.classtype);		
+		// SendRoomListCauseChange(nRoomIndex);
+		rep.room = m_rooms[nRoomIndex];
+		PLAYER l_playerlist[ROOMMAXPLAYER];
+		FindPlayersFromIDs_RMP(nRoomIndex,l_playerlist);
+		memcpy(&rep.playerlist,&l_playerlist,sizeof(PLAYER)*ROOMMAXPLAYER);
+		gPC->SendSelect(PL_ROOMREFRESH_REP,sizeof(PK_ROOMREFRESH_REP),&rep,ECM_ROOM,nRoomIndex);
+	}
+}
 
 void gRoomCore::pk_roomjoin_ask(PK_DEFAULT *pk, SOCKET sock)
 {
@@ -259,20 +293,19 @@ void gRoomCore::pk_roomjoin_ask(PK_DEFAULT *pk, SOCKET sock)
 		rep.result = ERJ_FULL;
 		gMainWin::GetIF()->Send(PL_ROOMJOIN_REP, sizeof(rep), &rep, sock);
 	}
-	else 
+	else // 논리적으로 rep와 rep2의 중복이...
 	{
 
 		EnterTheRoom(nRoomIndex,ask.szID); 
 
+
 		PK_ROOMREFRESH_REP rep2;
 		rep2.room = m_rooms[nRoomIndex];
-
-		// l_playerlist code (정말로 함수로 만들고 싶은..)
 		PLAYER l_playerlist[ROOMMAXPLAYER];
 		FindPlayersFromIDs_RMP(nRoomIndex,l_playerlist);
 		memcpy(&rep2.playerlist,&l_playerlist,sizeof(PLAYER)*ROOMMAXPLAYER);
-
 		gPC->SendSelect(PL_ROOMREFRESH_REP,sizeof(PK_ROOMREFRESH_REP),&rep2,ECM_ROOM,nRoomIndex);
+
 
 		rep.result = ERJ_SUCCESS;
 		gPC->PutMode(ask.szID,ECM_ROOM);
@@ -310,6 +343,7 @@ void gRoomCore::SendRoomListCauseChange(int nPage) {
 	gPC->SendSelect(PL_ROOMLIST_REP,sizeof(PK_ROOMLIST_REP),&rep,ECM_ROOMJOIN,nPage);
 }
 
+
 bool gRoomCore::isRoomInPage(int nPage) {
 	for(int i = 0 ; i < MAXROOMFORPAGE ; i++) {
 		if(m_isRoom[i+nPage*MAXROOMFORPAGE]) 
@@ -317,3 +351,4 @@ bool gRoomCore::isRoomInPage(int nPage) {
 	}
 	return false;
 }
+

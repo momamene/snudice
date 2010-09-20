@@ -31,8 +31,11 @@ public:
 
 	bool			PutMode(char* id, eCOREMODE mode);
 	bool			PutCoreFlag(char* id, int flag);
+	bool			PutClassType(char*id, CLASSTYPE classtype);
 	eCOREMODE		GetMode(char* id);
 	int				GetCoreFlag(char* id);
+
+	bool			isClasstypeExistedInRoom(int flag,CLASSTYPE clsstype);
 
 	// packet
 
@@ -44,6 +47,8 @@ public:
 	
 	//PLAYER[ROOMMAXPLAYER] GetPlayersFromIDs_RMP(char* szID[ROOMMAXPLAYER]);
 	PLAYER			GetPlayerFromID(char* szID);	// return 값도 [8(RMP)]의 배열
+
+	void			Draw(HDC hdc);
 
 	//	void			PrintUserList();
 

@@ -145,6 +145,25 @@ bool gPlayerContainer::PutCoreFlag (char* id,int flag)
 	return false;
 }
 
+bool gPlayerContainer::PutClassType (char* id,CLASSTYPE classtype)
+{
+	PLAYER*		temp;
+
+	for(PLAYER_LIST::iterator it = m_PlayerList.begin();
+		it != m_PlayerList.end(); it++)
+	{
+		temp = *it;
+
+		if(strcmp(temp->szID,id)==0)
+		{
+			temp->classtype = classtype;
+			return true;
+		}
+	}
+
+	return false;
+}
+
 int gPlayerContainer::GetCoreFlag(char* id) {
 	PLAYER*		temp;
 	for(PLAYER_LIST::iterator it = m_PlayerList.begin() ; 
@@ -173,6 +192,23 @@ eCOREMODE gPlayerContainer::GetMode(char* id) {
 	return (eCOREMODE)-1;
 }
 
+bool gPlayerContainer::isClasstypeExistedInRoom(int flag,CLASSTYPE classtype)
+{
+	PLAYER*		temp;
+	for(PLAYER_LIST::iterator it = m_PlayerList.begin() ; 
+		it != m_PlayerList.end() ; it++)
+	{
+		temp = *it;
+		if(temp->coreWhere==ECM_ROOM&&temp->nCoreFlag==flag)
+		{
+			if(temp->nCoreFlag==classtype)
+			return true;
+		}
+	}
+	return false;
+}
+
+
 PLAYER gPlayerContainer::GetPlayerFromID(char* szID) {
 	PLAYER*		temp;
 	PLAYER		player;
@@ -184,11 +220,11 @@ PLAYER gPlayerContainer::GetPlayerFromID(char* szID) {
 			temp = *it;
 			if(strcmp(temp->szID,szID)==0)
 			{
-				player = *temp; 
+				//player = *temp; 
+				memcpy(&player,temp,sizeof(PLAYER));
 				break;
 			}
-		}
-	
+		}	
 	return player;
 } 
 
@@ -206,4 +242,47 @@ void gPlayerContainer::SendSelect (ePROTOCOL prot,int pkSize,void *pk,eCOREMODE 
 			gMainWin::GetIF()->Send(prot, pkSize, pk, temp->szID);
 		}
 	}
+}
+
+
+void gPlayerContainer::Draw (HDC hdc) 
+{
+	PLAYER*		temp;
+	char printo[128];
+	char buf [128];
+	int count = 0;
+	for(PLAYER_LIST::iterator it = m_PlayerList.begin();
+		it != m_PlayerList.end(); it++)
+	{
+		temp = *it;
+		if(temp->szID[0]!='\0') {
+			strcpy(printo,"coreWhere : ");
+			if(temp->coreWhere == ECM_NONLOGIN) {
+				strcat(printo,"ECM_NONLOGIN");
+			}
+			else if(temp->coreWhere == ECM_LOGIN) {
+				strcat(printo,"ECM_LOGIN");
+			}
+			else if(temp->coreWhere == ECM_BATTLENET) {
+				strcat(printo,"ECM_BATTLENET");
+			}
+			else if(temp->coreWhere == ECM_ROOMMAKE) {
+				strcat(printo,"ECM_ROOMMAKE");
+			}
+			else if(temp->coreWhere == ECM_ROOMJOIN) {
+				strcat(printo,"ECM_ROOMJOIN");
+			}
+			else if(temp->coreWhere == ECM_ROOM) {
+				strcat(printo,"ECM_ROOM");
+			}
+			else {
+				strcat(printo,"ECM_GAMES");
+			}
+			sprintf(buf," Flag : %d Sock : %d Char : %d ID : %s",temp->nCoreFlag,temp->sock,temp->classtype,temp->szID);
+			strcat(printo,buf);
+			TextOut(hdc,0,count*15+15,printo,strlen(printo));
+		}
+		count++;
+	}
+	TextOut(hdc,0,0,"Player Infomation",strlen("Player Infomation"));
 }

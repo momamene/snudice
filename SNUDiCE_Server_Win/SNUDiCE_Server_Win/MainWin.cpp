@@ -47,7 +47,7 @@ void gMainWin::SetUpWindow(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow
 	WndClass.style			= CS_HREDRAW | CS_VREDRAW;
 	RegisterClass(&WndClass);
 
-	m_hWnd=CreateWindow(WNDNAME, WNDNAME, WNDSTYLE,
+	m_hWnd = CreateWindow(WNDNAME, WNDNAME, WNDSTYLE,
 		CW_USEDEFAULT, CW_USEDEFAULT, WNDSIZEW, WNDSIZEH,
 		NULL, (HMENU)NULL, hInstance, NULL);
 
@@ -246,6 +246,8 @@ void gMainWin::Recv(PK_DEFAULT *pk, SOCKET sock)
 			break;
 		case PL_ROOMJOIN_ASK:
 			gRoomCore::GetIF()->pk_roomjoin_ask(pk,sock);
+		case PL_CHARSELECT_ASK:
+			gRoomCore::GetIF()->pk_charselect_ask(pk,sock);
 	}
 
 }
@@ -316,8 +318,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 {
 	gMainWin	*mw		= gMainWin::GetIF();
 
+	PAINTSTRUCT ps;
+	HDC hdc;
+
 	switch(iMsg)
 	{
+	case WM_LBUTTONDOWN:
+		InvalidateRect(hWnd,NULL,true);
+		return 0;
 	case WM_KEYDOWN:
 		if(!mw->m_bActive)
 			return 0;
@@ -343,6 +351,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 			mw->m_bActive = false;
 			break;
 		}
+		return 0;
+
+	case WM_PAINT:
+		hdc = BeginPaint(hWnd,&ps);
+		gPlayerContainer::GetIF()->Draw(hdc);
+		EndPaint(hWnd,&ps);
 		return 0;
 
 	case WM_DESTROY:
@@ -393,13 +407,6 @@ void err_display(char *msg)
 
 // client <-> server °£ Ελ½Ε.
 
-/*
-void gMainWin::ExitPlayer(SOCKET client_sock,char* clientID,SOCKADDR_IN clientAddr)
-{
-
-
-}
-*/
 void gMainWin::UserRelease(SOCKET client_sock,SOCKADDR_IN clientAddr) {
 	char			clientID[IDLENGTH];
 
