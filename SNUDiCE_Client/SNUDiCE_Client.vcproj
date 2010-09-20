@@ -215,6 +215,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Map.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\PopUp.cpp"
 					>
 				</File>
@@ -308,6 +312,10 @@
 				</File>
 				<File
 					RelativePath=".\Edit.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Map.h"
 					>
 				</File>
 				<File
