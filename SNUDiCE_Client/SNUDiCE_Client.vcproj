@@ -227,6 +227,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\SubjectContainer.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\TopUI.cpp"
 					>
 				</File>
@@ -324,6 +328,10 @@
 				</File>
 				<File
 					RelativePath=".\Scrollbar.h"
+					>
+				</File>
+				<File
+					RelativePath=".\SubjectContainer.h"
 					>
 				</File>
 				<File

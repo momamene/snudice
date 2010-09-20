@@ -1,5 +1,6 @@
 #include "Map.h"
 #include "MainWin.h" // 위치 정보 등을 받습니다.
+#include "SubjectContainer.h"
 
 #define TILE_FOOD_IMG		".\\Data\\Map\\food.img"
 #define TILE_CARD_IMG		".\\Data\\Map\\card.img"
@@ -96,6 +97,7 @@ void gMap::LoadFileToBKS()
 void gMap::LoadBKSToTM()
 {
 	gMainWin *gmainWin = gMainWin::GetIF(); // temp
+	gSubjectContainer *gSC = gSubjectContainer::GetIF();
 	int i;
 	m_xInitSpacePos	= -1;
 	m_yInitSpacePos	= -1;
@@ -116,6 +118,10 @@ void gMap::LoadBKSToTM()
 					m_xInitSpacePos = i;
 					m_yInitSpacePos = j;
 				}
+				else if (tileMap[i*LINEY+j].tileType==TY_CLASS){
+					gSC->putSubject(tileMap[i*LINEY+j],i*LINEY+j);
+				}
+				
 			}
 			else tileMap[i*LINEY+j].init(i,j);
 		}
