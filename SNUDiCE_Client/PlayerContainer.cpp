@@ -39,6 +39,15 @@ void gPlayerContainer::SetMyRoom(ROOM *room)
 void gPlayerContainer::SetPlayerList(PLAYER *list)
 {
 	memcpy(m_PlayerList, list, sizeof(PLAYER) * ROOMMAXPLAYER);
+
+	for(int i = 0; i < ROOMMAXPLAYER; i++)
+	{
+		if(strcmp(m_PlayerList[i].szID, m_MyPlayer.szID) == 0)
+		{
+			memcpy(&m_MyPlayer, &m_PlayerList[i], sizeof PLAYER);
+			break;
+		}
+	}
 }
 
 bool gPlayerContainer::SetUpCharInfo()

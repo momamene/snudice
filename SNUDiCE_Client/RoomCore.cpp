@@ -163,15 +163,42 @@
 #define SEL_FILE_STUDY				".\\Data\\Room\\wait_bar_study.img"
 #define SEL_FILE_STAMINA			".\\Data\\Room\\wait_bar_stamina.img"
 #define SEL_FILE_MOVE				".\\Data\\Room\\wait_bar_move.img"
-#define SEL_SIZE_BAR_W				120
+#define SEL_SIZE_BAR_W				102
 #define SEL_SIZE_BAR_H				12
 
-#define SEL_POS_BAR_X				(WAIT_POS_SELBACK_X + 142)
+#define SEL_POS_BAR_X				(WAIT_POS_SELBACK_X + 139)
 #define SEL_POS_LANG_Y				(WAIT_POS_SELBACK_Y + 278)
-#define SEL_POS_MATH_Y				(WAIT_POS_SELBACK_Y + 296)
-#define SEL_POS_ART_Y				(WAIT_POS_SELBACK_Y + 314)
-#define SEL_POS_STAMINA_Y			(WAIT_POS_SELBACK_Y + 348)
+#define SEL_POS_MATH_Y				(WAIT_POS_SELBACK_Y + 298)
+#define SEL_POS_ART_Y				(WAIT_POS_SELBACK_Y + 318)
+#define SEL_POS_STAMINA_Y			(WAIT_POS_SELBACK_Y + 346)
 #define SEL_POS_MOVE_Y				(WAIT_POS_SELBACK_Y + 366)
+
+#define SEL_FILE_OUTLINE			".\\Data\\Room\\wait_btn_outline.img"
+#define SEL_BTN_FILE_LANG			".\\Data\\Room\\wait_btn_lang.img"
+#define SEL_BTN_FILE_MATH			".\\Data\\Room\\wait_btn_math.img"
+#define SEL_BTN_FILE_ART			".\\Data\\Room\\wait_btn_art.img"
+#define SEL_BTN_SIZE_LANG_W			81
+#define SEL_BTN_SIZE_LANG_H			21
+#define SEL_BTN_POS_CHARSEL_X		375
+#define SEL_BTN_POS_CHARSEL_Y		54
+#define SEL_BTN_TERM_CHARSEL_Y		4
+
+#define SEL_BTN_FILE_SELECT			".\\Data\\Room\\wait_btn_select.img"
+#define SEL_BTN_SIZE_SELECT_W		110
+#define SEL_BTN_SIZE_SELECT_H		30
+#define SEL_BTN_POS_SELECT_X		485
+#define SEL_BTN_POS_SELECT_Y		405
+
+#define SEL_POS_CHARIMG_X			478
+#define SEL_POS_CHARIMG_Y			62
+
+#define SEL_TERM_CHARNAME_X			6
+#define SEL_TERM_CHARNAME_Y			6
+
+#define SEL_POS_COLLEGE_X			479
+#define SEL_POS_COLLEGE_Y			220
+#define SEL_POS_SEX_X				550
+#define SEL_POS_SEX_Y				220
 
 static gRoomCore s_RoomCore;
 
@@ -257,6 +284,11 @@ void gRoomCore::Release()
 	m_ImgBarStudy.Release();
 	m_ImgBarStamina.Release();
 	m_ImgBarMove.Release();
+
+	m_ImgMySel.Release();
+
+	for(i = 0; i < BSM_END; i++)
+		m_SelBtn[i].Release();
 
 }
 
@@ -498,7 +530,7 @@ void gRoomCore::pk_roommake_rep(PK_ROOMMAKER_REP *rep)
 {
 	if(rep->result == ERM_USINGNAME)
 	{
-		gUtil::DebugMsg("Using Name\n");
+		gUtil::DebugMsg("aUsing Name\n");
 		gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_9);
 	}
 	else
@@ -506,6 +538,7 @@ void gRoomCore::pk_roommake_rep(PK_ROOMMAKER_REP *rep)
 		gUtil::DebugMsg("Success\n");
 		m_eRoom = ERM_ROOM;
 		gPlayerContainer::GetIF()->SetMyRoom(&rep->room);
+		gPlayerContainer::GetIF()->SetPlayerList(rep->playerlist);
 		SetFocus(gMainWin::GetIF()->m_hWnd);
 		gChat::GetIF()->MsgStackClear();
 	}
@@ -1032,13 +1065,6 @@ bool gRoomCore::SetUp_Room()
 	if(!m_ImgCharBack.Load(WAIT_FILE_CHARBACK))
 		return false;
 
-	if(!m_ImgBarStudy.Load(SEL_FILE_STUDY))
-		return false;
-	if(!m_ImgBarStamina.Load(SEL_FILE_STAMINA))
-		return false;
-	if(!m_ImgBarMove.Load(SEL_FILE_MOVE))
-		return false;
-
 	int			i;
 
 	RECT		rcDest;
@@ -1058,6 +1084,62 @@ bool gRoomCore::SetUp_Room()
 
 	m_bCharSel	= false;
 	m_nSelUser	= -1;
+
+	// sel
+
+	if(!m_ImgBarStudy.Load(SEL_FILE_STUDY))
+		return false;
+	if(!m_ImgBarStamina.Load(SEL_FILE_STAMINA))
+		return false;
+	if(!m_ImgBarMove.Load(SEL_FILE_MOVE))
+		return false;
+
+	if(!m_ImgMySel.Load(SEL_FILE_OUTLINE))
+		return false;
+
+	SetRect(&rcDest,
+			SEL_BTN_POS_CHARSEL_X,
+			SEL_BTN_POS_CHARSEL_Y,
+			SEL_BTN_POS_CHARSEL_X + SEL_BTN_SIZE_LANG_W,
+			SEL_BTN_POS_CHARSEL_Y + SEL_BTN_SIZE_LANG_H );
+
+	RECT		rcTemp;
+
+	for(i = 0; i < BSM_SELECT; i++)
+	{
+		rcTemp = rcDest;
+		OffsetRect(&rcTemp, 0, (SEL_BTN_SIZE_LANG_H + SEL_BTN_TERM_CHARSEL_Y) * i);
+
+		if(i <= BSM_FREE)
+		{
+			if(!m_SelBtn[i].SetUp(SEL_BTN_FILE_LANG, false, rcTemp))
+				return false;
+			continue;
+		}
+		if(i <= BSM_FARM)
+		{
+			if(!m_SelBtn[i].SetUp(SEL_BTN_FILE_MATH, false, rcTemp))
+				return false;
+			continue;
+		}
+		if(i <= BSM_ART)
+		{
+			if(!m_SelBtn[i].SetUp(SEL_BTN_FILE_ART, false, rcTemp))
+				return false;
+			continue;
+		}
+	}
+
+	SetRect(&rcDest,
+			SEL_BTN_POS_SELECT_X,
+			SEL_BTN_POS_SELECT_Y,
+			SEL_BTN_POS_SELECT_X + SEL_BTN_SIZE_SELECT_W,
+			SEL_BTN_POS_SELECT_Y + SEL_BTN_SIZE_SELECT_H );
+
+	if(!m_SelBtn[BSM_SELECT].SetUp(SEL_BTN_FILE_SELECT, false, rcDest))
+		return false;
+
+	m_nSelChar	= -1;
 
 	return true;
 }
@@ -1160,7 +1242,115 @@ void gRoomCore::Draw_Room()
 
 	if(m_bCharSel)
 	{
+		PLAYER	*list = gPlayerContainer::GetIF()->m_PlayerList;
+
 		m_ImgSelBack.Draw(WAIT_POS_SELBACK_X, WAIT_POS_SELBACK_Y);
+
+		for(i = 0; i < ROOMMAXPLAYER; i++)
+		{
+			if(list[i].classtype != -1)
+			{
+				m_SelBtn[ list[i].classtype ].m_eBtnMode = EBM_CLICK;
+			}
+		}
+
+		for(i = 0; i < BSM_SELECT; i++)
+		{
+			m_SelBtn[i].Draw();
+		}
+		if(m_nSelChar != -1)
+		{
+			m_ImgMySel.Draw(m_SelBtn[ m_nSelChar ].m_rcPos.left, m_SelBtn[ m_nSelChar ].m_rcPos.top);
+
+			// char img
+			gPlayerContainer::GetIF()->m_ImgInfo[ m_nSelChar ].ImgCharSel.Draw(SEL_POS_CHARIMG_X, SEL_POS_CHARIMG_Y);
+
+			// stat
+			RECT	rcSour, rcDest, rcTemp;
+
+			SetRect(&rcTemp,
+				0, 0, SEL_SIZE_BAR_W, SEL_SIZE_BAR_H );
+
+			//	lang
+			rcSour = rcTemp;
+			OffsetRect(&rcSour, 0, gPlayerContainer::GetIF()->m_CharInfo[m_nSelChar].nLang * SEL_SIZE_BAR_H );
+			SetRect(&rcDest,
+					SEL_POS_BAR_X,
+					SEL_POS_LANG_Y,
+					SEL_POS_BAR_X + SEL_SIZE_BAR_W,
+					SEL_POS_LANG_Y + SEL_SIZE_BAR_H);
+
+			m_ImgBarStudy.Draw(rcDest, rcSour);
+
+			// math
+			rcSour = rcTemp;
+			OffsetRect(&rcSour, 0, gPlayerContainer::GetIF()->m_CharInfo[m_nSelChar].nMath * SEL_SIZE_BAR_H );
+			SetRect(&rcDest,
+				SEL_POS_BAR_X,
+				SEL_POS_MATH_Y,
+				SEL_POS_BAR_X + SEL_SIZE_BAR_W,
+				SEL_POS_MATH_Y + SEL_SIZE_BAR_H);
+
+			m_ImgBarStudy.Draw(rcDest, rcSour);
+
+			// art
+			rcSour = rcTemp;
+			OffsetRect(&rcSour, 0, gPlayerContainer::GetIF()->m_CharInfo[m_nSelChar].nArt * SEL_SIZE_BAR_H );
+			SetRect(&rcDest,
+					SEL_POS_BAR_X,
+					SEL_POS_ART_Y,
+					SEL_POS_BAR_X + SEL_SIZE_BAR_W,
+					SEL_POS_ART_Y + SEL_SIZE_BAR_H);
+			m_ImgBarStudy.Draw(rcDest, rcSour);
+
+			// stamina
+			rcSour = rcTemp;
+			OffsetRect(&rcSour, 0, gPlayerContainer::GetIF()->m_CharInfo[m_nSelChar].nStamina * SEL_SIZE_BAR_H );
+			SetRect(&rcDest,
+				SEL_POS_BAR_X,
+				SEL_POS_STAMINA_Y,
+				SEL_POS_BAR_X + SEL_SIZE_BAR_W,
+				SEL_POS_STAMINA_Y + SEL_SIZE_BAR_H);
+			m_ImgBarStamina.Draw(rcDest, rcSour);					
+
+			// move
+			rcSour = rcTemp;
+			int		nMove = gPlayerContainer::GetIF()->m_CharInfo[m_nSelChar].nDice4 * 4 + 
+							gPlayerContainer::GetIF()->m_CharInfo[m_nSelChar].nDIce6 * 6;
+
+			OffsetRect(&rcSour, 0, (nMove - 2) * SEL_SIZE_BAR_H );
+			SetRect(&rcDest,
+				SEL_POS_BAR_X,
+				SEL_POS_MOVE_Y,
+				SEL_POS_BAR_X + SEL_SIZE_BAR_W,
+				SEL_POS_MOVE_Y + SEL_SIZE_BAR_H);
+			m_ImgBarMove.Draw(rcDest, rcSour);
+		}
+
+		// select
+		m_SelBtn[BSM_SELECT].Draw();
+
+		// string
+		gUtil::BeginText();
+			for(i = 0; i < BSM_SELECT; i++)
+			{
+				gUtil::Text(m_SelBtn[i].m_rcPos.left + SEL_TERM_CHARNAME_X, m_SelBtn[i].m_rcPos.top + SEL_TERM_CHARNAME_Y,
+					gPlayerContainer::GetIF()->m_CharInfo[i].szName);	
+			}
+
+			if(m_nSelChar != -1)
+			{
+				gUtil::Text(SEL_POS_COLLEGE_X, SEL_POS_COLLEGE_Y, gPlayerContainer::GetIF()->m_CharInfo[m_nSelChar].szCollege);
+
+				char	szBuf[8];
+				if(gPlayerContainer::GetIF()->m_CharInfo[m_nSelChar].bMale)
+					wsprintf(szBuf, "♂");
+				else
+					wsprintf(szBuf, "♀");
+
+				gUtil::Text(SEL_POS_SEX_X, SEL_POS_SEX_Y, szBuf);
+			}
+		gUtil::EndText();
 	}
 }
 
@@ -1339,20 +1529,46 @@ void gRoomCore::OnLButtonDown_Room()
 	gMouse		*mouse	= gMouse::GetIF();
 	gChat		*chat	= gChat::GetIF();
 
-	if(chat->PointInUI(mouse->m_nPosX, mouse->m_nPosY))
-	{
-		chat->OnLbuttonDown(mouse->m_nPosX, mouse->m_nPosY);
-		return;
-	}
-
 	int		i;
 
 	if(m_bCharSel)
 	{
+		if(chat->PointInUI(mouse->m_nPosX, mouse->m_nPosY))
+		{
+			chat->OnLbuttonDown(mouse->m_nPosX, mouse->m_nPosY);
+		}
 
+		for(i = 0; i < BSM_SELECT; i++)
+		{
+			if(m_SelBtn[i].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+			{
+				if(m_SelBtn[i].m_eBtnMode == EBM_CLICK)
+					return;
+
+				m_nSelChar = i;
+			}
+		}
+		if(m_nSelChar != -1)
+		{
+			if(m_SelBtn[BSM_SELECT].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+			{
+				PK_CHARSELECT_ASK		ask;
+
+				ask.classtype = (CLASSTYPE)m_nSelChar;
+				strcpy(ask.szID, gPlayerContainer::GetIF()->m_MyPlayer.szID);
+
+				gServer::GetIF()->Send(PL_CHARSELECT_ASK, sizeof ask, &ask);
+			}
+		}
 	}
 	else
 	{
+		if(chat->PointInUI(mouse->m_nPosX, mouse->m_nPosY))
+		{
+			chat->OnLbuttonDown(mouse->m_nPosX, mouse->m_nPosY);
+			return;
+		}
+
 		ROOM	*room = &gPlayerContainer::GetIF()->m_MyRoom;
 		
 		// 뒤에 캐릭터정보 배경
@@ -1376,6 +1592,7 @@ void gRoomCore::OnLButtonDown_Room()
 						&& m_nSelUser == i)
 					{
 						m_bCharSel = true;
+						m_nSelChar = gPlayerContainer::GetIF()->m_MyPlayer.classtype;
 					}
 					m_nSelUser = i;
 					break;
@@ -1390,20 +1607,42 @@ void gRoomCore::OnMouseMove_Room()
 	gMouse		*mouse	= gMouse::GetIF();
 	gChat		*chat	= gChat::GetIF();
 
-	if(chat->PointInUI(mouse->m_nPosX, mouse->m_nPosY))
-	{
-		chat->OnMouseMove(mouse->m_nPosX, mouse->m_nPosY);
-		return;
-	}
-	
+
 	int		i;
 
 	if(m_bCharSel)
 	{
+		if(chat->PointInUI(mouse->m_nPosX, mouse->m_nPosY))
+		{
+			chat->OnMouseMove(mouse->m_nPosX, mouse->m_nPosY);
+		}
 
+		for(i = 0; i < BSM_SELECT; i++)
+		{
+			if(m_SelBtn[i].m_eBtnMode != EBM_CLICK)
+			{
+				if(!m_SelBtn[i].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+					m_SelBtn[i].m_eBtnMode = EBM_NONE;
+				else
+					m_SelBtn[i].m_eBtnMode = EBM_HOVER;
+			}
+		}
+		for(i = BSM_SELECT; i < BSM_END; i++)
+		{
+			if(!m_SelBtn[i].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+				m_SelBtn[i].m_eBtnMode = EBM_NONE;
+			else
+				m_SelBtn[i].m_eBtnMode = EBM_HOVER;
+		}
 	}
 	else
 	{
+		if(chat->PointInUI(mouse->m_nPosX, mouse->m_nPosY))
+		{
+			chat->OnMouseMove(mouse->m_nPosX, mouse->m_nPosY);
+			return;
+		}
+
 		for(i = 0; i < BWM_END; i++)
 		{
 			if(!m_WaitBtn[i].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
@@ -1438,4 +1677,5 @@ void gRoomCore::OnRButtonDown_Room()
 	gMouse		*mouse = gMouse::GetIF();
 
 	m_bCharSel = false;
+	m_nSelChar = -1;
 }

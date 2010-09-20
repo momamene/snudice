@@ -141,7 +141,9 @@ public:
 	gImage		m_ImgBarStudy;
 	gImage		m_ImgBarStamina;
 	gImage		m_ImgBarMove;
-
+	gImgButton	m_SelBtn[BSM_END];
+	gImage		m_ImgMySel;
+	int			m_nSelChar;				// 캐릭터 고르기 몇번쨰냐
 
 public:
 	// overridng from Core 인터페이스
