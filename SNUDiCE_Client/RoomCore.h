@@ -120,6 +120,7 @@ public:
 	gEdit		m_EditPass;
 
 	// join
+	gImage		m_ImgRNameBack;
 	gImage		m_ImgRoomName;
 	gImgButton	m_JoinBtn[BJM_END];
 	int			m_nSelected;
@@ -138,6 +139,7 @@ public:
 	int			m_nSelUser;				// 선택된 유저
 
 	// room - select
+	gImage		m_ImgCNameBack;
 	gImage		m_ImgBarStudy;
 	gImage		m_ImgBarStamina;
 	gImage		m_ImgBarMove;

@@ -9,6 +9,7 @@
 #pragma once
 #include <windows.h>
 #include <ddraw.h>
+#include "Image.h"
 #include "networkconst.h"
 
 //#define FULLSCREEN		//	define 풀었다 해제하면서 fullscreen 체크
@@ -20,6 +21,8 @@
 #define WNDSTYLE		(WS_CAPTION | WS_SYSMENU)
 #define BEEPHACKREG		"Control Panel\\Sound"
 #define BEEPHACKREG2	"AppEvents\\Schemes\\Apps\\.Default\\.Default\\.Current"
+
+#define BACKBUFFERIMG	".\\Data\\Login\\backbuffer.img"
 
 
 class gMainWin  
@@ -36,6 +39,8 @@ public:
 	BOOL		m_Keys[256];				// keyboard
 	RECT		m_rcScr;					// screen 출력 영역
 	bool		m_bActive;					// 게임(윈도우)가 활성화 되어있나
+	
+	gImage		m_ImgBack;					// 항상 뒤에 출력이미지
 
 	eCOREMODE	m_eCoreMode;				// 게임이 어떤 모드냐
 

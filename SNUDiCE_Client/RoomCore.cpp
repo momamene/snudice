@@ -74,6 +74,10 @@
 #define ROOM_POS_JOIN_X				0
 #define ROOM_POS_JOIN_Y				60
 
+#define JOIN_FILE_RNAMEBACK			".\\Data\\Room\\join_rnameback.img"
+#define JOIN_SIZE_RNAMEBACK_W		230
+#define JOIN_SIZE_RNAMEBACK_H		90
+
 #define JOIN_BTN_FILE_RNAME			".\\Data\\Room\\join_btn_rname.img"
 #define JOIN_FILE_RNAME				".\\Data\\Room\\join_roomname.img"
 #define JOIN_SIZE_RNAME_W			220
@@ -152,6 +156,10 @@
 #define WAIT_TERM_CHARBACK_Y		4
 #define WAIT_TERM_CHARNAMEBACK_X	10
 #define WAIT_TERM_CHARNAMEBACK_Y	10
+
+#define WAIT_FILE_CNAMEBACK			".\\Data\\Room\\wait_cnameback.img"
+#define WAIT_SIZE_CNAMEBACK_W		114
+#define WAIT_SIZE_CNAMEBACK_H		144
 
 // room - select
 #define WAIT_FILE_SELBACK			".\\Data\\Room\\wait_charselback.img"
@@ -267,6 +275,7 @@ void gRoomCore::Release()
 
 	// join
 	m_ImgRoomName.Release();
+	m_ImgRNameBack.Release();
 
 	for(i = 0; i < BJM_END; i++)
 		m_JoinBtn[i].Release();
@@ -284,6 +293,8 @@ void gRoomCore::Release()
 	m_ImgBarStudy.Release();
 	m_ImgBarStamina.Release();
 	m_ImgBarMove.Release();
+
+	m_ImgCNameBack.Release();
 
 	m_ImgMySel.Release();
 
@@ -842,6 +853,9 @@ bool gRoomCore::SetUp_Join()
 	if(!m_ImgBack[ERM_JOIN].Load(ROOM_FILE_JOIN_BACK))
 		return false;
 
+	if(!m_ImgRNameBack.Load(JOIN_FILE_RNAMEBACK))
+		return false;
+
 	if(!m_ImgRoomName.Load(JOIN_FILE_RNAME))
 		return false;
 
@@ -951,8 +965,21 @@ void gRoomCore::Draw_Join()
 
 	int			i, j;
 
-	RECT		rcSour;
+	RECT		rcSour, rcDest;
 
+	if(m_nSelected != -1)
+	{
+		SetRect(&rcSour ,
+				0, 0, JOIN_SIZE_RNAMEBACK_W, JOIN_SIZE_RNAMEBACK_H );
+
+		rcDest = m_JoinBtn[m_nSelected + BJM_ROOM1].m_rcPos;
+		rcDest.left		-= 5;
+		rcDest.top		-= 5;
+		rcDest.right	+= 5;
+		rcDest.bottom	+= 5;
+
+		m_ImgRNameBack.Draw(rcDest, rcSour);
+	}
 
 	for(i = BJM_ROOM1; i <= BJM_ROOM8; i++)
 	{
@@ -988,11 +1015,6 @@ void gRoomCore::Draw_Join()
 	for(i = BJM_PREV; i <= BJM_JOIN;i ++)
 	{
 		m_JoinBtn[i].Draw();
-	}
-
-	if(m_nSelected != -1)
-	{
-		m_JoinBtn[m_nSelected + BJM_ROOM1].Draw();
 	}
 
 	char	szBuf[128];
@@ -1063,6 +1085,9 @@ bool gRoomCore::SetUp_Room()
 		return false;
 
 	if(!m_ImgCharBack.Load(WAIT_FILE_CHARBACK))
+		return false;
+
+	if(!m_ImgCNameBack.Load(WAIT_FILE_CNAMEBACK))
 		return false;
 
 	int			i;
@@ -1189,6 +1214,20 @@ void gRoomCore::Draw_Room()
 
 	ROOM	*room = &gPlayerContainer::GetIF()->m_MyRoom;
 
+	if(m_nSelUser != -1)
+	{
+		RECT		rcDest, rcSour;
+
+		SetRect(&rcDest,
+			WAIT_POS_CHARBACK_X,
+			WAIT_POS_CHARBACK_Y,
+			WAIT_POS_CHARBACK_X + WAIT_SIZE_CHARBACK_W,
+			WAIT_POS_CHARBACK_Y + WAIT_SIZE_CHARBACK_H );
+		OffsetRect(&rcDest,
+			(m_nSelUser % 4) * (WAIT_TERM_CHARBACK_X + WAIT_SIZE_CHARBACK_W), (m_nSelUser / 4) * (WAIT_TERM_CHARBACK_Y + WAIT_SIZE_CHARBACK_H));
+
+		m_ImgCNameBack.Draw(rcDest.left - 2, rcDest.top - 2);
+	}
 
 	// 뒤에 캐릭터정보 배경
 	for(i = 0; i < room->nMaxPlayer; i++)

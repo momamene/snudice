@@ -72,6 +72,9 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 	if(!SetUpDirect())
 		return false;
 
+	if(!m_ImgBack.Load(BACKBUFFERIMG))
+		return false;
+
 	if(!gPopUp::GetIF()->SetUp())
 		return false;
 
@@ -117,6 +120,7 @@ void gMainWin::MoveWindow()
 
 void gMainWin::Release()
 {
+	m_ImgBack.Release();
 	gServer::GetIF()->Release();
 	gPopUp::GetIF()->Release();
 	gMouse::GetIF()->Release();
@@ -179,6 +183,8 @@ void gMainWin::MainLoop()
 {
 	//if(!m_bActive)
 	//	return;
+
+	m_ImgBack.Draw();
 
 	switch(m_eCoreMode)
 	{
