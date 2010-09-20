@@ -144,6 +144,7 @@ struct PLAYER
 
 	// 게임관련 정보
 	CLASSTYPE	classtype;
+	bool		bReady;
 };
 
 struct PK_LOGIN_ASK
