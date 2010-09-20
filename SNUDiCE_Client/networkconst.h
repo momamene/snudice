@@ -54,11 +54,17 @@ enum ePROTOCOL
 enum eCOREMODE
 {
 	ECM_NONLOGIN,			// login 안한상태
+
 	ECM_LOGIN,
+
 	ECM_BATTLENET,			// LOGIN 하면 이 모드
+
 	ECM_ROOMMAKE,
 	ECM_ROOMJOIN,
 	ECM_ROOM,
+
+	ECM_SUGANG,				// 수강신청
+
 	
 	
 	ECM_TITLE,				// 타이틀
@@ -301,3 +307,16 @@ typedef struct
 	bool				bReady;
 
 } PK_GAMEREADY_ASK, PK_GAMESTART_ASK;
+
+enum ERRORGAMESTART
+{
+	EGS_NOREADY,			// 방장이 준비가 안됨..(방장이 캐릭터 선택 x)
+	EGS_NOREADYUSER,		// 유저들이 준비가 안됨.
+	EGS_ONEUSER,			// 유저가 방장 한명이라 시작 불가.(한명으로 게임 시작 불가)
+	EGS_SUCCESS,
+};
+
+struct PK_GAMESTART_REP
+{
+	ERRORGAMESTART		result;
+};

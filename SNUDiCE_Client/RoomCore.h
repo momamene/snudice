@@ -146,6 +146,8 @@ public:
 	gImgButton	m_SelBtn[BSM_END];
 	gImage		m_ImgMySel;
 	int			m_nSelChar;				// 캐릭터 고르기 몇번쨰냐
+	gImage		m_ImgReady;
+	gImage		m_ImgCrown;
 
 public:
 	// overridng from Core 인터페이스

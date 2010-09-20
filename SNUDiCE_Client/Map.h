@@ -7,51 +7,55 @@
 
 #pragma once
 #include <windows.h> // 중복 include (first case) 성공?
+#include "networkconst.h"
 #include "Image.h"
 
-enum ETILETYPE {
-	TY_STAMINA,
-		TY_ITEM,
-		//TY_GRASS,
-		TY_DRINK,
-		TY_BUS,
-		TY_MAINGATE,
-		TY_MOUNTAIN,
-		TY_CLASS,
-		TY_NONE
+#define MAPMAXSTRBUFFER		128
+
+enum ETILETYPE
+{
+	TY_NONE	= -1,
+	TY_STAMINA,		// 식당
+	TY_ITEM,		// 아이템
+	//TY_GRASS,
+	TY_DRINK,		// 녹두
+	TY_BUS,			// 셔틀
+	TY_MAINGATE,	// 정문
+	TY_MOUNTAIN,	// 관악산
+	TY_CLASS,		// 수업
+	TY_END,
 };
 
-class gTile {
+class gTile
+{
 public:
-	ETILETYPE tileType;
-	POINT prevTile;
-	POINT ptPos;
-	POINT nextTile;
-	//HBITMAP* img;
-	//int img;
-	int flag1;
-	int flag2;
-	int flag3;
-	char college[128];
-	char building[128];
-	char subject[128];
+	ETILETYPE		tileType;
+	POINT			prevTile;
+	POINT			ptPos;
+	POINT			nextTile;
+
+	int				flag1;
+	int				flag2;
+	int				flag3;
+	char			college[MAPMAXSTRBUFFER];
+	char			building[MAPMAXSTRBUFFER];
+	char			subject[MAPMAXSTRBUFFER];
 public:
-	//TILE();
-	void init(int xo, int yo);
+	void			init(int xo, int yo);
 };
 
-#define MAXSAVOR_N 100
+#define MAXSAVOR_N	100
 
-#define LEFTX 25
-#define MIDDLEX 52
-#define HALFX 52 // 25+ 52/2 = 52 
-#define FULLX 102
-#define WIDEX 154
-#define HALFY 40
-#define FULLY 80
+#define LEFTX		25
+#define MIDDLEX		52
+#define HALFX		52 // 25+ 52/2 = 52 
+#define FULLX		102
+#define WIDEX		154
+#define HALFY		40
+#define FULLY		80
 
-#define LINEX 29
-#define LINEY 19
+#define LINEX		29
+#define LINEY		19
 
 
 class gMap

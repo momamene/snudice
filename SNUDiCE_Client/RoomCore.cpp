@@ -155,7 +155,7 @@
 #define WAIT_TERM_CHARBACK_X		6
 #define WAIT_TERM_CHARBACK_Y		4
 #define WAIT_TERM_CHARNAMEBACK_X	10
-#define WAIT_TERM_CHARNAMEBACK_Y	10
+#define WAIT_TERM_CHARNAMEBACK_Y	120
 
 #define WAIT_FILE_CNAMEBACK			".\\Data\\Room\\wait_cnameback.img"
 #define WAIT_SIZE_CNAMEBACK_W		114
@@ -207,6 +207,20 @@
 #define SEL_POS_COLLEGE_Y			220
 #define SEL_POS_SEX_X				550
 #define SEL_POS_SEX_Y				220
+
+#define SEL_FILE_CROWN				".\\Data\\Room\\wait_crown.img"
+#define SEL_SIZE_CROWN_W			26
+#define SEL_SIZE_CROWN_H			24
+#define SEL_TERM_CROWN_X			5
+#define SEL_TERM_CROWN_Y			5
+
+#define SEL_FILE_READY				".\\Data\\Room\\wait_ready.img"
+#define SEL_SIZE_READY_W			87
+#define SEL_SIZE_READY_H			17
+#define SEL_TERM_READY_X			12
+#define SEL_TERM_READY_Y			60
+
+
 
 static gRoomCore s_RoomCore;
 
@@ -297,6 +311,9 @@ void gRoomCore::Release()
 	m_ImgCNameBack.Release();
 
 	m_ImgMySel.Release();
+
+	m_ImgCrown.Release();
+	m_ImgReady.Release();
 
 	for(i = 0; i < BSM_END; i++)
 		m_SelBtn[i].Release();
@@ -1090,6 +1107,12 @@ bool gRoomCore::SetUp_Room()
 	if(!m_ImgCNameBack.Load(WAIT_FILE_CNAMEBACK))
 		return false;
 
+	if(!m_ImgReady.Load(SEL_FILE_READY))
+		return false;
+
+	if(!m_ImgCrown.Load(SEL_FILE_CROWN))
+		return false;
+
 	int			i;
 
 	RECT		rcDest;
@@ -1249,7 +1272,21 @@ void gRoomCore::Draw_Room()
 			OffsetRect(&rcSour, WAIT_SIZE_CHARBACK_W, 0);
 		}
 		m_ImgCharBack.Draw(rcDest, rcSour);
+
+		if(strlen(room->szRoomMaxPlayer[i]) > 0)
+		{
+			if(gPlayerContainer::GetIF()->m_PlayerList[i].bReady)
+			{
+				m_ImgReady.Draw(rcDest.left + SEL_TERM_READY_X, rcDest.top + SEL_TERM_READY_Y);
+			}
+		}
 	}
+
+	// 방장 왕관아이콘
+	int	nX = WAIT_POS_CHARBACK_X + (room->nMakerIndex % 4) * (WAIT_TERM_CHARBACK_X + WAIT_SIZE_CHARBACK_W) + SEL_TERM_CROWN_X;
+	int nY = WAIT_POS_CHARBACK_Y + (room->nMakerIndex / 4) * (WAIT_TERM_CHARBACK_Y + WAIT_SIZE_CHARBACK_H) + SEL_TERM_CROWN_Y;
+
+	m_ImgCrown.Draw(nX, nY);
 
 	// 내가 방장
 	if(strcmp(room->szRoomMaxPlayer[room->nMakerIndex], gPlayerContainer::GetIF()->m_MyPlayer.szID) == 0)
@@ -1284,6 +1321,11 @@ void gRoomCore::Draw_Room()
 		PLAYER	*list = gPlayerContainer::GetIF()->m_PlayerList;
 
 		m_ImgSelBack.Draw(WAIT_POS_SELBACK_X, WAIT_POS_SELBACK_Y);
+
+		for(i = 0; i < CLASS_END; i++)
+		{
+			m_SelBtn[i].m_eBtnMode = EBM_NONE;
+		}
 
 		for(i = 0; i < ROOMMAXPLAYER; i++)
 		{
@@ -1636,6 +1678,27 @@ void gRoomCore::OnLButtonDown_Room()
 					m_nSelUser = i;
 					break;
 				}
+			}
+		}
+
+
+		if( strcmp(gPlayerContainer::GetIF()->m_PlayerList[room->nMakerIndex].szID, gPlayerContainer::GetIF()->m_MyPlayer.szID) == 0 )
+		{
+
+		}
+		else
+		{
+			if(m_WaitBtn[BWM_READY].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+			{
+				if(gPlayerContainer::GetIF()->m_MyPlayer.classtype == -1)
+					return;
+
+				PK_GAMEREADY_ASK		ask;
+
+				ask.bReady	= !gPlayerContainer::GetIF()->m_MyPlayer.bReady;
+				strcpy(ask.szID, gPlayerContainer::GetIF()->m_MyPlayer.szID);
+
+				gServer::GetIF()->Send(PL_GAMEREADY_ASK, sizeof ask, &ask);
 			}
 		}
 	}
