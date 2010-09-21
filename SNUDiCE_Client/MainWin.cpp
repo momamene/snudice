@@ -11,6 +11,7 @@
 #include "ChannelUI.h"
 #include "TopUI.h"
 #include "PlayerContainer.h"
+#include "Map.h"
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
@@ -70,6 +71,9 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 #endif
 
 	if(!SetUpDirect())
+		return false;
+
+	if(!gMap::GetIF()->Setup())
 		return false;
 
 	if(!m_ImgBack.Load(BACKBUFFERIMG))

@@ -1684,6 +1684,14 @@ void gRoomCore::OnLButtonDown_Room()
 
 		if( strcmp(gPlayerContainer::GetIF()->m_PlayerList[room->nMakerIndex].szID, gPlayerContainer::GetIF()->m_MyPlayer.szID) == 0 )
 		{
+			if(gPlayerContainer::GetIF()->m_MyPlayer.classtype == -1)
+				return;
+
+			PK_GAMESTART_ASK		ask;
+
+			strcpy(ask.szID, gPlayerContainer::GetIF()->m_MyPlayer.szID);
+
+			gServer::GetIF()->Send(PL_GAMESTART_ASK, sizeof ask, &ask);
 
 		}
 		else

@@ -2,6 +2,8 @@
 #include "MainWin.h" // 위치 정보 등을 받습니다.
 #include "SubjectContainer.h"
 
+#define MAPFILE				".\\Data\\map.xy"
+
 #define TILE_FOOD_IMG		".\\Data\\Map\\food.img"
 #define TILE_CARD_IMG		".\\Data\\Map\\card.img"
 #define TILE_NOKDU_IMG		".\\Data\\Map\\nokdu.img"
@@ -50,16 +52,35 @@ bool gMap::Setup()
 		}
 	}
 
-	m_ImgTile[0].Load(TILE_FOOD_IMG);
-	m_ImgTile[1].Load(TILE_CARD_IMG);
-	m_ImgTile[2].Load(TILE_NOKDU_IMG);
-	m_ImgTile[3].Load(TILE_BUS_IMG);
-	m_ImgTile[4].Load(TILE_MAINGATE_IMG);
-	m_ImgTile[5].Load(TILE_MOUNTAIN_IMG);
-	m_ImgTile[6].Load(TILE_LANG_IMG);
-	m_ImgTile[7].Load(TILE_MATH_IMG);
-	m_ImgTile[8].Load(TILE_ART_IMG);
-	m_ImgTileBack.Load(TILE_TITLE_IMG);
+	if(!m_ImgTile[0].Load(TILE_FOOD_IMG))
+		return false;
+
+	if(!m_ImgTile[1].Load(TILE_CARD_IMG))
+		return false;
+
+	if(!m_ImgTile[2].Load(TILE_NOKDU_IMG))
+		return false;
+
+	if(!m_ImgTile[3].Load(TILE_BUS_IMG))
+		return false;
+
+	if(!m_ImgTile[4].Load(TILE_MAINGATE_IMG))
+		return false;
+
+	if(!m_ImgTile[5].Load(TILE_MOUNTAIN_IMG))
+		return false;
+
+	if(!m_ImgTile[6].Load(TILE_LANG_IMG))
+		return false;
+
+	if(!m_ImgTile[7].Load(TILE_MATH_IMG))
+		return false;
+
+	if(!m_ImgTile[8].Load(TILE_ART_IMG))
+		return false;
+
+	if(!m_ImgTileBack.Load(TILE_TITLE_IMG))
+		return false;
 	
 	m_xSpacePos			= -1;
 	m_ySpacePos			= -1;
@@ -79,7 +100,7 @@ void gMap::LoadFileToBKS()
 {
 	int		i;
 		
-	hFile = CreateFile("load.xy", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	hFile = CreateFile(MAPFILE, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if(hFile != INVALID_HANDLE_VALUE)
 	{
 		ReadFile(hFile, &count, sizeof(int), &dw, NULL);
@@ -118,7 +139,8 @@ void gMap::LoadBKSToTM()
 					m_xInitSpacePos = i;
 					m_yInitSpacePos = j;
 				}
-				else if (tileMap[i*LINEY+j].tileType==TY_CLASS){
+				else if (tileMap[i*LINEY+j].tileType==TY_CLASS)
+				{
 					gSC->putSubject(tileMap[i*LINEY+j],i*LINEY+j);
 				}
 				
