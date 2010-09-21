@@ -75,8 +75,8 @@
 #define ROOM_POS_JOIN_Y				60
 
 #define JOIN_FILE_RNAMEBACK			".\\Data\\Room\\join_rnameback.img"
-#define JOIN_SIZE_RNAMEBACK_W		230
-#define JOIN_SIZE_RNAMEBACK_H		90
+#define JOIN_SIZE_RNAMEBACK_W		226
+#define JOIN_SIZE_RNAMEBACK_H		86
 
 #define JOIN_BTN_FILE_RNAME			".\\Data\\Room\\join_btn_rname.img"
 #define JOIN_FILE_RNAME				".\\Data\\Room\\join_roomname.img"
@@ -993,10 +993,10 @@ void gRoomCore::Draw_Join()
 				0, 0, JOIN_SIZE_RNAMEBACK_W, JOIN_SIZE_RNAMEBACK_H );
 
 		rcDest = m_JoinBtn[m_nSelected + BJM_ROOM1].m_rcPos;
-		rcDest.left		-= 5;
-		rcDest.top		-= 5;
-		rcDest.right	+= 5;
-		rcDest.bottom	+= 5;
+		rcDest.left		-= 3;
+		rcDest.top		-= 3;
+		rcDest.right	+= 3;
+		rcDest.bottom	+= 3;
 
 		m_ImgRNameBack.Draw(rcDest, rcSour);
 	}
@@ -1647,6 +1647,9 @@ void gRoomCore::OnLButtonDown_Room()
 				strcpy(ask.szID, gPlayerContainer::GetIF()->m_MyPlayer.szID);
 
 				gServer::GetIF()->Send(PL_CHARSELECT_ASK, sizeof ask, &ask);
+
+				m_bCharSel = false;
+				m_nSelChar = -1;
 			}
 		}
 	}
