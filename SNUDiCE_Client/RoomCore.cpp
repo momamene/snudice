@@ -161,6 +161,9 @@
 #define WAIT_SIZE_CNAMEBACK_W		114
 #define WAIT_SIZE_CNAMEBACK_H		144
 
+#define WAIT_TERM_CHARIMG_X			15
+#define WAIT_TERM_CHARIMG_Y			10
+
 // room - select
 #define WAIT_FILE_SELBACK			".\\Data\\Room\\wait_charselback.img"
 #define WAIT_SIZE_SELBACK_W			265
@@ -197,8 +200,8 @@
 #define SEL_BTN_POS_SELECT_X		485
 #define SEL_BTN_POS_SELECT_Y		405
 
-#define SEL_POS_CHARIMG_X			478
-#define SEL_POS_CHARIMG_Y			62
+#define SEL_POS_CHARIMG_X			493
+#define SEL_POS_CHARIMG_Y			65
 
 #define SEL_TERM_CHARNAME_X			6
 #define SEL_TERM_CHARNAME_Y			6
@@ -1275,6 +1278,11 @@ void gRoomCore::Draw_Room()
 
 		if(strlen(room->szRoomMaxPlayer[i]) > 0)
 		{
+			int		nTemp = gPlayerContainer::GetIF()->m_PlayerList[i].classtype;
+			if(nTemp != -1)
+			{
+				gPlayerContainer::GetIF()->m_ImgInfo[nTemp].ImgCharSel.Draw(rcDest.left + WAIT_TERM_CHARIMG_X, rcDest.top + WAIT_TERM_CHARIMG_Y);
+			}
 			if(gPlayerContainer::GetIF()->m_PlayerList[i].bReady)
 			{
 				m_ImgReady.Draw(rcDest.left + SEL_TERM_READY_X, rcDest.top + SEL_TERM_READY_Y);
@@ -1699,7 +1707,10 @@ void gRoomCore::OnLButtonDown_Room()
 			if(m_WaitBtn[BWM_READY].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 			{
 				if(gPlayerContainer::GetIF()->m_MyPlayer.classtype == -1)
+				{
+					gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_13);
 					return;
+				}
 
 				PK_GAMEREADY_ASK		ask;
 
@@ -1716,7 +1727,6 @@ void gRoomCore::OnMouseMove_Room()
 {
 	gMouse		*mouse	= gMouse::GetIF();
 	gChat		*chat	= gChat::GetIF();
-
 
 	int		i;
 

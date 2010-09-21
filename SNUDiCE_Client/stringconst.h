@@ -18,3 +18,4 @@
 #define STR_10			"비밀번호가 잘못되었습니다."		// ERJ_PASSWRONG
 #define STR_11			"방이 꽉 차 있습니다."				// ERJ_FULL
 #define STR_12			"이미 게임중인 방입니다."			// EFJ_PLAYING
+#define STR_13			"캐릭터를 선택하셔야 합니다."	
