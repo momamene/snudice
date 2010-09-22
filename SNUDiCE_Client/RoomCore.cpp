@@ -1695,15 +1695,20 @@ void gRoomCore::OnLButtonDown_Room()
 
 		if( strcmp(gPlayerContainer::GetIF()->m_PlayerList[room->nMakerIndex].szID, gPlayerContainer::GetIF()->m_MyPlayer.szID) == 0 )
 		{
-			if(gPlayerContainer::GetIF()->m_MyPlayer.classtype == -1)
-				return;
+			if(m_WaitBtn[BWM_START].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+			{
+				if(gPlayerContainer::GetIF()->m_MyPlayer.classtype == -1)
+				{
+					gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_13);
+					return;
+				}
 
-			PK_GAMESTART_ASK		ask;
+				PK_GAMESTART_ASK		ask;
 
-			strcpy(ask.szID, gPlayerContainer::GetIF()->m_MyPlayer.szID);
+				strcpy(ask.szID, gPlayerContainer::GetIF()->m_MyPlayer.szID);
 
-			gServer::GetIF()->Send(PL_GAMESTART_ASK, sizeof ask, &ask);
-
+				gServer::GetIF()->Send(PL_GAMESTART_ASK, sizeof ask, &ask);
+			}
 		}
 		else
 		{
@@ -1808,12 +1813,16 @@ void gRoomCore::pk_gamestart_rep(PK_GAMESTART_REP *rep)
 	switch(rep->result)
 	{
 		case EGS_NOREADY:
+			gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_13);
 			break;
 		case EGS_NOREADYUSER:
+			gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_14, STR_14_2);
 			break;
 		case EGS_ONEUSER:
+			gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_15, STR_15_2);
 			break;
 		case EGS_SUCCESS:
+			gMainWin::GetIF()->m_eCoreMode = ECM_SUBMIT;
 			break;
 	}
 }

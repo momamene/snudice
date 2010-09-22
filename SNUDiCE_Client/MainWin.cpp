@@ -3,6 +3,7 @@
 #include "Mouse.h"
 #include "LoginCore.h"
 #include "BattleNetCore.h"
+#include "SubmitCore.h"
 #include "RoomCore.h"
 #include "Server.h"
 #include "Util.h"
@@ -88,6 +89,9 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 	if(!gBattleNetCore::GetIF()->SetUp())
 		return false;
 
+	if(!gSubmitCore::GetIF()->SetUp())
+		return false;
+
 	if(!gTopUI::GetIF()->SetUp())
 		return false;
 
@@ -131,6 +135,7 @@ void gMainWin::Release()
 	gLoginCore::GetIF()->Release();
 	gBattleNetCore::GetIF()->Release();
 	gRoomCore::GetIF()->Release();
+	gSubmitCore::GetIF()->Release();
 	gPlayerContainer::GetIF()->Release();
 	gTopUI::GetIF()->Release();
 	SAFE_RELEASE(m_lpDDBack);
@@ -200,6 +205,9 @@ void gMainWin::MainLoop()
 			break;
 		case ECM_ROOMMAKE: case ECM_ROOMJOIN: case ECM_ROOM:
 			gRoomCore::GetIF()->MainLoop();
+			break;
+		case ECM_SUBMIT:
+			gSubmitCore::GetIF()->MainLoop();
 			break;
 	}
 

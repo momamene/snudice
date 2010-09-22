@@ -48,6 +48,9 @@ enum ePROTOCOL
 	PL_GAMEREADY_ASK,
 	PL_GAMESTART_ASK,
 	PL_GAMESTART_REP,
+
+	PL_SUBMIT_ASK,
+	PL_SUBMIT_REP,
 };
 
 
@@ -63,15 +66,7 @@ enum eCOREMODE
 	ECM_ROOMJOIN,
 	ECM_ROOM,
 
-	ECM_SUGANG,				// 수강신청
-
-	
-	
-	ECM_TITLE,				// 타이틀
-	ECM_PSEL,				// 플레이어 고르자
-	ECM_CSEL,				// 캐릭터 고르자
 	ECM_SUBMIT,				// 수강신청
-	ECM_GAME,				// 게임
 };
 
 struct PK_DEFAULT
@@ -323,5 +318,17 @@ enum ERRORGAMESTART
 struct PK_GAMESTART_REP
 {
 	ERRORGAMESTART		result;
+	BYTE				subject[CLASSNUM][CLASSSEAT];
+};
+
+// 수강 신청
+struct PK_SUBMIT_ASK
+{
+	char			szID[IDLENGTH];
+	BYTE			nSUbjectIdx;			// 신청한 과목 index
+};
+
+struct PK_SUBMIT_REP
+{
 	BYTE				subject[CLASSNUM][CLASSSEAT];
 };

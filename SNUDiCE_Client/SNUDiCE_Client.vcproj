@@ -254,6 +254,10 @@
 					RelativePath=".\RoomCore.cpp"
 					>
 				</File>
+				<File
+					RelativePath=".\SubmitCore.cpp"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
@@ -368,6 +372,10 @@
 				</File>
 				<File
 					RelativePath=".\RoomCore.h"
+					>
+				</File>
+				<File
+					RelativePath=".\SubmitCore.h"
 					>
 				</File>
 			</Filter>
