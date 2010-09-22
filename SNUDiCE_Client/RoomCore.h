@@ -170,6 +170,7 @@ public:
 	void		pk_roomlist_rep(PK_ROOMLIST_REP *rep);
 	void		pk_roomjoin_rep(PK_ROOMJOIN_REP *rep);
 	void		pk_roomrefresh_rep(PK_ROOMREFRESH_REP *rep);
+	void		pk_gamestart_rep(PK_GAMESTART_REP *rep);
 
 private:
 	// make

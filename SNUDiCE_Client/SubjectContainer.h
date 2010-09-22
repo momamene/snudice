@@ -12,11 +12,11 @@
 
 class SUBJECT {
 public:
-	int conPosIndex;
-	int flag;
-	char college[MAXSUBJECTINFOLENGTH];
-	char building[MAXSUBJECTINFOLENGTH];
-	char subject[MAXSUBJECTINFOLENGTH];
+	int		conPosIndex;
+	int		flag;
+	char	college[MAXSUBJECTINFOLENGTH];
+	char	building[MAXSUBJECTINFOLENGTH];
+	char	subject[MAXSUBJECTINFOLENGTH];
 
 	SUBJECT();
 };
@@ -26,11 +26,10 @@ class gSubjectContainer {
 public:
 	static gSubjectContainer *GetIF();
 
-	//private:
-	SUBJECT m_subject[MAXSUBJECT_N]; // -1은 빈거, 그렇지 않다면 i*LINEY+j
+	SUBJECT		m_subject[MAXSUBJECT_N]; // -1은 빈거,
 
 public:
 	//bool SetUp();
-	bool putSubject(gTile tile,int conPosIndex);
+	bool		putSubject(gTile tile,int conPosIndex);
 };
 

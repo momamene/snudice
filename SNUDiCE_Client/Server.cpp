@@ -209,6 +209,10 @@ void gServer::Recv()
 		case PL_ROOMREFRESH_REP:
 			gRoomCore::GetIF()->pk_roomrefresh_rep((PK_ROOMREFRESH_REP*)m_pkDefault.strPacket);
 			break;
+
+		case PL_GAMESTART_REP:
+			gRoomCore::GetIF()->pk_gamestart_rep((PK_GAMESTART_REP*)m_pkDefault.strPacket);
+			break;
 	}
 }
 

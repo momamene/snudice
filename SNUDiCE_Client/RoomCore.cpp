@@ -1802,3 +1802,18 @@ void gRoomCore::OnRButtonDown_Room()
 	m_bCharSel = false;
 	m_nSelChar = -1;
 }
+
+void gRoomCore::pk_gamestart_rep(PK_GAMESTART_REP *rep)
+{
+	switch(rep->result)
+	{
+		case EGS_NOREADY:
+			break;
+		case EGS_NOREADYUSER:
+			break;
+		case EGS_ONEUSER:
+			break;
+		case EGS_SUCCESS:
+			break;
+	}
+}

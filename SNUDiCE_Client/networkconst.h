@@ -316,7 +316,12 @@ enum ERRORGAMESTART
 	EGS_SUCCESS,
 };
 
+#define CLASSNUM		18
+#define CLASSSEAT		3
+#define NOSEAT			99
+
 struct PK_GAMESTART_REP
 {
 	ERRORGAMESTART		result;
+	BYTE				subject[CLASSNUM][CLASSSEAT];
 };
