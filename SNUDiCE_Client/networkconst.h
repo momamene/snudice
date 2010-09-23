@@ -399,6 +399,7 @@ struct PK_MOVESTART_ASK
 
 struct PK_MOVESTART_REP
 {
+	int			nDist;
 	BYTE		Dice4_1;
 	BYTE		Dice4_2;
 	BYTE		Dice6_1;
