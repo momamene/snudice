@@ -56,6 +56,13 @@ enum ePROTOCOL
 	PL_SUBMITREADY_REP,
 
 	PL_MAINGAMESTART_REP,
+
+	PL_MOVESTART_ASK,
+	PL_MOVESTART_REP,
+	PL_MOVEEND_ASK,
+
+	PL_NEXTTURN_REP,
+	
 };
 
 enum eCOREMODE
@@ -380,4 +387,30 @@ struct PK_MAINGAMESTART_REP
 {
 	GAMEPLAYER	list[ROOMMAXPLAYER];
 	int			nTurn;						// 누구 턴
+};
+
+// 메인 게임
+
+struct PK_MOVESTART_ASK
+{
+	char		szID[IDLENGTH];
+	int			nCurPos;			// 출발 좌표
+};
+
+struct PK_MOVESTART_REP
+{
+	int			nDice4;
+	int			nDice6;
+};
+
+struct PK_MOVEEND_ASK
+{
+	char		szID[IDLENGTH];
+	int			nDestPos;			// 도착 좌표
+};
+
+struct PK_NEXTTURN_REP
+{
+	int			nNowTurn;			// 현재 턴
+	int			nNextTurn;			// 다음 턴
 };
