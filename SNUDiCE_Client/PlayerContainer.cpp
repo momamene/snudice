@@ -5,38 +5,38 @@
 #define CHARIMGDATAFILE		".\\Data\\charimgdata.dat"
 
 
-gPlayerContainer s_PlayerContainer;
+gDataContainer s_PlayerContainer;
 
-gPlayerContainer *gPlayerContainer::GetIF()
+gDataContainer *gDataContainer::GetIF()
 {
 	return &s_PlayerContainer;
 }
 
-gPlayerContainer::gPlayerContainer(void)
+gDataContainer::gDataContainer(void)
 {
 }
 
-gPlayerContainer::~gPlayerContainer(void)
+gDataContainer::~gDataContainer(void)
 {
 }
 
-void gPlayerContainer::SetMyPlayer(PK_LOGIN_REP* rep)
+void gDataContainer::SetMyPlayer(PK_LOGIN_REP* rep)
 {
 	memcpy(&m_MyPlayer, &rep->player, sizeof(PLAYER));
 	memcpy(&m_MyChannel, &rep->channel, sizeof(CHANNEL));
 }
 
-void gPlayerContainer::RefreshChannel(CHANNEL *channel)
+void gDataContainer::RefreshChannel(CHANNEL *channel)
 {
 	memcpy(&m_MyChannel, channel, sizeof(CHANNEL));
 }
 
-void gPlayerContainer::SetMyRoom(ROOM *room)
+void gDataContainer::SetMyRoom(ROOM *room)
 {
 	memcpy(&m_MyRoom, room, sizeof(ROOM));
 }
 
-void gPlayerContainer::SetPlayerList(PLAYER *list)
+void gDataContainer::SetPlayerList(PLAYER *list)
 {
 	memcpy(m_PlayerList, list, sizeof(PLAYER) * ROOMMAXPLAYER);
 
@@ -50,7 +50,7 @@ void gPlayerContainer::SetPlayerList(PLAYER *list)
 	}
 }
 
-bool gPlayerContainer::SetUpCharInfo()
+bool gDataContainer::SetUpCharInfo()
 {
 	FILE		*fp;
 
@@ -125,7 +125,7 @@ bool gPlayerContainer::SetUpCharInfo()
 	return true;
 }
 
-void gPlayerContainer::Release()
+void gDataContainer::Release()
 {
 	int			i;
 
@@ -136,7 +136,7 @@ void gPlayerContainer::Release()
 
 }
 
-bool gPlayerContainer::SetUp()
+bool gDataContainer::SetUp()
 {
 	if(!SetUpCharInfo())
 		return false;
@@ -147,7 +147,7 @@ bool gPlayerContainer::SetUp()
 	return true;
 }
 
-bool gPlayerContainer::SetUpCharImg()
+bool gDataContainer::SetUpCharImg()
 {
 	FILE		*fp;
 
@@ -196,12 +196,12 @@ bool gPlayerContainer::SetUpCharImg()
 	return true;
 }
 
-void gPlayerContainer::SetMyGamePlayer(GAMEPLAYER* gp)
+void gDataContainer::SetMyGamePlayer(GAMEPLAYER* gp)
 {
 	memcpy(&m_MyGamePlayer, gp, sizeof(GAMEPLAYER));
 }
 
-void gPlayerContainer::SetGPList(GAMEPLAYER *list)
+void gDataContainer::SetGPList(GAMEPLAYER *list)
 {
 	memcpy(&m_GPlayerList, list, sizeof(PLAYER) * ROOMMAXPLAYER);
 

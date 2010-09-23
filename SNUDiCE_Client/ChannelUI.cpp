@@ -130,7 +130,7 @@ void gChannelUI::DrawChannel()
 	SetRect(&rcSour,
 		0, 0, CH_SIZE_CHNAMEW, CH_SIZE_CHNAMEH);
 
-	CHANNEL		*channel = &gPlayerContainer::GetIF()->m_MyChannel;
+	CHANNEL		*channel = &gDataContainer::GetIF()->m_MyChannel;
 
 	int		channelnum = channel->nChannelNum;
 
@@ -165,7 +165,7 @@ void gChannelUI::DrawChannelChange()
 	SetRect(&rcSour,
 		0, 0, CH_SIZE_CHNAMEW, CH_SIZE_CHNAMEH);
 
-	CHANNEL		*channel = &gPlayerContainer::GetIF()->m_MyChannel;
+	CHANNEL		*channel = &gDataContainer::GetIF()->m_MyChannel;
 
 	int		channelnum = channel->nChannelNum;
 
@@ -246,7 +246,7 @@ void gChannelUI::OnLButtonDown(int x, int y)
 						PK_CHANNELCHANGE_ASK		ask;
 
 						ask.nChannel	= i - CCB_CH1 + 1;
-						strcpy(ask.szID, gPlayerContainer::GetIF()->m_MyPlayer.szID);
+						strcpy(ask.szID, gDataContainer::GetIF()->m_MyPlayer.szID);
 						gServer::GetIF()->Send(PL_CHANNELCHANGE_ASK, sizeof(ask), &ask);
 						return;
 					}

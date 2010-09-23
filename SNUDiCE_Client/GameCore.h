@@ -32,4 +32,7 @@ public:
 	void		OnLButtonUp();
 	void		OnMouseMove();
 	void		OnRButtonDown();
+
+private:
+	void		MainLoopMouse();
 };

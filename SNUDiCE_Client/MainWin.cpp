@@ -106,7 +106,7 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 	if(!gChat::GetIF()->SetUp())
 		return false;
 
-	if(!gPlayerContainer::GetIF()->SetUp())
+	if(!gDataContainer::GetIF()->SetUp())
 		return false;
 
 	if(!gServer::GetIF()->SetUp())
@@ -145,7 +145,7 @@ void gMainWin::Release()
 	gRoomCore::GetIF()->Release();
 	gSubmitCore::GetIF()->Release();
 	gGameCore::GetIF()->Release();
-	gPlayerContainer::GetIF()->Release();
+	gDataContainer::GetIF()->Release();
 	gTopUI::GetIF()->Release();
 	gDice::GetIF()->Release();
 	SAFE_RELEASE(m_lpDDBack);

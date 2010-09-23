@@ -14,13 +14,13 @@ struct CHARIMGINFO
 	gImage			ImgCharSel;
 };
 
-class gPlayerContainer
+class gDataContainer
 {
 public:
-	static gPlayerContainer *GetIF();
+	static gDataContainer *GetIF();
 
-	gPlayerContainer(void);
-	virtual ~gPlayerContainer(void);
+	gDataContainer(void);
+	virtual ~gDataContainer(void);
 public:
 	PLAYER			m_MyPlayer;		// ³ª
 	CHANNEL			m_MyChannel;

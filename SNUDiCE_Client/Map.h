@@ -87,7 +87,7 @@ public:
 	int		m_Next_xSpacePos;
 	int		m_Next_ySpacePos;
 
-private:
+//private:
 	// 좌표 관련 변수들 네개와 frame값을 이용하여 현재 뿌리는 화면의 좌표를 지정한다.
 	int		m_nAbsDrawlineX;
 	int		m_nAbsDrawlineY;

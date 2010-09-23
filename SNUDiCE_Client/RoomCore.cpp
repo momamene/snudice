@@ -538,12 +538,12 @@ void gRoomCore::SendRoomMake()
 	memset(&ask, 0, sizeof(ask));
 
 
-	strcpy(ask.szID, gPlayerContainer::GetIF()->m_MyPlayer.szID);
+	strcpy(ask.szID, gDataContainer::GetIF()->m_MyPlayer.szID);
 
 	ask.room.nMaxPlayer = m_nPlayer;
 	ask.room.nNowPlayer	= 1;
 
-	strcpy(ask.room.szRoomMaxPlayer[0], gPlayerContainer::GetIF()->m_MyPlayer.szID);
+	strcpy(ask.room.szRoomMaxPlayer[0], gDataContainer::GetIF()->m_MyPlayer.szID);
 	strcpy(ask.room.szRoomName, m_EditRoom.m_szEdit);
 	if(strlen(m_EditPass.m_szEdit) == 0)
 	{
@@ -569,8 +569,8 @@ void gRoomCore::pk_roommake_rep(PK_ROOMMAKER_REP *rep)
 	{
 		gUtil::DebugMsg("Success\n");
 		m_eRoom = ERM_ROOM;
-		gPlayerContainer::GetIF()->SetMyRoom(&rep->room);
-		gPlayerContainer::GetIF()->SetPlayerList(rep->playerlist);
+		gDataContainer::GetIF()->SetMyRoom(&rep->room);
+		gDataContainer::GetIF()->SetPlayerList(rep->playerlist);
 		SetFocus(gMainWin::GetIF()->m_hWnd);
 		gChat::GetIF()->MsgStackClear();
 	}
@@ -1239,7 +1239,7 @@ void gRoomCore::Draw_Room()
 
 	int			i;
 
-	ROOM	*room = &gPlayerContainer::GetIF()->m_MyRoom;
+	ROOM	*room = &gDataContainer::GetIF()->m_MyRoom;
 
 	if(m_nSelUser != -1)
 	{
@@ -1279,12 +1279,12 @@ void gRoomCore::Draw_Room()
 
 		if(strlen(room->szRoomMaxPlayer[i]) > 0)
 		{
-			int		nTemp = gPlayerContainer::GetIF()->m_PlayerList[i].classtype;
+			int		nTemp = gDataContainer::GetIF()->m_PlayerList[i].classtype;
 			if(nTemp != -1)
 			{
-				gPlayerContainer::GetIF()->m_ImgInfo[nTemp].ImgCharSel.Draw(rcDest.left + WAIT_TERM_CHARIMG_X, rcDest.top + WAIT_TERM_CHARIMG_Y);
+				gDataContainer::GetIF()->m_ImgInfo[nTemp].ImgCharSel.Draw(rcDest.left + WAIT_TERM_CHARIMG_X, rcDest.top + WAIT_TERM_CHARIMG_Y);
 			}
-			if(gPlayerContainer::GetIF()->m_PlayerList[i].bReady)
+			if(gDataContainer::GetIF()->m_PlayerList[i].bReady)
 			{
 				m_ImgReady.Draw(rcDest.left + SEL_TERM_READY_X, rcDest.top + SEL_TERM_READY_Y);
 			}
@@ -1298,7 +1298,7 @@ void gRoomCore::Draw_Room()
 	m_ImgCrown.Draw(nX, nY);
 
 	// 내가 방장
-	if(strcmp(room->szRoomMaxPlayer[room->nMakerIndex], gPlayerContainer::GetIF()->m_MyPlayer.szID) == 0)
+	if(strcmp(room->szRoomMaxPlayer[room->nMakerIndex], gDataContainer::GetIF()->m_MyPlayer.szID) == 0)
 	{
 		m_WaitBtn[BWM_START].Draw();
 	}
@@ -1327,7 +1327,7 @@ void gRoomCore::Draw_Room()
 
 	if(m_bCharSel)
 	{
-		PLAYER	*list = gPlayerContainer::GetIF()->m_PlayerList;
+		PLAYER	*list = gDataContainer::GetIF()->m_PlayerList;
 
 		m_ImgSelBack.Draw(WAIT_POS_SELBACK_X, WAIT_POS_SELBACK_Y);
 
@@ -1353,7 +1353,7 @@ void gRoomCore::Draw_Room()
 			m_ImgMySel.Draw(m_SelBtn[ m_nSelChar ].m_rcPos.left, m_SelBtn[ m_nSelChar ].m_rcPos.top);
 
 			// char img
-			gPlayerContainer::GetIF()->m_ImgInfo[ m_nSelChar ].ImgCharSel.Draw(SEL_POS_CHARIMG_X, SEL_POS_CHARIMG_Y);
+			gDataContainer::GetIF()->m_ImgInfo[ m_nSelChar ].ImgCharSel.Draw(SEL_POS_CHARIMG_X, SEL_POS_CHARIMG_Y);
 
 			// stat
 			RECT	rcSour, rcDest, rcTemp;
@@ -1363,7 +1363,7 @@ void gRoomCore::Draw_Room()
 
 			//	lang
 			rcSour = rcTemp;
-			OffsetRect(&rcSour, 0, gPlayerContainer::GetIF()->m_CharInfo[m_nSelChar].nLang * SEL_SIZE_BAR_H );
+			OffsetRect(&rcSour, 0, gDataContainer::GetIF()->m_CharInfo[m_nSelChar].nLang * SEL_SIZE_BAR_H );
 			SetRect(&rcDest,
 					SEL_POS_BAR_X,
 					SEL_POS_LANG_Y,
@@ -1374,7 +1374,7 @@ void gRoomCore::Draw_Room()
 
 			// math
 			rcSour = rcTemp;
-			OffsetRect(&rcSour, 0, gPlayerContainer::GetIF()->m_CharInfo[m_nSelChar].nMath * SEL_SIZE_BAR_H );
+			OffsetRect(&rcSour, 0, gDataContainer::GetIF()->m_CharInfo[m_nSelChar].nMath * SEL_SIZE_BAR_H );
 			SetRect(&rcDest,
 				SEL_POS_BAR_X,
 				SEL_POS_MATH_Y,
@@ -1385,7 +1385,7 @@ void gRoomCore::Draw_Room()
 
 			// art
 			rcSour = rcTemp;
-			OffsetRect(&rcSour, 0, gPlayerContainer::GetIF()->m_CharInfo[m_nSelChar].nArt * SEL_SIZE_BAR_H );
+			OffsetRect(&rcSour, 0, gDataContainer::GetIF()->m_CharInfo[m_nSelChar].nArt * SEL_SIZE_BAR_H );
 			SetRect(&rcDest,
 					SEL_POS_BAR_X,
 					SEL_POS_ART_Y,
@@ -1395,7 +1395,7 @@ void gRoomCore::Draw_Room()
 
 			// stamina
 			rcSour = rcTemp;
-			OffsetRect(&rcSour, 0, gPlayerContainer::GetIF()->m_CharInfo[m_nSelChar].nStamina * SEL_SIZE_BAR_H );
+			OffsetRect(&rcSour, 0, gDataContainer::GetIF()->m_CharInfo[m_nSelChar].nStamina * SEL_SIZE_BAR_H );
 			SetRect(&rcDest,
 				SEL_POS_BAR_X,
 				SEL_POS_STAMINA_Y,
@@ -1405,8 +1405,8 @@ void gRoomCore::Draw_Room()
 
 			// move
 			rcSour = rcTemp;
-			int		nMove = gPlayerContainer::GetIF()->m_CharInfo[m_nSelChar].nDice4 * 4 + 
-							gPlayerContainer::GetIF()->m_CharInfo[m_nSelChar].nDice6 * 6;
+			int		nMove = gDataContainer::GetIF()->m_CharInfo[m_nSelChar].nDice4 * 4 + 
+							gDataContainer::GetIF()->m_CharInfo[m_nSelChar].nDice6 * 6;
 
 			OffsetRect(&rcSour, 0, (nMove - 2) * SEL_SIZE_BAR_H );
 			SetRect(&rcDest,
@@ -1425,15 +1425,15 @@ void gRoomCore::Draw_Room()
 			for(i = 0; i < BSM_SELECT; i++)
 			{
 				gUtil::Text(m_SelBtn[i].m_rcPos.left + SEL_TERM_CHARNAME_X, m_SelBtn[i].m_rcPos.top + SEL_TERM_CHARNAME_Y,
-					gPlayerContainer::GetIF()->m_CharInfo[i].szName);	
+					gDataContainer::GetIF()->m_CharInfo[i].szName);	
 			}
 
 			if(m_nSelChar != -1)
 			{
-				gUtil::Text(SEL_POS_COLLEGE_X, SEL_POS_COLLEGE_Y, gPlayerContainer::GetIF()->m_CharInfo[m_nSelChar].szCollege);
+				gUtil::Text(SEL_POS_COLLEGE_X, SEL_POS_COLLEGE_Y, gDataContainer::GetIF()->m_CharInfo[m_nSelChar].szCollege);
 
 				char	szBuf[8];
-				if(gPlayerContainer::GetIF()->m_CharInfo[m_nSelChar].bMale)
+				if(gDataContainer::GetIF()->m_CharInfo[m_nSelChar].bMale)
 					wsprintf(szBuf, "♂");
 				else
 					wsprintf(szBuf, "♀");
@@ -1492,7 +1492,7 @@ void gRoomCore::OnLButtonDown_Join()
 				PK_ROOMLIST_ASK			ask;
 
 				ask.nPage	= m_nPage - 1;
-				strcpy(ask.szID, gPlayerContainer::GetIF()->m_MyPlayer.szID);
+				strcpy(ask.szID, gDataContainer::GetIF()->m_MyPlayer.szID);
 				
 				gServer::GetIF()->Send(PL_ROOMLIST_ASK, sizeof(ask), &ask);
 				return;
@@ -1507,7 +1507,7 @@ void gRoomCore::OnLButtonDown_Join()
 				PK_ROOMLIST_ASK			ask;
 
 				ask.nPage = m_nPage + 1;
-				strcpy(ask.szID, gPlayerContainer::GetIF()->m_MyPlayer.szID);
+				strcpy(ask.szID, gDataContainer::GetIF()->m_MyPlayer.szID);
 
 				gServer::GetIF()->Send(PL_ROOMLIST_ASK, sizeof(ask), &ask);
 				return;
@@ -1575,7 +1575,7 @@ void gRoomCore::SendRoomJoin()
 
 	ask.nIdx	= m_nSelected;
 	ask.nPage	= m_nPage;
-	strcpy(ask.szID, gPlayerContainer::GetIF()->m_MyPlayer.szID);
+	strcpy(ask.szID, gDataContainer::GetIF()->m_MyPlayer.szID);
 	if(m_bEnteringPass)
 		strcpy(ask.szPass, m_EditPassEnter.m_szEdit);
 
@@ -1591,8 +1591,8 @@ void gRoomCore::pk_roomjoin_rep(PK_ROOMJOIN_REP *rep)
 				m_bEnteringPass = false;
 				SetFocus(gMainWin::GetIF()->m_hWnd);
 				m_eRoom = ERM_ROOM;
-				gPlayerContainer::GetIF()->SetMyRoom(&rep->joinroom);
-				gPlayerContainer::GetIF()->SetPlayerList(rep->playerlist);
+				gDataContainer::GetIF()->SetMyRoom(&rep->joinroom);
+				gDataContainer::GetIF()->SetPlayerList(rep->playerlist);
 				gChat::GetIF()->MsgStackClear();
 			}
 			break;
@@ -1645,7 +1645,7 @@ void gRoomCore::OnLButtonDown_Room()
 				PK_CHARSELECT_ASK		ask;
 
 				ask.classtype = (CLASSTYPE)m_nSelChar;
-				strcpy(ask.szID, gPlayerContainer::GetIF()->m_MyPlayer.szID);
+				strcpy(ask.szID, gDataContainer::GetIF()->m_MyPlayer.szID);
 
 				gServer::GetIF()->Send(PL_CHARSELECT_ASK, sizeof ask, &ask);
 
@@ -1662,7 +1662,7 @@ void gRoomCore::OnLButtonDown_Room()
 			return;
 		}
 
-		ROOM	*room = &gPlayerContainer::GetIF()->m_MyRoom;
+		ROOM	*room = &gDataContainer::GetIF()->m_MyRoom;
 		
 		// 뒤에 캐릭터정보 배경
 		for(i = 0; i < room->nMaxPlayer; i++)
@@ -1681,11 +1681,11 @@ void gRoomCore::OnLButtonDown_Room()
 			{
 				if(gUtil::PointInRect(mouse->m_nPosX, mouse->m_nPosY, rcDest))
 				{
-					if( strcmp(gPlayerContainer::GetIF()->m_MyPlayer.szID, room->szRoomMaxPlayer[i]) == 0 
+					if( strcmp(gDataContainer::GetIF()->m_MyPlayer.szID, room->szRoomMaxPlayer[i]) == 0 
 						&& m_nSelUser == i)
 					{
 						m_bCharSel = true;
-						m_nSelChar = gPlayerContainer::GetIF()->m_MyPlayer.classtype;
+						m_nSelChar = gDataContainer::GetIF()->m_MyPlayer.classtype;
 					}
 					m_nSelUser = i;
 					break;
@@ -1694,11 +1694,11 @@ void gRoomCore::OnLButtonDown_Room()
 		}
 
 
-		if( strcmp(gPlayerContainer::GetIF()->m_PlayerList[room->nMakerIndex].szID, gPlayerContainer::GetIF()->m_MyPlayer.szID) == 0 )
+		if( strcmp(gDataContainer::GetIF()->m_PlayerList[room->nMakerIndex].szID, gDataContainer::GetIF()->m_MyPlayer.szID) == 0 )
 		{
 			if(m_WaitBtn[BWM_START].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 			{
-				if(gPlayerContainer::GetIF()->m_MyPlayer.classtype == -1)
+				if(gDataContainer::GetIF()->m_MyPlayer.classtype == -1)
 				{
 					gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_13);
 					return;
@@ -1706,7 +1706,7 @@ void gRoomCore::OnLButtonDown_Room()
 
 				PK_GAMESTART_ASK		ask;
 
-				strcpy(ask.szID, gPlayerContainer::GetIF()->m_MyPlayer.szID);
+				strcpy(ask.szID, gDataContainer::GetIF()->m_MyPlayer.szID);
 
 				gServer::GetIF()->Send(PL_GAMESTART_ASK, sizeof ask, &ask);
 			}
@@ -1715,7 +1715,7 @@ void gRoomCore::OnLButtonDown_Room()
 		{
 			if(m_WaitBtn[BWM_READY].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 			{
-				if(gPlayerContainer::GetIF()->m_MyPlayer.classtype == -1)
+				if(gDataContainer::GetIF()->m_MyPlayer.classtype == -1)
 				{
 					gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_13);
 					return;
@@ -1723,8 +1723,8 @@ void gRoomCore::OnLButtonDown_Room()
 
 				PK_GAMEREADY_ASK		ask;
 
-				ask.bReady	= !gPlayerContainer::GetIF()->m_MyPlayer.bReady;
-				strcpy(ask.szID, gPlayerContainer::GetIF()->m_MyPlayer.szID);
+				ask.bReady	= !gDataContainer::GetIF()->m_MyPlayer.bReady;
+				strcpy(ask.szID, gDataContainer::GetIF()->m_MyPlayer.szID);
 
 				gServer::GetIF()->Send(PL_GAMEREADY_ASK, sizeof ask, &ask);
 			}
@@ -1797,8 +1797,8 @@ void gRoomCore::OnLButtonUp_Room()
 
 void gRoomCore::pk_roomrefresh_rep(PK_ROOMREFRESH_REP *rep)
 {
-	gPlayerContainer::GetIF()->SetMyRoom(&rep->room);
-	gPlayerContainer::GetIF()->SetPlayerList(rep->playerlist);
+	gDataContainer::GetIF()->SetMyRoom(&rep->room);
+	gDataContainer::GetIF()->SetPlayerList(rep->playerlist);
 }
 
 void gRoomCore::OnRButtonDown_Room()
