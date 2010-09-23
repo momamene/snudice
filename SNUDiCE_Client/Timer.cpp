@@ -12,8 +12,9 @@ gTimer *gTimer::GetIF()
 
 void gTimer::SetUp()
 {
-	m_turn =  0;
-	m_on = false;
+	//m_start=GetTickCount();
+	m_turn =0;
+	m_on   =false;
 }
 
 int gTimer::frame()
@@ -40,16 +41,15 @@ void gTimer::frameStart(int cycleMs,int frame) {
 }
 
 int gTimer::frameSyn() {
-	int count=0;
 	while((GetTickCount() - m_start) > m_cycleMs){
 		m_start += m_cycleMs;
 		m_turn++;
 	}
-	return count;
+	return m_turn;
 }
 
 void gTimer::frameEnd(){
 	m_start = GetTickCount();
-	//	m_turn = 0;
+	m_turn = 0;
 	m_on = false;
 }
