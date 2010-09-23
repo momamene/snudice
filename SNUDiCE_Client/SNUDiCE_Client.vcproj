@@ -211,6 +211,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Dice.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Edit.cpp"
 					>
 				</File>
@@ -248,6 +252,10 @@
 				>
 				<File
 					RelativePath=".\BattleNetCore.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\GameCore.cpp"
 					>
 				</File>
 				<File
@@ -323,6 +331,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Dice.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Edit.h"
 					>
 				</File>
@@ -372,6 +384,10 @@
 				</File>
 				<File
 					RelativePath=".\coreconst.h"
+					>
+				</File>
+				<File
+					RelativePath=".\GameCore.h"
 					>
 				</File>
 				<File

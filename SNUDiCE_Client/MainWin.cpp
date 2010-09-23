@@ -5,6 +5,7 @@
 #include "LoginCore.h"
 #include "BattleNetCore.h"
 #include "SubmitCore.h"
+#include "GameCore.h"
 #include "RoomCore.h"
 #include "Server.h"
 #include "Util.h"
@@ -99,6 +100,9 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 	if(!gRoomCore::GetIF()->SetUp())
 		return false;
 
+	if(!gGameCore::GetIF()->SetUp())
+		return false;
+
 	if(!gChat::GetIF()->SetUp())
 		return false;
 
@@ -140,8 +144,10 @@ void gMainWin::Release()
 	gBattleNetCore::GetIF()->Release();
 	gRoomCore::GetIF()->Release();
 	gSubmitCore::GetIF()->Release();
+	gGameCore::GetIF()->Release();
 	gPlayerContainer::GetIF()->Release();
 	gTopUI::GetIF()->Release();
+	gDice::GetIF()->Release();
 	SAFE_RELEASE(m_lpDDBack);
 	SAFE_RELEASE(m_lpDDPrimary);
 	SAFE_RELEASE(m_lpDD);
@@ -179,6 +185,12 @@ int gMainWin::Run()
 					if(gRoomCore::GetIF()->PreTransMsg(Msg))
 						continue;
 					break;
+				case ECM_SUBMIT:
+					break;
+				case ECM_GAME:
+					if(gGameCore::GetIF()->PreTransMsg(Msg))
+						continue;
+					break;
 			}
 
 			TranslateMessage(&Msg);
@@ -212,6 +224,9 @@ void gMainWin::MainLoop()
 			break;
 		case ECM_SUBMIT:
 			gSubmitCore::GetIF()->MainLoop();
+			break;
+		case ECM_GAME:
+			gGameCore::GetIF()->MainLoop();
 			break;
 	}
 

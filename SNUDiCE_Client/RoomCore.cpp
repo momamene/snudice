@@ -1406,7 +1406,7 @@ void gRoomCore::Draw_Room()
 			// move
 			rcSour = rcTemp;
 			int		nMove = gPlayerContainer::GetIF()->m_CharInfo[m_nSelChar].nDice4 * 4 + 
-							gPlayerContainer::GetIF()->m_CharInfo[m_nSelChar].nDIce6 * 6;
+							gPlayerContainer::GetIF()->m_CharInfo[m_nSelChar].nDice6 * 6;
 
 			OffsetRect(&rcSour, 0, (nMove - 2) * SEL_SIZE_BAR_H );
 			SetRect(&rcDest,

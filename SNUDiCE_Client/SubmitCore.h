@@ -41,6 +41,7 @@ public:
 public:
 	void			pk_submit_rep(PK_SUBMIT_REP *rep);
 	void			pk_submitready_rep(PK_SUBMITREADY_REP *rep);
+	void			pk_maingametart_rep(PK_MAINGAMESTART_REP *rep);
 
 	void			SetSubject(BYTE *subj);
 

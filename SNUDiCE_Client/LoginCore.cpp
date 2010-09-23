@@ -157,11 +157,6 @@ void gLoginCore::MainLoop()
 {
 	Draw();
 	
-	//sungsungsungsungusngsungsungsungsungsunggigigigigsungigsungigsunggisunggisunggi
-#ifdef DebugDice
-	gDice::GetIF()->DiceStart(false,true,2,3);
-	gDice::GetIF()->DiceThrow(); //To be Deleted
-#endif
 // popup Ã¢ Ã³¸®
 	if(gPopUp::GetIF()->isPopUp())
 	{

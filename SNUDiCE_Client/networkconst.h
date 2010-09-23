@@ -54,8 +54,9 @@ enum ePROTOCOL
 
 	PL_SUBMITREADY_ASK,
 	PL_SUBMITREADY_REP,
-};
 
+	PL_MAINGAMESTART_REP,
+};
 
 enum eCOREMODE
 {
@@ -70,6 +71,8 @@ enum eCOREMODE
 	ECM_ROOM,
 
 	ECM_SUBMIT,				// 수강신청
+
+	ECM_GAME,				// 메인게임
 };
 
 struct PK_DEFAULT
@@ -136,7 +139,7 @@ struct CHARINFO
 	int			nStamina;
 	// 이동력
 	int			nDice4;
-	int			nDIce6;
+	int			nDice6;
 };
 
 struct PLAYER
@@ -352,4 +355,29 @@ enum ESUBMITERROR
 struct PK_SUBMITREADY_REP
 {
 	ESUBMITERROR	result;
+};
+
+#define MAXSUBJECT				6	// 한사람당 들을수잇는 과목수
+
+struct GAMEPLAYER
+{
+	char		szID[IDLENGTH];
+	// 게임정보
+	CLASSTYPE	ctype;
+
+	BYTE		nLang;
+	BYTE		nMath;
+	BYTE		nArt;
+	BYTE		nStamina, nMaxStamina;
+	BYTE		nDice4, nDice6;
+
+	float		fGrade[MAXSUBJECT];
+
+	WORD		nPos;
+};
+
+struct PK_MAINGAMESTART_REP
+{
+	GAMEPLAYER	list[ROOMMAXPLAYER];
+	int			nTurn;						// 누구 턴
 };

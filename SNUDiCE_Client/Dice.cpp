@@ -49,9 +49,13 @@ bool gDice::SetUp()
 
 void gDice::Release()
 {
-	int i;
-	for(i=0;i<4;i++) m_ImgHed[i].Release();
-	for(i=0;i<6;i++) m_ImgCube[i].Release();
+	int		i;
+
+	for(i = 0; i < 4; i++)
+		m_ImgHed[i].Release();
+
+	for(i = 0; i < 6; i++)
+		m_ImgCube[i].Release();
 }
 
 void gDice::DiceStart(bool hedron, bool cube, int n1, int n2)
@@ -59,32 +63,40 @@ void gDice::DiceStart(bool hedron, bool cube, int n1, int n2)
 	//It must be 
 //	ASSERT(n1<4 && n2<6);
 
-	if(!m_start) {
+	if(!m_start)
+	{
 		m_frametime.SetUp();
-		m_frametime.frameStart(2300,23); //위에서 해주세요도
-		m_start=true;
+		m_frametime.frameStart(2300, 23); //위에서 해주세요도
+		m_start = true;
 	}
-	m_hedron=hedron, m_cube=cube;
-	m_nCube = n2, m_nHed = n1;
+	m_hedron	= hedron;
+	m_cube		= cube;
+	m_nCube = n2;
+	m_nHed	= n1;
 }
 
 void gDice::DiceThrow()
 {
 	RECT	rcSour;
-	int		n1,n2;
+	int		n1, n2;
 
-	if(!m_start) return;
+	if(!m_start)
+		return;
+
 	n1 = m_nHed, n2 = m_nCube;
 	
 	m_nPos = m_frametime.frame();
-	if(m_nPos==DICE_FRAME) {
+
+	if(m_nPos == DICE_FRAME)
+	{
 		m_frametime.frameEnd();
-		m_start=false;
+		m_start = false;
 		return;
 	}
 	
 	//three case consideration
-	if(m_hedron && m_cube) {
+	if(m_hedron && m_cube)
+	{
 		SetRect(&rcSour, m_ImgHed[n1].m_nWidth/(DICE_FRAME)*m_nPos, 0, 
 			m_ImgHed[n1].m_nWidth/(DICE_FRAME)*(m_nPos+1), m_ImgHed[n1].m_nHeight);
 		m_ImgHed[n1].Draw(m_winPos1, rcSour);
@@ -99,7 +111,8 @@ void gDice::DiceThrow()
 		m_ImgHedWin.Draw(m_winPos1, rcSour);
 		m_ImgCubeWin.Draw(m_winPos2, rcSour);
 	}
-	else if(m_hedron) {
+	else if(m_hedron)
+	{
 		SetRect(&rcSour, m_ImgHed[n1].m_nWidth/(DICE_FRAME)*m_nPos, 0, 
 			m_ImgHed[n1].m_nWidth/(DICE_FRAME)*(m_nPos+1), m_ImgHed[n1].m_nHeight);
 		m_ImgHed[n1].Draw(m_winPos, rcSour);
@@ -108,7 +121,8 @@ void gDice::DiceThrow()
 			m_ImgCubeWin.m_nWidth, m_ImgCubeWin.m_nHeight);
 		m_ImgHedWin.Draw(m_winPos, rcSour);
 	}
-	else if(m_cube) {
+	else if(m_cube)
+	{
 		SetRect(&rcSour, m_ImgCube[n2].m_nWidth/(DICE_FRAME)*m_nPos, 0, 
 			m_ImgCube[n2].m_nWidth/(DICE_FRAME)*(m_nPos+1), m_ImgCube[n2].m_nHeight);
 		m_ImgCube[n2].Draw(m_winPos, rcSour);

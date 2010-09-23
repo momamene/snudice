@@ -108,7 +108,7 @@ bool gPlayerContainer::SetUpCharInfo()
 						m_CharInfo[nIndex].nDice4 = atoi(szTemp);
 						break;
 					case 8: // 6∏È√º
-						m_CharInfo[nIndex].nDIce6 = atoi(szTemp);
+						m_CharInfo[nIndex].nDice6 = atoi(szTemp);
 						break;
 				}
 				k = 0;
@@ -194,4 +194,25 @@ bool gPlayerContainer::SetUpCharImg()
 	fclose(fp);
 
 	return true;
+}
+
+void gPlayerContainer::SetMyGamePlayer(GAMEPLAYER* gp)
+{
+	memcpy(&m_MyGamePlayer, gp, sizeof(GAMEPLAYER));
+}
+
+void gPlayerContainer::SetGPList(GAMEPLAYER *list)
+{
+	memcpy(&m_GPlayerList, list, sizeof(PLAYER) * ROOMMAXPLAYER);
+
+	int			i;
+
+	for(i = 0; i < ROOMMAXPLAYER; i++)
+	{
+		if(strcmp(m_MyPlayer.szID, m_GPlayerList[i].szID) == 0)
+		{
+			SetMyGamePlayer(&m_GPlayerList[i]);
+			break;
+		}
+	}
 }

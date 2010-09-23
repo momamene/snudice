@@ -5,6 +5,7 @@
 #include "BattleNetCore.h"
 #include "SubmitCore.h"
 #include "RoomCore.h"
+#include "GameCore.h"
 
 static gMouse s_Mouse;
 
@@ -61,6 +62,9 @@ void gMouse::OnLButtonDown()
 		case ECM_SUBMIT:
 			gSubmitCore::GetIF()->OnLButtonDown();
 			break;
+		case ECM_GAME:
+			gGameCore::GetIF()->OnLButtonDown();
+			break;
 	}
 
 }
@@ -87,6 +91,9 @@ void gMouse::OnLButtonUp()
 		case ECM_SUBMIT:
 			gSubmitCore::GetIF()->OnLButtonUp();
 			break;
+		case ECM_GAME:
+			gGameCore::GetIF()->OnLButtonUp();
+			break;
 	}
 }
 
@@ -112,6 +119,9 @@ void gMouse::OnMouseMove()
 		case ECM_SUBMIT:
 			gSubmitCore::GetIF()->OnMouseMove();
 			break;
+		case ECM_GAME:
+			gGameCore::GetIF()->OnMouseMove();
+			break;
 	}
 }
 
@@ -136,6 +146,9 @@ void gMouse::OnRButtonDown()
 			break;
 		case ECM_SUBMIT:
 			gSubmitCore::GetIF()->OnRButtonDown();
+			break;
+		case ECM_GAME:
+			gGameCore::GetIF()->OnRButtonDown();
 			break;
 	}
 }
