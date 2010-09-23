@@ -126,6 +126,22 @@ bool gPlayerContainer::PutMode(char* id,eCOREMODE mode)
 	return false;
 }
 
+void gPlayerContainer::PutModeToModeForAll(eCOREMODE befMode, int flag,eCOREMODE newMode)
+{
+	PLAYER*		temp;
+
+	for(PLAYER_LIST::iterator it = m_PlayerList.begin();
+		it != m_PlayerList.end(); it++)
+	{
+		temp = *it;
+
+		if(temp->nCoreFlag==flag && temp->coreWhere==befMode)
+		{
+			temp->coreWhere = newMode;
+		}
+	}
+}
+
 bool gPlayerContainer::PutCoreFlag (char* id,int flag)
 {
 	PLAYER*		temp;

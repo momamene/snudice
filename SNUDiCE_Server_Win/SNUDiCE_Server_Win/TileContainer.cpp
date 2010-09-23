@@ -35,6 +35,8 @@ void gTileContainer::Load()
 
 void gTileContainer::LoadFileToBKS()
 {
+	gMainWin *mw = gMainWin::GetIF();
+
 	int i;
 	HANDLE	hFile;
 	DWORD	dw;
@@ -46,6 +48,9 @@ void gTileContainer::LoadFileToBKS()
 			memset(&m_bmpKindSavor[i],0,sizeof(TILE));
 			ReadFile(hFile,&m_bmpKindSavor[i],sizeof(TILE),&dw,NULL);
 		}
+	}
+	else {
+		MessageBox(mw->m_hWnd, "Tile Info Error : There is no MainGate", "Error", MB_OK);
 	}
 	CloseHandle(hFile);
 }

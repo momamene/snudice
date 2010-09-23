@@ -26,11 +26,15 @@ public:
 	void			pk_gameready_ask(PK_DEFAULT *pk, SOCKET sock);
 	void			pk_gamestart_ask(PK_DEFAULT *pk,SOCKET sock);
 
+//
+
 	void			ExitTheRoom (char* szID);
 
 	void			SendRoomListCauseChange(int nPage);		// nPage에 있는 애들에게 RoomList를 갱신
 
 	int				FindThePlayerInTheRoom(char* szID,int nRoomIndex);
+
+	void			FindClasstypeFromIDs_RMP(int roomIndex,CLASSTYPE* classtype);
 
 private:
 	void			SendRoomRefreshCauseChange(int nRoomIndex);		// nRoomIndex에 있는 애들에게 RoomInfo를 갱신

@@ -31,6 +31,7 @@ public:
 
 	bool			PutMode(char* id, eCOREMODE mode);
 	bool			PutCoreFlag(char* id, int flag);
+	void			PutModeToModeForAll(eCOREMODE befMode, int flag, eCOREMODE newMode);
 	bool			PutClassType(char*id, CLASSTYPE classtype);
 	bool			PutBoolReady (char* id,bool bReady);
 	eCOREMODE		GetMode(char* id);

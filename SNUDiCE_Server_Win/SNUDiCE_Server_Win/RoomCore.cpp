@@ -129,6 +129,18 @@ void gRoomCore::FindPlayersFromIDs_RMP(int roomIndex,PLAYER* getPlayerlist) {
 	}
 }
 
+void gRoomCore::FindClasstypeFromIDs_RMP(int roomIndex,CLASSTYPE* getClasstype) {
+	gPlayerContainer *gPC = gPlayerContainer::GetIF();
+	for(int j = 0 ; j < ROOMMAXPLAYER ; j++) {
+		if(m_rooms[roomIndex].szRoomMaxPlayer[j][0]=='\0') {
+			getClasstype[j] = CLASS_NONE;
+		}
+		else {
+			getClasstype[j] = gPC->GetClassType(m_rooms[roomIndex].szRoomMaxPlayer[j]);
+		}
+	}
+}
+
 
 bool gRoomCore::ChangeMakerToFirstUser(int roomIndex) 
 {
@@ -225,7 +237,7 @@ void gRoomCore::pk_roomlist_ask(PK_DEFAULT *pk, SOCKET sock)
 	wsprintf(buf,"[PK_ROOMLIST_ASK] %s\t player : %s\n", inet_ntoa(clientAddr.sin_addr), ask.szID);
 	OutputDebugString(buf);
 
-	if(isRoomInPage(ask.nPage)) {
+	if(ask.nPage==0||isRoomInPage(ask.nPage)) {
 		gPC->PutMode(ask.szID,ECM_ROOMJOIN);
 		gPC->PutCoreFlag(ask.szID,ask.nPage);
 		SendRoomListCauseChange(ask.nPage);

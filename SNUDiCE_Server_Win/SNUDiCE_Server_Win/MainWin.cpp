@@ -12,6 +12,7 @@
 
 #include "SubjectContainer.h"
 #include "TileContainer.h"
+#include "GamePlayerContainer.h"
 		
 
 static gMainWin	s_MainWin;		// for singleton
@@ -141,10 +142,13 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 	// b
 //	if(!gSubjectContainer::GetIF()->SetUp()) // SetUp 이 필요 없었던 경우.
 //		return false;
-//	if(!gTileContainer::GetIF()->Setup())
-//		return false;
+	if(!gTileContainer::GetIF()->Setup())
+		return false;
 
 	if(!gSubmitCore::GetIF()->SetUp())
+		return false;
+
+	if(!gGamePlayerContainer::GetIF()->SetUp())
 		return false;
 	
 	return true;
@@ -219,6 +223,7 @@ void gMainWin::Release()
 	gChannelCore::GetIF()->Release();
 	gRoomCore::GetIF()->Release();
 	gSubmitCore::GetIF()->Release();
+	gGamePlayerContainer::GetIF()->Release();
 	
 }
 
@@ -265,6 +270,10 @@ void gMainWin::Recv(PK_DEFAULT *pk, SOCKET sock)
 			break;
 		case PL_SUBMIT_ASK:
 			gSubmitCore::GetIF()->pk_submit_ask(pk,sock);
+			break;
+		case PL_SUBMITREADY_ASK:
+			gSubmitCore::GetIF()->pk_submitready_ask(pk,sock);
+			break;
 	}
 }
 
