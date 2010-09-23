@@ -77,39 +77,4 @@ void gMessageCore::pk_message_ask(PK_DEFAULT *pk, SOCKET sock)
 		// error
 		OutputDebugString("(f)[pk_message_ask] Error in mode Problem\n");
 	}
-		
-/*
-	int nRoomIndex = gCC->FindPlayer(ask.szID);
-	SOCKET socketOne;
-	bool bTemp;
-
-	if(nRoomIndex==-1)
-		return;
-
-	for(int i = 0 ; i < CHANNELUSERMAX ; i++)
-	{
-		if(!gCC->m_isExisted[nRoomIndex][i]) 
-			continue;
-		if(gPC->FindSocketFromID(gCC->m_channelArray[nRoomIndex].szUserInCh[i],&socketOne)) {
-			strcpy(rep.szID,ask.szID);
-			strcpy(rep.szMsg,ask.szMsg);
-			gMainWin::GetIF()->Send(PL_MESSAGE_REP, sizeof(rep),&rep, socketOne);
-		}
-		else {
-			// error
-		}
-
-	}
-	for(PLAYER_LIST::iterator it = gPC->m_PlayerList.begin(); it != gPC->m_PlayerList.end(); it++) {
-			//if(strcmp(it->szID,ask->szID)==0) continue;
-		temp = *it;
-		if(temp->coreWhere == ECM_BATTLENET) {
-			strcpy(rep.szID,ask.szID);
-			strcpy(rep.szMsg,ask.szMsg);
-			gMainWin::GetIF()->Send(PL_MESSAGE_REP, sizeof(rep), &rep, temp->sock);
-		}
-	}
-	*/
 }
-
-

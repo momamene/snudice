@@ -145,6 +145,25 @@ bool gPlayerContainer::PutCoreFlag (char* id,int flag)
 	return false;
 }
 
+bool gPlayerContainer::PutBoolReady (char* id,bool bReady)
+{
+	PLAYER*		temp;
+
+	for(PLAYER_LIST::iterator it = m_PlayerList.begin();
+		it != m_PlayerList.end(); it++)
+	{
+		temp = *it;
+
+		if(strcmp(temp->szID,id)==0)
+		{
+			temp->bReady = bReady;
+			return true;
+		}
+	}
+
+	return false;
+}
+
 bool gPlayerContainer::PutClassType (char* id,CLASSTYPE classtype)
 {
 	PLAYER*		temp;
@@ -163,6 +182,25 @@ bool gPlayerContainer::PutClassType (char* id,CLASSTYPE classtype)
 
 	return false;
 }
+
+CLASSTYPE gPlayerContainer::GetClassType (char* id)
+{
+	PLAYER*		temp;
+
+	for(PLAYER_LIST::iterator it = m_PlayerList.begin();
+		it != m_PlayerList.end(); it++)
+	{
+		temp = *it;
+
+		if(strcmp(temp->szID,id)==0)
+		{
+			return temp->classtype;
+		}
+	}
+
+	return CLASS_NONE;
+}
+
 
 int gPlayerContainer::GetCoreFlag(char* id) {
 	PLAYER*		temp;
@@ -192,20 +230,36 @@ eCOREMODE gPlayerContainer::GetMode(char* id) {
 	return (eCOREMODE)-1;
 }
 
-bool gPlayerContainer::isClasstypeExistedInRoom(int flag,CLASSTYPE classtype)
+bool gPlayerContainer::isClasstypeExistedInRoom(int nRoomIndex,CLASSTYPE classtype)
 {
 	PLAYER*		temp;
 	for(PLAYER_LIST::iterator it = m_PlayerList.begin() ; 
 		it != m_PlayerList.end() ; it++)
 	{
 		temp = *it;
-		if(temp->coreWhere==ECM_ROOM&&temp->nCoreFlag==flag)
+		if(temp->coreWhere==ECM_ROOM && temp->nCoreFlag==nRoomIndex)
 		{
-			if(temp->nCoreFlag==classtype)
-			return true;
+			if(temp->classtype==classtype)
+				return true;
 		}
 	}
 	return false;
+}
+
+bool gPlayerContainer::isAllReadyInRoom(int nRoomIndex)
+{
+	PLAYER*		temp;
+	for(PLAYER_LIST::iterator it = m_PlayerList.begin() ; 
+		it != m_PlayerList.end() ; it++)
+	{
+		temp = *it;
+		if(temp->coreWhere==ECM_ROOM && temp->nCoreFlag==nRoomIndex)
+		{
+			if(temp->bReady==false)
+				return false;
+		}
+	}
+	return true;
 }
 
 

@@ -5,6 +5,7 @@
 #include "MessageCore.h"
 #include "ChannelCore.h"
 #include "RoomCore.h"
+#include "SubmitCore.h"
 
 #include "PlayerContainer.h"
 #include "ChannelContainer.h"
@@ -142,6 +143,9 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 //		return false;
 //	if(!gTileContainer::GetIF()->Setup())
 //		return false;
+
+	if(!gSubmitCore::GetIF()->SetUp())
+		return false;
 	
 	return true;
 }
@@ -213,6 +217,9 @@ void gMainWin::Release()
 	gMessageCore::GetIF()->Release();
 	gChannelContainer::GetIF()->Release();
 	gChannelCore::GetIF()->Release();
+	gRoomCore::GetIF()->Release();
+	gSubmitCore::GetIF()->Release();
+	
 }
 
 
@@ -246,10 +253,19 @@ void gMainWin::Recv(PK_DEFAULT *pk, SOCKET sock)
 			break;
 		case PL_ROOMJOIN_ASK:
 			gRoomCore::GetIF()->pk_roomjoin_ask(pk,sock);
+			break;
 		case PL_CHARSELECT_ASK:
 			gRoomCore::GetIF()->pk_charselect_ask(pk,sock);
+			break;
+		case PL_GAMEREADY_ASK:
+			gRoomCore::GetIF()->pk_gameready_ask(pk,sock);
+			break;
+		case PL_GAMESTART_ASK:
+			gRoomCore::GetIF()->pk_gamestart_ask(pk,sock);
+			break;
+		case PL_SUBMIT_ASK:
+			gSubmitCore::GetIF()->pk_submit_ask(pk,sock);
 	}
-
 }
 
 bool gMainWin::Send(DWORD type, DWORD size, void *buf ,char* szID)

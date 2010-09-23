@@ -2,6 +2,7 @@
 #include "MainWin.h"
 #include "PlayerContainer.h"
 #include "ChannelContainer.h"
+#include "SubmitCore.h"
 
 static gRoomCore s_RoomCore;
 
@@ -9,6 +10,7 @@ gRoomCore *gRoomCore::GetIF()
 {
 	return &s_RoomCore;
 }
+
 
 bool gRoomCore::SetUp()
 {
@@ -18,6 +20,7 @@ bool gRoomCore::SetUp()
 	memset(m_rooms,0,sizeof(ROOM)*MAXROOM);
 	return true;
 }
+
 
 void gRoomCore::Release()
 {
@@ -37,6 +40,7 @@ int gRoomCore::FindFirstEmptyRoom ()
 	return -1;
 }
 
+
 int gRoomCore::FindTheRoom(char* szRoomName)
 {
 	for(int i = 0 ;  i < MAXROOM ; i++)
@@ -48,11 +52,24 @@ int gRoomCore::FindTheRoom(char* szRoomName)
 	return -1;
 }
 
+
+int gRoomCore::FindThePlayerInTheRoom(char* szID,int nRoomIndex)
+{
+	for(int i = 0 ; i < ROOMMAXPLAYER ; i++)
+	{
+		if(strcmp(m_rooms[nRoomIndex].szRoomMaxPlayer[i],szID)==0)
+			return i;
+	}
+	return -1;
+}
+
+
 bool gRoomCore::isFullRoom (int index)
 {
 	if(m_isRoom[index] && m_rooms[index].nNowPlayer >= m_rooms[index].nMaxPlayer) return true;
 	else return false;
 }
+
 
 void gRoomCore::EnterTheRoom (int index,char* szID)
 {
@@ -66,6 +83,7 @@ void gRoomCore::EnterTheRoom (int index,char* szID)
 	}
 	// 방에 못들어가도 에러처리는 없으니. isFullRoom을 애용하길.
 }	
+
 
 void gRoomCore::ExitTheRoom (char* szID)	// 방장을 빼내면 방이 파괴됨.
 {
@@ -87,15 +105,8 @@ void gRoomCore::ExitTheRoom (char* szID)	// 방장을 빼내면 방이 파괴됨.
 					ChangeMakerToFirstUser(i);
 				}
 
-				PK_ROOMREFRESH_REP rep;
-				rep.room = m_rooms[i];
+				SendRoomRefreshCauseChange(i);
 
-				PLAYER l_playerlist[ROOMMAXPLAYER];
-				FindPlayersFromIDs_RMP(i,l_playerlist);
-				memcpy(&rep.playerlist,&l_playerlist,sizeof(PLAYER)*ROOMMAXPLAYER);
-		
-				gPlayerContainer::GetIF()->SendSelect(
-					PL_ROOMREFRESH_REP,sizeof(PK_ROOMREFRESH_REP),&rep,ECM_ROOM,i);
 				SendRoomListCauseChange(i/MAXROOMFORPAGE);
 
 				return;
@@ -103,6 +114,7 @@ void gRoomCore::ExitTheRoom (char* szID)	// 방장을 빼내면 방이 파괴됨.
 		}
 	}
 }
+
 
 void gRoomCore::FindPlayersFromIDs_RMP(int roomIndex,PLAYER* getPlayerlist) {
 	gPlayerContainer *gPC = gPlayerContainer::GetIF();
@@ -117,11 +129,14 @@ void gRoomCore::FindPlayersFromIDs_RMP(int roomIndex,PLAYER* getPlayerlist) {
 	}
 }
 
+
 bool gRoomCore::ChangeMakerToFirstUser(int roomIndex) 
 {
+	gPlayerContainer *gPC = gPlayerContainer::GetIF();
 	for(int i = 0 ; i < ROOMMAXPLAYER ; i++) {
 		if(m_rooms[roomIndex].szRoomMaxPlayer[i][0]!='\0') {
 			m_rooms[roomIndex].nMakerIndex = i;
+			gPC->PutBoolReady(m_rooms[roomIndex].szRoomMaxPlayer[i],false);
 			return true;
 		}
 	}
@@ -160,10 +175,8 @@ void gRoomCore::pk_roommaker_ask(PK_DEFAULT *pk, SOCKET sock)
 	OutputDebugString(buf);
 
 
-
 	PK_ROOMMAKER_REP	rep;
 	
-
 	int emptyRoom = FindFirstEmptyRoom();
 
 	if(FindTheRoom(ask.room.szRoomName)!=-1) {
@@ -194,8 +207,6 @@ void gRoomCore::pk_roommaker_ask(PK_DEFAULT *pk, SOCKET sock)
 }
 
 
-
-
 void gRoomCore::pk_roomlist_ask(PK_DEFAULT *pk, SOCKET sock)
 {
 	gPlayerContainer *gPC = gPlayerContainer::GetIF();
@@ -221,6 +232,7 @@ void gRoomCore::pk_roomlist_ask(PK_DEFAULT *pk, SOCKET sock)
 	}
 }
 
+
 void gRoomCore::pk_charselect_ask(PK_DEFAULT *pk, SOCKET sock)
 {
 	gPlayerContainer *gPC = gPlayerContainer::GetIF();
@@ -239,21 +251,101 @@ void gRoomCore::pk_charselect_ask(PK_DEFAULT *pk, SOCKET sock)
 	wsprintf(buf,"[PK_CHARSELECT_ASK] %s\t player : %s\n", inet_ntoa(clientAddr.sin_addr), ask.szID);
 	OutputDebugString(buf);
 
-	PK_ROOMREFRESH_REP rep;
-
 	int nRoomIndex = gPC->GetCoreFlag(ask.szID);
-	if(flag<0) return;
-
-	if(!gPC->isClasstypeExistedInRoom(nRoomIndex,ask.classtype)) {
+	if(nRoomIndex<0) return;
+	else if(!gPC->isClasstypeExistedInRoom(nRoomIndex,ask.classtype)) {
 		gPC->PutClassType(ask.szID,ask.classtype);		
-		// SendRoomListCauseChange(nRoomIndex);
-		rep.room = m_rooms[nRoomIndex];
-		PLAYER l_playerlist[ROOMMAXPLAYER];
-		FindPlayersFromIDs_RMP(nRoomIndex,l_playerlist);
-		memcpy(&rep.playerlist,&l_playerlist,sizeof(PLAYER)*ROOMMAXPLAYER);
-		gPC->SendSelect(PL_ROOMREFRESH_REP,sizeof(PK_ROOMREFRESH_REP),&rep,ECM_ROOM,nRoomIndex);
+		SendRoomRefreshCauseChange(nRoomIndex);
 	}
 }
+
+
+void gRoomCore::pk_gameready_ask(PK_DEFAULT *pk, SOCKET sock)
+{
+	gPlayerContainer *gPC = gPlayerContainer::GetIF();
+
+	PK_GAMEREADY_ASK ask;
+
+	SOCKADDR_IN			clientAddr;
+	int					addrLen;
+	char				buf [1024];
+
+	addrLen = sizeof(clientAddr);
+	getpeername(sock, (SOCKADDR*)&clientAddr, &addrLen);
+
+	ask = *((PK_GAMEREADY_ASK*)pk->strPacket);
+
+	wsprintf(buf,"[PK_GAMEREADY_ASK] %s\t player : %s\n", inet_ntoa(clientAddr.sin_addr), ask.szID);
+	OutputDebugString(buf);
+
+
+	gPC->PutBoolReady(ask.szID,ask.bReady);
+	int nRoomIndex = gPC->GetCoreFlag(ask.szID);
+	if(nRoomIndex<0) return;
+	else if (gPC->GetClassType(ask.szID)!=CLASS_NONE) {
+		SendRoomRefreshCauseChange(nRoomIndex);
+	}
+}
+
+
+void gRoomCore::pk_gamestart_ask(PK_DEFAULT *pk, SOCKET sock)
+{
+	gPlayerContainer *gPC = gPlayerContainer::GetIF();
+
+	PK_GAMESTART_ASK ask;
+
+	SOCKADDR_IN			clientAddr;
+	int					addrLen;
+	char				buf [1024];
+
+	addrLen = sizeof(clientAddr);
+	getpeername(sock, (SOCKADDR*)&clientAddr, &addrLen);
+
+	ask = *((PK_GAMESTART_ASK*)pk->strPacket);
+
+	wsprintf(buf,"[PK_GAMESTART_ASK] %s\t player : %s\n", inet_ntoa(clientAddr.sin_addr), ask.szID);
+	OutputDebugString(buf);
+
+	PK_GAMESTART_REP rep;
+
+	CLASSTYPE ctype = gPC->GetClassType(ask.szID);
+	int nRoomIndex = gPC->GetCoreFlag(ask.szID);
+	// sangwoo temp
+	gPC->PutBoolReady(ask.szID,true);
+	bool bTemp = gPC->isAllReadyInRoom(nRoomIndex);
+	gPC->PutBoolReady(ask.szID,false);
+	// end
+	int nNowPlayer = m_rooms[nRoomIndex].nNowPlayer;
+
+	BYTE temp_subject[CLASSNUM][CLASSSEAT];
+	for(int i = 0 ; i < CLASSNUM ; i++)
+	{
+		temp_subject[i][0] = -1;
+		temp_subject[i][1] = -1;
+		temp_subject[i][2] = NOSEAT;
+ 	}
+
+	if(ctype==-1) {
+		rep.result = EGS_NOREADY;
+		gMainWin::GetIF()->Send(PL_GAMESTART_REP, sizeof(rep), &rep, sock);
+	}
+	else if (!bTemp) {
+		rep.result = EGS_NOREADYUSER;
+		gMainWin::GetIF()->Send(PL_GAMESTART_REP, sizeof(rep), &rep, sock);
+
+	}
+	else if(nNowPlayer==1) {
+		rep.result = EGS_ONEUSER;
+		gMainWin::GetIF()->Send(PL_GAMESTART_REP, sizeof(rep), &rep, sock);
+	}
+
+	else {
+		m_rooms[nRoomIndex].isGaming = true;
+		gSubmitCore::GetIF()->pk_gamestart_rep(nRoomIndex);
+	}
+}
+
+
 
 void gRoomCore::pk_roomjoin_ask(PK_DEFAULT *pk, SOCKET sock)
 {
@@ -298,14 +390,10 @@ void gRoomCore::pk_roomjoin_ask(PK_DEFAULT *pk, SOCKET sock)
 
 		EnterTheRoom(nRoomIndex,ask.szID); 
 
+		SendRoomRefreshCauseChange(nRoomIndex);
 
-		PK_ROOMREFRESH_REP rep2;
-		rep2.room = m_rooms[nRoomIndex];
 		PLAYER l_playerlist[ROOMMAXPLAYER];
 		FindPlayersFromIDs_RMP(nRoomIndex,l_playerlist);
-		memcpy(&rep2.playerlist,&l_playerlist,sizeof(PLAYER)*ROOMMAXPLAYER);
-		gPC->SendSelect(PL_ROOMREFRESH_REP,sizeof(PK_ROOMREFRESH_REP),&rep2,ECM_ROOM,nRoomIndex);
-
 
 		rep.result = ERJ_SUCCESS;
 		gPC->PutMode(ask.szID,ECM_ROOM);
@@ -324,7 +412,7 @@ void gRoomCore::pk_roomjoin_ask(PK_DEFAULT *pk, SOCKET sock)
 }
 
 //////////////////////////////////////////////////////////////////////////
-///
+/// ???
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -343,6 +431,18 @@ void gRoomCore::SendRoomListCauseChange(int nPage) {
 	gPC->SendSelect(PL_ROOMLIST_REP,sizeof(PK_ROOMLIST_REP),&rep,ECM_ROOMJOIN,nPage);
 }
 
+void gRoomCore::SendRoomRefreshCauseChange(int nRoomIndex)
+{
+	gPlayerContainer *gPC = gPlayerContainer::GetIF();
+	PK_ROOMREFRESH_REP rep;
+	
+	rep.room = m_rooms[nRoomIndex];
+	PLAYER l_playerlist[ROOMMAXPLAYER];
+	FindPlayersFromIDs_RMP(nRoomIndex,l_playerlist);
+	memcpy(&rep.playerlist,&l_playerlist,sizeof(PLAYER)*ROOMMAXPLAYER);
+	gPC->SendSelect(PL_ROOMREFRESH_REP,sizeof(PK_ROOMREFRESH_REP),&rep,ECM_ROOM,nRoomIndex);
+}
+
 
 bool gRoomCore::isRoomInPage(int nPage) {
 	for(int i = 0 ; i < MAXROOMFORPAGE ; i++) {
@@ -351,4 +451,3 @@ bool gRoomCore::isRoomInPage(int nPage) {
 	}
 	return false;
 }
-

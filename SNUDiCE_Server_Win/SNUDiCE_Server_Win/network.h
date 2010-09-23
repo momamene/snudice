@@ -45,24 +45,28 @@ enum ePROTOCOL
 	PL_ROOMREFRESH_REP,
 
 	PL_CHARSELECT_ASK,
+	PL_GAMEREADY_ASK,
+	PL_GAMESTART_ASK,
+	PL_GAMESTART_REP,
+
+	PL_SUBMIT_ASK,
+	PL_SUBMIT_REP,
 };
 
 
 enum eCOREMODE
 {
 	ECM_NONLOGIN,			// login 안한상태
+
 	ECM_LOGIN,
+
 	ECM_BATTLENET,			// LOGIN 하면 이 모드
+
 	ECM_ROOMMAKE,
 	ECM_ROOMJOIN,
 	ECM_ROOM,
 
-
-	ECM_TITLE,				// 타이틀
-	ECM_PSEL,				// 플레이어 고르자
-	ECM_CSEL,				// 캐릭터 고르자
 	ECM_SUBMIT,				// 수강신청
-	ECM_GAME,				// 게임
 };
 
 struct PK_DEFAULT
@@ -112,6 +116,26 @@ enum CLASSTYPE
 
 };
 
+#define CHARNAMELENGTH		16
+#define CHARCOLLEGENAME		16
+#define MAXCHARNUM			16		// 캐릭터 갯수
+
+struct CHARINFO
+{
+	char		szName[CHARNAMELENGTH];
+	char		szCollege[CHARCOLLEGENAME];
+	bool		bMale;
+	// 학습력
+	int			nLang;
+	int			nMath;
+	int			nArt;
+	// 체력
+	int			nStamina;
+	// 이동력
+	int			nDice4;
+	int			nDIce6;
+};
+
 struct PLAYER
 {
 	char		szID[IDLENGTH];
@@ -121,6 +145,7 @@ struct PLAYER
 
 	// 게임관련 정보
 	CLASSTYPE	classtype;
+	bool		bReady;
 };
 
 struct PK_LOGIN_ASK
@@ -265,8 +290,44 @@ struct PK_ROOMREFRESH_REP
 	PLAYER				playerlist[ROOMMAXPLAYER];
 };
 
-struct PK_CHARSELECT_ASK 
+struct PK_CHARSELECT_ASK
 {
-	char szID[IDLENGTH];
-	CLASSTYPE classtype;
+	char				szID[IDLENGTH];
+	CLASSTYPE			classtype;
+};
+
+typedef struct
+{
+	char				szID[IDLENGTH];
+	bool				bReady;
+
+} PK_GAMEREADY_ASK, PK_GAMESTART_ASK;
+
+enum ERRORGAMESTART
+{
+	EGS_NOREADY,			// 방장이 준비가 안됨..(방장이 캐릭터 선택 x)
+	EGS_NOREADYUSER,		// 유저들이 준비가 안됨.
+	EGS_ONEUSER,			// 유저가 방장 한명이라 시작 불가.(한명으로 게임 시작 불가)
+	EGS_SUCCESS,
+};
+
+#define CLASSNUM		18
+#define CLASSSEAT		3
+#define NOSEAT			99
+
+struct PK_GAMESTART_REP
+{
+	ERRORGAMESTART		result;
+	BYTE				subject[CLASSNUM][CLASSSEAT];
+};
+
+struct PK_SUBMIT_ASK
+{
+	char			szID[IDLENGTH];
+	BYTE			nSUbjectIdx;			// 신청한 과목 index
+};
+
+struct PK_SUBMIT_REP
+{
+	BYTE				subject[CLASSNUM][CLASSSEAT];
 };

@@ -32,10 +32,13 @@ public:
 	bool			PutMode(char* id, eCOREMODE mode);
 	bool			PutCoreFlag(char* id, int flag);
 	bool			PutClassType(char*id, CLASSTYPE classtype);
+	bool			PutBoolReady (char* id,bool bReady);
 	eCOREMODE		GetMode(char* id);
 	int				GetCoreFlag(char* id);
+	CLASSTYPE		GetClassType (char* id);
 
 	bool			isClasstypeExistedInRoom(int flag,CLASSTYPE clsstype);
+	bool			isAllReadyInRoom(int nRoomIndex);
 
 	// packet
 

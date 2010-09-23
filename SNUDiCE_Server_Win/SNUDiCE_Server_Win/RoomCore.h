@@ -23,12 +23,21 @@ public:
 	void			pk_roomlist_ask(PK_DEFAULT *pk, SOCKET sock);
 	void			pk_roomjoin_ask(PK_DEFAULT *pk, SOCKET sock);
 	void			pk_charselect_ask(PK_DEFAULT *pk, SOCKET sock);
+	void			pk_gameready_ask(PK_DEFAULT *pk, SOCKET sock);
+	void			pk_gamestart_ask(PK_DEFAULT *pk,SOCKET sock);
+
 	void			ExitTheRoom (char* szID);
-	void			SendRoomListCauseChange(int nPage);
+
+	void			SendRoomListCauseChange(int nPage);		// nPage에 있는 애들에게 RoomList를 갱신
+
+	int				FindThePlayerInTheRoom(char* szID,int nRoomIndex);
 
 private:
-	int				FindFirstEmptyRoom ();
+	void			SendRoomRefreshCauseChange(int nRoomIndex);		// nRoomIndex에 있는 애들에게 RoomInfo를 갱신
+
+	int				FindFirstEmptyRoom ();	
 	int				FindTheRoom(char* szRoomName);
+	
 	bool			isFullRoom (int index);
 	void			EnterTheRoom (int index,char* szID);
 	void			DeleteTheRoom (int index);

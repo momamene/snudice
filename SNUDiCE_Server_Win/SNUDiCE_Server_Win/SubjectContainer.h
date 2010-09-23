@@ -25,8 +25,9 @@ class gSubjectContainer {
 public:
 	static gSubjectContainer *GetIF();
 
-private:
+//private:
 	SUBJECT m_subject[MAXSUBJECT_N]; // -1은 빈거, 그렇지 않다면 i*LINEY+j
+
 
 public:
 	//bool SetUp();
