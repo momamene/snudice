@@ -51,6 +51,9 @@ enum ePROTOCOL
 
 	PL_SUBMIT_ASK,
 	PL_SUBMIT_REP,
+
+	PL_SUBMITREADY_ASK,
+	PL_SUBMITREADY_REP,
 };
 
 
@@ -311,6 +314,7 @@ enum ERRORGAMESTART
 	EGS_SUCCESS,
 };
 
+#define AVAILSEAT		255
 #define CLASSNUM		18
 #define CLASSSEAT		3
 #define NOSEAT			99
@@ -325,10 +329,27 @@ struct PK_GAMESTART_REP
 struct PK_SUBMIT_ASK
 {
 	char			szID[IDLENGTH];
-	BYTE			nSUbjectIdx;			// 신청한 과목 index
+	BYTE			nSubjectIdx;			// 신청한 과목 index
+	bool			bSubmit;				// true면 신청, false면 취소
 };
 
 struct PK_SUBMIT_REP
 {
-	BYTE				subject[CLASSNUM][CLASSSEAT];
+	BYTE			subject[CLASSNUM][CLASSSEAT];
+};
+
+struct PK_SUBMITREADY_ASK
+{
+	char			szID[IDLENGTH];
+};
+
+enum ESUBMITERROR
+{
+	ESUB_LESSCLASS,					// 수강과목이 6개 아래다.
+	ESUB_SUCCESS,
+};
+
+struct PK_SUBMITREADY_REP
+{
+	ESUBMITERROR	result;
 };

@@ -6,6 +6,7 @@
 #include "LoginCore.h"
 #include "BattleNetCore.h"
 #include "RoomCore.h"
+#include "SubmitCore.h"
 #include "Chat.h"
 
 static SOCKET		s_sock = NULL;
@@ -212,6 +213,10 @@ void gServer::Recv()
 
 		case PL_GAMESTART_REP:
 			gRoomCore::GetIF()->pk_gamestart_rep((PK_GAMESTART_REP*)m_pkDefault.strPacket);
+			break;
+
+		case PL_SUBMIT_REP:
+			gSubmitCore::GetIF()->pk_submit_rep((PK_SUBMIT_REP*)m_pkDefault.strPacket);
 			break;
 	}
 }

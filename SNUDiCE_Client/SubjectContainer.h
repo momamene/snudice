@@ -36,7 +36,8 @@
 */
 
 
-class SUBJECT {
+class SUBJECT
+{
 public:
 	int		conPosIndex;
 	int		flag;
@@ -48,7 +49,8 @@ public:
 };
 
 
-class gSubjectContainer {
+class gSubjectContainer
+{
 public:
 	static gSubjectContainer *GetIF();
 

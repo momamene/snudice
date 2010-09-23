@@ -21,10 +21,17 @@ public:
 
 public:
 	gImage			m_ImgBack;
+	gImage			m_ImgIconPlayer;
 	gImgButton		m_BtnClass[CLASSNUM];
 	int				m_nSelected;				// 마우스 hover된 과목
 
+	BYTE			m_subject[CLASSNUM][CLASSSEAT];
+
 public:
+	void			pk_submit_rep(PK_SUBMIT_REP *rep);
+
+	void			SetSubject(BYTE *subj);
+
 	bool			SetUp();
 	void			MainLoop();
 	void			Draw();

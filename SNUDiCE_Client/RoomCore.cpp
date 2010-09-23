@@ -1,4 +1,5 @@
 #include "RoomCore.h"
+#include "SubmitCore.h"
 #include "PopUp.h"
 #include "Mouse.h"
 #include "Server.h"
@@ -1823,6 +1824,7 @@ void gRoomCore::pk_gamestart_rep(PK_GAMESTART_REP *rep)
 			break;
 		case EGS_SUCCESS:
 			gMainWin::GetIF()->m_eCoreMode = ECM_SUBMIT;
+			gSubmitCore::GetIF()->SetSubject((BYTE*)rep->subject);
 			break;
 	}
 }
