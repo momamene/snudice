@@ -229,14 +229,15 @@ void gPlayerContainer::SetGPList(GAMEPLAYER *list)
 
 void gPlayerContainer::MainLoop()
 {
-	POINT pt;
+	POINT		pt;
+
 	for(int i = 0 ; i < ROOMMAXPLAYER ; i++)
 	{
-		if(m_MyRoom.szRoomMaxPlayer[i][0]!='\0')
+		if(m_MyRoom.szRoomMaxPlayer[i][0] != '\0')
 		{
-			pt.x = m_GPlayerList[i].nPos/LINEY;
-			pt.y = m_GPlayerList[i].nPos%LINEY;
-			pt = gMap::GetIF()->conToAbs(pt);
+			pt.x	= m_GPlayerList[i].nPos / LINEY;
+			pt.y	= m_GPlayerList[i].nPos % LINEY;
+			pt		= gMap::GetIF()->conToAbs(pt);
 			m_nAbsDrawlineX[i] = pt.x;
 			m_nAbsDrawlineY[i] = pt.y;
 		}
@@ -246,19 +247,20 @@ void gPlayerContainer::MainLoop()
 
 void gPlayerContainer::Draw()
 {
-	RECT rcScr;
-	RECT rcImg;
+	RECT	rcScr;
+	RECT	rcImg;
 	gMap* gmap = gMap::GetIF();
 
 	for(int i = 0 ; i < ROOMMAXPLAYER ; i++)
 	{
-		if(m_MyRoom.szRoomMaxPlayer[i][0]!='\0') {
-			SetRect(&rcScr,-gmap->m_nAbsDrawlineX+m_nAbsDrawlineX[i]+15,
-				-gmap->m_nAbsDrawlineY+m_nAbsDrawlineY[i]-FULLY,
-				-gmap->m_nAbsDrawlineX+m_nAbsDrawlineX[i]+15+70,
-				-gmap->m_nAbsDrawlineY+m_nAbsDrawlineY[i]-FULLY+130);
-			SetRect(&rcImg,0,0,70,130);
-			m_ImgInfo[i].ImgDot.Draw(rcScr,rcImg,false);
+		if(m_MyRoom.szRoomMaxPlayer[i][0] != '\0')
+		{
+			SetRect(&rcScr, -gmap->m_nAbsDrawlineX + m_nAbsDrawlineX[i] + 15,
+				-gmap->m_nAbsDrawlineY + m_nAbsDrawlineY[i] - FULLY,
+				-gmap->m_nAbsDrawlineX + m_nAbsDrawlineX[i] + 15 + 70,
+				-gmap->m_nAbsDrawlineY + m_nAbsDrawlineY[i] - FULLY + 130);
+			SetRect(&rcImg, 0, 0, 70, 130);
+			m_ImgInfo[i].ImgDot.Draw(rcScr, rcImg, false);
 		}
 	}
 }

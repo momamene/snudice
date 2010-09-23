@@ -399,8 +399,10 @@ struct PK_MOVESTART_ASK
 
 struct PK_MOVESTART_REP
 {
-	int			nDice4;
-	int			nDice6;
+	BYTE		Dice4_1;
+	BYTE		Dice4_2;
+	BYTE		Dice6_1;
+	BYTE		Dice6_2;
 };
 
 struct PK_MOVEEND_ASK

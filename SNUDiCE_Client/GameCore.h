@@ -33,6 +33,10 @@ public:
 	void		OnMouseMove();
 	void		OnRButtonDown();
 
+	void		pk_movestart_rep(PK_MOVESTART_REP *rep);
+
 private:
 	void		MainLoopMouse();
+
+	void		SendMoveAsk();
 };

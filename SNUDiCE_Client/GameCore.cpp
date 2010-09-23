@@ -6,6 +6,9 @@
 #include "Map.h"
 #include "Mouse.h"
 #include "PlayerContainer.h"
+#include "Server.h"
+#include "Chat.h"
+#include "Dice.h"
 
 #define MINMOVE			20
 #define WORLDX			2228
@@ -36,6 +39,7 @@ void gGameCore::MainLoop()
 	MainLoopMouse();		// 付快胶 胶农费
 	
 	Draw();
+	gPlayerContainer::GetIF()->MainLoop();
 
 	// popup 芒 贸府
 	if(gPopUp::GetIF()->isPopUp())
@@ -59,6 +63,21 @@ void gGameCore::MainLoop()
 		}
 		gPopUp::GetIF()->m_bReturn = false;
 	}
+
+	if(gMainWin::GetIF()->m_Keys[VK_RETURN])
+	{
+		gChat::GetIF()->m_Edit.SetFocusOn();
+		gMainWin::GetIF()->m_Keys[VK_RETURN] = false;
+	}
+	
+	if(gMainWin::GetIF()->m_Keys[VK_SPACE])
+	{
+		SendMoveAsk();
+		gMainWin::GetIF()->m_Keys[VK_SPACE] = false;
+	}
+
+	gChat::GetIF()->MainLoop();
+	gDice::GetIF()->DiceThrow();
 }
 
 void gGameCore::MainLoopMouse()
@@ -93,7 +112,6 @@ void gGameCore::MainLoopMouse()
 void gGameCore::Draw()
 {
 	gMap::GetIF()->Draw();
-	gPlayerContainer::GetIF()->MainLoop();
 }
 
 void gGameCore::Release()
@@ -103,17 +121,38 @@ void gGameCore::Release()
 
 void gGameCore::OnLButtonDown()
 {
+	gMouse		*mouse	= gMouse::GetIF();
+	gChat		*chat	= gChat::GetIF();
 
+	if(chat->PointInUI(mouse->m_nPosX, mouse->m_nPosY))
+	{
+		chat->OnLbuttonDown(mouse->m_nPosX, mouse->m_nPosY);
+		return;
+	}
 }
 
 void gGameCore::OnLButtonUp()
 {
+	gMouse		*mouse	= gMouse::GetIF();
+	gChat		*chat	= gChat::GetIF();
 
+	if(chat->PointInUI(mouse->m_nPosX, mouse->m_nPosY))
+	{
+		chat->OnLbuttonUp(mouse->m_nPosX, mouse->m_nPosY);
+		return;
+	}
 }
 
 void gGameCore::OnMouseMove()
 {
+	gMouse		*mouse	= gMouse::GetIF();
+	gChat		*chat	= gChat::GetIF();
 
+	if(chat->PointInUI(mouse->m_nPosX, mouse->m_nPosY))
+	{
+		chat->OnMouseMove(mouse->m_nPosX, mouse->m_nPosY);
+		return;
+	}
 }
 
 void gGameCore::OnRButtonDown()
@@ -123,6 +162,54 @@ void gGameCore::OnRButtonDown()
 
 bool gGameCore::PreTransMsg(MSG &msg)
 {
+	HWND		hChat = gChat::GetIF()->m_Edit.m_hEdit;
+
+	if(msg.hwnd == hChat)
+	{
+		if(!gServer::GetIF()->m_bConnect)
+			return true;
+
+		if(msg.message == WM_KEYDOWN)
+		{
+			if(gPopUp::GetIF()->isPopUp())
+			{
+				if(msg.wParam == VK_RETURN)
+					gPopUp::GetIF()->DoEnter();
+
+				return true;
+			}
+
+			switch(msg.wParam)
+			{
+			case VK_RETURN:
+				SetFocus(gMainWin::GetIF()->m_hWnd);
+				gChat::GetIF()->SendMsg();
+				return true;
+			case VK_TAB:
+				return true;
+			case VK_ESCAPE:
+				SetFocus(gMainWin::GetIF()->m_hWnd);
+				return true;
+			}
+		}
+	}
+
 	return false;
 }
 
+void gGameCore::SendMoveAsk()
+{
+	PK_MOVESTART_ASK		ask;
+
+	strcpy(ask.szID, gPlayerContainer::GetIF()->m_MyGamePlayer.szID);
+	ask.nCurPos		= gPlayerContainer::GetIF()->m_MyGamePlayer.nPos;
+
+	gServer::GetIF()->Send(PL_MOVESTART_ASK, sizeof ask, &ask);
+}
+
+void gGameCore::pk_movestart_rep(PK_MOVESTART_REP *rep)
+{
+
+
+	//gDice::GetIF()->DiceStart(bDice4, bDice6, rep->nDice4, rep->nDice6);
+}

@@ -45,7 +45,7 @@ public:
 public:
 	bool		SetUp();
 	void		Release();
-	void		DiceStart(bool,bool,int,int);
+	void		DiceStart(bool, bool, int, int);
 	void		DiceThrow();
 
 private:
