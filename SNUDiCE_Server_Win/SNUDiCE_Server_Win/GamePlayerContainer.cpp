@@ -89,6 +89,8 @@ bool gGamePlayerContainer::init(int nRoomIndex)
 	gTileContainer *gTC = gTileContainer::GetIF();
 	gRC->FindClasstypeFromIDs_RMP(nRoomIndex,classtype);
 
+	memset(m_GamePlayer[nRoomIndex], 0, sizeof(GAMEPLAYER) * ROOMMAXPLAYER);
+
 	for(int i = 0 ; i < ROOMMAXPLAYER ; i++)
 	{
 		if(gRC->m_rooms[nRoomIndex].szRoomMaxPlayer[i][0] == '\0') {
