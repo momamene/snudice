@@ -11,6 +11,14 @@
 #include "ImgButton.h"
 #include "Core.h"
 
+enum SUBBTN
+{
+	BSUB_READY,
+	BSUB_CHANGE,
+
+	BSUB_END,
+};
+
 class gSubmitCore : Core
 {
 public:
@@ -24,11 +32,15 @@ public:
 	gImage			m_ImgIconPlayer;
 	gImgButton		m_BtnClass[CLASSNUM];
 	int				m_nSelected;				// 마우스 hover된 과목
+	gImgButton		m_BtnSub[BSUB_END];
+	bool			m_bReady;
+	bool			m_bChange;
 
 	BYTE			m_subject[CLASSNUM][CLASSSEAT];
 
 public:
 	void			pk_submit_rep(PK_SUBMIT_REP *rep);
+	void			pk_submitready_rep(PK_SUBMITREADY_REP *rep);
 
 	void			SetSubject(BYTE *subj);
 

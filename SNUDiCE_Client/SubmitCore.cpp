@@ -5,6 +5,9 @@
 #include "Map.h"
 #include "PlayerContainer.h"
 #include "Server.h"
+#include "PopUp.h"
+#include "MainWin.h"
+#include "stringconst.h"
 
 #define SUB_FILE_BACK				".\\Data\\Submit\\sub_back.img"
 
@@ -32,6 +35,18 @@
 #define SUB_SIZE_ICONPLAYER_H		14
 #define SUB_POS_ICONPLAYER_X		210
 #define SUB_POS_ICONPLAYER_Y		88
+
+#define SUB_BTN_FILE_CHANGE			".\\Data\\SUbmit\\sub_btn_change.img"
+#define SUB_BTN_SIZE_CHANGE_W		125
+#define SUB_BTN_SIZE_CHANGE_H		60
+#define SUB_BTN_POS_CHANGE_X		363
+#define SUB_BTN_POS_CHANGE_Y		400
+#define SUB_BTN_FILE_READY			".\\Data\\Submit\\sub_btn_ready.img"
+#define SUB_BTN_SIZE_READY_W		125
+#define SUB_BTN_SIZE_READY_H		60
+#define SUB_BTN_POS_READY_X			490
+#define SUB_BTN_POS_READY_Y			400
+
 
 static gSubmitCore s_SubmitCore;
 
@@ -76,11 +91,53 @@ bool gSubmitCore::SetUp()
 	if(!m_ImgIconPlayer.Load(SUB_FILE_ICONPLAYER))
 		return false;
 
+	SetRect(&rcDest,
+			SUB_BTN_POS_CHANGE_X,
+			SUB_BTN_POS_CHANGE_Y,
+			SUB_BTN_POS_CHANGE_X + SUB_BTN_SIZE_CHANGE_W,
+			SUB_BTN_POS_CHANGE_Y + SUB_BTN_SIZE_CHANGE_H);
+	if(!m_BtnSub[BSUB_CHANGE].SetUp(SUB_BTN_FILE_CHANGE, false, rcDest))
+		return false;
+
+	SetRect(&rcDest,
+		SUB_BTN_POS_READY_X,
+		SUB_BTN_POS_READY_Y,
+		SUB_BTN_POS_READY_X + SUB_BTN_SIZE_READY_W,
+		SUB_BTN_POS_READY_Y + SUB_BTN_SIZE_READY_H);
+	if(!m_BtnSub[BSUB_READY].SetUp(SUB_BTN_FILE_READY, false, rcDest))
+		return false;
+
+	m_bChange	= false;
+	m_bReady	= false;
+
 }
 
 void gSubmitCore::MainLoop()
 {
 	Draw();
+
+	// popup Ã¢ Ã³¸®
+	if(gPopUp::GetIF()->isPopUp())
+	{
+		gPopUp::GetIF()->MainLoop();
+		return;
+	}
+
+	if(gPopUp::GetIF()->m_bReturn)
+	{
+		switch(gPopUp::GetIF()->m_ePop)
+		{
+			case EPOP_DISCONNECT:
+				switch(gPopUp::GetIF()->m_eBtnClk)
+				{
+					case ECLK_OK:
+						gMainWin::GetIF()->Exit();
+						break;
+				}
+				break;
+		}
+		gPopUp::GetIF()->m_bReturn = false;
+	}
 }
 
 void gSubmitCore::Draw()
@@ -126,6 +183,23 @@ void gSubmitCore::Draw()
 	for(i = 0; i < CLASSNUM; i++)
 		m_BtnClass[i].Draw();
 
+	if(m_bReady)
+	{
+		m_BtnSub[BSUB_READY].m_eBtnMode = EBM_CLICK;
+	}
+
+	if(m_bChange)
+	{
+		m_BtnSub[BSUB_CHANGE].m_eBtnMode = EBM_CLICK;
+	}
+
+	for(i = 0; i < BSUB_END; i++)
+		m_BtnSub[i].Draw();
+
+
+	// map
+	gMap::GetIF()->DrawHexagon(SUB_MINI_START_X, SUB_MINI_START_Y, SUB_MINI_SOLUTION, true);
+
 	gUtil::BeginText();
 		for(i = 0; i < CLASSNUM; i++)
 		{
@@ -137,7 +211,6 @@ void gSubmitCore::Draw()
 		}
 
 	gUtil::EndText();
-	gMap::GetIF()->DrawHexagon(SUB_MINI_START_X,SUB_MINI_START_Y,SUB_MINI_SOLUTION,true);
 }
 
 void gSubmitCore::Release()
@@ -150,6 +223,9 @@ void gSubmitCore::Release()
 		m_BtnClass[i].Release();
 
 	m_ImgIconPlayer.Release();
+
+	for(i = 0; i < BSUB_END; i++)
+		m_BtnSub[i].Release();
 }
 
 void gSubmitCore::OnLButtonDown()
@@ -158,17 +234,45 @@ void gSubmitCore::OnLButtonDown()
 
 	int			i;
 
-	for(i = 0; i < CLASSNUM; i++)
+	if(m_bReady)
 	{
-		if(m_BtnClass[i].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+		if(m_BtnSub[BSUB_READY].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 		{
-			PK_SUBMIT_ASK		ask;
+			m_bReady = false;
+		}
+	}
+	else
+	{
+		for(i = 0; i < CLASSNUM; i++)
+		{
+			if(m_BtnClass[i].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+			{
+				PK_SUBMIT_ASK		ask;
 
-			ask.nSubjectIdx	= i;
-			strcpy(ask.szID, gPlayerContainer::GetIF()->m_MyPlayer.szID);
+				ask.nSubjectIdx	= i;
+				strcpy(ask.szID, gPlayerContainer::GetIF()->m_MyPlayer.szID);
+				ask.bSubmit		= !m_bChange;
 
-			gServer::GetIF()->Send(PL_SUBMIT_ASK, sizeof ask, &ask);
-			return;
+				gServer::GetIF()->Send(PL_SUBMIT_ASK, sizeof ask, &ask);
+				return;
+			}
+		}
+
+		if(m_BtnSub[BSUB_CHANGE].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+		{
+			if(!m_bReady)
+				m_bChange = !m_bChange;
+		}
+		if(m_BtnSub[BSUB_READY].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+		{
+			if(!m_bChange)
+			{
+				PK_SUBMITREADY_ASK		ask;
+
+				strcpy(ask.szID, gPlayerContainer::GetIF()->m_MyPlayer.szID);
+
+				gServer::GetIF()->Send(PL_SUBMITREADY_ASK, sizeof ask, &ask);
+			}
 		}
 	}
 }
@@ -195,6 +299,13 @@ void gSubmitCore::OnMouseMove()
 		}
 	}
 
+	for(i = 0; i < BSUB_END; i++)
+	{
+		if(!m_BtnSub[i].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+			m_BtnSub[i].m_eBtnMode = EBM_NONE;
+		else
+			m_BtnSub[i].m_eBtnMode = EBM_HOVER;
+	}
 }
 
 void gSubmitCore::OnRButtonDown()
@@ -210,4 +321,17 @@ void gSubmitCore::SetSubject(BYTE *subj)
 void gSubmitCore::pk_submit_rep(PK_SUBMIT_REP *rep)
 {
 	SetSubject((BYTE*)rep->subject);
+}
+
+void gSubmitCore::pk_submitready_rep(PK_SUBMITREADY_REP *rep)
+{
+	switch(rep->result)
+	{
+		case ESUB_LESSCLASS:
+			gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_16);
+			break;
+		case ESUB_SUCCESS:
+			m_bReady = true;
+			break;
+	}
 }

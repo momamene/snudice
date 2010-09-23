@@ -218,6 +218,9 @@ void gServer::Recv()
 		case PL_SUBMIT_REP:
 			gSubmitCore::GetIF()->pk_submit_rep((PK_SUBMIT_REP*)m_pkDefault.strPacket);
 			break;
+		case PL_SUBMITREADY_REP:
+			gSubmitCore::GetIF()->pk_submitready_rep((PK_SUBMITREADY_REP*)m_pkDefault.strPacket);
+			break;
 	}
 }
 
