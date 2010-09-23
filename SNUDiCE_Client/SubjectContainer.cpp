@@ -27,16 +27,20 @@ gSubjectContainer *gSubjectContainer::GetIF() // 3
 	return &s_subjectContainer;
 }
 
-bool gSubjectContainer::putSubject(gTile tile, int conPosIndex) {
-	if(tile.flag2 < MAXSUBJECT_N && m_subject[tile.flag2].conPosIndex == -1) {
+bool gSubjectContainer::putSubject(gTile tile, int conPosIndex)
+{
+	if(tile.flag2 < CLASSNUM && m_subject[tile.flag2].conPosIndex == -1)
+	{
 		m_subject[tile.flag2].conPosIndex = conPosIndex;
 		m_subject[tile.flag2].flag = tile.flag1;
 		strcpy(m_subject[tile.flag2].college,tile.college);
 		strcpy(m_subject[tile.flag2].building,tile.building);
 		strcpy(m_subject[tile.flag2].subject,tile.subject);
+
 		return true;
 	} 
-	else {
+	else
+	{
 		return false;
 	}
 }

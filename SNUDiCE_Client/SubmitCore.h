@@ -21,15 +21,17 @@ public:
 
 public:
 	gImage			m_ImgBack;
+	gImgButton		m_BtnClass[CLASSNUM];
+	int				m_nSelected;				// 마우스 hover된 과목
 
 public:
-	bool		SetUp();
-	void		MainLoop();
-	void		Draw();
-	void		Release();
+	bool			SetUp();
+	void			MainLoop();
+	void			Draw();
+	void			Release();
 	
-	void		OnLButtonDown();
-	void		OnLButtonUp();
-	void		OnMouseMove();
-	void		OnRButtonDown();
+	void			OnLButtonDown();
+	void			OnLButtonUp();
+	void			OnMouseMove();
+	void			OnRButtonDown();
 };
