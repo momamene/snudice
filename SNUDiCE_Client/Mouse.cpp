@@ -3,6 +3,7 @@
 #include "PopUp.h"
 #include "LoginCore.h"
 #include "BattleNetCore.h"
+#include "SubmitCore.h"
 #include "RoomCore.h"
 
 static gMouse s_Mouse;
@@ -57,6 +58,9 @@ void gMouse::OnLButtonDown()
 		case ECM_ROOMMAKE: case ECM_ROOMJOIN: case ECM_ROOM:
 			gRoomCore::GetIF()->OnLButtonDown();
 			break;
+		case ECM_SUBMIT:
+			gSubmitCore::GetIF()->OnLButtonDown();
+			break;
 	}
 
 }
@@ -80,6 +84,9 @@ void gMouse::OnLButtonUp()
 		case ECM_ROOMMAKE: case ECM_ROOMJOIN: case ECM_ROOM:
 			gRoomCore::GetIF()->OnLButtonUp();
 			break;
+		case ECM_SUBMIT:
+			gSubmitCore::GetIF()->OnLButtonUp();
+			break;
 	}
 }
 
@@ -102,6 +109,9 @@ void gMouse::OnMouseMove()
 		case ECM_ROOMMAKE: case ECM_ROOMJOIN: case ECM_ROOM:
 			gRoomCore::GetIF()->OnMouseMove();
 			break;
+		case ECM_SUBMIT:
+			gSubmitCore::GetIF()->OnMouseMove();
+			break;
 	}
 }
 
@@ -123,6 +133,9 @@ void gMouse::OnRButtonDown()
 			break;
 		case ECM_ROOMMAKE: case ECM_ROOMJOIN: case ECM_ROOM:
 			gRoomCore::GetIF()->OnRButtonDown();
+			break;
+		case ECM_SUBMIT:
+			gSubmitCore::GetIF()->OnRButtonDown();
 			break;
 	}
 }
