@@ -1,6 +1,7 @@
 #include "MainWin.h"
 #include "const.h"
 #include "Mouse.h"
+#include "Dice.h"
 #include "LoginCore.h"
 #include "BattleNetCore.h"
 #include "SubmitCore.h"
@@ -105,6 +106,9 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 		return false;
 
 	if(!gServer::GetIF()->SetUp())
+		return false;
+
+	if(!gDice::GetIF()->SetUp())
 		return false;
 
 	ShowWindow(m_hWnd, nCmdShow);
