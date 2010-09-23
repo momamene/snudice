@@ -98,6 +98,7 @@ bool gGamePlayerContainer::init(int nRoomIndex)
 		}
 		else {
 			m_isGamePlayer[nRoomIndex][i] = true;
+			m_isNokdu[nRoomIndex][i] = false;
 			strcpy(m_GamePlayer[nRoomIndex][i].szID,gRC->m_rooms[nRoomIndex].szRoomMaxPlayer[i]);
 			m_GamePlayer[nRoomIndex][i].ctype = classtype[i];
 			m_GamePlayer[nRoomIndex][i].nLang = m_CharInfo[classtype[i]].nLang;
@@ -133,6 +134,71 @@ void gGamePlayerContainer::pk_maingamestart_rep(int nRoomIndex)
 	gPC->SendSelect(PL_MAINGAMESTART_REP,sizeof(PK_MAINGAMESTART_REP),&rep,ECM_GAME,nRoomIndex);
 }
 
+void gGamePlayerContainer::pk_movestart_ask(PK_DEFAULT *pk,SOCKET sock)
+{
+	PK_MOVESTART_ASK		ask;		//from client
+	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
+	gRoomCore			*gRC = gRoomCore::GetIF();
+	gTileContainer		*gTC = gTileContainer::GetIF();
+
+	SOCKADDR_IN			clientAddr;
+	int					addrLen;
+	char				buf [1024];
+
+	addrLen = sizeof(clientAddr);
+	getpeername(sock, (SOCKADDR*)&clientAddr, &addrLen);
+
+	ask = *((PK_MOVESTART_ASK*)pk->strPacket);
+
+	wsprintf(buf,"[PK_MOVESTART_ASK] %s\t message : %s\n", inet_ntoa(clientAddr.sin_addr), ask.szID);
+	OutputDebugString(buf);
+
+	
+	PK_MOVESTART_REP		rep;
+	int nRoomIndex = gPC->GetCoreFlag(ask.szID);
+	int nInRoomIndex = gRC->FindThePlayerInTheRoom(ask.szID,nRoomIndex);
+
+	int nSum;
+	rep.Dice4_1 = 0;
+	rep.Dice4_2 = 0;
+	rep.Dice6_1 = 0;
+	rep.Dice6_2 = 0;
+	switch(m_GamePlayer[nRoomIndex][nInRoomIndex].nDice4) {
+	case 0:
+		break;
+	case 1:
+		rep.Dice4_1 = rand()%4 + 1;
+		break;
+	case 2:
+		rep.Dice4_1 = rand()%4 + 1;
+		rep.Dice4_2 = rand()%4 + 1;
+		break;
+	}
+	switch(m_GamePlayer[nRoomIndex][nInRoomIndex].nDice6) {
+	case 0:
+		break;
+	case 1:
+		rep.Dice6_1 = rand()%6 + 1;
+		break;
+	case 2:
+		rep.Dice6_1 = rand()%6 + 1;
+		rep.Dice6_2 = rand()%6 + 1;
+		break;
+	}
+	nSum = rep.Dice4_1 + rep.Dice4_2 + rep.Dice6_1 + rep.Dice6_2;
+	if(m_isNokdu[nRoomIndex][nInRoomIndex]) nSum *= -1;
+	rep.nDist = nSum;
+
+	int des = gTC->destination(m_GamePlayer[nRoomIndex][nInRoomIndex].nPos,rep.nDist);
+	if(des == gTC->m_xInitSpacePos*LINEY+gTC->m_yInitSpacePos) { // flip
+		if(m_isNokdu[nRoomIndex][nInRoomIndex]) m_isNokdu[nRoomIndex][nInRoomIndex] = false;
+		else m_isNokdu[nRoomIndex][nInRoomIndex] = true;
+	}
+	m_GamePlayer[nRoomIndex][nInRoomIndex].nPos = des;
+
+
+	gPC->SendSelect(PL_MOVESTART_REP,sizeof(PK_MOVESTART_REP),&rep,ECM_GAME,nRoomIndex);
+}
 
 void gGamePlayerContainer::Release()
 {

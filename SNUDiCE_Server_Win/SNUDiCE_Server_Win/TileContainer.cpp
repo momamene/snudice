@@ -20,6 +20,39 @@ bool gTileContainer::Setup()
 
 	Load();
 
+	// sangwoo temp
+	char buf[128];
+	int a = distance(5*LINEY+14,5*LINEY+15);
+	wsprintf(buf,"%d\n",a);
+	OutputDebugString(buf);
+
+	a = distance(5*LINEY+14,5*LINEY+14);
+	wsprintf(buf,"%d\n",a);
+	OutputDebugString(buf);
+
+	a = distance(5*LINEY+14,6*LINEY+14);
+	wsprintf(buf,"%d\n",a);
+	OutputDebugString(buf);
+
+	a = distance(5*LINEY+14,4*LINEY+15);
+	wsprintf(buf,"%d\n",a);
+	OutputDebugString(buf);
+
+	a = distance(4*LINEY+15,5*LINEY+15);
+	wsprintf(buf,"%d\n",a);
+	OutputDebugString(buf);
+
+	a = destination(4*LINEY+15,-2);
+	wsprintf(buf,"%d %d\n",a/LINEY,a%LINEY);
+	OutputDebugString(buf);
+
+	a = destination(4*LINEY+15,2);
+	wsprintf(buf,"%d %d\n",a/LINEY,a%LINEY);
+	OutputDebugString(buf);
+	// end
+
+
+
 	return true;
 }
 
@@ -93,3 +126,66 @@ void gTileContainer::LoadBKSToTM()
 	}
 }
 
+int gTileContainer::distance(int mapA, int mapB)
+{	// 치명적인 녹두 문제. 녹두 들어가면 무한루프 때문에 그 오류를 알 수 있음
+	int localCount	= 0;
+	int iter		= mapA;
+
+	if(mapA == mapB)
+		return 0;
+
+	while(1)
+	{
+		iter = m_tileMap[iter].nextTile.x*LINEY+m_tileMap[iter].nextTile.y;
+		localCount++;
+		if(iter == mapB)
+		{
+			//	localCount++;
+			return localCount;
+		}
+		else if(iter == mapA || localCount > 100)	// 논리적으로 온당하지 않은 부당한 
+			// sangwoo temp. localCount > 100 이렇게 하는 건 막장이지 임마.
+		{
+			break;
+		}
+	} 
+	localCount = 0;
+	iter = mapA;
+	while(1)
+	{
+		if(iter/LINEY == m_xInitSpacePos && iter%LINEY == m_yInitSpacePos) 
+			iter = m_tileMap[iter].flag1*LINEY + m_tileMap[iter].flag2;
+		else 
+			iter = m_tileMap[iter].nextTile.x*LINEY+m_tileMap[iter].nextTile.y;
+		localCount++;
+		if(iter == mapB)
+		{
+			localCount *= -1;
+			return localCount;
+		}
+		else if(iter == mapA)
+		{
+			break;
+		}
+	}
+	return 0;
+}
+
+int gTileContainer::destination(int mapA,int spacor) // Find mapB
+{
+	int iter = mapA;
+	while(spacor!=0){
+		if(spacor>0) {
+			iter = m_tileMap[iter].nextTile.x*LINEY+m_tileMap[iter].nextTile.y;
+			spacor--;
+		}
+		else if(spacor<0) {
+			if(iter/LINEY == m_xInitSpacePos && iter%LINEY == m_yInitSpacePos) 
+				iter = m_tileMap[iter].flag1*LINEY + m_tileMap[iter].flag2;
+			else 
+				iter = m_tileMap[iter].nextTile.x*LINEY+m_tileMap[iter].nextTile.y;
+			spacor++;
+		}
+	}
+	return iter;
+}

@@ -3,6 +3,7 @@
 룸조인 : 페이지
 룸 : 방번호
 서브밋 : 방번호
+게임 : 방번호
 
 // 9월 19일 (일) 오후 03시 이후의 이야기
 (1) Draw 함수를 만들고 있었는데, m_hWnd가 엉망으로 말을 잘 안듣는 사실을 깨닫거나,
@@ -42,3 +43,7 @@ SendRoomRefreshCauseChange 를 만들었는데 잘 돌아갈까?
 (6) 6을 다른 define값으로 제안
 // (5) 정말 중요한건데, ECM_ROOM 이 아니라 ECM_SUBMIT으로 바꿔야지!
 (7) gRC->m_rooms[nRoomIndex].szRoomMaxPlayer[i][0] != '\0' 를 대체할만한 함수...
+
+// 9월 24일
+(1) 클라이언트 - 맵
+(2) 서버 - pk_movestart_ask

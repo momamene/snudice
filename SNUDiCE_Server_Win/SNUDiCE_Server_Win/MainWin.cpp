@@ -150,6 +150,8 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 
 	if(!gGamePlayerContainer::GetIF()->SetUp())
 		return false;
+
+	srand(GetTickCount());
 	
 	return true;
 }
@@ -273,6 +275,9 @@ void gMainWin::Recv(PK_DEFAULT *pk, SOCKET sock)
 			break;
 		case PL_SUBMITREADY_ASK:
 			gSubmitCore::GetIF()->pk_submitready_ask(pk,sock);
+			break;
+		case PL_MOVESTART_ASK:
+			gGamePlayerContainer::GetIF()->pk_movestart_ask(pk,sock);
 			break;
 	}
 }
