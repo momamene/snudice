@@ -6,6 +6,10 @@
 #include "Map.h"
 #include "Mouse.h"
 
+#define MINMOVE			20
+#define WORLDX			2228
+#define WORLDY			1520
+
 static gGameCore s_GameCore;
 
 gGameCore *gGameCore::GetIF()
@@ -28,7 +32,7 @@ bool gGameCore::SetUp()
 
 void gGameCore::MainLoop()
 {
-	MainLoopMouse();
+	MainLoopMouse();		// 마우스 스크롤
 	Draw();
 
 	// popup 창 처리
@@ -55,25 +59,30 @@ void gGameCore::MainLoop()
 	}
 }
 
-#define MINMOVE 20
-#define WORLDX 2228
-#define WORLDY 1520
+void gGameCore::MainLoopMouse()
+{
+	gMouse	*mouse = gMouse::GetIF();
+	gMap	*map = gMap::GetIF();
 
-void gGameCore::MainLoopMouse(){
-	gMouse *mouse = gMouse::GetIF();
-	gMap *map = gMap::GetIF();
-
-	if(mouse->m_nPosX < MINMOVE){
-		if(map->m_nAbsDrawlineX>0) map->m_nAbsDrawlineX -= 2;
+	if(mouse->m_nPosX < MINMOVE)
+	{
+		if(map->m_nAbsDrawlineX > 0)
+			map->m_nAbsDrawlineX -= 2;
 	}
-	if(mouse->m_nPosY < MINMOVE) {
-		if(map->m_nAbsDrawlineY>0) map->m_nAbsDrawlineY -= 2;
+	if(mouse->m_nPosY < MINMOVE)
+	{
+		if(map->m_nAbsDrawlineY > 0)
+			map->m_nAbsDrawlineY -= 2;
 	}
-	if(mouse->m_nPosX > WNDSIZEW - MINMOVE) { 
-		if(map->m_nAbsDrawlineX<WORLDX-WNDSIZEW+MINMOVE) map->m_nAbsDrawlineX += 2;
+	if(mouse->m_nPosX > WNDSIZEW - MINMOVE)
+	{ 
+		if(map->m_nAbsDrawlineX < WORLDX - WNDSIZEW + MINMOVE)
+			map->m_nAbsDrawlineX += 2;
 	}
-	if(mouse->m_nPosY > WNDSIZEH - MINMOVE){ // 수학적 공식
-		if(map->m_nAbsDrawlineY<WORLDY+FULLY*2-WNDSIZEH+MINMOVE) map->m_nAbsDrawlineY += 2;
+	if(mouse->m_nPosY > WNDSIZEH - MINMOVE)
+	{ // 수학적 공식
+		if(map->m_nAbsDrawlineY < WORLDY + FULLY * 2 - WNDSIZEH + MINMOVE)
+			map->m_nAbsDrawlineY += 2;
 	}
 }
 

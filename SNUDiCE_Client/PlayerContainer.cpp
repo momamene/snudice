@@ -181,6 +181,10 @@ bool gDataContainer::SetUpCharImg()
 						if(!m_ImgInfo[nIndex].ImgCharSel.Load(szTemp))
 							return false;
 						break;
+					case 1:	// µµÆ®
+						if(!m_ImgInfo[nIndex].ImgDot.Load(szTemp))
+							return false;
+						break;
 				}
 				k = 0;
 			}

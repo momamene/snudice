@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------------
-//	gPlayerContainer Class
+//	gDataContainer Class
 //
 //	2010. 08. 02	CoderK
 //
@@ -12,6 +12,7 @@
 struct CHARIMGINFO
 {
 	gImage			ImgCharSel;
+	gImage			ImgDot;
 };
 
 class gDataContainer
