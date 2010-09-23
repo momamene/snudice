@@ -15,13 +15,13 @@ struct CHARIMGINFO
 	gImage			ImgDot;
 };
 
-class gDataContainer
+class gPlayerContainer
 {
 public:
-	static gDataContainer *GetIF();
+	static gPlayerContainer *GetIF();
 
-	gDataContainer(void);
-	virtual ~gDataContainer(void);
+	gPlayerContainer(void);
+	virtual ~gPlayerContainer(void);
 public:
 	PLAYER			m_MyPlayer;		// ³ª
 	CHANNEL			m_MyChannel;
@@ -35,6 +35,12 @@ public:
 	GAMEPLAYER		m_MyGamePlayer;
 	GAMEPLAYER		m_GPlayerList[ROOMMAXPLAYER];
 
+	int				m_nAbsDrawlineX[ROOMMAXPLAYER];
+	int				m_nAbsDrawlineY[ROOMMAXPLAYER];
+
+	int				m_moveFoot[ROOMMAXPLAYER];
+	int				m_movePosition[ROOMMAXPLAYER];
+
 public:
 	void			SetMyPlayer(PK_LOGIN_REP *rep);
 	void			RefreshChannel(CHANNEL *channel);
@@ -47,6 +53,9 @@ public:
 
 	bool			SetUp();
 	void			Release();
+
+	void			MainLoop();
+	void			Draw();
 
 private:
 	bool			SetUpCharInfo();

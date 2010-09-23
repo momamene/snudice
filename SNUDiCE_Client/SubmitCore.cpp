@@ -251,7 +251,7 @@ void gSubmitCore::OnLButtonDown()
 				PK_SUBMIT_ASK		ask;
 
 				ask.nSubjectIdx	= i;
-				strcpy(ask.szID, gDataContainer::GetIF()->m_MyPlayer.szID);
+				strcpy(ask.szID, gPlayerContainer::GetIF()->m_MyPlayer.szID);
 				ask.bSubmit		= !m_bChange;
 
 				gServer::GetIF()->Send(PL_SUBMIT_ASK, sizeof ask, &ask);
@@ -270,7 +270,7 @@ void gSubmitCore::OnLButtonDown()
 			{
 				PK_SUBMITREADY_ASK		ask;
 
-				strcpy(ask.szID, gDataContainer::GetIF()->m_MyPlayer.szID);
+				strcpy(ask.szID, gPlayerContainer::GetIF()->m_MyPlayer.szID);
 
 				gServer::GetIF()->Send(PL_SUBMITREADY_ASK, sizeof ask, &ask);
 			}
@@ -339,7 +339,7 @@ void gSubmitCore::pk_submitready_rep(PK_SUBMITREADY_REP *rep)
 
 void gSubmitCore::pk_maingametart_rep(PK_MAINGAMESTART_REP *rep)
 {
-	gDataContainer::GetIF()->SetGPList(rep->list);
+	gPlayerContainer::GetIF()->SetGPList(rep->list);
 	gGameCore::GetIF()->m_nTurn		= rep->nTurn;
 	gMainWin::GetIF()->m_eCoreMode	= ECM_GAME;
 }

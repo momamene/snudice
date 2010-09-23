@@ -277,6 +277,13 @@ void gMap::posSpacor(bool isNokdu)
 	posMover();
 }
 
+void gMap::posSpacor(int xNextSpacePos, int yNextSpacePos)
+{
+	m_Next_xSpacePos = xNextSpacePos;
+	m_Next_ySpacePos = yNextSpacePos;
+	posMover();
+}
+
 void gMap::posMover ()
 {
 	POINT a;
@@ -319,7 +326,7 @@ void gMap::posStoper()
 
 
 // 4. Essential for All Line Start
-
+/*
 bool gMap::isExisted(int i, int j)
 {
 	if(i > -1 && j > -1 && i < LINEX && j < LINEY)
@@ -338,6 +345,7 @@ bool gMap::isExisted(int line)
 	else
 		return false;
 }
+*/
 
 
 POINT gMap::conToAbs(POINT ij)
@@ -397,6 +405,11 @@ POINT gMap::absToCon(POINT ij)
 
 // 6. ?
 
+void gMap::MainLoop()
+{
+
+}
+
 void gMap::Release()
 {
 	int		i;
@@ -405,7 +418,7 @@ void gMap::Release()
 		m_ImgTile[i].Release();
 
 }
-
+/*
 int gMap::distance(int mapA, int mapB)
 {	// 치명적인 녹두 문제. 녹두 들어가면 무한루프 때문에 그 오류를 알 수 있음
 	int localCount	= 0;
@@ -451,5 +464,5 @@ int gMap::distance(int mapA, int mapB)
 	//localCount++;
 	//return localCount;
 }
-
+*/
 // 6. end

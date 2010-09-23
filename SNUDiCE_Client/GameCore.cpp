@@ -5,6 +5,7 @@
 #include "MainWin.h"
 #include "Map.h"
 #include "Mouse.h"
+#include "PlayerContainer.h"
 
 #define MINMOVE			20
 #define WORLDX			2228
@@ -33,6 +34,7 @@ bool gGameCore::SetUp()
 void gGameCore::MainLoop()
 {
 	MainLoopMouse();		// 付快胶 胶农费
+	
 	Draw();
 
 	// popup 芒 贸府
@@ -91,6 +93,7 @@ void gGameCore::MainLoopMouse()
 void gGameCore::Draw()
 {
 	gMap::GetIF()->Draw();
+	gPlayerContainer::GetIF()->MainLoop();
 }
 
 void gGameCore::Release()
@@ -122,3 +125,4 @@ bool gGameCore::PreTransMsg(MSG &msg)
 {
 	return false;
 }
+

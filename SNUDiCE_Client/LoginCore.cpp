@@ -310,7 +310,7 @@ void gLoginCore::pk_login_rep(PK_LOGIN_REP *rep)
 			gMainWin::GetIF()->m_eCoreMode = ECM_BATTLENET;
 			SetFocus(gMainWin::GetIF()->m_hWnd);
 			gChat::GetIF()->m_bShow = true;
-			gDataContainer::GetIF()->SetMyPlayer(rep);
+			gPlayerContainer::GetIF()->SetMyPlayer(rep);
 
 			gUtil::DebugMsg("login success\n");
 			break;

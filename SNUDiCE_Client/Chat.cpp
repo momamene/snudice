@@ -172,7 +172,7 @@ void gChat::SendMsg()
 
 	PLAYER*		myplayer;
 
-	myplayer = &gDataContainer::GetIF()->m_MyPlayer;
+	myplayer = &gPlayerContainer::GetIF()->m_MyPlayer;
 
 	strcpy(ask.szID, myplayer->szID);
 	strcpy(ask.szMsg, m_Edit.m_szEdit);

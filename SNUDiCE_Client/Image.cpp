@@ -57,8 +57,8 @@ bool gImage::Load(char *szFileName)
 	LPDIRECTDRAW	dd = gMainWin::GetIF()->m_lpDD;
 	if(FAILED(dd->CreateSurface(&ddsd, &m_lpDDSur, NULL)))
 	{
-//		wsprintf(szError, "gImage : %s surface failed", szFileName);
-//		MessageBox(gMainWin::GetIF()->m_hWnd, szError, "Error", MB_OK);
+	//	wsprintf(szError, "gImage : %s surface failed", szFileName);
+	//	MessageBox(gMainWin::GetIF()->m_hWnd, szError, "Error", MB_OK);
 		return false;
 	}
 

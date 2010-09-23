@@ -1,42 +1,43 @@
 #include "PlayerContainer.h"
+#include "Map.h"
 #include <stdio.h>
 
 #define CHARDATAFILE		".\\Data\\chardata.dat"
 #define CHARIMGDATAFILE		".\\Data\\charimgdata.dat"
 
 
-gDataContainer s_PlayerContainer;
+gPlayerContainer s_PlayerContainer;
 
-gDataContainer *gDataContainer::GetIF()
+gPlayerContainer *gPlayerContainer::GetIF()
 {
 	return &s_PlayerContainer;
 }
 
-gDataContainer::gDataContainer(void)
+gPlayerContainer::gPlayerContainer(void)
 {
 }
 
-gDataContainer::~gDataContainer(void)
+gPlayerContainer::~gPlayerContainer(void)
 {
 }
 
-void gDataContainer::SetMyPlayer(PK_LOGIN_REP* rep)
+void gPlayerContainer::SetMyPlayer(PK_LOGIN_REP* rep)
 {
 	memcpy(&m_MyPlayer, &rep->player, sizeof(PLAYER));
 	memcpy(&m_MyChannel, &rep->channel, sizeof(CHANNEL));
 }
 
-void gDataContainer::RefreshChannel(CHANNEL *channel)
+void gPlayerContainer::RefreshChannel(CHANNEL *channel)
 {
 	memcpy(&m_MyChannel, channel, sizeof(CHANNEL));
 }
 
-void gDataContainer::SetMyRoom(ROOM *room)
+void gPlayerContainer::SetMyRoom(ROOM *room)
 {
 	memcpy(&m_MyRoom, room, sizeof(ROOM));
 }
 
-void gDataContainer::SetPlayerList(PLAYER *list)
+void gPlayerContainer::SetPlayerList(PLAYER *list)
 {
 	memcpy(m_PlayerList, list, sizeof(PLAYER) * ROOMMAXPLAYER);
 
@@ -50,7 +51,7 @@ void gDataContainer::SetPlayerList(PLAYER *list)
 	}
 }
 
-bool gDataContainer::SetUpCharInfo()
+bool gPlayerContainer::SetUpCharInfo()
 {
 	FILE		*fp;
 
@@ -125,7 +126,7 @@ bool gDataContainer::SetUpCharInfo()
 	return true;
 }
 
-void gDataContainer::Release()
+void gPlayerContainer::Release()
 {
 	int			i;
 
@@ -136,7 +137,7 @@ void gDataContainer::Release()
 
 }
 
-bool gDataContainer::SetUp()
+bool gPlayerContainer::SetUp()
 {
 	if(!SetUpCharInfo())
 		return false;
@@ -144,10 +145,15 @@ bool gDataContainer::SetUp()
 	if(!SetUpCharImg())
 		return false;
 
+	memset(m_nAbsDrawlineX,0,sizeof(int)*ROOMMAXPLAYER);
+	memset(m_nAbsDrawlineY,0,sizeof(int)*ROOMMAXPLAYER);
+	memset(m_moveFoot,0,sizeof(int)*ROOMMAXPLAYER);
+	memset(m_movePosition,0,sizeof(int)*ROOMMAXPLAYER);
+
 	return true;
 }
 
-bool gDataContainer::SetUpCharImg()
+bool gPlayerContainer::SetUpCharImg()
 {
 	FILE		*fp;
 
@@ -200,12 +206,12 @@ bool gDataContainer::SetUpCharImg()
 	return true;
 }
 
-void gDataContainer::SetMyGamePlayer(GAMEPLAYER* gp)
+void gPlayerContainer::SetMyGamePlayer(GAMEPLAYER* gp)
 {
 	memcpy(&m_MyGamePlayer, gp, sizeof(GAMEPLAYER));
 }
 
-void gDataContainer::SetGPList(GAMEPLAYER *list)
+void gPlayerContainer::SetGPList(GAMEPLAYER *list)
 {
 	memcpy(&m_GPlayerList, list, sizeof(PLAYER) * ROOMMAXPLAYER);
 
@@ -217,6 +223,42 @@ void gDataContainer::SetGPList(GAMEPLAYER *list)
 		{
 			SetMyGamePlayer(&m_GPlayerList[i]);
 			break;
+		}
+	}
+}
+
+void gPlayerContainer::MainLoop()
+{
+	POINT pt;
+	for(int i = 0 ; i < ROOMMAXPLAYER ; i++)
+	{
+		if(m_MyRoom.szRoomMaxPlayer[i][0]!='\0')
+		{
+			pt.x = m_GPlayerList[i].nPos/LINEY;
+			pt.y = m_GPlayerList[i].nPos%LINEY;
+			pt = gMap::GetIF()->conToAbs(pt);
+			m_nAbsDrawlineX[i] = pt.x;
+			m_nAbsDrawlineY[i] = pt.y;
+		}
+	}
+	Draw();
+}
+
+void gPlayerContainer::Draw()
+{
+	RECT rcScr;
+	RECT rcImg;
+	gMap* gmap = gMap::GetIF();
+
+	for(int i = 0 ; i < ROOMMAXPLAYER ; i++)
+	{
+		if(m_MyRoom.szRoomMaxPlayer[i][0]!='\0') {
+			SetRect(&rcScr,-gmap->m_nAbsDrawlineX+m_nAbsDrawlineX[i]+15,
+				-gmap->m_nAbsDrawlineY+m_nAbsDrawlineY[i]-FULLY,
+				-gmap->m_nAbsDrawlineX+m_nAbsDrawlineX[i]+15+70,
+				-gmap->m_nAbsDrawlineY+m_nAbsDrawlineY[i]-FULLY+130);
+			SetRect(&rcImg,0,0,70,130);
+			m_ImgInfo[i].ImgDot.Draw(rcScr,rcImg,false);
 		}
 	}
 }

@@ -3,6 +3,7 @@
 /// class gTile, gMap
 /// Coder : 장난죄송
 /// tileContainer에는 더 많은 함수들이 있음.
+/// 옛날에 m_xPos의 역활을 이제는 gMap class의 m_nAbsDrawlineX 이 맡게 되었다.
 //////////////////////////////////////////////////////////////////////////
 
 #pragma once
@@ -95,11 +96,13 @@ public:
 
 public:
 	bool	Setup();			// setup
+	void	MainLoop();
 	void	Draw();				// 그리는 함수
 
 	// Draw Position set colony
 	void	posSetter(int xSpacePos, int ySpacePos);
 	void	posSpacor(bool isNokdu=false);		// space를 누르면 해당 위치로 이동하고, 캐릭터의 이동을 잡아주는 등의 함수
+	void	posSpacor(int xNextSpacePos, int yNextSpacePos); // 다음칸이 아닌 특정 칸으로 이동.
 	void	posMover();
 	void	posMover(int frame,int frameN);
 	void	posStoper();		// 항상 posSpacor -> posMover -> posStoper 순으로 써야함
@@ -109,7 +112,7 @@ public:
 	POINT	absToCon(POINT ij); 
 
 	// 상우의 막장 돌진 함수군
-	int		distance(int mapA,int mapB);	
+	//int		distance(int mapA,int mapB);	
 	// 거리를 잰다. mapA는 시작점, mapB는 도착점
 	// return 값은 양수일경우 녹두를 거치지 않는 경우, 음수일경우 녹두를 뺑뺑이하는 경우
 	// 값은 움직여야 하는 값을 의미한다. 1은 한칸, 0은 0칸, -3은 3칸인데 녹두를 만나면 뺑뺑이.
@@ -130,7 +133,9 @@ private:
 
 
 	// 기타 중요
+	/*
 	bool	isExisted(int i, int j);	// Tile (i,j) 호출은 유효한가? 
 	bool	isExisted(int line);
+	*/
 
 };
