@@ -231,6 +231,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Timer.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\TopUI.cpp"
 					>
 				</File>
@@ -336,6 +340,10 @@
 				</File>
 				<File
 					RelativePath=".\SubjectContainer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Timer.h"
 					>
 				</File>
 				<File

@@ -116,6 +116,7 @@ public:
 
 	void	Release();	
 
+	void	DrawHexagon(int x0,int y0,int n,bool boolo=false);
 
 private:
 	// Setup의 떨거지 (subfunction)
@@ -124,7 +125,7 @@ private:
 	void	LoadBKSToTM();
 
 	// Draw의 떨거지
-	void	DrawHexagon(int x0,int y0,int n,bool boolo=false);
+	
 	void	DrawHexagonOne(int x0,int y0,int i,int j,int n,bool boolo,int type=0);	// 0은 기본 1은 선택된 표시
 
 

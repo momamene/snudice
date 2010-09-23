@@ -2,6 +2,7 @@
 #include "Mouse.h"
 #include "SubjectContainer.h"
 #include "Util.h"
+#include "Map.h"
 
 #define SUB_FILE_BACK				".\\Data\\Submit\\sub_back.img"
 
@@ -16,6 +17,10 @@
 #define SUB_TERM_SUBNAME_Y			6
 #define SUB_TERM_COLLEGE_X			105
 #define SUB_TERM_COLLEGE_Y			6
+
+#define SUB_MINI_START_X			350
+#define SUB_MINI_START_Y			160
+#define SUB_MINI_SOLUTION			9
 
 static gSubmitCore s_SubmitCore;
 
@@ -82,6 +87,7 @@ void gSubmitCore::Draw()
 				gSubjectContainer::GetIF()->m_subject[i].college);
 		}
 	gUtil::EndText();
+	gMap::GetIF()->DrawHexagon(SUB_MINI_START_X,SUB_MINI_START_Y,SUB_MINI_SOLUTION,true);
 }
 
 void gSubmitCore::Release()
