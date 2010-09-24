@@ -243,6 +243,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\UIGame.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Util.cpp"
 					>
 				</File>
@@ -360,6 +364,10 @@
 				</File>
 				<File
 					RelativePath=".\TopUI.h"
+					>
+				</File>
+				<File
+					RelativePath=".\UIGame.h"
 					>
 				</File>
 				<File

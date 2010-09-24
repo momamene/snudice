@@ -229,6 +229,9 @@ void gServer::Recv()
 		case PL_MOVESTART_REP:
 			gGameCore::GetIF()->pk_movestart_rep((PK_MOVESTART_REP*)m_pkDefault.strPacket);
 			break;
+		case PL_NEXTTURN_REP:
+			gGameCore::GetIF()->pk_nexttur_rep((PK_NEXTTURN_REP*)m_pkDefault.strPacket);
+			break;
 	}
 }
 

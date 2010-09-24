@@ -20,6 +20,7 @@ public:
 public:
 	int			m_nTurn;		// 누구 턴
 	int			m_spacor;
+	bool		m_bMoved;		// 해당 턴에 움직엿냐, 즉 movestart_ask 보냇으면 true
 
 public:
 
@@ -36,12 +37,14 @@ public:
 	void		OnRButtonDown();
 
 	void		pk_movestart_rep(PK_MOVESTART_REP *rep);
-	void				Start(int spacor);
-	void				Start(int spacor,int conPosX,int conPosY);
-	void				StepStart();
-	void				StepOn();
-	void				StepEnd();
-	void				End();
+	void		pk_nextturn_rep(PK_NEXTTURN_REP *rep);
+
+	void		Start(int spacor);
+	void		Start(int spacor,int conPosX,int conPosY);
+	void		StepStart();
+	void		StepOn();
+	void		StepEnd();
+	void		End();
 
 
 private:

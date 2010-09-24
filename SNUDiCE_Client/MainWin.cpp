@@ -15,6 +15,7 @@
 #include "TopUI.h"
 #include "PlayerContainer.h"
 #include "Map.h"
+#include "UIGame.h"
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
@@ -115,6 +116,9 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 	if(!gDice::GetIF()->SetUp())
 		return false;
 
+	if(!gUIGame::GetIF()->SetUp())
+		return false;
+
 	ShowWindow(m_hWnd, nCmdShow);
 
 	if(!DisableBeep())
@@ -150,6 +154,7 @@ void gMainWin::Release()
 	gPlayerContainer::GetIF()->Release();
 	gTopUI::GetIF()->Release();
 	gDice::GetIF()->Release();
+	gUIGame::GetIF()->Release();
 	SAFE_RELEASE(m_lpDDBack);
 	SAFE_RELEASE(m_lpDDPrimary);
 	SAFE_RELEASE(m_lpDD);

@@ -9,8 +9,9 @@
 #include "Server.h"
 #include "Chat.h"
 #include "Dice.h"
+#include "UIGame.h"
 
-#define MINMOVE			20
+#define MINMOVE			5
 #define WORLDX			2228
 #define WORLDY			1520
 
@@ -32,6 +33,7 @@ gGameCore::~gGameCore(void)
 bool gGameCore::SetUp()
 {
 	m_spacor = 0;
+	m_bMoved = false;
 	return true;
 }
 
@@ -40,11 +42,12 @@ void gGameCore::MainLoop()
 	if(m_spacor!=0)
 		StepOn();
 
+	gUIGame::GetIF()->MainLoop();
+
 	MainLoopMouse();		// 마우스 스크롤
 	
 	Draw();
-	gPlayerContainer::GetIF()->MainLoop();
-
+	
 	// popup 창 처리
 	if(gPopUp::GetIF()->isPopUp())
 	{
@@ -116,6 +119,9 @@ void gGameCore::MainLoopMouse()
 void gGameCore::Draw()
 {
 	gMap::GetIF()->Draw();
+	gPlayerContainer::GetIF()->MainLoop();
+	gChat::GetIF()->Draw();
+	gUIGame::GetIF()->Draw();
 }
 
 void gGameCore::Release()
@@ -185,15 +191,15 @@ bool gGameCore::PreTransMsg(MSG &msg)
 
 			switch(msg.wParam)
 			{
-			case VK_RETURN:
-				SetFocus(gMainWin::GetIF()->m_hWnd);
-				gChat::GetIF()->SendMsg();
-				return true;
-			case VK_TAB:
-				return true;
-			case VK_ESCAPE:
-				SetFocus(gMainWin::GetIF()->m_hWnd);
-				return true;
+				case VK_RETURN:
+					SetFocus(gMainWin::GetIF()->m_hWnd);
+					gChat::GetIF()->SendMsg();
+					return true;
+				case VK_TAB:
+					return true;
+				case VK_ESCAPE:
+					SetFocus(gMainWin::GetIF()->m_hWnd);
+					return true;
 			}
 		}
 	}
@@ -209,73 +215,134 @@ void gGameCore::SendMoveAsk()
 	ask.nCurPos		= gPlayerContainer::GetIF()->m_MyGamePlayer.nPos;
 
 	gServer::GetIF()->Send(PL_MOVESTART_ASK, sizeof ask, &ask);
+
+	m_bMoved = true;
 }
 
 void gGameCore::pk_movestart_rep(PK_MOVESTART_REP *rep)
 {
-	int d1=0,d2=0, c1,c2;
+	gPlayerContainer *gPC = gPlayerContainer::GetIF();
+	
+	// 내 차례가 아님
+	if(strcmp(gPC->m_MyGamePlayer.szID, gPC->m_GPlayerList[m_nTurn].szID) != 0)
+		return;
 
-	if(rep->Dice4_1) d1++; if(rep->Dice4_2) d1++;
-	if(rep->Dice6_1) d2++; if(rep->Dice6_2) d2++;
-	if(d1==1 && d2==1) c1=rep->Dice4_1, c2=rep->Dice6_1;
-	else if(d1==2) c1=rep->Dice4_1, c2=rep->Dice4_2;
-	else if(d2==2) c1=rep->Dice6_1, c2=rep->Dice6_2;
-	else if(d1==1) c1=rep->Dice4_1, c2=0;
-	else c1=0, c2=rep->Dice6_1;
+	if(gDice::GetIF()->m_start)
+		return;
 
-	gDice::GetIF()->DiceStart(d1, d2, c1-1, c2-1);
+	int d1 = 0, d2 = 0;		// 4 ,6 면체 갯수
+	int	c1, c2;				// 주사위 1,2의 눈
+
+	if(rep->Dice4_1)
+		d1++;
+	if(rep->Dice4_2)
+		d1++;
+
+	if(rep->Dice6_1)
+		d2++;
+	if(rep->Dice6_2)
+		d2++;
+
+
+	if(d1 == 1 && d2 == 1)
+		c1 = rep->Dice4_1, c2 = rep->Dice6_1;
+	else if(d1 == 2)
+		c1 = rep->Dice4_1, c2 = rep->Dice4_2;
+	else if(d2 == 2)
+		c1 = rep->Dice6_1, c2 = rep->Dice6_2;
+	else if(d1 == 1)
+		c1 = rep->Dice4_1, c2 = 0;
+	else
+		c1 = 0, c2 = rep->Dice6_1;
+
+	gDice::GetIF()->DiceStart(d1, d2, c1 - 1, c2 - 1);
 }
 
-void	gGameCore::Start (int spacor) {
+void gGameCore::Start(int spacor)
+{
 	m_spacor = spacor;
 	//gMap::GetIF()->posSpacor();
 	gTimer::GetIF()->frameStart(500,60);
 	StepStart();
 }
 
-void	gGameCore::Start (int spacor,int conPosX, int conPosY)
+void gGameCore::Start(int spacor,int conPosX, int conPosY)
 {
 	gMap::GetIF()->posSetter(conPosX,conPosY);
 	Start(spacor);
 }
 
-void	gGameCore::StepStart () {
+void gGameCore::StepStart()
+{
 	if(m_spacor>=0)
 		gMap::GetIF()->posSpacor();
 	else 
 		gMap::GetIF()->posSpacor(true);
 }
 
-void	gGameCore::StepOn () {
-	gTimer *gt = gTimer::GetIF();
-	gPlayerContainer *gPC = gPlayerContainer::GetIF();
-	
+void gGameCore::StepOn()
+{
+	gTimer				*gt = gTimer::GetIF();
+	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
+
 
 	int l_frame = gt->frame();
-	if(gt->m_turn>0) {
+
+	if(gt->m_turn > 0)
+	{
 		StepEnd();
 	}
-	else {
-		gMap::GetIF()->posMover(l_frame,gt->m_frame);
+	else
+	{
+		gMap::GetIF()->posMover(l_frame, gt->m_frame);
 		gPC->SyncronizeToMap(m_nTurn);
 		gPC->PutFootPosition(m_nTurn,l_frame,60/4);
 	}	
 }
 
-void	gGameCore::StepEnd () {
+void gGameCore::StepEnd()
+{
 	gTimer *gt = gTimer::GetIF();
+
 	gMap::GetIF()->posStoper();
-	if(m_spacor>0)
+
+	if(m_spacor > 0)
 		m_spacor--;
-	else if(m_spacor<0)
+	else if(m_spacor < 0)
 		m_spacor++;
+
 	gt->m_turn--;
-	if(m_spacor!=0) StepStart();
-	else End();
+
+	if(m_spacor!=0)
+		StepStart();
+	else
+		End();
 }
 
-void	gGameCore::End () {
+void gGameCore::End()		// 이동 끝남
+{
+	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
+	gMap				*map = gMap::GetIF();
+
 	gTimer::GetIF()->frameEnd();
-	gMap *gtc = gMap::GetIF();
+
+	gPC->m_GPlayerList[ m_nTurn ].nPos = map->m_xSpacePos * LINEY + map->m_xSpacePos;
+
+	PK_MOVEEND_ASK			ask;
+
+	ask.nDestPos = gPC->m_GPlayerList[ m_nTurn ].nPos;
+	strcpy(ask.szID, gPC->m_MyGamePlayer.szID);
+
+	gServer::GetIF()->Send(PL_MOVEEND_ASK, sizeof ask, &ask);
+
 	//pk_stepFinish_ask(gtc->m_xSpacePos,gtc->m_ySpacePos);
+}
+
+void gGameCore::pk_nextturn_rep(PK_NEXTTURN_REP *rep)
+{
+	if(m_nTurn == rep->nNowTurn)
+	{
+		m_nTurn		= rep->nNextTurn;
+		m_bMoved	= false;
+	}
 }

@@ -26,10 +26,10 @@
 #define DICE_FILE_HEDWIN	".\\data\\dice\\hedronwindow.img"
 #define DICE_FILE_CUBWIN	".\\data\\dice\\cubewindow.img"
 
-#define WIN_POS_X			250
+#define WIN_POS_X			245
 #define WIN_POS_Y			100
-#define WIN_POS_X1			200
-#define WIN_POS_X2			350
+#define WIN_POS_X1			180
+#define WIN_POS_X2			330
 
 #define DICE_POS_X			15
 #define DICE_POS_Y			15
