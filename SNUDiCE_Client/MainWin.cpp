@@ -124,6 +124,8 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 
 	m_eCoreMode = ECM_LOGIN;
 
+	srand(NULL);
+
 	return true;
 }
 

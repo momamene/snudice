@@ -399,3 +399,12 @@ void gMap::Release()
 
 	m_ImgSmallTile.Release();
 }
+
+int gMap::PositionFor_gPC()
+{
+	if(m_xSpacePos < m_Next_xSpacePos) return 3;
+	else if(m_xSpacePos > m_Next_xSpacePos) return 1;
+	else if(m_ySpacePos < m_Next_ySpacePos) return 0;
+	else if(m_ySpacePos > m_Next_ySpacePos) return 2;
+	else return 0;
+}

@@ -249,13 +249,16 @@ void	gGameCore::StepStart () {
 void	gGameCore::StepOn () {
 	gTimer *gt = gTimer::GetIF();
 	gPlayerContainer *gPC = gPlayerContainer::GetIF();
+	
+
 	int l_frame = gt->frame();
 	if(gt->m_turn>0) {
 		StepEnd();
 	}
 	else {
 		gMap::GetIF()->posMover(l_frame,gt->m_frame);
-		gPlayerContainer::GetIF()->SyncronizeToMap(m_nTurn);
+		gPC->SyncronizeToMap(m_nTurn);
+		gPC->PutFootPosition(m_nTurn,l_frame,60/4);
 	}	
 }
 

@@ -61,6 +61,8 @@ public:
 	// Packet을 통해서 싱크로나이즈 되면, m_nAbsDrawline 값들을 싱크로나이즈 해주는 함수
 	void			SyncronizeToMap(int nInRoomIndex);
 	// gMap class의 m_nAbsDrawline과 본 class의 m_nAbsDrawline 값을 싱크로나이즈 해주는 함수
+	void			PutFootPosition(int nInRoomIndex,int nframe,int nCutline);
+	// frame값과 nCutline (아마 nCutline은 15겠지?) 을 넣어서 gGameCore에서 캐릭터의 발을 결맞게 해주는 함수
 
 private:
 	bool			SetUpCharInfo();

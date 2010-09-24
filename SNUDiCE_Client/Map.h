@@ -122,6 +122,8 @@ public:
 
 	void	DrawHexagon(int x0,int y0,int n,bool boolo=false);
 
+	int		PositionFor_gPC();
+
 private:
 	// Setup의 떨거지 (subfunction)
 	void	Load();				// 파일을 불러오는 함수
