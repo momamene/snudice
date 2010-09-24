@@ -27,8 +27,8 @@
 #define SUB_POS_INFO_X				368
 #define SUB_POS_INFO_Y				88
 
-#define SUB_MINI_START_X			350
-#define SUB_MINI_START_Y			160
+#define SUB_MINI_START_X			360
+#define SUB_MINI_START_Y			175
 #define SUB_MINI_SOLUTION			9
 
 #define SUB_FILE_ICONPLAYER			".\\Data\\Submit\\sub_icon_player.img"

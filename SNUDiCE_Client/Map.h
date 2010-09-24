@@ -69,6 +69,7 @@ public:
 	DWORD	dw;
 	gImage	m_ImgTile[9];
 	gImage	m_ImgTileBack;
+	gImage	m_ImgSmallTile;
 
 	int		count; // 아마 이것이 tile의 갯수갰지.
 

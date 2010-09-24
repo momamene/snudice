@@ -86,6 +86,9 @@ void gGameCore::MainLoop()
 
 void gGameCore::MainLoopMouse()
 {
+	if(!gMainWin::GetIF()->m_bActive)
+		return;
+
 	gMouse	*mouse = gMouse::GetIF();
 	gMap	*map = gMap::GetIF();
 

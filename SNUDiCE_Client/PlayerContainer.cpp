@@ -265,7 +265,7 @@ void gPlayerContainer::Draw()
 				-gmap->m_nAbsDrawlineX + m_nAbsDrawlineX[i] + 15 + 70 ,
 				-gmap->m_nAbsDrawlineY + m_nAbsDrawlineY[i] - FULLY + 130 );
 			SetRect(&rcImg, 0, 0, 70, 130);
-			m_ImgInfo[i].ImgDot.Draw(rcScr, rcImg, false);
+			m_ImgInfo[ m_GPlayerList[i].ctype ].ImgDot.Draw(rcScr, rcImg, false);
 		}
 	}
 }
@@ -273,6 +273,7 @@ void gPlayerContainer::Draw()
 void gPlayerContainer::SyncronizeToMap(int nInRoomIndex)
 {
 	gMap* gmap = gMap::GetIF();
+
 	m_nAbsDrawlineX[nInRoomIndex] = gmap->m_nAbsDrawlineX + WNDSIZEW/2 - 15;
 	m_nAbsDrawlineY[nInRoomIndex] = gmap->m_nAbsDrawlineY + WNDSIZEH/2 - 15;
 }

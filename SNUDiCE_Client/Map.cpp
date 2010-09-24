@@ -15,6 +15,8 @@
 #define TILE_ART_IMG		".\\Data\\Map\\art.img"
 #define TILE_TITLE_IMG		".\\Data\\Map\\title.img"
 
+#define TILE_SMALLTILE		".\\Data\\Map\\smallmapchip.img"
+
 void gTile::init(int xo,int yo)
 {
 	tileType	= TY_NONE;
@@ -81,6 +83,9 @@ bool gMap::Setup()
 
 	if(!m_ImgTileBack.Load(TILE_TITLE_IMG))
 		return false;
+
+	if(!m_ImgSmallTile.Load(TILE_SMALLTILE))
+		return false;
 	
 	m_xSpacePos			= -1;
 	m_ySpacePos			= -1;
@@ -111,9 +116,6 @@ void gMap::LoadFileToBKS()
 	}
 	CloseHandle(hFile);
 }
-
-
-
 
 void gMap::LoadBKSToTM()
 {
@@ -238,8 +240,6 @@ void gMap::DrawHexagon(int x0, int y0, int n, bool boolo)
 
 void gMap::Draw()
 {
-
-	
 	int n = 1; // √‡º“¿≤
 	int start_x = m_nAbsDrawlineX;
 	int start_y = m_nAbsDrawlineY;
@@ -396,4 +396,5 @@ void gMap::Release()
 	for(i = 0; i < 9; i++)
 		m_ImgTile[i].Release();
 
+	m_ImgSmallTile.Release();
 }
