@@ -14,6 +14,7 @@ struct CHARIMGINFO
 {
 	gImage			ImgCharSel;
 	gImage			ImgDot;
+	gImage			ImgPic;				// 작은 얼굴이미지. ui에들어가는거
 };
 
 class gPlayerContainer

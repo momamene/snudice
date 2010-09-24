@@ -1,21 +1,21 @@
 // 캐릭터이미지 스크립트
-// 캐릭터고르기이미지,			도트이미지
+// 캐릭터고르기이미지,			도트이미지,				작은 얼굴 사진
 // 언어
-.\\Data\\Char\\char_sel_literal.img,	.\\Data\\Char\\char_dot_literal.img,
-.\\Data\\Char\\char_sel_social.img,	.\\Data\\Char\\char_dot_social.img,
-.\\Data\\Char\\char_sel_manage.img,	.\\Data\\Char\\char_dot_literal.img,
-.\\Data\\Char\\char_sel_law.img,	.\\Data\\Char\\char_dot_law.img,
-.\\Data\\Char\\char_sel_life.img,	.\\Data\\Char\\char_dot_literal.img,	
-.\\Data\\Char\\char_sel_teach.img,	.\\Data\\Char\\char_dot_teach.img,
-.\\Data\\Char\\char_sel_free.img,	.\\Data\\Char\\char_dot_free.img,
+.\\Data\\Char\\char_sel_literal.img,	.\\Data\\Char\\char_dot_literal.img,	.\\Data\\Char\\char_face_literal.img,
+.\\Data\\Char\\char_sel_social.img,	.\\Data\\Char\\char_dot_social.img,	.\\Data\\Char\\char_face_social.img,
+.\\Data\\Char\\char_sel_manage.img,	.\\Data\\Char\\char_dot_literal.img,	.\\Data\\Char\\char_face_manage.img,
+.\\Data\\Char\\char_sel_law.img,	.\\Data\\Char\\char_dot_law.img,	.\\Data\\Char\\char_face_law.img,
+.\\Data\\Char\\char_sel_life.img,	.\\Data\\Char\\char_dot_literal.img,	.\\Data\\Char\\char_face_life.img,
+.\\Data\\Char\\char_sel_teach.img,	.\\Data\\Char\\char_dot_teach.img,	.\\Data\\Char\\char_face_teach.img,
+.\\Data\\Char\\char_sel_free.img,	.\\Data\\Char\\char_dot_free.img,	.\\Data\\Char\\char_face_free.img,
 // 수리
-.\\Data\\Char\\char_sel_engine.img,	.\\Data\\Char\\char_dot_literal.img,
-.\\Data\\Char\\char_sel_nature.img,	.\\Data\\Char\\char_dot_nature.img,
-.\\Data\\Char\\char_sel_doctor.img,	.\\Data\\Char\\char_dot_doctor.img,
-.\\Data\\Char\\char_sel_animal.img,	.\\Data\\Char\\char_dot_literal.img,
-.\\Data\\Char\\char_sel_drug.img,	.\\Data\\Char\\char_dot_drug.img,
-.\\Data\\Char\\char_sel_nurse.img,	.\\Data\\Char\\char_dot_nurse.img,
-.\\Data\\Char\\char_sel_farm.img,	.\\Data\\Char\\char_dot_literal.img,
+.\\Data\\Char\\char_sel_engine.img,	.\\Data\\Char\\char_dot_literal.img,	.\\Data\\Char\\char_face_engine.img,
+.\\Data\\Char\\char_sel_nature.img,	.\\Data\\Char\\char_dot_nature.img,	.\\Data\\Char\\char_face_nature.img,
+.\\Data\\Char\\char_sel_doctor.img,	.\\Data\\Char\\char_dot_doctor.img,	.\\Data\\Char\\char_face_doctor.img,
+.\\Data\\Char\\char_sel_animal.img,	.\\Data\\Char\\char_dot_literal.img,	.\\Data\\Char\\char_face_animal.img,
+.\\Data\\Char\\char_sel_drug.img,	.\\Data\\Char\\char_dot_drug.img,	.\\Data\\Char\\char_face_drug.img,
+.\\Data\\Char\\char_sel_nurse.img,	.\\Data\\Char\\char_dot_nurse.img,	.\\Data\\Char\\char_face_nurse.img,
+.\\Data\\Char\\char_sel_farm.img,	.\\Data\\Char\\char_dot_literal.img,	.\\Data\\Char\\char_face_farm.img,
 // 예술
-.\\Data\\Char\\char_sel_music.img,	.\\Data\\Char\\char_dot_literal.img,
-.\\Data\\Char\\char_sel_art.img,	.\\Data\\Char\\char_dot_literal.img,
+.\\Data\\Char\\char_sel_music.img,	.\\Data\\Char\\char_dot_literal.img,	.\\Data\\Char\\char_face_music.img,
+.\\Data\\Char\\char_sel_art.img,	.\\Data\\Char\\char_dot_literal.img,	.\\Data\\Char\\char_face_art.img,

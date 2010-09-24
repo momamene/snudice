@@ -21,6 +21,8 @@
 #define MAININFO_DICE6_POS_Y				33
 #define MAININFO_DICE4_POS_X				180
 #define MAININFO_DICE4_POS_Y				51
+#define MAININFO_NAME_POS_X					17
+#define MAININFO_NAME_POS_Y					76
 
 static gUIGame s_UIGame;
 
@@ -81,6 +83,8 @@ void gUIGame::Draw()
 		gUtil::Text(MAININFO_DICE6_POS_X, MAININFO_DICE6_POS_Y, szBuf);
 		wsprintf(szBuf, "%d", gPC->m_MyGamePlayer.nDice4);
 		gUtil::Text(MAININFO_DICE4_POS_X, MAININFO_DICE4_POS_Y, szBuf);
+
+		gUtil::Text(MAININFO_NAME_POS_X, MAININFO_NAME_POS_Y, gPC->m_CharInfo[gPC->m_MyGamePlayer.ctype].szName);
 
 	gUtil::EndText();
 }

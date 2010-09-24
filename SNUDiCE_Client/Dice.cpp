@@ -1,6 +1,7 @@
 #include "Dice.h"
 #include "GameCore.h"
 #include "PlayerContainer.h"
+#include "Map.h"
 
 static gDice s_Dice;
 
@@ -93,8 +94,11 @@ void gDice::DiceThrow()
 		m_frametime.frameEnd();
 		m_start = false;
 
-		gPlayerContainer::GetIF()->PacketalDrawFix();
-		gGameCore::GetIF()->Start(n1+n2+2);
+		gPlayerContainer	*gPC = gPlayerContainer::GetIF();
+		
+		gPC->PacketalDrawFix();
+		int ntPos = gPC->m_GPlayerList[gGameCore::GetIF()->m_nTurn].nPos;
+		gGameCore::GetIF()->Start(n1+n2+2,ntPos/LINEY,ntPos%LINEY);
 
 		return;
 	}

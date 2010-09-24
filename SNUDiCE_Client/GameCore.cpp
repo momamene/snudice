@@ -89,6 +89,9 @@ void gGameCore::MainLoop()
 
 void gGameCore::MainLoopMouse()
 {
+	if(!gMainWin::GetIF()->m_bActive)
+		return;
+
 	gMouse	*mouse = gMouse::GetIF();
 	gMap	*map = gMap::GetIF();
 
@@ -328,9 +331,12 @@ void gGameCore::End()		// 이동 끝남
 	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
 	gMap				*map = gMap::GetIF();
 
-	gTimer::GetIF()->frameEnd();
+	gTimer::GetIF()->frameEnd(); 
 
-	gPC->m_GPlayerList[ m_nTurn ].nPos = map->m_xSpacePos * LINEY + map->m_xSpacePos;
+	gPC->m_GPlayerList[ m_nTurn ].nPos = map->m_xSpacePos * LINEY + map->m_ySpacePos;
+
+	if(strcmp(gPC->m_MyGamePlayer.szID, gPC->m_GPlayerList[m_nTurn].szID) == 0)
+		gPC->m_MyGamePlayer.nPos = gPC->m_GPlayerList[ m_nTurn ].nPos;
 
 	PK_MOVEEND_ASK			ask;
 
@@ -338,6 +344,7 @@ void gGameCore::End()		// 이동 끝남
 	strcpy(ask.szID, gPC->m_MyGamePlayer.szID);
 
 	gServer::GetIF()->Send(PL_MOVEEND_ASK, sizeof ask, &ask);
+	
 
 	//pk_stepFinish_ask(gtc->m_xSpacePos,gtc->m_ySpacePos);
 }
