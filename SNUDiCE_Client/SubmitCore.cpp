@@ -340,6 +340,8 @@ void gSubmitCore::pk_submitready_rep(PK_SUBMITREADY_REP *rep)
 void gSubmitCore::pk_maingametart_rep(PK_MAINGAMESTART_REP *rep)
 {
 	gPlayerContainer::GetIF()->SetGPList(rep->list);
+	gPlayerContainer::GetIF()->PacketalDrawFix();
 	gGameCore::GetIF()->m_nTurn		= rep->nTurn;
 	gMainWin::GetIF()->m_eCoreMode	= ECM_GAME;
+
 }

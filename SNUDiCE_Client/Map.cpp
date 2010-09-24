@@ -326,27 +326,6 @@ void gMap::posStoper()
 
 
 // 4. Essential for All Line Start
-/*
-bool gMap::isExisted(int i, int j)
-{
-	if(i > -1 && j > -1 && i < LINEX && j < LINEY)
-	{
-		if(tileMap[i*LINEY+j].tileType != TY_NONE)
-			return true;
-	}
-	return false;
-}
-bool gMap::isExisted(int line)
-{
-	if(line < 0 || line >= LINEX * LINEY)
-		return false;
-	else if(tileMap[line].tileType != TY_NONE)
-		return true;
-	else
-		return false;
-}
-*/
-
 
 POINT gMap::conToAbs(POINT ij)
 {
@@ -418,51 +397,3 @@ void gMap::Release()
 		m_ImgTile[i].Release();
 
 }
-/*
-int gMap::distance(int mapA, int mapB)
-{	// 치명적인 녹두 문제. 녹두 들어가면 무한루프 때문에 그 오류를 알 수 있음
-	int localCount	= 0;
-	int iter		= mapA;
-	
-	if(mapA == mapB)
-		return 0;
-	
-	while(1)
-	{
-		iter = tileMap[iter].nextTile.x*LINEY+tileMap[iter].nextTile.y;
-		localCount++;
-		if(iter != mapB)
-		{
-		//	localCount++;
-			return localCount;
-		}
-		else if(iter == mapA)
-		{
-			break;
-		}
-	} 
-	localCount = 0;
-	while(1)
-	{
-		if(iter/LINEY == m_xInitSpacePos && iter%LINEY == m_yInitSpacePos) 
-			iter = tileMap[iter].flag1*LINEY + tileMap[iter].flag2;
-		else 
-			iter = tileMap[iter].nextTile.x*LINEY+tileMap[iter].nextTile.y;
-		localCount++;
-		if(iter != mapB)
-		{
-			localCount *= -1;
-			return localCount;
-		}
-		else if(iter == mapA)
-{
-			break;
-		}
-	}
-	return 0;
-	
-	//localCount++;
-	//return localCount;
-}
-*/
-// 6. end

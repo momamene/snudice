@@ -31,11 +31,15 @@ gGameCore::~gGameCore(void)
 
 bool gGameCore::SetUp()
 {
+	m_spacor = 0;
 	return true;
 }
 
 void gGameCore::MainLoop()
 {
+	if(m_spacor!=0)
+		StepOn();
+
 	MainLoopMouse();		// 마우스 스크롤
 	
 	Draw();
@@ -209,7 +213,58 @@ void gGameCore::SendMoveAsk()
 
 void gGameCore::pk_movestart_rep(PK_MOVESTART_REP *rep)
 {
-
-
+	gPlayerContainer::GetIF()->PacketalDrawFix();
+	Start(rep->nDist);
 	//gDice::GetIF()->DiceStart(bDice4, bDice6, rep->nDice4, rep->nDice6);
+}
+
+void	gGameCore::Start (int spacor) {
+	m_spacor = spacor;
+	//gMap::GetIF()->posSpacor();
+	gTimer::GetIF()->frameStart(500,60);
+	StepStart();
+}
+
+void	gGameCore::Start (int spacor,int conPosX, int conPosY)
+{
+	gMap::GetIF()->posSetter(conPosX,conPosY);
+	Start(spacor);
+}
+
+void	gGameCore::StepStart () {
+	if(m_spacor>=0)
+		gMap::GetIF()->posSpacor();
+	else 
+		gMap::GetIF()->posSpacor(true);
+}
+
+void	gGameCore::StepOn () {
+	gTimer *gt = gTimer::GetIF();
+	gPlayerContainer *gPC = gPlayerContainer::GetIF();
+	int l_frame = gt->frame();
+	if(gt->m_turn>0) {
+		StepEnd();
+	}
+	else {
+		gMap::GetIF()->posMover(l_frame,gt->m_frame);
+		gPlayerContainer::GetIF()->SyncronizeToMap(m_nTurn);
+	}	
+}
+
+void	gGameCore::StepEnd () {
+	gTimer *gt = gTimer::GetIF();
+	gMap::GetIF()->posStoper();
+	if(m_spacor>0)
+		m_spacor--;
+	else if(m_spacor<0)
+		m_spacor++;
+	gt->m_turn--;
+	if(m_spacor!=0) StepStart();
+	else End();
+}
+
+void	gGameCore::End () {
+	gTimer::GetIF()->frameEnd();
+	gMap *gtc = gMap::GetIF();
+	//pk_stepFinish_ask(gtc->m_xSpacePos,gtc->m_ySpacePos);
 }

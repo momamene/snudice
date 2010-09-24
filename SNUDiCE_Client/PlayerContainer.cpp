@@ -1,5 +1,6 @@
 #include "PlayerContainer.h"
 #include "Map.h"
+#include "MainWin.h"
 #include <stdio.h>
 
 #define CHARDATAFILE		".\\Data\\chardata.dat"
@@ -229,6 +230,11 @@ void gPlayerContainer::SetGPList(GAMEPLAYER *list)
 
 void gPlayerContainer::MainLoop()
 {
+	Draw();
+}
+
+void gPlayerContainer::PacketalDrawFix() {
+
 	POINT		pt;
 
 	for(int i = 0 ; i < ROOMMAXPLAYER ; i++)
@@ -242,7 +248,6 @@ void gPlayerContainer::MainLoop()
 			m_nAbsDrawlineY[i] = pt.y;
 		}
 	}
-	Draw();
 }
 
 void gPlayerContainer::Draw()
@@ -255,12 +260,19 @@ void gPlayerContainer::Draw()
 	{
 		if(m_MyRoom.szRoomMaxPlayer[i][0] != '\0')
 		{
-			SetRect(&rcScr, -gmap->m_nAbsDrawlineX + m_nAbsDrawlineX[i] + 15,
-				-gmap->m_nAbsDrawlineY + m_nAbsDrawlineY[i] - FULLY,
-				-gmap->m_nAbsDrawlineX + m_nAbsDrawlineX[i] + 15 + 70,
-				-gmap->m_nAbsDrawlineY + m_nAbsDrawlineY[i] - FULLY + 130);
+			SetRect(&rcScr, -gmap->m_nAbsDrawlineX + m_nAbsDrawlineX[i] + 15 ,
+				-gmap->m_nAbsDrawlineY + m_nAbsDrawlineY[i] - FULLY ,
+				-gmap->m_nAbsDrawlineX + m_nAbsDrawlineX[i] + 15 + 70 ,
+				-gmap->m_nAbsDrawlineY + m_nAbsDrawlineY[i] - FULLY + 130 );
 			SetRect(&rcImg, 0, 0, 70, 130);
 			m_ImgInfo[i].ImgDot.Draw(rcScr, rcImg, false);
 		}
 	}
+}
+
+void gPlayerContainer::SyncronizeToMap(int nInRoomIndex)
+{
+	gMap* gmap = gMap::GetIF();
+	m_nAbsDrawlineX[nInRoomIndex] = gmap->m_nAbsDrawlineX + WNDSIZEW/2 - 15;
+	m_nAbsDrawlineY[nInRoomIndex] = gmap->m_nAbsDrawlineY + WNDSIZEH/2 - 15;
 }

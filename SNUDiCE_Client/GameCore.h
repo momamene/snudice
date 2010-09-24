@@ -19,6 +19,8 @@ public:
 
 public:
 	int			m_nTurn;		// ¥©±∏ ≈œ
+	int			m_spacor;
+
 public:
 
 	bool		PreTransMsg(MSG &msg);
@@ -34,6 +36,13 @@ public:
 	void		OnRButtonDown();
 
 	void		pk_movestart_rep(PK_MOVESTART_REP *rep);
+	void				Start(int spacor);
+	void				Start(int spacor,int conPosX,int conPosY);
+	void				StepStart();
+	void				StepOn();
+	void				StepEnd();
+	void				End();
+
 
 private:
 	void		MainLoopMouse();

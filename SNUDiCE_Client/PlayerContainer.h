@@ -57,6 +57,11 @@ public:
 	void			MainLoop();
 	void			Draw();
 
+	void			PacketalDrawFix();		
+	// Packet을 통해서 싱크로나이즈 되면, m_nAbsDrawline 값들을 싱크로나이즈 해주는 함수
+	void			SyncronizeToMap(int nInRoomIndex);
+	// gMap class의 m_nAbsDrawline과 본 class의 m_nAbsDrawline 값을 싱크로나이즈 해주는 함수
+
 private:
 	bool			SetUpCharInfo();
 	bool			SetUpCharImg();
