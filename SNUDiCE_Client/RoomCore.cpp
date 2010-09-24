@@ -1439,29 +1439,11 @@ void gRoomCore::Draw_Room()
 				else
 					wsprintf(szBuf, "¡Ï");
 
-				char temp[100]={0,}, imsi[50], imsi2[50];
-				int c=0;
 
-				FILE *fp=fopen("PlayerScript.txt","rt");
-				for(i=0;i<=m_nSelChar;i++) fgets(temp,100,fp);
-
-				for(i=0;i<strlen(temp);i++) {
-					if(temp[i]==',') { imsi[c]=0; break; }
-					else imsi[c++]=temp[i];
-				}
-				i++;
-				while(temp[i]=='\t' || temp[i]==' ') i++;
-				c=0;
-				for(;i<strlen(temp);i++) {
-					if(temp[i]==',') { imsi2[c]=0; break; }
-					else imsi2[c++]=temp[i];
-				}
-				imsi2[c]=0;
-				fclose(fp);
 
 				gUtil::Text(SEL_POS_SEX_X, SEL_POS_SEX_Y, szBuf);
-				gUtil::Text(SEL_POS_COLLEGE_X, SEL_POS_SEX_Y+23, imsi);
-				gUtil::Text(SEL_POS_COLLEGE_X, SEL_POS_SEX_Y+38, imsi2);
+				gUtil::Text(SEL_POS_COLLEGE_X, SEL_POS_SEX_Y+23, gPlayerContainer::GetIF()->imsi[m_nSelChar]);
+				gUtil::Text(SEL_POS_COLLEGE_X, SEL_POS_SEX_Y+38, gPlayerContainer::GetIF()->imsi2[m_nSelChar]);
 			}
 		gUtil::EndText();
 	}

@@ -151,6 +151,28 @@ bool gPlayerContainer::SetUp()
 	memset(m_moveFoot,0,sizeof(int)*ROOMMAXPLAYER);
 	memset(m_movePosition,0,sizeof(int)*ROOMMAXPLAYER);
 
+	
+	int c,j,i;
+	char temp[100]={0,};
+
+	FILE *fp=fopen("PlayerScript.txt","rt");
+	for(j=0;j<16;j++) {
+		fgets(temp,100,fp); c=0;
+		for(i=0;i<strlen(temp);i++) {
+			if(temp[i]==',') { imsi[j][c]=0; break; }
+			else imsi[j][c++]=temp[i];
+		}
+		i++;
+		while(temp[i]=='\t' || temp[i]==' ') i++;
+		c=0;
+		for(;i<strlen(temp);i++) {
+			if(temp[i]==',') { imsi2[j][c]=0; break; }
+			else imsi2[j][c++]=temp[i];
+		}
+		imsi2[j][c]=0;
+	}
+	fclose(fp);
+
 	return true;
 }
 
@@ -260,16 +282,11 @@ void gPlayerContainer::Draw()
 	{
 		if(m_MyRoom.szRoomMaxPlayer[i][0] != '\0')
 		{
-			SetRect(&rcScr, 
-				-gmap->m_nAbsDrawlineX + m_nAbsDrawlineX[i] + 15 ,
+			SetRect(&rcScr, -gmap->m_nAbsDrawlineX + m_nAbsDrawlineX[i] + 15 ,
 				-gmap->m_nAbsDrawlineY + m_nAbsDrawlineY[i] - FULLY ,
 				-gmap->m_nAbsDrawlineX + m_nAbsDrawlineX[i] + 15 + 70 ,
 				-gmap->m_nAbsDrawlineY + m_nAbsDrawlineY[i] - FULLY + 130 );
-			SetRect(&rcImg, 
-				m_moveFoot[i]*70,
-				m_movePosition[i]*130,
-				(m_moveFoot[i]+1)*70, 
-				(m_movePosition[i]+1)*130);
+			SetRect(&rcImg, 0, 0, 70, 130);
 			m_ImgInfo[ m_GPlayerList[i].ctype ].ImgDot.Draw(rcScr, rcImg, false);
 		}
 	}
@@ -279,18 +296,6 @@ void gPlayerContainer::SyncronizeToMap(int nInRoomIndex)
 {
 	gMap* gmap = gMap::GetIF();
 
-	m_nAbsDrawlineX[nInRoomIndex] = gmap->m_nAbsDrawlineX + WNDSIZEW/2 - HALFX;
-	m_nAbsDrawlineY[nInRoomIndex] = gmap->m_nAbsDrawlineY + WNDSIZEH/2 - HALFY;
-}
-
-void gPlayerContainer::PutFootPosition(int nInRoomIndex,int nframe,int nCutline)
-{
-	// tileContainer의 m_xSpacePos 와 m_ySpacePos를 읽어서, nMovePosition을 결정.
-	// frame을 읽어서 m_moveFoot을 결정
-	m_movePosition[nInRoomIndex] = gMap::GetIF()->PositionFor_gPC();
-	int nframeLocal = (nframe/nCutline);
-	if(nframeLocal%4==0) m_moveFoot[nInRoomIndex] = 1;
-	else if(nframeLocal%4==1) m_moveFoot[nInRoomIndex] = 0;
-	else if(nframeLocal%4==2) m_moveFoot[nInRoomIndex] = 1;
-	else if(nframeLocal%4==3) m_moveFoot[nInRoomIndex] = 2;
+	m_nAbsDrawlineX[nInRoomIndex] = gmap->m_nAbsDrawlineX + WNDSIZEW/2 - 15;
+	m_nAbsDrawlineY[nInRoomIndex] = gmap->m_nAbsDrawlineY + WNDSIZEH/2 - 15;
 }
