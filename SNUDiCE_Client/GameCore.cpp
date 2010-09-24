@@ -209,6 +209,14 @@ bool gGameCore::PreTransMsg(MSG &msg)
 
 void gGameCore::SendMoveAsk()
 {
+	gPlayerContainer *gPC = gPlayerContainer::GetIF();
+
+	// ³» Â÷·Ê°¡ ¾Æ´Ô
+	if(strcmp(gPC->m_MyGamePlayer.szID, gPC->m_GPlayerList[m_nTurn].szID) != 0)
+		return;
+	if(m_bMoved)		// ¿òÁ÷ÀÌ´Â ÁßÀÓ
+		return;
+
 	PK_MOVESTART_ASK		ask;
 
 	strcpy(ask.szID, gPlayerContainer::GetIF()->m_MyGamePlayer.szID);
@@ -223,10 +231,6 @@ void gGameCore::pk_movestart_rep(PK_MOVESTART_REP *rep)
 {
 	gPlayerContainer *gPC = gPlayerContainer::GetIF();
 	
-	// ³» Â÷·Ê°¡ ¾Æ´Ô
-	if(strcmp(gPC->m_MyGamePlayer.szID, gPC->m_GPlayerList[m_nTurn].szID) != 0)
-		return;
-
 	if(gDice::GetIF()->m_start)
 		return;
 

@@ -9,12 +9,17 @@
 #include "networkconst.h"
 #include "Image.h"
 #include "ImgButton.h"
-#include "Core.h"
 
 enum UIIMAGE
 {
 	UIIMG_MAININFO,
 	UIIMG_END,
+};
+
+enum UITYPE
+{
+	UIT_MAININFO,
+	UIT_END,
 };
 
 
@@ -28,8 +33,12 @@ public:
 
 public:
 	gImage		m_ImgUI[UIIMG_END];
+	RECT		m_rcPos[UIT_END];
 
 public:
+	bool		IsUIRange(int x, int y);
+
+
 	bool		SetUp();
 	void		MainLoop();
 	void		Draw();

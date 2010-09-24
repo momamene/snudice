@@ -1442,8 +1442,8 @@ void gRoomCore::Draw_Room()
 
 
 				gUtil::Text(SEL_POS_SEX_X, SEL_POS_SEX_Y, szBuf);
-				gUtil::Text(SEL_POS_COLLEGE_X, SEL_POS_SEX_Y+23, gPlayerContainer::GetIF()->imsi[m_nSelChar]);
-				gUtil::Text(SEL_POS_COLLEGE_X, SEL_POS_SEX_Y+38, gPlayerContainer::GetIF()->imsi2[m_nSelChar]);
+				gUtil::Text(SEL_POS_COLLEGE_X, SEL_POS_SEX_Y+23, gPlayerContainer::GetIF()->m_script1[m_nSelChar]);
+				gUtil::Text(SEL_POS_COLLEGE_X, SEL_POS_SEX_Y+38, gPlayerContainer::GetIF()->m_script2[m_nSelChar]);
 			}
 		gUtil::EndText();
 	}
