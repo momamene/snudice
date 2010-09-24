@@ -86,9 +86,6 @@ void gGameCore::MainLoop()
 
 void gGameCore::MainLoopMouse()
 {
-	if(!gMainWin::GetIF()->m_bActive)
-		return;
-
 	gMouse	*mouse = gMouse::GetIF();
 	gMap	*map = gMap::GetIF();
 
@@ -216,9 +213,17 @@ void gGameCore::SendMoveAsk()
 
 void gGameCore::pk_movestart_rep(PK_MOVESTART_REP *rep)
 {
-	gPlayerContainer::GetIF()->PacketalDrawFix();
-	Start(rep->nDist);
-	//gDice::GetIF()->DiceStart(bDice4, bDice6, rep->nDice4, rep->nDice6);
+	int d1=0,d2=0, c1,c2;
+
+	if(rep->Dice4_1) d1++; if(rep->Dice4_2) d1++;
+	if(rep->Dice6_1) d2++; if(rep->Dice6_2) d2++;
+	if(d1==1 && d2==1) c1=rep->Dice4_1, c2=rep->Dice6_1;
+	else if(d1==2) c1=rep->Dice4_1, c2=rep->Dice4_2;
+	else if(d2==2) c1=rep->Dice6_1, c2=rep->Dice6_2;
+	else if(d1==1) c1=rep->Dice4_1, c2=0;
+	else c1=0, c2=rep->Dice6_1;
+
+	gDice::GetIF()->DiceStart(d1, d2, c1-1, c2-1);
 }
 
 void	gGameCore::Start (int spacor) {

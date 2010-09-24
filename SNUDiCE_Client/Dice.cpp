@@ -1,5 +1,6 @@
 #include "Dice.h"
-
+#include "GameCore.h"
+#include "PlayerContainer.h"
 
 static gDice s_Dice;
 
@@ -58,7 +59,7 @@ void gDice::Release()
 		m_ImgCube[i].Release();
 }
 
-void gDice::DiceStart(bool hedron, bool cube, int n1, int n2)
+void gDice::DiceStart(int hedron, int cube, int n1, int n2)
 {
 	//It must be 
 //	ASSERT(n1<4 && n2<6);
@@ -71,46 +72,64 @@ void gDice::DiceStart(bool hedron, bool cube, int n1, int n2)
 	}
 	m_hedron	= hedron;
 	m_cube		= cube;
-	m_nCube = n2;
-	m_nHed	= n1;
+	m_n2		= n2;
+	m_n1		= n1;
 }
 
 void gDice::DiceThrow()
 {
 	RECT	rcSour;
 	int		n1, n2;
+	gImage	img1, img2;
 
-	if(!m_start)
-		return;
+	if(!m_start) return;
 
-	n1 = m_nHed, n2 = m_nCube;
+	n1 = m_n1, n2 = m_n2;
 	
 	m_nPos = m_frametime.frame();
 
-	if(m_nPos == DICE_FRAME)
+	if(m_nPos >= DICE_FRAME-1)
 	{
 		m_frametime.frameEnd();
 		m_start = false;
+
+		gPlayerContainer::GetIF()->PacketalDrawFix();
+		gGameCore::GetIF()->Start(n1+n2+2);
+
 		return;
 	}
 	
 	//three case consideration
-	if(m_hedron && m_cube)
-	{
-		SetRect(&rcSour, m_ImgHed[n1].m_nWidth/(DICE_FRAME)*m_nPos, 0, 
-			m_ImgHed[n1].m_nWidth/(DICE_FRAME)*(m_nPos+1), m_ImgHed[n1].m_nHeight);
-		m_ImgHed[n1].Draw(m_winPos1, rcSour);
+	if(m_hedron+m_cube==2) {
+		if(m_hedron==1 && m_cube==1) img1=m_ImgHed[n1], img2=m_ImgCube[n2];
+		else if(m_hedron==2) img1=m_ImgHed[n1], img2=m_ImgHed[n2];
+		else img1=m_ImgCube[n1], img2=m_ImgCube[n2];
 
-		SetRect(&rcSour, m_ImgCube[n2].m_nWidth/(DICE_FRAME)*m_nPos, 0, 
-			m_ImgCube[n1].m_nWidth/(DICE_FRAME)*(m_nPos+1), m_ImgCube[n2].m_nHeight);
-		m_ImgCube[n2].Draw(m_winPos2, rcSour);
+		SetRect(&rcSour, img1.m_nWidth/(DICE_FRAME)*m_nPos, 0, 
+			img1.m_nWidth/(DICE_FRAME)*(m_nPos+1), img1.m_nHeight);
+		img1.Draw(m_winPos1, rcSour);
+
+		SetRect(&rcSour, img2.m_nWidth/(DICE_FRAME)*m_nPos, 0, 
+			img2.m_nWidth/(DICE_FRAME)*(m_nPos+1), img2.m_nHeight);
+		img2.Draw(m_winPos2, rcSour);
 
 		SetRect(&rcSour, 0, 0, 
 			m_ImgCubeWin.m_nWidth, m_ImgCubeWin.m_nHeight);
 
-		m_ImgHedWin.Draw(m_winPos1, rcSour);
-		m_ImgCubeWin.Draw(m_winPos2, rcSour);
+		if(m_hedron==1 && m_cube==1) {
+			m_ImgHedWin.Draw(m_winPos1, rcSour);
+			m_ImgCubeWin.Draw(m_winPos2, rcSour);
+		}
+		else if(m_hedron==2) {
+			m_ImgHedWin.Draw(m_winPos1, rcSour);
+			m_ImgHedWin.Draw(m_winPos2, rcSour);
+		}
+		else {
+			m_ImgCubeWin.Draw(m_winPos1, rcSour);
+			m_ImgCubeWin.Draw(m_winPos2, rcSour);
+		}
 	}
+
 	else if(m_hedron)
 	{
 		SetRect(&rcSour, m_ImgHed[n1].m_nWidth/(DICE_FRAME)*m_nPos, 0, 
