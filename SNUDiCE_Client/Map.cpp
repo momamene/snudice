@@ -1,6 +1,7 @@
 #include "Map.h"
 #include "MainWin.h" // 위치 정보 등을 받습니다.
 #include "SubjectContainer.h"
+#include "Chat.h"
 
 #define MAPFILE				".\\Data\\map.xy"
 
