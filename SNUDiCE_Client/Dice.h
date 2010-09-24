@@ -9,7 +9,7 @@
 #pragma once
 #include "Image.h"
 #include "Timer.h"
-//#define DebugDice 1
+#define DebugDice 1
 
 #define DICE_FILE_HED1		".\\data\\dice\\hedron1.img"
 #define DICE_FILE_HED2		".\\data\\dice\\hedron2.img"
@@ -39,13 +39,14 @@
 class gDice {
 public:
 	static gDice	*GetIF();
-	int			m_nHed;
-	int			m_nCube;
+	int			m_n1;
+	int			m_n2;
+	bool		m_start;
 
 public:
 	bool		SetUp();
 	void		Release();
-	void		DiceStart(bool, bool, int, int);
+	void		DiceStart(int, int, int, int);
 	void		DiceThrow();
 
 private:
@@ -55,8 +56,7 @@ private:
 	gImage		m_ImgCube[6];
 	int			m_nPos;
 
-	bool		m_start;
-	bool		m_hedron, m_cube;
+	int			m_hedron, m_cube;
 
 	gTimer		m_frametime;
 
