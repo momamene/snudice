@@ -59,18 +59,26 @@
 
 #define SUBINFO_SUBWND_FILE					".\\Data\\Interface\\game_sub_subwnd.img"
 #define SUBINFO_SUBWND_SIZE_W				270
-#define SUBINFO_SUBWND_SIZE_H				216
+#define SUBINFO_SUBWND_SIZE_H				230
 #define SUBINFO_SUBWND_POS_X				((WNDSIZEW - SUBINFO_SUBWND_SIZE_W) / 2)
 #define SUBINFO_SUBWND_POS_Y				((WNDSIZEH - SUBINFO_SUBWND_SIZE_H) / 2)
-#define SUBINFO_ID_POS_X					200
-#define SUBINFO_ID_POS_Y					200
-#define SUBINFO_SUBNAME_POS_X				200
-#define SUBINFO_GRADE_POS_X					300
-#define SUBINFO_SUBNAME_POS_Y				220
-#define SUBINFO_SUBNAME_TERM_Y				20
+#define SUBINFO_ID_POS_X					240
+#define SUBINFO_ID_POS_Y					190
+#define SUBINFO_BUILDING_POS_X				215
+#define SUBINFO_SUBNAME_POS_X				270
+#define SUBINFO_GRADE_POS_X					400
+#define SUBINFO_SUBNAME_POS_Y				181
+#define SUBINFO_SUBNAME_TERM_Y				18
 #define SUBINFO_AVGRADE_POS_X				300
 #define SUBINFO_AVGRADE_POS_Y				360
-
+#define SUBINFO_BTN_FILE_PREV				".\\Data\\Interface\\game_btn_prev.img"
+#define SUBINFO_BTN_FILE_NEXT				".\\Data\\Interface\\game_btn_next.img"
+#define SUBINFO_BTN_PREV_SIZE_W				12
+#define SUBINFO_BTN_PREV_SIZE_H				21
+#define SUBINFO_BTN_PREV_POS_X				200
+#define SUBINFO_BTN_PREV_POS_Y				240
+#define SUBINFO_BTN_NEXT_POS_X				400
+#define SUBINFO_BTN_NEXT_POS_Y				240
 
 #define PINFO_FILE_BACK						".\\Data\\Interface\\game_pinfo_back.img"
 #define PINFO_SIZE_W						160
@@ -83,7 +91,6 @@
 #define DICEBTN_SIZE_H						101
 #define DICEBTN_POS_X						515
 #define DICEBTN_POS_Y						247
-
 
 static gUIGame s_UIGame;
 
@@ -163,6 +170,22 @@ bool gUIGame::SetUp()
 
 	m_bShowSubWnd = false;
 
+	SetRect(&rcDest,
+		SUBINFO_BTN_PREV_POS_X,
+		SUBINFO_BTN_PREV_POS_Y,
+		SUBINFO_BTN_PREV_POS_X + SUBINFO_BTN_PREV_SIZE_W,
+		SUBINFO_BTN_PREV_POS_Y + SUBINFO_BTN_PREV_SIZE_H );
+	if(!m_BtnUI[UIBTN_SUBPREV].SetUp(SUBINFO_BTN_FILE_PREV, false, rcDest))
+		return false;
+
+	SetRect(&rcDest,
+		SUBINFO_BTN_NEXT_POS_X,
+		SUBINFO_BTN_NEXT_POS_Y,
+		SUBINFO_BTN_NEXT_POS_X + SUBINFO_BTN_PREV_SIZE_W,
+		SUBINFO_BTN_NEXT_POS_Y + SUBINFO_BTN_PREV_SIZE_H );
+	if(!m_BtnUI[UIBTN_SUBNEXT].SetUp(SUBINFO_BTN_FILE_NEXT, false, rcDest))
+		return false;
+
 	// players info
 	if(!m_ImgUI[UIIMG_PINFO].Load(PINFO_FILE_BACK))
 		return false;
@@ -209,7 +232,11 @@ void gUIGame::Draw()
 	m_BtnUI[UIBTN_SUBJECT].Draw();
 
 	if(m_bShowSubWnd)
+	{
 		m_ImgUI[UIIMG_SUBWND].Draw(SUBINFO_SUBWND_POS_X, SUBINFO_SUBWND_POS_Y);
+		m_BtnUI[UIBTN_SUBPREV].Draw();
+		m_BtnUI[UIBTN_SUBNEXT].Draw();
+	}
 
 	// playersInfo
 	m_ImgUI[UIIMG_PINFO].Draw(PINFO_POS_X, PINFO_POS_Y);
@@ -244,15 +271,21 @@ void gUIGame::Draw()
 			gUtil::Text(MAININFO_NAME_POS_X, MAININFO_NAME_POS_Y, gPC->m_CharInfo[gPC->m_MyGamePlayer.ctype].szName);
 
 	// sub - subwnd
-		GAMEPLAYER	*gp = &gPC->m_GPlayerList[gPC->GetMyGPIndex()];
-		for(i = 0; i < MAXSUBJECT; i++)
-		{	
-			gUtil::Text(SUBINFO_SUBNAME_POS_X, SUBINFO_SUBNAME_POS_Y + (SUBINFO_SUBNAME_TERM_Y * i),
-					sc->m_subject[ gp->bySubIdx[i] ].subject);
+		if(m_bShowSubWnd)
+		{
+			GAMEPLAYER	*gp = &gPC->m_GPlayerList[gPC->GetMyGPIndex()];
+			for(i = 0; i < MAXSUBJECT; i++)
+			{	
+				gUtil::Text(SUBINFO_BUILDING_POS_X, SUBINFO_SUBNAME_POS_Y + (SUBINFO_SUBNAME_TERM_Y * i),
+						sc->m_subject[ gp->bySubIdx[i] ].building);
 
-			sprintf_s(szBuf, ".1f", gp->fGrade[i]);
-			gUtil::Text(SUBINFO_GRADE_POS_X, SUBINFO_SUBNAME_POS_Y + (SUBINFO_SUBNAME_TERM_Y * i),
-				szBuf);
+				gUtil::Text(SUBINFO_SUBNAME_POS_X, SUBINFO_SUBNAME_POS_Y + (SUBINFO_SUBNAME_TERM_Y * i),
+						sc->m_subject[ gp->bySubIdx[i] ].subject);
+
+				sprintf_s(szBuf, "%.1f", gp->fGrade[i]);
+				gUtil::Text(SUBINFO_GRADE_POS_X, SUBINFO_SUBNAME_POS_Y + (SUBINFO_SUBNAME_TERM_Y * i),
+					szBuf);
+			}
 		}
 		//sprintf_s(szBuf, ".1f", )
 

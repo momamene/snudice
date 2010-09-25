@@ -362,3 +362,15 @@ int gPlayerContainer::GetMyGPIndex()
 	}
 	return -1;
 }
+
+int gPlayerContainer::GetMyPIndex()
+{
+	int			i;
+
+	for(i = 0; i < ROOMMAXPLAYER; i++)
+	{
+		if(strcmp(m_MyPlayer.szID, m_PlayerList[i].szID) == 0)
+			return i;
+	}
+	return -1;
+}
