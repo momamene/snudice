@@ -2,6 +2,8 @@
 #include "MainWin.h" // 위치 정보 등을 받습니다.
 #include "SubjectContainer.h"
 #include "Chat.h"
+#include "SubmitCore.h"
+#include "PlayerContainer.h"
 
 #define MAPFILE				".\\Data\\map.xy"
 
@@ -234,6 +236,96 @@ void gMap::DrawHexagon(int x0, int y0, int n, bool boolo)
 		for(j = 0 ; j < LINEY ; j++)
 		{
 			DrawHexagonOne(x0, y0, i, j, n, boolo);
+		}
+	}
+}
+
+#define SMALLFULLX 13
+#define SMALLFULLY 10
+
+void gMap::DrawHexagonSubmitOne(int x0, int y0, int i, int j, int n, int classtype, int statetype)
+{
+	// classtype 0 : 언어
+	// classtype 1 : 수리
+	// classtype 2 : 예체능
+	// classtype 3 : nothing.
+	// statetype 0 : basic
+	// statetype 0,1 : 깜빡깜빡
+	// statetype 2 : 선택!
+
+	//	gGameCore *gameCore = gGameCore::GetIF();
+
+	int		k;
+	RECT	a;
+	RECT	b;
+
+	k = tileMap[i*LINEY+j].tileType;
+
+	if(k == TY_NONE)
+		return;
+
+	if(i%2 == 0) {
+		a.left	= WIDEX * i/2;
+		a.top	= FULLY * j;
+	}
+	else {
+		a.left	= LEFTX + MIDDLEX + WIDEX * (i - 1) / 2;
+		a.top	= HALFY + FULLY * j;
+	}
+
+	a.left	/= n;
+	a.top	/= n;
+	a.left	+= x0;
+	a.top	+= y0;
+	a.right = a.left + FULLX / n;
+	a.bottom = a.top + FULLY / n;
+
+
+	if(classtype==3) {
+		SetRect(&b,0,0,SMALLFULLX,SMALLFULLY);
+	}
+	else {
+		SetRect(&b,0,(classtype*3+statetype+1)*SMALLFULLY,
+			SMALLFULLX,(classtype*3+statetype+2)*SMALLFULLY);
+	}
+
+	m_ImgSmallTile.Draw(a,b,false);
+}
+
+void gMap::DrawSubmit(int x0, int y0, int n, int subjectIndex, int frameOn) // frameOn = false 가 기본 setting
+{
+	gSubmitCore *gSC = gSubmitCore::GetIF();	// 선택된 list
+	//	list 2 : gSC->m_subject 를 사용하자.
+	//  list 1 : 무엇이 언어이고, 무엇이 수리고... 이런건 tileMap에 있겠지...
+
+	gPlayerContainer *gPC = gPlayerContainer::GetIF();
+	int nMyInRoomIndex = gPC->GetMyPIndex();
+	int nSubjectIndexInTempTile;		// 각 타일의 과목의 subjectIndex;
+	bool bTemp;
+
+
+	for(int i = 0 ; i < LINEX ; i++)
+	{ 
+		for(int j = 0 ; j < LINEY ; j++)
+		{
+			if(tileMap[i*LINEY+j].tileType==TY_NONE) 
+				continue;
+			else if(tileMap[i*LINEY+j].tileType!=TY_CLASS) 
+				DrawHexagonSubmitOne(x0, y0, i, j, n, 3, 0);
+			else {
+				nSubjectIndexInTempTile = tileMap[i*LINEY+j].flag2;
+
+				bTemp = false;
+				for(int k = 0 ; k < CLASSSEAT ; k++) {
+					if(gSC->m_subject[nSubjectIndexInTempTile][k] == nMyInRoomIndex) bTemp = true;
+				}
+				if(bTemp) 
+					DrawHexagonSubmitOne(x0, y0, i, j, n, tileMap[i*LINEY+j].flag1, 2);
+				else if (subjectIndex > 0 && frameOn && subjectIndex == nSubjectIndexInTempTile)
+					DrawHexagonSubmitOne(x0, y0, i, j, n, tileMap[i*LINEY+j].flag1, 1);
+				else
+					DrawHexagonSubmitOne(x0, y0, i, j, n, tileMap[i*LINEY+j].flag1, 0);
+			}
 		}
 	}
 }

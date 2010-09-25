@@ -200,7 +200,8 @@ void gSubmitCore::Draw()
 
 
 	// map
-	gMap::GetIF()->DrawHexagon(SUB_MINI_START_X, SUB_MINI_START_Y, SUB_MINI_SOLUTION, true);
+	//gMap::GetIF()->DrawHexagon(SUB_MINI_START_X, SUB_MINI_START_Y, SUB_MINI_SOLUTION, true);
+	gMap::GetIF()->DrawSubmit(SUB_MINI_START_X, SUB_MINI_START_Y, SUB_MINI_SOLUTION);
 
 	gUtil::BeginText();
 		for(i = 0; i < CLASSNUM; i++)

@@ -118,11 +118,21 @@ public:
 	// return 값은 양수일경우 녹두를 거치지 않는 경우, 음수일경우 녹두를 뺑뺑이하는 경우
 	// 값은 움직여야 하는 값을 의미한다. 1은 한칸, 0은 0칸, -3은 3칸인데 녹두를 만나면 뺑뺑이.
 
-	void	Release();	
-
-	void	DrawHexagon(int x0,int y0,int n,bool boolo=false);
+	void	DrawHexagon(int x0,int y0,int n,bool boolo=false);	
+	// 특정 좌표에 n의 비율로 나누어서 육각형들을 뿌려줌.
+	// boolo 필요 없을 것 같은데, boolo setting해두면 막혔을 때, 타일이 쪼그라들음
 
 	int		PositionFor_gPC();
+	// 지금 gMap의 nPos 와 nPosNext 의 관계를 비교해 봤을 때, 
+	// Player가 찍어야 하는 발은 몇번째 발일까를 리턴하는 함수
+	// 즉, 이 함수는 gMap의 함수이지만 gPlayerContainer에서(만) 사용되도록 고안되었다.
+
+	void	DrawSubmit(int x0, int y0, int n, int subjectIndex = -1, int frameOn = 0); // frameOn = false 가 기본 setting
+	// subjectIndex 는 선택된 과목 만약, 없다면 -1을 넣어주자.
+	// frameOn은 subjectIndex > 0 일 때, 1이면 깜빡이기.
+
+	void	Release();	
+
 
 private:
 	// Setup의 떨거지 (subfunction)
@@ -133,12 +143,6 @@ private:
 	// Draw의 떨거지
 	
 	void	DrawHexagonOne(int x0,int y0,int i,int j,int n,bool boolo,int type=0);	// 0은 기본 1은 선택된 표시
-
-
-	// 기타 중요
-	/*
-	bool	isExisted(int i, int j);	// Tile (i,j) 호출은 유효한가? 
-	bool	isExisted(int line);
-	*/
+	void	DrawHexagonSubmitOne(int x0, int y0, int i, int j, int n, int classtype, int statetype);
 
 };
