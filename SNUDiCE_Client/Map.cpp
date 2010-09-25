@@ -357,7 +357,7 @@ void gMap::posSetter(int xSpacePos, int ySpacePos)
 
 void gMap::posSpacor(bool isNokdu)
 {
-	if(isNokdu)
+	if(isNokdu && m_xSpacePos == m_xInitSpacePos && m_ySpacePos == m_yInitSpacePos)
 	{
 		m_Next_xSpacePos = tileMap[m_xSpacePos*LINEY+m_ySpacePos].flag1; // gplayerManager->m_player[gameCore->m_turnPlayer]->m_charInfo;
 		m_Next_ySpacePos = tileMap[m_xSpacePos*LINEY+m_ySpacePos].flag2; // gplayerManager->m_player[gameCore->m_turnPlayer];
