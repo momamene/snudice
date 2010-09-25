@@ -159,7 +159,7 @@ void gGameCore::OnLButtonDown()
 	if(gUIGame::GetIF()->OnLButtonDown())
 		return;
 
-	if(m_bMoving)
+	if(m_bMoving || m_bBusing)
 		return;
 
 	if(m_bBusSel)
@@ -195,7 +195,7 @@ void gGameCore::OnLButtonUp()
 		chat->OnLbuttonUp(mouse->m_nPosX, mouse->m_nPosY);
 		return;
 	}
-	if(m_bMoving)
+	if(m_bMoving || m_bBusing)
 		return;
 }
 
@@ -221,7 +221,7 @@ void gGameCore::OnRButtonDown()
 	gUIGame		*ui		= gUIGame::GetIF();
 
 	ui->OnRButtonDown();
-	if(m_bMoving)
+	if(m_bMoving || m_bBusing)
 		return;
 }
 
@@ -462,8 +462,6 @@ void gGameCore::pk_busmovechoose_rep(PK_BUSMOVECHOOSE_REP *rep)
 
 void gGameCore::pk_busmovestart_rep(PK_BUSMOVESTART_REP *rep)
 {
-	m_bMoving = true;
-
 	gPlayerContainer *gPC = gPlayerContainer::GetIF();
 
 	int  nPos = gPC->m_GPlayerList[m_nTurn].nPos;
@@ -554,7 +552,7 @@ void gGameCore::BusEnd()  // 이동 끝남
 
 	gServer::GetIF()->Send(PL_BUSMOVEEND_ASK, sizeof ask, &ask);
 
-	m_bBusing = false;
+	//m_bBusing = false;
 	//pk_stepFinish_ask(gtc->m_xSpacePos,gtc->m_ySpacePos);
 }
 
