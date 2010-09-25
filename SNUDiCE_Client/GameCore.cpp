@@ -11,7 +11,7 @@
 #include "Dice.h"
 #include "UIGame.h"
 
-#define MINMOVE			5
+#define MINMOVE			10
 #define WORLDX			2228
 #define WORLDY			1520
 
