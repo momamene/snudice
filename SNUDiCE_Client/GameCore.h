@@ -26,6 +26,7 @@ public:
 	bool		m_bMoving;		// 움직이는 중이냐
 	bool		m_bScrolling;	// 스크롤하는 중이냐, m_bMoving과 충돌될 우려가 있다.
 	bool		m_bBusSel;		// 버스 이동 선택모드
+	bool		m_bBusing;		// 버스로 움직이는 중이냐
 
 public:
 
@@ -60,5 +61,12 @@ private:
 	void		ScrollStart(int nPos);
 	void		ScrollOn();
 	void		ScrollEnd();
+
+	void		BusStart(int spacor);
+	void		BusStart(int spacor,int conPosX, int conPosY);
+	void		BusStepStart();
+	void		BusStepOn();
+	void		BusStepEnd();
+	void		BusEnd();
 
 };

@@ -37,6 +37,7 @@ bool gGameCore::SetUp()
 	m_bMoving	= false;
 	m_bScrolling = false;
 	m_bBusSel	= false;
+	m_bBusing   = false;
 
 	return true;
 }
@@ -44,9 +45,13 @@ bool gGameCore::SetUp()
 void gGameCore::MainLoop()
 {
 	if(m_spacor!=0)
-		StepOn();
+		if(m_bMoving)
+			StepOn();
+		if(m_bBusing)
+			BusStepOn();
 	if(m_bScrolling)
 		ScrollOn();
+
 
 	gUIGame::GetIF()->MainLoop();
 
@@ -447,12 +452,107 @@ void gGameCore::pk_busmovechoose_rep(PK_BUSMOVECHOOSE_REP *rep)
 		m_bBusSel = true;
 }
 
+// 상우의  주요 작업 부분 시작
+
 void gGameCore::pk_busmovestart_rep(PK_BUSMOVESTART_REP *rep)
 {
 	m_bMoving = true;
 
-	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
+	gPlayerContainer *gPC = gPlayerContainer::GetIF();
 
-	int		nPos = gPC->m_MyGamePlayer[m_nTurn].nPos;
-	Start(rep->nDist, nPos / LINEY, nPos % LINEY);
+	int  nPos = gPC->m_MyGamePlayer[m_nTurn].nPos;
+	m_bBusing = true;
+	BusStart(rep->nDist,nPos/LINEY,nPos%LINEY);
 }
+
+void gGameCore::BusStart(int spacor)
+{
+	m_spacor = spacor;
+	//gMap::GetIF()->posSpacor();
+	gTimer::GetIF()->frameStart(250,60);
+	BusStepStart();
+}
+
+void gGameCore::BusStart(int spacor,int conPosX, int conPosY)
+{
+	gMap::GetIF()->posSetter(conPosX,conPosY);
+	BusStart(spacor);
+}
+
+void gGameCore::BusStepStart()
+{
+	if(m_spacor>=0)
+		gMap::GetIF()->posSpacor();
+	else 
+		gMap::GetIF()->posSpacor(true);
+}
+
+void gGameCore::BusStepOn()
+{
+	gTimer    *gt = gTimer::GetIF();
+	gPlayerContainer *gPC = gPlayerContainer::GetIF();
+
+
+	int l_frame = gt->frame();
+
+	if(gt->m_turn > 0)
+	{
+		BusStepEnd();
+	}
+	else
+	{
+		gMap::GetIF()->posMover(l_frame, gt->m_frame);
+		gPC->SyncronizeToMap(m_nTurn);
+		gPC->PutFootPosition(m_nTurn,l_frame,60/4);
+	} 
+}
+
+void gGameCore::BusStepEnd()
+{
+	gTimer *gt = gTimer::GetIF();
+
+	gMap::GetIF()->posStoper();
+
+	if(m_spacor > 0)
+		m_spacor--;
+	else if(m_spacor < 0)
+		m_spacor++;
+
+	gt->m_turn--;
+
+	if(m_spacor!=0)
+		BusStepStart();
+	else
+		BusEnd();
+}
+
+void gGameCore::BusEnd()  // 이동 끝남
+{
+	gPlayerContainer *gPC = gPlayerContainer::GetIF();
+	gMap    *map = gMap::GetIF();
+
+	gTimer::GetIF()->frameEnd(); 
+	m_bBusing = false;
+
+	gPC->m_GPlayerList[ m_nTurn ].nPos = map->m_xSpacePos * LINEY + map->m_ySpacePos;
+
+	if(strcmp(gPC->m_MyGamePlayer.szID, gPC->m_GPlayerList[m_nTurn].szID) == 0)
+		gPC->m_MyGamePlayer.nPos = gPC->m_GPlayerList[ m_nTurn ].nPos;
+
+	// TODO : BusEnd의 패킷을 보냄
+/*
+	PK_MOVEEND_ASK   ask;
+
+	ask.nDestPos = gPC->m_GPlayerList[ m_nTurn ].nPos;
+	strcpy(ask.szID, gPC->m_MyGamePlayer.szID);
+
+	gServer::GetIF()->Send(PL_MOVEEND_ASK, sizeof ask, &ask);
+
+	m_bBusing = false;
+
+	pk_busmoveend_ask();
+	*/
+	//pk_stepFinish_ask(gtc->m_xSpacePos,gtc->m_ySpacePos);
+}
+
+// - 끝 - 
