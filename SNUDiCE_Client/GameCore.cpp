@@ -164,7 +164,12 @@ void gGameCore::OnLButtonDown()
 
 	if(m_bBusSel)
 	{
-		int		nPos = gMap::GetIF()->viewabsToCon(mouse->m_nPosX, mouse->m_nPosY);
+		POINT	ptTemp;
+		
+		ptTemp.x = mouse->m_nPosX;
+		ptTemp.y = mouse->m_nPosY;
+
+		int		nPos = gMap::GetIF()->viewabsToCon(ptTemp);
 
 		if(gMap::GetIF()->tileMap[nPos].tileType == TY_BUS)
 		{
@@ -174,6 +179,7 @@ void gGameCore::OnLButtonDown()
 			strcpy(ask.szID, gPC->m_MyGamePlayer.szID);
 			
 			gServer::GetIF()->Send(PL_BUSMOVESELECT_ASK, sizeof ask, &ask);
+			m_bBusSel = false;
 		}
 	}
 }
@@ -460,7 +466,7 @@ void gGameCore::pk_busmovestart_rep(PK_BUSMOVESTART_REP *rep)
 
 	gPlayerContainer *gPC = gPlayerContainer::GetIF();
 
-	int  nPos = gPC->m_MyGamePlayer[m_nTurn].nPos;
+	int  nPos = gPC->m_GPlayerList[m_nTurn].nPos;
 	m_bBusing = true;
 	BusStart(rep->nDist,nPos/LINEY,nPos%LINEY);
 }
@@ -540,18 +546,15 @@ void gGameCore::BusEnd()  // 이동 끝남
 		gPC->m_MyGamePlayer.nPos = gPC->m_GPlayerList[ m_nTurn ].nPos;
 
 	// TODO : BusEnd의 패킷을 보냄
-/*
-	PK_MOVEEND_ASK   ask;
+
+	PK_BUSMOVEEND_ASK   ask;
 
 	ask.nDestPos = gPC->m_GPlayerList[ m_nTurn ].nPos;
 	strcpy(ask.szID, gPC->m_MyGamePlayer.szID);
 
-	gServer::GetIF()->Send(PL_MOVEEND_ASK, sizeof ask, &ask);
+	gServer::GetIF()->Send(PL_BUSMOVEEND_ASK, sizeof ask, &ask);
 
 	m_bBusing = false;
-
-	pk_busmoveend_ask();
-	*/
 	//pk_stepFinish_ask(gtc->m_xSpacePos,gtc->m_ySpacePos);
 }
 
