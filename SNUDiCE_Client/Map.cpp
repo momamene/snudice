@@ -473,6 +473,17 @@ POINT gMap::absToCon(POINT ij)
 	return res;
 }
 
+int gMap::viewabsToCon(POINT ij)
+{
+	ij.x += m_nAbsDrawlineX;
+	ij.y += m_nAbsDrawlineY;
+
+	POINT	ptCon = absToCon(ij);
+	int		con = ptCon.x * LINEY + ptCon.y;
+
+	return con;
+}
+
 // 4. Essential for All Line End
 
 // 6. ?

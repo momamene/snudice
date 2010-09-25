@@ -36,6 +36,7 @@ bool gGameCore::SetUp()
 	m_bMoved	= false;
 	m_bMoving	= false;
 	m_bScrolling = false;
+	m_bBusSel	= false;
 
 	return true;
 }
@@ -141,8 +142,9 @@ void gGameCore::Release()
 
 void gGameCore::OnLButtonDown()
 {
-	gMouse		*mouse	= gMouse::GetIF();
-	gChat		*chat	= gChat::GetIF();
+	gMouse				*mouse	= gMouse::GetIF();
+	gChat				*chat	= gChat::GetIF();
+	gPlayerContainer	*gPC	= gPlayerContainer::GetIF();
 
 	if(chat->PointInUI(mouse->m_nPosX, mouse->m_nPosY))
 	{
@@ -154,6 +156,21 @@ void gGameCore::OnLButtonDown()
 
 	if(m_bMoving)
 		return;
+
+	if(m_bBusSel)
+	{
+		int		nPos = gMap::GetIF()->viewabsToCon(mouse->m_nPosX, mouse->m_nPosY);
+
+		if(gMap::GetIF()->tileMap[nPos].tileType == TY_BUS)
+		{
+			PK_BUSMOVESELECT_ASK		ask;
+
+			ask.nPos = nPos;
+			strcpy(ask.szID, gPC->m_MyGamePlayer.szID);
+			
+			gServer::GetIF()->Send(PL_BUSMOVESELECT_ASK, sizeof ask, &ask);
+		}
+	}
 }
 
 void gGameCore::OnLButtonUp()
@@ -419,4 +436,23 @@ void gGameCore::ScrollEnd()
 {
 	m_bScrolling = false;
 	gMap::GetIF()->posStoper();
+}
+
+void gGameCore::pk_busmovechoose_rep(PK_BUSMOVECHOOSE_REP *rep)
+{
+	if(m_bBusSel)
+		return;
+
+	if(m_nTurn == rep->nNowTurn)
+		m_bBusSel = true;
+}
+
+void gGameCore::pk_busmovestart_rep(PK_BUSMOVESTART_REP *rep)
+{
+	m_bMoving = true;
+
+	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
+
+	int		nPos = gPC->m_MyGamePlayer[m_nTurn].nPos;
+	Start(rep->nDist, nPos / LINEY, nPos % LINEY);
 }

@@ -131,6 +131,9 @@ public:
 	// subjectIndex 는 선택된 과목 만약, 없다면 -1을 넣어주자.
 	// frameOn은 subjectIndex > 0 일 때, 1이면 깜빡이기.
 
+	int		viewabsToCon(POINT ij);
+	// 마우스 좌표 받아서, nPos return
+
 	void	Release();	
 
 

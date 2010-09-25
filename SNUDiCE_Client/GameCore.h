@@ -25,6 +25,7 @@ public:
 	bool		m_bMoved;		// 해당 턴에 움직엿냐, 즉 movestart_ask 보냇으면 true
 	bool		m_bMoving;		// 움직이는 중이냐
 	bool		m_bScrolling;	// 스크롤하는 중이냐, m_bMoving과 충돌될 우려가 있다.
+	bool		m_bBusSel;		// 버스 이동 선택모드
 
 public:
 
@@ -42,6 +43,8 @@ public:
 
 	void		pk_movestart_rep(PK_MOVESTART_REP *rep);
 	void		pk_nextturn_rep(PK_NEXTTURN_REP *rep);
+	void		pk_busmovechoose_rep(PK_BUSMOVECHOOSE_REP *rep);
+	void		pk_busmovestart_rep(PK_BUSMOVESTART_REP *rep);
 
 	void		Start(int spacor);
 	void		Start(int spacor,int conPosX,int conPosY);
