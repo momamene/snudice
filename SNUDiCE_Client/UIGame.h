@@ -9,6 +9,7 @@
 #include "networkconst.h"
 #include "Image.h"
 #include "ImgButton.h"
+#include "ScrollBar.h"
 
 enum UIIMAGE
 {
@@ -21,6 +22,8 @@ enum UIIMAGE
 
 	UIIMG_PINFO,		// 우하단
 
+	UIIMG_NUMBER,		// 숫자 1 ~ 8 랭킹표시에쓸거
+
 	UIIMG_END,
 };
 
@@ -30,6 +33,8 @@ enum UIBTN
 	UIBTN_SUBJECT,
 	UIBTN_SUBPREV,
 	UIBTN_SUBNEXT,
+
+	UIBTN_MENU,
 
 	UIBTN_DICE,
 
@@ -44,6 +49,8 @@ enum UITYPE
 	UIT_SUBWND,			// 수강편람
 
 	UIT_PINFO,			// 우하단
+
+	UIT_MENU,
 
 	UIT_DICE,
 
@@ -63,6 +70,7 @@ public:
 	gImage		m_ImgUI[UIIMG_END];
 	gImgButton	m_BtnUI[UIBTN_END];
 	RECT		m_rcPos[UIT_END];
+	gScrollbar	m_Scroll;
 
 	bool		m_bShowSubWnd;				// 수강편람 윈도우
 	int			m_nSubSel;					// 수강편람 누구 보고있나

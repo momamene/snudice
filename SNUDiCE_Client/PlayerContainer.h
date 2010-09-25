@@ -45,6 +45,7 @@ public:
 	int				m_movePosition[ROOMMAXPLAYER];
 
 public:
+	int				GetGPNum();			// 게임 플레이어 수
 	int				GetMyGPIndex();		// 게임 플레이어 인덱스
 	int				GetMyPIndex();		// 걍 플레이어 인덱스
 	bool			isTurn(int turn);				

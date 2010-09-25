@@ -387,3 +387,16 @@ int gPlayerContainer::GetMyPIndex()
 	}
 	return -1;
 }
+
+int gPlayerContainer::GetGPNum()
+{
+	int		temp = 0;
+	int		i;
+
+	for(i = 0; i < ROOMMAXPLAYER; i++)
+	{
+		if(strlen(m_GPlayerList[i].szID) != 0)
+			temp++;
+	}
+	return temp;
+}

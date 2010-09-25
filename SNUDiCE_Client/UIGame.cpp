@@ -86,12 +86,32 @@
 #define PINFO_SIZE_H						120
 #define PINFO_POS_X							480
 #define PINFO_POS_Y							360
+#define PINFO_INFO_POS_X					495
+#define PINFO_INFO_POS_Y					378
+#define PINFO_INFO_TERM_Y					40
+#define PINFO_SCROLL_FILE					".\\Data\\Interface\\game_pinfo_scroll.img"
+#define PINFO_SCROLL_POS_X					620
+#define PINFO_SCROLL_POS_Y					370
+#define PINFO_SCROLL_SIZE_H					100
 
 #define DICEBTN_FILE						".\\Data\\Interface\\game_btn_dice.img"
 #define DICEBTN_SIZE_W						100
 #define DICEBTN_SIZE_H						101
 #define DICEBTN_POS_X						515
 #define DICEBTN_POS_Y						247
+
+#define MENUBTN_FILE						".\\Data\\Interface\\game_btn_menu.img"
+#define MENUBTN_SIZE_W						80
+#define MENUBTN_SIZE_H						30
+#define MENUBTN_POS_X						(WNDSIZEW - MENUBTN_SIZE_W)
+#define MENUBTN_POS_Y						0
+
+#define UI_NUMBER_FILE						".\\Data\\Interface\\game_number.img"
+#define UI_NUMBER_SIZE_W					16
+#define UI_NUMBER_SIZE_H					16
+#define UI_NUMBER_TERM_X					5
+#define UI_NUMBER_TERM_Y					5
+
 
 static gUIGame s_UIGame;
 
@@ -187,6 +207,15 @@ bool gUIGame::SetUp()
 	if(!m_BtnUI[UIBTN_SUBNEXT].SetUp(SUBINFO_BTN_FILE_NEXT, false, rcDest))
 		return false;
 
+	// menu
+	SetRect(&m_rcPos[UIT_MENU],
+		MENUBTN_POS_X,
+		MENUBTN_POS_Y,
+		MENUBTN_POS_X + MENUBTN_SIZE_W,
+		MENUBTN_POS_Y + MENUBTN_SIZE_H);
+	if(!m_BtnUI[UIBTN_MENU].SetUp(MENUBTN_FILE, false, m_rcPos[UIT_MENU]))
+		return false;
+
 	// players info
 	if(!m_ImgUI[UIIMG_PINFO].Load(PINFO_FILE_BACK))
 		return false;
@@ -195,6 +224,12 @@ bool gUIGame::SetUp()
 			PINFO_POS_Y,
 			PINFO_POS_X + PINFO_SIZE_W,
 			PINFO_POS_Y + PINFO_SIZE_H);
+
+	if(!m_ImgUI[UIIMG_NUMBER].Load(UI_NUMBER_FILE))
+		return false;
+
+	if(!m_Scroll.SetUp(PINFO_SCROLL_POS_X, PINFO_SCROLL_POS_Y, PINFO_SCROLL_SIZE_H, PINFO_SCROLL_FILE))
+		return false;
 
 	// dice btn
 	SetRect(&m_rcPos[UIT_DICE],
@@ -219,6 +254,9 @@ void gUIGame::Draw()
 	gGameCore			*gc		= gGameCore::GetIF();
 	gSubjectContainer	*sc		= gSubjectContainer::GetIF();
 
+
+	RECT	rcDest, rcSour;
+
 	// MainInfo
 	gPC->m_ImgInfo[gPC->m_MyGamePlayer.ctype].ImgPic.Draw(MAININFO_PIC_POS_X, MAININFO_PIC_POS_Y);
 	m_ImgUI[UIIMG_MAININFO].Draw(UI_POS_MAININFO_X, UI_POS_MAININFO_Y);
@@ -241,7 +279,28 @@ void gUIGame::Draw()
 
 	// playersInfo
 	m_ImgUI[UIIMG_PINFO].Draw(PINFO_POS_X, PINFO_POS_Y);
+	int		nCount	= 0;
+	int		nRank	= 1;
+	int		i;
+	while(true)
+	{
+		for(i = 0; i < ROOMMAXPLAYER; i++)
+		{
+			if(strlen(gPC->m_GPlayerList[i].szID) == 0)
+				continue;
+
+			if(gPC->m_GPlayerList[i].nRank == nRank)
+			{
+				//Set
+			}
+
+		}
+	}
+	m_Scroll.Draw();
 	
+	// menu
+	m_BtnUI[UIBTN_MENU].Draw();
+
 	// dice btn
 	if(!gPC->isTurn(gc->m_nTurn))
 		m_BtnUI[UIBTN_DICE].m_eBtnMode = EBM_CLICK;
@@ -249,7 +308,6 @@ void gUIGame::Draw()
 	m_BtnUI[UIBTN_DICE].Draw();
 	
 
-	int		i;
 	char	szBuf[128];
 	gUtil::BeginText();
 	// MainInfo
@@ -326,6 +384,7 @@ void gUIGame::Release()
 	for(i = 0; i < UIBTN_END; i++)
 		m_BtnUI[i].Release();
 
+	m_Scroll.Release();
 }
 
 bool gUIGame::OnLButtonDown()
@@ -333,6 +392,8 @@ bool gUIGame::OnLButtonDown()
 	gPlayerContainer	*gPC	= gPlayerContainer::GetIF();
 	gMouse				*mouse	= gMouse::GetIF();
 	gGameCore			*gc		= gGameCore::GetIF();
+
+	m_Scroll.OnLbuttonDown(mouse->m_nPosX, mouse->m_nPosY);
 
 	if(m_BtnUI[UIBTN_DICE].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 	{
@@ -391,7 +452,9 @@ bool gUIGame::OnLButtonDown()
 
 void gUIGame::OnLButtonUp()
 {
+	gMouse				*mouse	= gMouse::GetIF();
 
+	m_Scroll.OnLbuttonUp(mouse->m_nPosX, mouse->m_nPosY);
 }
 
 void gUIGame::OnMouseMove()
@@ -399,6 +462,8 @@ void gUIGame::OnMouseMove()
 	gMouse		*mouse = gMouse::GetIF();
 
 	int			i;
+
+	m_Scroll.OnMouseMove(mouse->m_nPosX, mouse->m_nPosY);
 
 	for(i = 0; i < UIBTN_END; i++)
 	{
