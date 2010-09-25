@@ -80,3 +80,9 @@ void gUtil::DebugMsg(char *msg)
 {
 	OutputDebugString(msg);
 }
+
+void gUtil::SetDefaultFont()
+{
+	s_nSize = UTIL_DEFAULT_FONTSIZE;
+	strcpy(s_szFont, UTIL_DEFAULT_FONT);
+}

@@ -62,23 +62,24 @@
 #define SUBINFO_SUBWND_SIZE_H				230
 #define SUBINFO_SUBWND_POS_X				((WNDSIZEW - SUBINFO_SUBWND_SIZE_W) / 2)
 #define SUBINFO_SUBWND_POS_Y				((WNDSIZEH - SUBINFO_SUBWND_SIZE_H) / 2)
-#define SUBINFO_ID_POS_X					240
-#define SUBINFO_ID_POS_Y					190
+#define SUBINFO_ID_POS_X					212
+#define SUBINFO_ID_POS_Y					155
 #define SUBINFO_BUILDING_POS_X				215
 #define SUBINFO_SUBNAME_POS_X				270
 #define SUBINFO_GRADE_POS_X					400
 #define SUBINFO_SUBNAME_POS_Y				181
 #define SUBINFO_SUBNAME_TERM_Y				18
-#define SUBINFO_AVGRADE_POS_X				300
-#define SUBINFO_AVGRADE_POS_Y				360
+#define SUBINFO_AVGRADE_FONTSIZE			22
+#define SUBINFO_AVGRADE_POS_X				355
+#define SUBINFO_AVGRADE_POS_Y				305
 #define SUBINFO_BTN_FILE_PREV				".\\Data\\Interface\\game_btn_prev.img"
 #define SUBINFO_BTN_FILE_NEXT				".\\Data\\Interface\\game_btn_next.img"
 #define SUBINFO_BTN_PREV_SIZE_W				12
 #define SUBINFO_BTN_PREV_SIZE_H				21
-#define SUBINFO_BTN_PREV_POS_X				200
-#define SUBINFO_BTN_PREV_POS_Y				240
-#define SUBINFO_BTN_NEXT_POS_X				400
-#define SUBINFO_BTN_NEXT_POS_Y				240
+#define SUBINFO_BTN_PREV_POS_X				190
+#define SUBINFO_BTN_PREV_POS_Y				220
+#define SUBINFO_BTN_NEXT_POS_X				438
+#define SUBINFO_BTN_NEXT_POS_Y				220
 
 #define PINFO_FILE_BACK						".\\Data\\Interface\\game_pinfo_back.img"
 #define PINFO_SIZE_W						160
@@ -273,7 +274,9 @@ void gUIGame::Draw()
 	// sub - subwnd
 		if(m_bShowSubWnd)
 		{
-			GAMEPLAYER	*gp = &gPC->m_GPlayerList[gPC->GetMyGPIndex()];
+			GAMEPLAYER	*gp = &gPC->m_GPlayerList[m_nSubSel];
+
+			gUtil::Text(SUBINFO_ID_POS_X, SUBINFO_ID_POS_Y, gp->szID);
 			for(i = 0; i < MAXSUBJECT; i++)
 			{	
 				gUtil::Text(SUBINFO_BUILDING_POS_X, SUBINFO_SUBNAME_POS_Y + (SUBINFO_SUBNAME_TERM_Y * i),
@@ -286,11 +289,19 @@ void gUIGame::Draw()
 				gUtil::Text(SUBINFO_GRADE_POS_X, SUBINFO_SUBNAME_POS_Y + (SUBINFO_SUBNAME_TERM_Y * i),
 					szBuf);
 			}
+			sprintf_s(szBuf, "%.1f", gp->fAvGrade);
 		}
 		//sprintf_s(szBuf, ".1f", )
-
-
 	gUtil::EndText();
+
+	gUtil::SetSize(SUBINFO_AVGRADE_FONTSIZE);
+	gUtil::BeginText();
+	if(m_bShowSubWnd)
+	{
+		gUtil::Text(SUBINFO_AVGRADE_POS_X, SUBINFO_AVGRADE_POS_Y, szBuf);
+	}
+	gUtil::EndText();
+	gUtil::SetDefaultFont();
 }
 
 
@@ -339,6 +350,40 @@ bool gUIGame::OnLButtonDown()
 
 		m_bShowSubWnd = !m_bShowSubWnd;
 		return true;
+	}
+
+	if(m_bShowSubWnd)
+	{
+		if(m_BtnUI[UIBTN_SUBPREV].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+		{
+			while(true)
+			{
+				m_nSubSel--;
+				if(m_nSubSel < 0)
+					m_nSubSel = ROOMMAXPLAYER - 1;
+
+				if(strlen(gPC->m_GPlayerList[m_nSubSel].szID) == 0)
+					continue;
+				
+				break;
+			}
+			return true;
+		}
+		if(m_BtnUI[UIBTN_SUBNEXT].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+		{
+			while(true)
+			{
+				m_nSubSel++;
+				if(m_nSubSel >= ROOMMAXPLAYER)
+					m_nSubSel = 0;
+
+				if(strlen(gPC->m_GPlayerList[m_nSubSel].szID) == 0)
+					continue;
+
+				break;
+			}
+			return true;
+		}
 	}
 
 	return false;
