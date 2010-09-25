@@ -63,6 +63,11 @@ bool gLoginCore::SetUp()
 	Put("test18","1111");
 	Put("test19","1111");
 	Put("test20","1111");
+	Put("빅토리아","1111");
+	Put("장연수","1111");
+	Put("sylairon","1111");
+	Put("장난죄송","1111");
+	Put("운영자","1111");
 
 	return true;
 }

@@ -4,10 +4,13 @@
 #include "PlayerContainer.h"
 #include "MainWin.h"
 #include "SubmitCore.h"
+#include "SubjectContainer.h"
 
 #include <stdio.h>
+#include <time.h>
 
 #define CHARDATAFILE ".\\chardata.dat"
+#define ENDROUND	20
 
 static gGamePlayerContainer s_GamePlayerContainer;
 
@@ -18,6 +21,8 @@ gGamePlayerContainer *gGamePlayerContainer::GetIF()
 
 bool gGamePlayerContainer::SetUp()
 {
+	srand((unsigned)time(NULL));
+
 	FILE  *fp;
 	fp = fopen(CHARDATAFILE, "rt");
 	if(!fp)
@@ -108,6 +113,8 @@ bool gGamePlayerContainer::init(int nRoomIndex)
 		else {
 			m_isGamePlayer[nRoomIndex][i] = true;
 			m_isNokdu[nRoomIndex][i] = false;			
+			//m_isNokdu[nRoomIndex][i] = true;			
+
 			strcpy(m_GamePlayer[nRoomIndex][i].szID,gRC->m_rooms[nRoomIndex].szRoomMaxPlayer[i]);
 			m_GamePlayer[nRoomIndex][i].ctype = classtype[i];
 			m_GamePlayer[nRoomIndex][i].nLang = m_CharInfo[classtype[i]].nLang;
@@ -119,11 +126,15 @@ bool gGamePlayerContainer::init(int nRoomIndex)
 			m_GamePlayer[nRoomIndex][i].nDice6 = m_CharInfo[classtype[i]].nDice6;
 			// sangwoo temp (grade 관련)
 			for(int j = 0 ; j < MAXSUBJECT ; j++) 
-			m_GamePlayer[nRoomIndex][i].fGrade[j] = 0.7;
+				m_GamePlayer[nRoomIndex][i].fGrade[j] = 0.7;
 			m_GamePlayer[nRoomIndex][i].fAvGrade = 0.7;
 			m_GamePlayer[nRoomIndex][i].nRank = 1;
 			// end
+			for(int j = 0 ; j < MAXSUBJECT ; j++) 
+				m_nSubjectCount[nRoomIndex][i][j] = 90;
 			m_GamePlayer[nRoomIndex][i].nPos = gTC->m_xInitSpacePos * LINEY + gTC->m_yInitSpacePos;
+			//m_GamePlayer[nRoomIndex][i].nPos = 2 * LINEY + 17;
+
 			memcpy(m_GamePlayer[nRoomIndex][i].bySubIdx,
 				gSC->m_submitSubjectPlayer[nRoomIndex][i],
 				sizeof(BYTE)*MAXSUBJECT);
@@ -177,6 +188,14 @@ void gGamePlayerContainer::pk_movestart_ask(PK_DEFAULT *pk,SOCKET sock)
 	PK_MOVESTART_REP		rep;
 	int nRoomIndex = gPC->GetCoreFlag(ask.szID);
 	int nInRoomIndex = gRC->FindPlayerIndexInTheRoom(ask.szID,nRoomIndex);
+
+	if(m_GamePlayer[nRoomIndex][nInRoomIndex].nStamina<=0) {
+		staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],1);
+		pk_popinfo_rep(nRoomIndex,1,0);	
+		pk_gameplayerinfo_rep(nRoomIndex);
+		pk_nextturn_rep(nRoomIndex);
+		return;
+	}
 
 	int nSum;
 	rep.Dice4_1 = 0;
@@ -252,6 +271,10 @@ void gGamePlayerContainer::pk_moveend_ask(PK_DEFAULT *pk,SOCKET sock)
 	SOCKADDR_IN			clientAddr;
 	int					addrLen;
 	char				buf [1024];
+
+	wsprintf(buf,"%d %d %d\n",m_GamePlayer[0][0].nPos,000,sock);
+	OutputDebugString(buf);
+	
 	
 	addrLen = sizeof(clientAddr);
 	getpeername(sock, (SOCKADDR*)&clientAddr, &addrLen);
@@ -261,30 +284,98 @@ void gGamePlayerContainer::pk_moveend_ask(PK_DEFAULT *pk,SOCKET sock)
 	wsprintf(buf,"[PK_MOVEEND_ASK] %s\t message : %s\n", inet_ntoa(clientAddr.sin_addr), ask.szID);
 	OutputDebugString(buf);
 
+	wsprintf(buf,"%d %d %d\n",m_GamePlayer[0][0].nPos,111,sock);
+	OutputDebugString(buf);
 	
 	int nRoomIndex = gPC->GetCoreFlag(ask.szID);
 	int nInRoomIndex = gRC->FindPlayerIndexInTheRoom(ask.szID,nRoomIndex);
 	char szTurnID[IDLENGTH];
 	strcpy(szTurnID,m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].szID);
 
+	wsprintf(buf,"%d %d %d\n",m_GamePlayer[0][0].nPos,222,sock);
+	OutputDebugString(buf);
+
 	if(m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nPos == ask.nDestPos) {
 		m_bSyncronize[nRoomIndex][nInRoomIndex] = true;
-
+		
+		wsprintf(buf,"%d %d %d\n",m_GamePlayer[0][0].nPos,333,sock);
+		OutputDebugString(buf);
+		
 		if(isbSynAllTrue(nRoomIndex)) {
 			PushbSynAllPlayer(nRoomIndex,false);
-			if(gTC->m_tileMap[ask.nDestPos].tileType==TY_BUS)
+			if(gTC->m_tileMap[ask.nDestPos].tileType==TY_BUS) {
+				OutputDebugString("TY_BUS\n");
 				pk_busmovechoose_rep(nRoomIndex,szTurnID);
-			else			
-				pk_nextturn_rep(nRoomIndex);			
+			}
+			else if(gTC->m_tileMap[ask.nDestPos].tileType==TY_CLASS) {
+				OutputDebugString("TY_CLASS\n");
+				int getAccomplishment = meetGrade(nRoomIndex,gTC->m_tileMap[ask.nDestPos].flag1);
+				
+				wsprintf(buf,"%d %d %d\n",m_GamePlayer[0][0].nPos,444,sock);
+				OutputDebugString(buf);
+				
+				GradeRankSyncronizer(nRoomIndex);
+
+				wsprintf(buf,"%d %d %d\n",m_GamePlayer[0][0].nPos,555,sock);
+				OutputDebugString(buf);
+					
+				if(getAccomplishment!=-1) {
+					OutputDebugString("TY_MySubject\n");
+					wsprintf(buf,"%d %d %d\n",m_GamePlayer[0][0].nPos,666,sock);
+					OutputDebugString(buf);
+					staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],-1);
+					wsprintf(buf,"%d %d %d\n",m_GamePlayer[0][0].nPos,777,sock);
+					OutputDebugString(buf);
+					pk_popinfo_rep(nRoomIndex,-1,getAccomplishment);
+
+					wsprintf(buf,"%d %d %d\n",m_GamePlayer[0][0].nPos,888,sock);
+					OutputDebugString(buf);
+				}
+				pk_gameplayerinfo_rep(nRoomIndex);
+				wsprintf(buf,"%d %d %d\n",m_GamePlayer[0][0].nPos,999,sock);
+				OutputDebugString(buf);
+				pk_nextturn_rep(nRoomIndex);
+
+
+			}
+			else if(gTC->m_tileMap[ask.nDestPos].tileType=TY_DRINK) {
+				OutputDebugString("TY_DRINK\n");
+				staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],-1);
+				pk_popinfo_rep(nRoomIndex,-1,0);
+				pk_gameplayerinfo_rep(nRoomIndex);
+				pk_nextturn_rep(nRoomIndex);
+				wsprintf(buf,"%d %d %d\n",m_GamePlayer[0][0].nPos,000,sock);
+				OutputDebugString(buf);
+			}
+			else if(gTC->m_tileMap[ask.nDestPos].tileType==TY_STAMINA) {
+				OutputDebugString("TY_STAMINA\n");
+				staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],1);
+				pk_popinfo_rep(nRoomIndex,1,0);
+				pk_gameplayerinfo_rep(nRoomIndex);
+				pk_nextturn_rep(nRoomIndex);
+				wsprintf(buf,"%d %d %d\n",m_GamePlayer[0][0].nPos,1111,sock);
+				OutputDebugString(buf);
+			}
+			else {
+				OutputDebugString("TY_NOTHING\n");
+				pk_gameplayerinfo_rep(nRoomIndex);
+				pk_nextturn_rep(nRoomIndex);
+				wsprintf(buf,"%d %d %d\n",m_GamePlayer[0][0].nPos,2222,sock);
+				OutputDebugString(buf);
+			}
 		}
 	}
 	else {
-		wsprintf(buf,"server : %d %d , client : %d %d player : %s \n",
+		wsprintf(buf,"%d %d %d\n",m_GamePlayer[0][0].nPos,3333,sock);
+		OutputDebugString(buf);
+		wsprintf(buf,"server : %d %d , client : %d %d player : %s etc : %d %d\n",
 			(m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nPos)/LINEY,
 			(m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nPos)%LINEY,
 			ask.nDestPos/LINEY,
 			ask.nDestPos%LINEY,
-			ask.szID);
+			ask.szID,
+			m_nTurn[nRoomIndex],
+			nRoomIndex);
 		OutputDebugString("[pk_moveend_ask] 심각한 Error, 보안 주의 요망, 서버와 클라이언트의 연산 결과가 다름\n");
 		OutputDebugString(buf);
 		OutputDebugString("이 방은 더 이상 동작하지 않습니다.\n");
@@ -297,12 +388,20 @@ void gGamePlayerContainer::pk_nextturn_rep (int nRoomIndex)
 
 	PK_NEXTTURN_REP		rep;
 
+	char	buf[128];
+
 	rep.nNowTurn = m_nTurn[nRoomIndex];
 	NextTurn(nRoomIndex);
 	rep.nNextTurn = m_nTurn[nRoomIndex];
+	wsprintf(buf,"[pk_nextturn_rep] room : %d befTurn : %d nextTurn : %d\n",nRoomIndex,rep.nNowTurn,rep.nNextTurn);
+	OutputDebugString(buf);
 
-	gPC->SendSelect(PL_NEXTTURN_REP,sizeof(PK_NEXTTURN_REP),&rep,ECM_GAME,nRoomIndex);
+	if(m_nRound[nRoomIndex]<ENDROUND)
+		gPC->SendSelect(PL_NEXTTURN_REP,sizeof(rep),&rep,ECM_GAME,nRoomIndex);
+	else
+		pk_gameend_rep(nRoomIndex);
 }
+
 
 void gGamePlayerContainer::pk_busmovechoose_rep(int nRoomIndex,char* szID)
 {
@@ -310,6 +409,36 @@ void gGamePlayerContainer::pk_busmovechoose_rep(int nRoomIndex,char* szID)
 
 	rep.nNowTurn = m_nTurn[nRoomIndex];
 	gMainWin::GetIF()->Send(PL_BUSMOVECHOOSE_REP,sizeof(rep),&rep,szID);
+}
+
+
+void gGamePlayerContainer::pk_gameplayerinfo_rep (int nRoomIndex)
+{
+	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
+
+	PK_GAMEPLAYERINFO_REP		rep;
+
+	memcpy(rep.list,m_GamePlayer[nRoomIndex],sizeof(GAMEPLAYER)*ROOMMAXPLAYER);
+
+	gPC->SendSelect(PL_GAMEPLAYERINFO_REP,sizeof(rep),&rep,ECM_GAME,nRoomIndex);
+}
+
+
+void gGamePlayerContainer::pk_popinfo_rep(int nRoomIndex,int stamina,int accomplishment) {
+
+	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
+
+	PK_POPINFO_REP				rep;
+
+	int nInRoomIndex= m_nTurn[nRoomIndex];
+	strcpy(rep.szID,m_GamePlayer[nRoomIndex][nInRoomIndex].szID);
+	rep.nLang = 0;
+	rep.nMath = 0;
+	rep.nArt = 0;
+	rep.nStamina = stamina;
+	rep.nGrade = accomplishment;
+
+	gPC->SendSelect(PL_POPINFO_REP,sizeof(rep),&rep,ECM_GAME,nRoomIndex);
 }
 
 
@@ -351,6 +480,7 @@ void gGamePlayerContainer::pk_busmoveselect_ask(PK_DEFAULT *pk,SOCKET sock)
 
 	gPC->SendSelect(PL_BUSMOVESTART_REP,sizeof(rep),&rep,ECM_GAME,nRoomIndex);
 }
+
 
 void gGamePlayerContainer::pk_busmoveend_ask(PK_DEFAULT *pk,SOCKET sock)
 {
@@ -399,7 +529,6 @@ void gGamePlayerContainer::pk_busmoveend_ask(PK_DEFAULT *pk,SOCKET sock)
 
 
 
-
 void gGamePlayerContainer::FirstTurn(int nRoomIndex)
 {
 	m_nTurn[nRoomIndex] = 0;
@@ -433,4 +562,146 @@ void gGamePlayerContainer::NextTurn(int nRoomIndex)
 void gGamePlayerContainer::Release()
 {
 	
+}
+
+//////////////////////////////////////////////////////////////////////////
+/// 학점 관련 함수
+//////////////////////////////////////////////////////////////////////////
+
+int gGamePlayerContainer::meetGrade(int nRoomIndex,int subjectIndex) // subjectIndex = flag1
+{	// int 값으로 resultMIC 값을 return 하면 되겠네..
+	gSubjectContainer *gSCt = gSubjectContainer::GetIF();
+
+	int nInRoomIndex = m_nTurn[nRoomIndex];
+	
+	int resultMIC = -1;	// error
+	for(int i = 0 ; i < MAXSUBJECT ; i++ ){
+		if(m_GamePlayer[nRoomIndex][nInRoomIndex].bySubIdx[i]==subjectIndex){
+			if(gSCt->m_subject[subjectIndex].flag1==0) {
+				resultMIC = meetItemCalculator(0,m_GamePlayer[nRoomIndex][nInRoomIndex].nLang);
+				m_nSubjectCount[nRoomIndex][nInRoomIndex][i] += resultMIC;
+			}
+			else if(gSCt->m_subject[subjectIndex].flag1==1) {
+				resultMIC = meetItemCalculator(1,m_GamePlayer[nRoomIndex][nInRoomIndex].nMath);
+				m_nSubjectCount[nRoomIndex][nInRoomIndex][i] += resultMIC;
+			}
+			else if(gSCt->m_subject[subjectIndex].flag1==2) {
+				resultMIC = meetItemCalculator(2,m_GamePlayer[nRoomIndex][nInRoomIndex].nArt);
+				m_nSubjectCount[nRoomIndex][nInRoomIndex][i] += resultMIC;
+			}
+			break;
+		}
+	}
+	
+	return resultMIC;
+}
+
+int gGamePlayerContainer::meetItemCalculator(int classType,int originalVal) {
+	/*
+	itemContainer* itemcontainer = itemContainer::GetIF();
+
+	int i;
+	int convertedVal = originalVal;
+
+	for (i = 0 ; i < MAXCARD ; i++){
+
+		if(m_itemCooltime[i]==0) continue;
+
+
+		if(itemcontainer->m_item[i].m_effect==0 || itemcontainer->m_item[i].m_effect==classType+1 ){
+
+			if(itemcontainer->m_item[i].m_flagHigh==0) convertedVal += itemcontainer->m_item[i].m_flagLow;
+			else if (itemcontainer->m_item[i].m_flagHigh==1){
+				convertedVal -= itemcontainer->m_item[i].m_flagLow;
+			}
+		}
+	}
+	for (i = 0 ; i < MAXCARD ; i++){
+		if(m_itemCooltime[i]==0) continue;
+		if(itemcontainer->m_item[i].m_effect==0 || itemcontainer->m_item[i].m_effect==classType+1 ){
+			if(itemcontainer->m_item[i].m_flagHigh==2) convertedVal *= itemcontainer->m_item[i].m_flagLow;
+		}
+	}
+
+	if(convertedVal < 0 ) convertedVal = 0;
+*/
+	return originalVal*20;
+}
+
+
+void gGamePlayerContainer::GradeRankSyncronizer(int nRoomIndex)	// 이 함수의 존재로 인해, grade와 rank는 비동기화된 개념임.
+{	// count만이 진정한 동기화된 개념.
+	gSubjectContainer *gSCt = gSubjectContainer::GetIF();
+	for(int i = 0 ; i < ROOMMAXPLAYER ; i++) {
+		if(m_isGamePlayer[nRoomIndex][i]) {
+			for(int j = 0 ; j < MAXSUBJECT ; j++) {
+				m_GamePlayer[nRoomIndex][i].fGrade[j] = 
+					gSCt->gradeExpectOne(m_nSubjectCount[nRoomIndex][i][j],m_nRound[nRoomIndex]);
+			}
+			m_GamePlayer[nRoomIndex][i].fAvGrade = 
+				gSCt->gradeAverage(m_nSubjectCount[nRoomIndex][i],m_nRound[nRoomIndex],MAXSUBJECT);
+		}
+	}
+	for(int i = 0 ;i < ROOMMAXPLAYER ; i++) {
+		if(m_isGamePlayer[nRoomIndex][i]) {
+			m_GamePlayer[nRoomIndex][i].nRank = Rank(nRoomIndex,i);			
+		}
+	}	
+}
+
+
+int gGamePlayerContainer::Rank(int nRoomIndex,int nInRoomIndex)
+{
+	float myAv = m_GamePlayer[nRoomIndex][nInRoomIndex].fAvGrade;
+	int rank = 1;
+	for(int i = 0 ; i < ROOMMAXPLAYER ; i++) {
+		if(m_isGamePlayer[nRoomIndex][i]) {
+			if(m_GamePlayer[nRoomIndex][i].fAvGrade > myAv)
+				rank++;
+		}
+	}
+	return rank;
+}
+
+
+void gGamePlayerContainer::staminaConvert(int nRoomIndex,int nInRoomIndex,int nPlusMinus)
+{
+	if(m_GamePlayer[nRoomIndex][nInRoomIndex].nStamina + nPlusMinus >= 
+		m_GamePlayer[nRoomIndex][nInRoomIndex].nMaxStamina)
+		m_GamePlayer[nRoomIndex][nInRoomIndex].nStamina = m_GamePlayer[nRoomIndex][nInRoomIndex].nMaxStamina;
+	else if(m_GamePlayer[nRoomIndex][nInRoomIndex].nStamina + nPlusMinus <= 0)
+		m_GamePlayer[nRoomIndex][nInRoomIndex].nStamina = 0;
+	else m_GamePlayer[nRoomIndex][nInRoomIndex].nStamina += nPlusMinus;
+}
+
+int gGamePlayerContainer::WhoIsRankOne(int nRoomIndex)
+{
+	int WinnerIndex = -1;
+	float WinnerScore = 0.0;
+	char buf[128];
+	for(int i = 0 ; i < ROOMMAXPLAYER ; i++) {
+		if(m_isGamePlayer[nRoomIndex][i]) {
+			if(WinnerScore <= m_GamePlayer[nRoomIndex][i].fAvGrade) {
+				WinnerIndex = i;
+				WinnerScore = m_GamePlayer[nRoomIndex][i].fAvGrade;
+			}
+		}
+	}
+	wsprintf(buf,"[] %d\n",WinnerIndex);
+	OutputDebugString(buf);
+
+	return WinnerIndex;
+}
+
+void gGamePlayerContainer::pk_gameend_rep(int nRoomIndex)
+{
+	gPlayerContainer *gPC = gPlayerContainer::GetIF();
+
+	PK_GAMEEND_REP	rep;
+
+	int nWinnerIndex = WhoIsRankOne(nRoomIndex);
+	strcpy(rep.szID,m_GamePlayer[nRoomIndex][nWinnerIndex].szID);
+	
+	gPC->SendSelect(PL_GAMEEND_REP,sizeof(rep),&rep,ECM_GAME,nRoomIndex);
+
 }

@@ -66,6 +66,12 @@ enum ePROTOCOL
 	PL_BUSMOVESTART_REP,
 	PL_BUSMOVEEND_ASK,
 
+	PL_GAMEPLAYERINFO_REP,
+
+	PL_POPINFO_REP,			// 클라이언트에 말풍선처럼 정보 띄워줄 때
+
+	PL_GAMEEND_REP,
+
 	PL_NEXTTURN_REP,
 
 };
@@ -407,11 +413,11 @@ struct PK_MOVESTART_ASK
 
 struct PK_MOVESTART_REP
 {
-    int		nDist;
-	BYTE	Dice4_1;
-	BYTE	Dice4_2;
-	BYTE	Dice6_1;
-	BYTE	Dice6_2;
+	int			nDist;
+	BYTE		Dice4_1;
+	BYTE		Dice4_2;
+	BYTE		Dice6_1;
+	BYTE		Dice6_2;
 };
 
 struct PK_MOVEEND_ASK
@@ -426,24 +432,44 @@ struct PK_NEXTTURN_REP
 	int			nNextTurn;			// 다음 턴
 };
 
-struct PK_BUSMOVECHOOSE_REP   // 이동한 칸이 버스다. 이동할 곳 찍어라 라고 서버가 보내주는 패킷(해당 플레이어만)
+struct PK_BUSMOVECHOOSE_REP			// 이동한 칸이 버스다. 이동할 곳 찍어라 라고 서버가 보내주는 패킷(해당 플레이어만)
 {
-	int   nNowTurn;
+	int			nNowTurn;
 };
 
 struct PK_BUSMOVESELECT_ASK
 {
-	char  szID[IDLENGTH];
-	int   nPos;
+	char		szID[IDLENGTH];
+	int			nPos;
 };
 
-struct PK_BUSMOVESTART_REP   // 모든 애들한테 이동시켜라 라고 뿌려줌
+struct PK_BUSMOVESTART_REP			// 모든 애들한테 이동시켜라 라고 뿌려줌
 {
-	int   nDist;
+	int			nDist;
 };
 
-struct PK_BUSMOVEEND_ASK   // 모든 애들한테 받아서 다 받으면, nextturn
+struct PK_BUSMOVEEND_ASK			// 모든 애들한테 받아서 다 받으면, nextturn
 {
-	char  szID[IDLENGTH];
-	int   nDestPos;
+	char		szID[IDLENGTH];
+	int			nDestPos;
+};
+
+struct PK_GAMEPLAYERINFO_REP
+{
+	GAMEPLAYER	list[ROOMMAXPLAYER];
+};
+
+struct PK_POPINFO_REP
+{
+	char		szID[IDLENGTH];
+	int			nLang;
+	int			nMath;
+	int			nArt;
+	int			nStamina;
+	int			nGrade;				// 성취도. 학점이 아님
+};
+
+struct PK_GAMEEND_REP
+{
+	char		szID[IDLENGTH];		// 이긴넘
 };

@@ -13,6 +13,8 @@
 #include "SubjectContainer.h"
 #include "TileContainer.h"
 #include "GamePlayerContainer.h"
+
+#include "time.h"
 		
 
 static gMainWin	s_MainWin;		// for singleton
@@ -489,6 +491,8 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	int				addrLen;
 	int				retVal;
 	PK_DEFAULT		pkDefault;
+
+	srand((unsigned)time(NULL));
 
 
 
