@@ -10,6 +10,7 @@
 #include "Chat.h"
 #include "Dice.h"
 #include "UIGame.h"
+#include "PopUp.h"
 
 #define MINMOVE			10
 #define WORLDX			2228
@@ -467,8 +468,14 @@ void gGameCore::pk_busmovestart_rep(PK_BUSMOVESTART_REP *rep)
 	gPlayerContainer *gPC = gPlayerContainer::GetIF();
 
 	int  nPos = gPC->m_GPlayerList[m_nTurn].nPos;
-	m_bBusing = true;
-	BusStart(rep->nDist,nPos/LINEY,nPos%LINEY);
+
+	if(rep->nDist ==0) {
+		BusEnd();
+	}
+	else {
+		m_bBusing = true;
+		BusStart(rep->nDist,nPos/LINEY,nPos%LINEY);
+	}
 }
 
 void gGameCore::BusStart(int spacor)
@@ -564,6 +571,11 @@ void gGameCore::pk_gameplayerinfo_rep(PK_GAMEPLAYERINFO_REP *rep)
 }
 
 void gGameCore::pk_popinfo_rep(PK_POPINFO_REP *rep)
+{
+
+}
+
+void gGameCore::pk_gameend_rep(PK_GAMEEND_REP *rep)
 {
 
 }

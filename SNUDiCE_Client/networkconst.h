@@ -70,6 +70,8 @@ enum ePROTOCOL
 
 	PL_POPINFO_REP,			// 클라이언트에 말풍선처럼 정보 띄워줄 때
 
+	PL_GAMEEND_REP,
+
 	PL_NEXTTURN_REP,
 	
 };
@@ -465,4 +467,9 @@ struct PK_POPINFO_REP
 	int			nArt;
 	int			nStamina;
 	int			nGrade;				// 성취도. 학점이 아님
+};
+
+struct PK_GAMEEND_REP
+{
+	char		szID[IDLENGTH];		// 이긴넘
 };

@@ -88,11 +88,13 @@
 #define PINFO_POS_Y							360
 #define PINFO_INFO_POS_X					495
 #define PINFO_INFO_POS_Y					378
-#define PINFO_INFO_TERM_Y					40
+#define PINFO_INFO_TERM_Y					42
 #define PINFO_SCROLL_FILE					".\\Data\\Interface\\game_pinfo_scroll.img"
 #define PINFO_SCROLL_POS_X					620
 #define PINFO_SCROLL_POS_Y					370
 #define PINFO_SCROLL_SIZE_H					100
+#define PINFO_ID_TERM_X						20
+#define PINFO_ID_TERM_Y						3
 
 #define DICEBTN_FILE						".\\Data\\Interface\\game_btn_dice.img"
 #define DICEBTN_SIZE_W						100
@@ -291,6 +293,18 @@ void gUIGame::Draw()
 		0, 0, UI_NUMBER_SIZE_W, UI_NUMBER_SIZE_H);
 	OffsetRect(&rcSour, (gPC->m_GPlayerList[ m_rankIdx[m_nCurPInfo] ].nRank - 1) * UI_NUMBER_SIZE_W, 0);
 	m_ImgUI[UIIMG_NUMBER].Draw(rcDest, rcSour);
+	
+	if(m_rankIdx[m_nCurPInfo + 1] != -1)
+	SetRect(&rcDest,
+		PINFO_INFO_POS_X,
+		PINFO_INFO_POS_Y,
+		PINFO_INFO_POS_X + UI_NUMBER_SIZE_W,
+		PINFO_INFO_POS_Y + UI_NUMBER_SIZE_H );
+	OffsetRect(&rcDest, UI_NUMBER_TERM_X, UI_NUMBER_TERM_Y + PINFO_INFO_TERM_Y);
+	SetRect(&rcSour,
+		0, 0, UI_NUMBER_SIZE_W, UI_NUMBER_SIZE_H);
+	OffsetRect(&rcSour, (gPC->m_GPlayerList[ m_rankIdx[m_nCurPInfo + 1] ].nRank - 1) * UI_NUMBER_SIZE_W, 0);
+	m_ImgUI[UIIMG_NUMBER].Draw(rcDest, rcSour);
 	m_Scroll.Draw();
 	
 	// menu
@@ -323,6 +337,14 @@ void gUIGame::Draw()
 			gUtil::Text(MAININFO_NAME_POS_X + 8, MAININFO_NAME_POS_Y, gPC->m_CharInfo[gPC->m_MyGamePlayer.ctype].szName);
 		else
 			gUtil::Text(MAININFO_NAME_POS_X, MAININFO_NAME_POS_Y, gPC->m_CharInfo[gPC->m_MyGamePlayer.ctype].szName);
+
+	// pinfo
+		gUtil::Text(PINFO_INFO_POS_X + PINFO_ID_TERM_X, PINFO_INFO_POS_Y + PINFO_ID_TERM_Y,
+					gPC->m_GPlayerList[ m_rankIdx[m_nCurPInfo] ].szID);
+		if(m_rankIdx[ m_nCurPInfo + 1 ] != -1)
+			gUtil::Text(PINFO_INFO_POS_X + PINFO_ID_TERM_X, PINFO_INFO_POS_Y + PINFO_ID_TERM_Y + PINFO_INFO_TERM_Y,
+				gPC->m_GPlayerList[ m_rankIdx[m_nCurPInfo + 1] ].szID);
+
 
 	// sub - subwnd
 		if(m_bShowSubWnd)
@@ -515,6 +537,7 @@ void gUIGame::SetRankList()
 			if(nCount >= m_nMaxPInfo)
 				return;
 		}
+		nRank++;
 	}
 
 }

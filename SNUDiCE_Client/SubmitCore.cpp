@@ -349,5 +349,6 @@ void gSubmitCore::pk_maingametart_rep(PK_MAINGAMESTART_REP *rep)
 	gMainWin::GetIF()->m_eCoreMode	= ECM_GAME;
 	gChat::GetIF()->MsgStackClear();
 	gUIGame::GetIF()->FirstInit();
+	gUIGame::GetIF()->SetRankList();
 
 }

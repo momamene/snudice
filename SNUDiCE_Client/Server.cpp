@@ -248,6 +248,10 @@ void gServer::Recv()
 		case PL_NEXTTURN_REP:
 			gGameCore::GetIF()->pk_nextturn_rep((PK_NEXTTURN_REP*)m_pkDefault.strPacket);
 			break;
+
+		case PL_GAMEEND_REP:
+			gGameCore::GetIF()->pk_gameend_rep((PK_GAMEEND_REP*)m_pkDefault.strPacket);
+			break;
 	}
 }
 
