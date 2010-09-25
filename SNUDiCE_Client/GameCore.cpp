@@ -71,7 +71,7 @@ void gGameCore::MainLoop()
 	{
 		switch(gPopUp::GetIF()->m_ePop)
 		{
-			case EPOP_DISCONNECT:
+			case EPOP_DISCONNECT: // == EPOP_EXIT:
 				switch(gPopUp::GetIF()->m_eBtnClk)
 				{
 					case ECLK_OK:
@@ -327,7 +327,7 @@ void gGameCore::Start(int spacor)
 {
 	m_spacor = spacor;
 	//gMap::GetIF()->posSpacor();
-	gTimer::GetIF()->frameStart(500,60);
+	gTimer::GetIF()->frameStart(400, 60);
 	StepStart();
 }
 
@@ -482,7 +482,7 @@ void gGameCore::BusStart(int spacor)
 {
 	m_spacor = spacor;
 	//gMap::GetIF()->posSpacor();
-	gTimer::GetIF()->frameStart(250,60);
+	gTimer::GetIF()->frameStart(100,60);
 	BusStepStart();
 }
 
@@ -577,5 +577,5 @@ void gGameCore::pk_popinfo_rep(PK_POPINFO_REP *rep)
 
 void gGameCore::pk_gameend_rep(PK_GAMEEND_REP *rep)
 {
-
+	gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_EXIT, rep->szID, STR_17);
 }
