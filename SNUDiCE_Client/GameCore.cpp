@@ -149,11 +149,10 @@ void gGameCore::OnLButtonDown()
 		chat->OnLbuttonDown(mouse->m_nPosX, mouse->m_nPosY);
 		return;
 	}
-
-	if(m_bMoving)
+	if(gUIGame::GetIF()->OnLButtonDown())
 		return;
 
-	if(gUIGame::GetIF()->OnLButtonDown())
+	if(m_bMoving)
 		return;
 }
 
@@ -191,9 +190,11 @@ void gGameCore::OnMouseMove()
 
 void gGameCore::OnRButtonDown()
 {
+	gUIGame		*ui		= gUIGame::GetIF();
+
+	ui->OnRButtonDown();
 	if(m_bMoving)
 		return;
-
 }
 
 bool gGameCore::PreTransMsg(MSG &msg)

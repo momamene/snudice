@@ -16,9 +16,10 @@ enum UIIMAGE
 	UIIMG_BAROUTLINE,
 	UIIMG_BARGUAGE,
 
-	UIIMG_SUBINFO,
+	UIIMG_SUBINFO,		// 아이템, 수강현황
+	UIIMG_SUBWND,		// 수강편람
 
-	UIIMG_PINFO,
+	UIIMG_PINFO,		// 우하단
 
 	UIIMG_END,
 };
@@ -35,8 +36,12 @@ enum UIBTN
 enum UITYPE
 {
 	UIT_MAININFO,
-	UIT_SUBINFO,
-	UIT_PINFO,
+
+	UIT_SUBINFO,		// 아이템, 수강현황
+	UIT_SUBWND,			// 수강편람
+
+	UIT_PINFO,			// 우하단
+
 	UIT_DICE,
 
 	UIT_END,
@@ -55,6 +60,8 @@ public:
 	gImage		m_ImgUI[UIIMG_END];
 	gImgButton	m_BtnUI[UIBTN_END];
 	RECT		m_rcPos[UIT_END];
+
+	bool		m_bShowSubWnd;				// 수강편람 윈도우
 
 private:
 	RECT		m_rcBarDest, m_rcBarSour;

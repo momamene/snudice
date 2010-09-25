@@ -3,6 +3,7 @@
 #include "PlayerContainer.h"
 #include "GameCore.h"
 #include "Mouse.h"
+#include "MainWin.h"
 
 #define	UI_FILE_MAININFO					".\\Data\\Interface\\game_maininfo.img"
 #define UI_SIZE_MAININFO_W					220
@@ -53,6 +54,11 @@
 #define SUBINFO_SUBJECT_SIZE_H				30
 #define SUBINFO_SUBJECT_POS_X				283
 #define SUBINFO_SUBJECT_POS_Y				5
+#define SUBINFO_SUBWND_FILE					".\\Data\\Interface\\game_sub_subwnd.img"
+#define SUBINFO_SUBWND_SIZE_W				270
+#define SUBINFO_SUBWND_SIZE_H				216
+#define SUBINFO_SUBWND_POS_X				((WNDSIZEW - SUBINFO_SUBWND_SIZE_W) / 2)
+#define SUBINFO_SUBWND_POS_Y				((WNDSIZEH - SUBINFO_SUBWND_SIZE_H) / 2)
 
 #define PINFO_FILE_BACK						".\\Data\\Interface\\game_pinfo_back.img"
 #define PINFO_SIZE_W						160
@@ -134,6 +140,17 @@ bool gUIGame::SetUp()
 	if(!m_BtnUI[UIBTN_SUBJECT].SetUp(SUBINFO_SUBJECT_FILE, false, rcDest))
 		return false;
 
+	// sub - subject window
+	if(!m_ImgUI[UIIMG_SUBWND].Load(SUBINFO_SUBWND_FILE))
+		return false;
+	SetRect(&m_rcPos[UIT_SUBWND],
+		SUBINFO_SUBWND_POS_X,
+		SUBINFO_SUBWND_POS_Y,
+		SUBINFO_SUBWND_POS_X + SUBINFO_SUBWND_SIZE_W,
+		SUBINFO_SUBWND_POS_Y + SUBINFO_SUBWND_SIZE_H );
+
+	m_bShowSubWnd = false;
+
 	// players info
 	if(!m_ImgUI[UIIMG_PINFO].Load(PINFO_FILE_BACK))
 		return false;
@@ -177,6 +194,9 @@ void gUIGame::Draw()
 	m_ImgUI[UIIMG_SUBINFO].Draw(SUBINFO_POS_X, SUBINFO_POS_Y);
 	m_BtnUI[UIBTN_ITEMCARD].Draw();
 	m_BtnUI[UIBTN_SUBJECT].Draw();
+
+	if(m_bShowSubWnd)
+		m_ImgUI[UIIMG_SUBWND].Draw(SUBINFO_SUBWND_POS_X, SUBINFO_SUBWND_POS_Y);
 
 	// playersInfo
 	m_ImgUI[UIIMG_PINFO].Draw(PINFO_POS_X, PINFO_POS_Y);
@@ -232,8 +252,17 @@ bool gUIGame::OnLButtonDown()
 
 	if(m_BtnUI[UIBTN_DICE].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 	{
+		if(gc->m_bMoving)
+			return true;
 		if(gPC->isTurn(gc->m_nTurn))
 			gc->SendMoveAsk();
+
+		return true;
+	}
+	if(m_BtnUI[UIBTN_SUBJECT].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+	{
+		m_bShowSubWnd = !m_bShowSubWnd;
+		return true;
 	}
 
 	return false;
@@ -262,7 +291,8 @@ void gUIGame::OnMouseMove()
 
 void gUIGame::OnRButtonDown()
 {
-
+	if(m_bShowSubWnd)
+		m_bShowSubWnd = !m_bShowSubWnd;
 }
 
 bool gUIGame::IsUIRange(int x, int y)
@@ -271,6 +301,9 @@ bool gUIGame::IsUIRange(int x, int y)
 
 	for(i = 0; i < UIT_END; i++)
 	{
+		if( i == UIT_SUBWND && !m_bShowSubWnd )
+				continue;
+
 		if(gUtil::PointInRect(x, y, m_rcPos[i]))
 			return true;
 	}
