@@ -36,7 +36,7 @@ void gSubmitCore::init(int nRoomIndex)
 			else {
 				m_isFinishSubmitSubject[nRoomIndex][i] = true;
 			}
-			for(int j = 0 ; j < 6 ; j++) {
+			for(int j = 0 ; j < MAXSUBJECT ; j++) {
 				m_submitSubjectPlayer[nRoomIndex][i][j] = AVAILSEAT;
 			}
 		}
@@ -59,7 +59,7 @@ void gSubmitCore::pk_gamestart_rep(int nRoomIndex)
 
 void gSubmitCore::putSubjectToPlayer(int nRoomIndex, int nInRoomIndex, int nSubjectIndex)
 {
-	for(int i = 0 ; i < 6 ; i++)
+	for(int i = 0 ; i < MAXSUBJECT ; i++)
 	{
 		if(m_submitSubjectPlayer[nRoomIndex][nInRoomIndex][i]==AVAILSEAT)
 		{
@@ -71,7 +71,7 @@ void gSubmitCore::putSubjectToPlayer(int nRoomIndex, int nInRoomIndex, int nSubj
 
 void gSubmitCore::pushSubjectToPlayer(int nRoomIndex,int nInRoomIndex,int nSubjectIndex)
 {
-	for(int i = 0 ; i < 6 ; i++)
+	for(int i = 0 ; i < MAXSUBJECT ; i++)
 	{
 		if(m_submitSubjectPlayer[nRoomIndex][nInRoomIndex][i]==nSubjectIndex)
 		{
@@ -83,7 +83,7 @@ void gSubmitCore::pushSubjectToPlayer(int nRoomIndex,int nInRoomIndex,int nSubje
 
 bool gSubmitCore::isSubjectFull(int nRoomIndex,int nInRoomIndex)
 {
-	for(int i = 0 ; i < 6 ; i++)
+	for(int i = 0 ; i < MAXSUBJECT ; i++)
 	{
 		if(m_submitSubjectPlayer[nRoomIndex][nInRoomIndex][i]==AVAILSEAT)
 		{
@@ -95,7 +95,7 @@ bool gSubmitCore::isSubjectFull(int nRoomIndex,int nInRoomIndex)
 
 bool gSubmitCore::isSubjectExisted(int nRoomIndex,int nInRoomIndex,int nSubjectIndex)
 {
-	for(int i = 0 ; i < 6 ; i++)
+	for(int i = 0 ; i < MAXSUBJECT ; i++)
 	{
 		if(m_submitSubjectPlayer[nRoomIndex][nInRoomIndex][i]==nSubjectIndex)
 		{
@@ -107,7 +107,7 @@ bool gSubmitCore::isSubjectExisted(int nRoomIndex,int nInRoomIndex,int nSubjectI
 
 bool gSubmitCore::isFinishAllSubmit(int nRoomIndex)
 {
-	for(int i = 0 ; i < 6 ; i++)
+	for(int i = 0 ; i < MAXSUBJECT ; i++)
 	{
 		if(!m_isFinishSubmitSubject[nRoomIndex][i])
 		{
@@ -177,7 +177,7 @@ void gSubmitCore::pk_submit_ask(PK_DEFAULT *pk,SOCKET sock)
 
 
 	int nRoomIndex = gPlayerContainer::GetIF()->GetCoreFlag(ask.szID);
-	int nInRoomIndex = gRoomCore::GetIF()->FindThePlayerInTheRoom(ask.szID,nRoomIndex);
+	int nInRoomIndex = gRoomCore::GetIF()->FindPlayerIndexInTheRoom(ask.szID,nRoomIndex);
 	if(m_isFinishSubmitSubject[nRoomIndex][nInRoomIndex]) {
 		OutputDebugString("수강신청 할 수가 없어\n");
 	}
@@ -223,7 +223,7 @@ void gSubmitCore::pk_submitready_ask(PK_DEFAULT *pk,SOCKET sock)
 
 	PK_SUBMITREADY_REP rep;
 	int nRoomIndex = gPlayerContainer::GetIF()->GetCoreFlag(ask.szID);
-	int nInRoomIndex = gRoomCore::GetIF()->FindThePlayerInTheRoom(ask.szID,nRoomIndex);
+	int nInRoomIndex = gRoomCore::GetIF()->FindPlayerIndexInTheRoom(ask.szID,nRoomIndex);
 	if(!isSubjectFull(nRoomIndex,nInRoomIndex)) {
 		rep.result = ESUB_LESSCLASS;
 	}

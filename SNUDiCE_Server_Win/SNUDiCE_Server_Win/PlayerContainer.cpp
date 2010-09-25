@@ -345,8 +345,11 @@ void gPlayerContainer::Draw (HDC hdc)
 			else if(temp->coreWhere == ECM_ROOM) {
 				strcat(printo,"ECM_ROOM");
 			}
-			else {
-				strcat(printo,"ECM_GAMES");
+			else if(temp->coreWhere == ECM_SUBMIT) {
+				strcat(printo,"ECM_SUBMIT");
+			}
+			else if(temp->coreWhere == ECM_GAME) {
+				strcat(printo,"ECM_GAME");
 			}
 			sprintf(buf," Flag : %d Sock : %d Char : %d ID : %s",temp->nCoreFlag,temp->sock,temp->classtype,temp->szID);
 			strcat(printo,buf);

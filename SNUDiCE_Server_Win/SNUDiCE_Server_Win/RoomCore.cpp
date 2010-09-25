@@ -53,7 +53,7 @@ int gRoomCore::FindTheRoom(char* szRoomName)
 }
 
 
-int gRoomCore::FindThePlayerInTheRoom(char* szID,int nRoomIndex)
+int gRoomCore::FindPlayerIndexInTheRoom(char* szID,int nRoomIndex)
 {
 	for(int i = 0 ; i < ROOMMAXPLAYER ; i++)
 	{

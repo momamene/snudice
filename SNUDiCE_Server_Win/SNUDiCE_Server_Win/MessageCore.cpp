@@ -60,19 +60,19 @@ void gMessageCore::pk_message_ask(PK_DEFAULT *pk, SOCKET sock)
 	if( mode==-1 || flag==-1 ) {
 		// error
 	}
-	else if(mode==ECM_BATTLENET || mode==ECM_ROOM) {
+	else if(mode==ECM_BATTLENET || mode==ECM_ROOM || mode==ECM_GAME) {
 		//int nChannelIndex = gCC->FindPlayer(ask.szID);
 		strcpy(rep.szID,ask.szID);
 		strcpy(rep.szMsg,ask.szMsg);
 		gPC->SendSelect(PL_MESSAGE_REP,sizeof(PK_MESSAGE_REP),&rep,mode,flag);
 	}
 	/*
-	else if(mode==ECM_ROOM) {
+	else if(mode==ECM_GAME) {
 		strcpy(rep.szID,ask.szID);
 		strcpy(rep.szMsg,ask.szMsg);
-		gPC->SendSelect(PL_MESSAGE_REP,sizeof(PK_MESSAGE_REP),&rep,ECM_ROOM,flag);
+		gPC->SendSelect(PL_MESSAGE_REP,sizeof(PK_MESSAGE_REP),&rep,mode,flag);
 	}
-	*/
+	*/	
 	else {
 		// error
 		OutputDebugString("(f)[pk_message_ask] Error in mode Problem\n");

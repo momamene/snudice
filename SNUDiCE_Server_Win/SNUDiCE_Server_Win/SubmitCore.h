@@ -10,7 +10,7 @@ public:
 public:
 	bool			m_isValidSubmitSubject[MAXROOM];
 	BYTE			m_submitSubject[MAXROOM][CLASSNUM][CLASSSEAT];
-	BYTE			m_submitSubjectPlayer[MAXROOM][ROOMMAXPLAYER][6];
+	BYTE			m_submitSubjectPlayer[MAXROOM][ROOMMAXPLAYER][MAXSUBJECT];
 	bool			m_isFinishSubmitSubject[MAXROOM][ROOMMAXPLAYER];
 
 public:

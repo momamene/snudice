@@ -61,6 +61,11 @@ enum ePROTOCOL
 	PL_MOVESTART_REP,
 	PL_MOVEEND_ASK,
 
+	PL_BUSMOVECHOOSE_REP,
+	PL_BUSMOVESELECT_ASK,
+	PL_BUSMOVESTART_REP,
+	PL_BUSMOVEEND_ASK,
+
 	PL_NEXTTURN_REP,
 
 };
@@ -379,6 +384,9 @@ struct GAMEPLAYER
 	BYTE		nDice4, nDice6;
 
 	float		fGrade[MAXSUBJECT];
+	float		fAvGrade;
+	BYTE		bySubIdx[MAXSUBJECT];
+	int			nRank;
 
 	WORD		nPos;
 };
@@ -416,4 +424,26 @@ struct PK_NEXTTURN_REP
 {
 	int			nNowTurn;			// 현재 턴
 	int			nNextTurn;			// 다음 턴
+};
+
+struct PK_BUSMOVECHOOSE_REP   // 이동한 칸이 버스다. 이동할 곳 찍어라 라고 서버가 보내주는 패킷(해당 플레이어만)
+{
+	int   nNowTurn;
+};
+
+struct PK_BUSMOVESELECT_ASK
+{
+	char  szID[IDLENGTH];
+	int   nPos;
+};
+
+struct PK_BUSMOVESTART_REP   // 모든 애들한테 이동시켜라 라고 뿌려줌
+{
+	int   nDist;
+};
+
+struct PK_BUSMOVEEND_ASK   // 모든 애들한테 받아서 다 받으면, nextturn
+{
+	char  szID[IDLENGTH];
+	int   nDestPos;
 };

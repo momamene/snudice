@@ -21,7 +21,9 @@ bool gTileContainer::Setup()
 	Load();
 
 	// sangwoo temp
+	/*
 	char buf[128];
+	OutputDebugString("Test in TileContainer\n");
 	int a = distance(5*LINEY+14,5*LINEY+15);
 	wsprintf(buf,"%d\n",a);
 	OutputDebugString(buf);
@@ -42,13 +44,14 @@ bool gTileContainer::Setup()
 	wsprintf(buf,"%d\n",a);
 	OutputDebugString(buf);
 
-	a = destination(4*LINEY+15,-2);
+	a = destination(5*LINEY+14,6);
 	wsprintf(buf,"%d %d\n",a/LINEY,a%LINEY);
 	OutputDebugString(buf);
 
-	a = destination(4*LINEY+15,2);
+	a = destination(5*LINEY+14,7);
 	wsprintf(buf,"%d %d\n",a/LINEY,a%LINEY);
 	OutputDebugString(buf);
+	*/
 	// end
 
 
@@ -181,7 +184,7 @@ int gTileContainer::destination(int mapA,int spacor) // Find mapB
 		}
 		else if(spacor<0) {
 			if(iter/LINEY == m_xInitSpacePos && iter%LINEY == m_yInitSpacePos) 
-				iter = m_tileMap[iter].flag1*LINEY + m_tileMap[iter].flag2;
+				iter = m_tileMap[iter].flag1 * LINEY + m_tileMap[iter].flag2;
 			else 
 				iter = m_tileMap[iter].nextTile.x*LINEY+m_tileMap[iter].nextTile.y;
 			spacor++;

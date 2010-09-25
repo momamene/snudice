@@ -32,7 +32,7 @@ public:
 
 	void			SendRoomListCauseChange(int nPage);		// nPage에 있는 애들에게 RoomList를 갱신
 
-	int				FindThePlayerInTheRoom(char* szID,int nRoomIndex);
+	int				FindPlayerIndexInTheRoom(char* szID,int nRoomIndex);
 
 	void			FindClasstypeFromIDs_RMP(int roomIndex,CLASSTYPE* classtype);
 
