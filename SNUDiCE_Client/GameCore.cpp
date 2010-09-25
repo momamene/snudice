@@ -35,6 +35,7 @@ bool gGameCore::SetUp()
 	m_spacor	= 0;
 	m_bMoved	= false;
 	m_bMoving	= false;
+	m_bScrolling = false;
 
 	return true;
 }
@@ -43,6 +44,8 @@ void gGameCore::MainLoop()
 {
 	if(m_spacor!=0)
 		StepOn();
+	if(m_bScrolling)
+		ScrollOn();
 
 	gUIGame::GetIF()->MainLoop();
 
@@ -381,4 +384,38 @@ void gGameCore::pk_nextturn_rep(PK_NEXTTURN_REP *rep)
 		m_nTurn		= rep->nNextTurn;
 		m_bMoved	= false;
 	}
+	
+	int nTempPos = gPlayerContainer::GetIF()->m_GPlayerList[m_nTurn].nPos;
+	ScrollStart(nTempPos);
+}
+
+void gGameCore::ScrollStart(int nPos)
+{
+	m_bScrolling = true;
+	gMap::GetIF()->posSpacor(nPos/LINEY,nPos%LINEY);
+	gTimer::GetIF()->frameStart(1000,60);
+}
+
+void gGameCore::ScrollOn()
+{
+	gTimer				*gt = gTimer::GetIF();
+	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
+
+
+	int l_frame = gt->frame();
+
+	if(gt->m_turn > 0)
+	{
+		ScrollEnd();
+	}
+	else
+	{
+		gMap::GetIF()->posMover(l_frame, gt->m_frame);
+	}	
+}
+
+void gGameCore::ScrollEnd()
+{
+	m_bScrolling = false;
+	gMap::GetIF()->posStoper();
 }
