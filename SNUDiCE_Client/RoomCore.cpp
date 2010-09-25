@@ -1244,7 +1244,7 @@ void gRoomCore::Draw_Room()
 
 	if(m_nSelUser != -1)
 	{
-		RECT		rcDest, rcSour;
+		RECT		rcDest;//, rcSour;
 
 		SetRect(&rcDest,
 			WAIT_POS_CHARBACK_X,

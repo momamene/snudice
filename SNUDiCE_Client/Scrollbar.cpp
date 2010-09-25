@@ -194,7 +194,7 @@ void gScrollbar::ChangeCursor(int cur, int size)
 	float	newCur = m_rcPosScroll.top + scrollSize * temp;
 
 	if(newCur + SCROLL_SIZE_BAR_H > m_rcPosScroll.bottom)
-		newCur = m_rcPosScroll.bottom - SCROLL_SIZE_BAR_H;
+		newCur = (float)m_rcPosScroll.bottom - SCROLL_SIZE_BAR_H;
 
 	m_ImgBtn[SCR_BAR].m_rcPos.top = (int)newCur;
 	m_ImgBtn[SCR_BAR].m_rcPos.bottom = m_ImgBtn[SCR_BAR].m_rcPos.top + SCROLL_SIZE_BAR_H;

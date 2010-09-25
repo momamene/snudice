@@ -66,6 +66,10 @@ enum ePROTOCOL
 	PL_BUSMOVESTART_REP,
 	PL_BUSMOVEEND_ASK,
 
+	PL_GAMEPLAYERINFO_REP,
+
+	PL_POPINFO_REP,			// 클라이언트에 말풍선처럼 정보 띄워줄 때
+
 	PL_NEXTTURN_REP,
 	
 };
@@ -446,4 +450,19 @@ struct PK_BUSMOVEEND_ASK			// 모든 애들한테 받아서 다 받으면, nextturn
 {
 	char		szID[IDLENGTH];
 	int			nDestPos;
+};
+
+struct PK_GAMEPLAYERINFO_REP
+{
+	GAMEPLAYER	list[ROOMMAXPLAYER];
+};
+
+struct PK_POPINFO_REP
+{
+	char		szID[IDLENGTH];
+	int			nLang;
+	int			nMath;
+	int			nArt;
+	int			nStamina;
+	int			nGrade;				// 성취도. 학점이 아님
 };

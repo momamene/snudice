@@ -112,7 +112,7 @@ void gPopUp::TextPosX()
 		length = strlen(m_szLine1);
 		length *= POPUP_PIXEL_PER_LETTER;		// 글자 하나당 6pixel이라고 가정(한글기준)
 
-		for(i = 0; i < strlen(m_szLine1); i++)
+		for(i = 0; i < (int)strlen(m_szLine1); i++)
 			if(m_szLine1[i] == ' ' || m_szLine1[i] == ',' || m_szLine1[i] == '.')
 				length -= 2;
 
@@ -127,7 +127,7 @@ void gPopUp::TextPosX()
 		length = strlen(m_szLine2);
 		length *= POPUP_PIXEL_PER_LETTER;		// 글자 하나당 6pixel이라고 가정(한글기준)
 
-		for(i = 0; i < strlen(m_szLine1); i++)
+		for(i = 0; i < (int)strlen(m_szLine1); i++)
 			if(m_szLine2[i] == ' ' || m_szLine2[i] == ',' || m_szLine2[i] == '.')
 				length -= 2;
 	

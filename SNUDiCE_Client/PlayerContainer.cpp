@@ -169,19 +169,32 @@ bool gPlayerContainer::SetupCharDesc()
 	int c,j,i;
 	char temp[100]={0,};
 
-	FILE *fp=fopen(CHARDESCRIPTFILE,"rt");
-	for(j=0;j<16;j++) {
-		fgets(temp,100,fp); c=0;
-		for(i=0;i<strlen(temp);i++) {
-			if(temp[i]==',') { m_script1[j][c]=0; break; }
-			else m_script1[j][c++]=temp[i];
+	FILE	*fp = fopen(CHARDESCRIPTFILE,"rt");
+	for(j = 0;j < 16;j++)
+	{
+		fgets(temp, 100, fp); c=0;
+		for(i = 0;i < (int)strlen(temp); i++)
+		{
+			if(temp[i]==',')
+			{
+				m_script1[j][c]=0;
+				break;
+			}
+			else
+				m_script1[j][c++] = temp[i];
 		}
 		i++;
 		while(temp[i]=='\t' || temp[i]==' ') i++;
 		c=0;
-		for(;i<strlen(temp);i++) {
-			if(temp[i]==',') { m_script2[j][c]=0; break; }
-			else m_script2[j][c++]=temp[i];
+		for(; i < (int)strlen(temp); i++)
+		{
+			if(temp[i]==',')
+			{
+				m_script2[j][c]=0;
+				break;
+			}
+			else
+				m_script2[j][c++] = temp[i];
 		}
 		m_script2[j][c]=0;
 	}

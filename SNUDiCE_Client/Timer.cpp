@@ -41,7 +41,7 @@ void gTimer::frameStart(int cycleMs,int frame) {
 }
 
 int gTimer::frameSyn() {
-	while((GetTickCount() - m_start) > m_cycleMs){
+	while( int(GetTickCount() - m_start) > m_cycleMs){
 		m_start += m_cycleMs;
 		m_turn++;
 	}

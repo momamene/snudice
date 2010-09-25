@@ -98,20 +98,25 @@ void gEdit::Draw()
 		int		i;
 
 		strcpy(szTemp, m_szEdit);
-		for(i = 0; i < strlen(m_szEdit); i++)
+		for(i = 0; i < (int)strlen(m_szEdit); i++)
 		{
 			m_szEdit[i] = '*';
 		}
 	}
 
 	int m_CurPoint=(WORD)SendMessage(m_hEdit,EM_GETSEL,0,0);
-	if(isFocus()) {
+	if(isFocus())
+	{
 		strncpy(PrintTemp,m_szEdit,m_CurPoint);
-		if(t%1000 <= 500) strcat(PrintTemp,"|");
-		else strcat(PrintTemp," ");
+		if( t %1000 <= 500)
+			strcat(PrintTemp,"|");
+		else
+			strcat(PrintTemp," ");
+
 		strcat(PrintTemp,m_szEdit+m_CurPoint);
 	}
 	else strcpy(PrintTemp,m_szEdit);
+
 	gUtil::BeginText();
 		gUtil::Text(m_rcPos.left + 5, m_rcPos.top + 4, PrintTemp);
 	gUtil::EndText();

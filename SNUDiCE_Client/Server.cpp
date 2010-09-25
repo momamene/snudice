@@ -79,7 +79,7 @@ bool gServer::SetUp()
 	return true;
 }
 
-bool gServer::Send(DWORD type, DWORD size, void *buf)
+bool gServer::Send(WORD type, WORD size, void *buf)
 {
 	if(!s_sock)
 		return false;
@@ -120,7 +120,7 @@ void gServer::Receive(LPARAM lParam)
 		return;
 
 	char	szBuf[256];
-	int		retVal;
+//	int		retVal;
 
 	switch( WSAGETSELECTEVENT(lParam) )
 	{
@@ -237,6 +237,14 @@ void gServer::Recv()
 			gGameCore::GetIF()->pk_busmovestart_rep((PK_BUSMOVESTART_REP*)m_pkDefault.strPacket);
 			break;
 
+		case PL_GAMEPLAYERINFO_REP:
+			gGameCore::GetIF()->pk_gameplayerinfo_rep((PK_GAMEPLAYERINFO_REP*)m_pkDefault.strPacket);
+			break;
+
+		case PL_POPINFO_REP:
+			gGameCore::GetIF()->pk_popinfo_rep((PK_POPINFO_REP*)m_pkDefault.strPacket);
+			break;
+
 		case PL_NEXTTURN_REP:
 			gGameCore::GetIF()->pk_nextturn_rep((PK_NEXTTURN_REP*)m_pkDefault.strPacket);
 			break;
@@ -282,7 +290,7 @@ void gServer::EndSocket()
 bool gServer::SocketErrorMessage(LPARAM lParam)
 {
 	char	szBuf[256];
-	int		retVal;
+//	int		retVal;
 	
 	if( WSAGETSELECTERROR(lParam) )
 	{

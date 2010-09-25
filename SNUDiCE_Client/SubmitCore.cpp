@@ -112,6 +112,7 @@ bool gSubmitCore::SetUp()
 	m_bChange	= false;
 	m_bReady	= false;
 
+	return true;
 }
 
 void gSubmitCore::MainLoop()

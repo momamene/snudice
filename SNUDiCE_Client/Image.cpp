@@ -22,7 +22,7 @@ bool gImage::Load(char *szFileName)
 	DWORD		dwPitch;
 	RGBQUAD		*rgb;
 	BYTE*		pData;
-	char		szError[256];
+//	char		szError[256];
 
 	// Read Img File
 	hFile = CreateFile(szFileName, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);

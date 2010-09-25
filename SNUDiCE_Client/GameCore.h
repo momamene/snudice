@@ -46,6 +46,8 @@ public:
 	void		pk_nextturn_rep(PK_NEXTTURN_REP *rep);
 	void		pk_busmovechoose_rep(PK_BUSMOVECHOOSE_REP *rep);
 	void		pk_busmovestart_rep(PK_BUSMOVESTART_REP *rep);
+	void		pk_gameplayerinfo_rep(PK_GAMEPLAYERINFO_REP *rep);
+	void		pk_popinfo_rep(PK_POPINFO_REP *rep);
 
 	void		Start(int spacor);
 	void		Start(int spacor,int conPosX,int conPosY);

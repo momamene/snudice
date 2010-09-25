@@ -26,7 +26,7 @@ private:
 public:
 	bool		SetUp();
 	void		Release();
-	bool		Send(DWORD type, DWORD size, void *buf);
+	bool		Send(WORD type, WORD size, void *buf);
 	void		Receive(LPARAM lParam);		// 받은 메시지에서 error 아니면 readpacket 호출
 	void		ReConnect();				// titlecore에서 재접속 요청
 

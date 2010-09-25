@@ -556,4 +556,12 @@ void gGameCore::BusEnd()  // 이동 끝남
 	//pk_stepFinish_ask(gtc->m_xSpacePos,gtc->m_ySpacePos);
 }
 
-// - 끝 - 
+void gGameCore::pk_gameplayerinfo_rep(PK_GAMEPLAYERINFO_REP *rep)
+{
+	gPlayerContainer::GetIF()->SetGPList(rep->list);
+}
+
+void gGameCore::pk_popinfo_rep(PK_POPINFO_REP *rep)
+{
+
+}
