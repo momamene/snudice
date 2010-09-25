@@ -60,7 +60,7 @@ void gDice::Release()
 		m_ImgCube[i].Release();
 }
 
-void gDice::DiceStart(int hedron, int cube, int n1, int n2)
+void gDice::DiceStart(int hedron, int cube, int n1, int n2, int spacor)
 {
 	//It must be 
 //	ASSERT(n1<4 && n2<6);
@@ -75,6 +75,7 @@ void gDice::DiceStart(int hedron, int cube, int n1, int n2)
 	m_cube		= cube;
 	m_n2		= n2;
 	m_n1		= n1;
+	m_spacor = spacor;
 }
 
 void gDice::DiceThrow()
@@ -98,7 +99,7 @@ void gDice::DiceThrow()
 		
 		gPC->PacketalDrawFix();
 		int ntPos = gPC->m_GPlayerList[gGameCore::GetIF()->m_nTurn].nPos;
-		gGameCore::GetIF()->Start(n1+n2+2,ntPos/LINEY,ntPos%LINEY);
+			gGameCore::GetIF()->Start(m_spacor,ntPos/LINEY,ntPos%LINEY);
 
 		return;
 	}

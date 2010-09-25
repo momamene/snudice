@@ -42,11 +42,12 @@ public:
 	int			m_n1;
 	int			m_n2;
 	bool		m_start;
+	int			m_spacor;
 
 public:
 	bool		SetUp();
 	void		Release();
-	void		DiceStart(int, int, int, int);
+	void		DiceStart(int, int, int, int, int);
 	void		DiceThrow();
 
 private:

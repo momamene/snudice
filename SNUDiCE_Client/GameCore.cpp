@@ -319,7 +319,7 @@ void gGameCore::pk_movestart_rep(PK_MOVESTART_REP *rep)
 
 	int ntPos = gPC->m_GPlayerList[ gGameCore::GetIF()->m_nTurn ].nPos;
 	gMap::GetIF()->posSetter(ntPos / LINEY, ntPos % LINEY);
-	gDice::GetIF()->DiceStart(d1, d2, c1 - 1, c2 - 1);
+	gDice::GetIF()->DiceStart(d1, d2, c1 - 1, c2 - 1, rep->nDist);
 	m_bMoving = true;
 }
 
