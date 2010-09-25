@@ -268,7 +268,7 @@ void gPlayerContainer::SetMyGamePlayer(GAMEPLAYER* gp)
 
 void gPlayerContainer::SetGPList(GAMEPLAYER *list)
 {
-	memcpy(&m_GPlayerList, list, sizeof(PLAYER) * ROOMMAXPLAYER);
+	memcpy(&m_GPlayerList, list, sizeof(GAMEPLAYER) * ROOMMAXPLAYER);
 
 	int			i;
 
@@ -404,4 +404,12 @@ int gPlayerContainer::GetGPNum()
 			temp++;
 	}
 	return temp;
+}
+
+void gPlayerContainer::FootClear()
+{
+	int		i;
+
+	for(i = 0; i < ROOMMAXPLAYER; i++)
+		m_moveFoot[i] = 1;
 }

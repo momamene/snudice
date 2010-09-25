@@ -65,6 +65,8 @@ public:
 	void			MainLoop();
 	void			Draw();
 
+	void			FootClear();			// 이동완료됬을 때, 서있는 프레임 아닐 경우 있어서, 막아줌
+
 	void			PacketalDrawFix();		
 	// Packet을 통해서 싱크로나이즈 되면, m_nAbsDrawline 값들을 싱크로나이즈 해주는 함수
 	void			SyncronizeToMap(int nInRoomIndex);

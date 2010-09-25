@@ -389,7 +389,8 @@ void gGameCore::End()		// 이동 끝남
 	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
 	gMap				*map = gMap::GetIF();
 
-	gTimer::GetIF()->frameEnd(); 
+	gTimer::GetIF()->frameEnd();
+	gPC->FootClear();
 
 	gPC->m_GPlayerList[ m_nTurn ].nPos = map->m_xSpacePos * LINEY + map->m_ySpacePos;
 
@@ -545,6 +546,7 @@ void gGameCore::BusEnd()  // 이동 끝남
 	gMap    *map = gMap::GetIF();
 
 	gTimer::GetIF()->frameEnd(); 
+	gPC->FootClear();
 	m_bBusing = false;
 
 	gPC->m_GPlayerList[ m_nTurn ].nPos = map->m_xSpacePos * LINEY + map->m_ySpacePos;
