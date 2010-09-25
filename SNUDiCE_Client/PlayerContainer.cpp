@@ -1,6 +1,7 @@
 #include "PlayerContainer.h"
 #include "Map.h"
 #include "MainWin.h"
+#include "UIGame.h"
 #include <stdio.h>
 
 #define CHARDATAFILE		".\\Data\\chardata.dat"
@@ -279,6 +280,10 @@ void gPlayerContainer::SetGPList(GAMEPLAYER *list)
 			break;
 		}
 	}
+
+	if(gMainWin::GetIF()->m_eCoreMode == ECM_GAME)
+		gUIGame::GetIF()->SetRankList();
+
 }
 
 void gPlayerContainer::MainLoop()

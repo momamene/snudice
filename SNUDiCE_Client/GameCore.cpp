@@ -195,8 +195,8 @@ void gGameCore::OnLButtonUp()
 		chat->OnLbuttonUp(mouse->m_nPosX, mouse->m_nPosY);
 		return;
 	}
-	if(gUIGame::GetIF()->OnLButtonDown())
-		return;
+	gUIGame::GetIF()->OnLButtonUp();
+		
 	if(m_bMoving || m_bBusing)
 		return;
 }

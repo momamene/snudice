@@ -10,6 +10,7 @@
 #include "MainWin.h"
 #include "stringconst.h"
 #include "Chat.h"
+#include "UIGame.h"
 
 #define SUB_FILE_BACK				".\\Data\\Submit\\sub_back.img"
 
@@ -347,5 +348,6 @@ void gSubmitCore::pk_maingametart_rep(PK_MAINGAMESTART_REP *rep)
 	gGameCore::GetIF()->m_nTurn		= rep->nTurn;
 	gMainWin::GetIF()->m_eCoreMode	= ECM_GAME;
 	gChat::GetIF()->MsgStackClear();
+	gUIGame::GetIF()->FirstInit();
 
 }

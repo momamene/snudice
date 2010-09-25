@@ -109,8 +109,8 @@
 #define UI_NUMBER_FILE						".\\Data\\Interface\\game_number.img"
 #define UI_NUMBER_SIZE_W					16
 #define UI_NUMBER_SIZE_H					16
-#define UI_NUMBER_TERM_X					5
-#define UI_NUMBER_TERM_Y					5
+#define UI_NUMBER_TERM_X					0
+#define UI_NUMBER_TERM_Y					0
 
 
 static gUIGame s_UIGame;
@@ -240,6 +240,8 @@ bool gUIGame::SetUp()
 	if(!m_BtnUI[UIBTN_DICE].SetUp(DICEBTN_FILE, false, m_rcPos[UIT_DICE]))
 		return false;
 
+	m_nCurPInfo = 0;
+
 	return true;
 }
 
@@ -279,23 +281,16 @@ void gUIGame::Draw()
 
 	// playersInfo
 	m_ImgUI[UIIMG_PINFO].Draw(PINFO_POS_X, PINFO_POS_Y);
-	int		nCount	= 0;
-	int		nRank	= 1;
-	int		i;
-	while(true)
-	{
-		for(i = 0; i < ROOMMAXPLAYER; i++)
-		{
-			if(strlen(gPC->m_GPlayerList[i].szID) == 0)
-				continue;
-
-			if(gPC->m_GPlayerList[i].nRank == nRank)
-			{
-				//Set
-			}
-
-		}
-	}
+	SetRect(&rcDest,
+		PINFO_INFO_POS_X,
+		PINFO_INFO_POS_Y,
+		PINFO_INFO_POS_X + UI_NUMBER_SIZE_W,
+		PINFO_INFO_POS_Y + UI_NUMBER_SIZE_H );
+	OffsetRect(&rcDest, UI_NUMBER_TERM_X, UI_NUMBER_TERM_Y);
+	SetRect(&rcSour,
+		0, 0, UI_NUMBER_SIZE_W, UI_NUMBER_SIZE_H);
+	OffsetRect(&rcSour, (gPC->m_GPlayerList[ m_rankIdx[m_nCurPInfo] ].nRank - 1) * UI_NUMBER_SIZE_W, 0);
+	m_ImgUI[UIIMG_NUMBER].Draw(rcDest, rcSour);
 	m_Scroll.Draw();
 	
 	// menu
@@ -307,7 +302,7 @@ void gUIGame::Draw()
 
 	m_BtnUI[UIBTN_DICE].Draw();
 	
-
+	int		i;
 	char	szBuf[128];
 	gUtil::BeginText();
 	// MainInfo
@@ -397,7 +392,7 @@ bool gUIGame::OnLButtonDown()
 
 	if(m_BtnUI[UIBTN_DICE].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 	{
-		if(gc->m_bMoving)
+		if(gc->m_bMoving || gc->m_bBusing)
 			return true;
 		if(gPC->isTurn(gc->m_nTurn))
 			gc->SendMoveAsk();
@@ -495,4 +490,50 @@ bool gUIGame::IsUIRange(int x, int y)
 	}
 
 	return false;
+}
+
+void gUIGame::SetRankList()
+{
+	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
+
+	memset(m_rankIdx, -1, sizeof(int) * ROOMMAXPLAYER);
+
+	int			nRank = 1;
+	int			nCount = 0;
+	int			i;
+
+	while(true)
+	{
+		for(i = 0; i < ROOMMAXPLAYER; i++)
+		{
+			if(strlen(gPC->m_GPlayerList[i].szID) == 0)
+				continue;
+
+			if(gPC->m_GPlayerList[i].nRank == nRank)
+				m_rankIdx[nCount++] = i;
+
+			if(nCount >= m_nMaxPInfo)
+				return;
+		}
+	}
+
+}
+
+void gUIGame::FirstInit()
+{
+	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
+
+	m_nCurPInfo = 0;
+	m_nMaxPInfo	= gPlayerContainer::GetIF()->GetGPNum();
+// 
+// 	int		i;
+// 
+// 	for(i = m_nCurPInfo; i < ROOMMAXPLAYER; i++)
+// 	{
+// 		if(strlen(gPC->m_GPlayerList[i].szID) != 0)
+// 		{
+// 			m_nCurPInfo = i;
+// 			return;
+// 		}
+// 	}
 }

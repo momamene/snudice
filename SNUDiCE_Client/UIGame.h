@@ -75,11 +75,18 @@ public:
 	bool		m_bShowSubWnd;				// 수강편람 윈도우
 	int			m_nSubSel;					// 수강편람 누구 보고있나
 
+	int			m_nCurPInfo;				// 우하단 pinfo, cursor
+	int			m_nMaxPInfo;
+
 private:
 	RECT		m_rcBarDest, m_rcBarSour;
+	int			m_rankIdx[ROOMMAXPLAYER];	// 랭킹인덱스
 
 public:
 	bool		IsUIRange(int x, int y);
+
+	void		SetRankList();
+	void		FirstInit();
 
 
 	bool		SetUp();
