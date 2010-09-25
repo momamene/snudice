@@ -134,6 +134,8 @@ void gPlayerContainer::Release()
 	for(i = 0; i < MAXCHARNUM; i++)
 	{
 		m_ImgInfo[i].ImgCharSel.Release();
+		m_ImgInfo[i].ImgDot.Release();
+		m_ImgInfo[i].ImgPic.Release();
 	}
 
 }
@@ -224,6 +226,10 @@ bool gPlayerContainer::SetUpCharImg()
 						break;
 					case 1:	// 도트
 						if(!m_ImgInfo[nIndex].ImgDot.Load(szTemp))
+							return false;
+						break;
+					case 2: // 캐릭터 얼굴. ui에 쓸 거
+						if(!m_ImgInfo[nIndex].ImgPic.Load(szTemp))
 							return false;
 						break;
 				}

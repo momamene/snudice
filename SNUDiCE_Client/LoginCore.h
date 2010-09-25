@@ -32,6 +32,7 @@ public:
 
 public:
 	gImage		m_ImgBack;			// title ¹è°æ
+	gImage		m_ImgLogBox;
 	gImgButton	m_Btn[ELB_END];
 	gEdit		m_EditID;
 	gEdit		m_EditPW;

@@ -13,12 +13,25 @@
 enum UIIMAGE
 {
 	UIIMG_MAININFO,
+	UIIMG_BAROUTLINE,
+	UIIMG_BARGUAGE,
+
+	UIIMG_SUBINFO,
 	UIIMG_END,
+};
+
+enum UIBTN
+{
+	UIBTN_ITEMCARD,
+	UIBTN_SUBJECT,
+
+	UIBTN_END,
 };
 
 enum UITYPE
 {
 	UIT_MAININFO,
+	UIT_SUBINFO,
 	UIT_END,
 };
 
@@ -33,7 +46,11 @@ public:
 
 public:
 	gImage		m_ImgUI[UIIMG_END];
+	gImgButton	m_BtnUI[UIBTN_END];
 	RECT		m_rcPos[UIT_END];
+
+private:
+	RECT		m_rcBarDest, m_rcBarSour;
 
 public:
 	bool		IsUIRange(int x, int y);

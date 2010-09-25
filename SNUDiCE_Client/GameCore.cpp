@@ -91,9 +91,11 @@ void gGameCore::MainLoopMouse()
 {
 	if(!gMainWin::GetIF()->m_bActive)
 		return;
+	if(gDice::GetIF()->m_start)
+		return;
 
-	gMouse	*mouse = gMouse::GetIF();
-	gMap	*map = gMap::GetIF();
+	gMouse	*mouse	= gMouse::GetIF();
+	gMap	*map	= gMap::GetIF();
 
 	if(mouse->m_nPosX < MINMOVE)
 	{
@@ -160,12 +162,15 @@ void gGameCore::OnMouseMove()
 {
 	gMouse		*mouse	= gMouse::GetIF();
 	gChat		*chat	= gChat::GetIF();
+	gUIGame		*ui		= gUIGame::GetIF();
 
 	if(chat->PointInUI(mouse->m_nPosX, mouse->m_nPosY))
 	{
 		chat->OnMouseMove(mouse->m_nPosX, mouse->m_nPosY);
 		return;
 	}
+	ui->OnMouseMove();
+
 }
 
 void gGameCore::OnRButtonDown()
@@ -262,6 +267,8 @@ void gGameCore::pk_movestart_rep(PK_MOVESTART_REP *rep)
 	else
 		c1 = 0, c2 = rep->Dice6_1;
 
+	int ntPos = gPC->m_GPlayerList[ gGameCore::GetIF()->m_nTurn ].nPos;
+	gMap::GetIF()->posSetter(ntPos / LINEY, ntPos % LINEY);
 	gDice::GetIF()->DiceStart(d1, d2, c1 - 1, c2 - 1);
 }
 

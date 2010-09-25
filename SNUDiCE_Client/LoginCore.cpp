@@ -1,5 +1,4 @@
 #include "LoginCore.h"
-#include "coreconst.h"
 #include "PopUp.h"
 #include "Mouse.h"
 #include "Server.h"
@@ -9,6 +8,33 @@
 #include "Chat.h"
 #include "Dice.h"
 #include "PlayerContainer.h"
+
+#define LOGIN_FILE_CONNECTBTN		".\\Data\\Login\\connect.img"
+#define LOGIN_SIZE_CONNECTBTNW		160
+#define LOGIN_SIZE_CONNECTBTNH		30
+#define LOGIN_VERT_CONNECTBTN		false
+#define LOGIN_POS_CONNECTBTNX		((WNDSIZEW - LOGIN_SIZE_CONNECTBTNW) / 2)
+#define LOGIN_POS_CONNECTBTNY		360
+
+// connect
+#define LOGIN_FILE_BACK				".\\Data\\Login\\login_back.img"
+
+// id, pw edit control
+#define LOGIN_EDIT_SZLENGTH			12			// 사실 바이트 수
+#define LOGIN_FILE_LOGBOX			".\\Data\\Login\\login_loginbox.img"
+#define LOGIN_SIZE_LOGBOX_W			200
+#define LOGIN_SIZE_LOGBOX_H			150
+#define LOGIN_POS_LOGBOX_X			((WNDSIZEW - LOGIN_SIZE_LOGBOX_W) / 2)
+#define LOGIN_POS_LOGBOX_Y			260
+
+#define LOGIN_EDIT_ID_W				120
+#define LOGIN_EDIT_ID_H				20
+#define LOGIN_EDIT_ID_X				((WNDSIZEW - LOGIN_EDIT_ID_W) / 2 + 25)
+#define LOGIN_EDIT_ID_Y				300
+#define LOGIN_EDIT_PW_W				120
+#define LOGIN_EDIT_PW_H				20
+#define LOGIN_EDIT_PW_X				((WNDSIZEW - LOGIN_EDIT_ID_W) / 2 + 25)
+#define LOGIN_EDIT_PW_Y				330
 
 
 static gLoginCore s_LoginCore;
@@ -34,6 +60,9 @@ bool gLoginCore::SetUp()
 	if(!m_ImgBack.Load(LOGIN_FILE_BACK))
 		return false;
 
+	if(!m_ImgLogBox.Load(LOGIN_FILE_LOGBOX))
+		return false;
+
 	// button setup
 	RECT		rcBtn;
 
@@ -46,23 +75,6 @@ bool gLoginCore::SetUp()
 		return false;
 	
 
-// 	// button setup
-// 	SetRect(&rcBtn, TITLE_POS_STARTBTNX,
-// 					TITLE_POS_STARTBTNY,
-// 					TITLE_POS_STARTBTNX + TITLE_SIZE_STARTBTNW,
-// 					TITLE_POS_STARTBTNY + TITLE_SIZE_STARTBTNH );
-// 
-// 	if(!m_Btn[ELB_START].SetUp(TITLE_FILE_STARTBTN, TITLE_VERT_STARTBTN, rcBtn))
-// 		return false;
-// 	
-// 	SetRect(&rcBtn, TITLE_POS_EXITBTNX,
-// 					TITLE_POS_EXITBTNY,
-// 					TITLE_POS_EXITBTNX + TITLE_SIZE_EXITBTNW,
-// 					TITLE_POS_EXITBTNY + TITLE_SIZE_EXITBTNH );
-// 
-// 	if(!m_Btn[ELB_EXIT].SetUp(TITLE_FILE_EXITBTN, TITLE_VERT_EXITBTN, rcBtn))
-// 		return false;
-
 	// edit control
 	RECT		rcDest;
 
@@ -72,7 +84,7 @@ bool gLoginCore::SetUp()
 			LOGIN_EDIT_ID_X + LOGIN_EDIT_ID_W,
 			LOGIN_EDIT_ID_Y + LOGIN_EDIT_ID_H );
 
-	if(!m_EditID.SetUp(rcDest, LOGIN_EDIT_IMG, LOGIN_EDIT_SZLENGTH, EDIT_STRING))
+	if(!m_EditID.SetUp(rcDest, NULL, LOGIN_EDIT_SZLENGTH, EDIT_STRING))
 		return false;
 
 	SetRect(&rcDest,
@@ -81,7 +93,7 @@ bool gLoginCore::SetUp()
 			LOGIN_EDIT_PW_X + LOGIN_EDIT_PW_W,
 			LOGIN_EDIT_PW_Y + LOGIN_EDIT_PW_H );
 	
-	if(!m_EditPW.SetUp(rcDest, LOGIN_EDIT_IMG, LOGIN_EDIT_SZLENGTH, EDIT_PASSWORD))
+	if(!m_EditPW.SetUp(rcDest, NULL, LOGIN_EDIT_SZLENGTH, EDIT_PASSWORD))
 		return false;
 
 	m_EditID.SetFocusOn();
@@ -207,6 +219,7 @@ void gLoginCore::MainLoop()
 void gLoginCore::Draw()
 {
 	m_ImgBack.Draw();
+	m_ImgLogBox.Draw(LOGIN_POS_LOGBOX_X, LOGIN_POS_LOGBOX_Y);
 
 	m_EditID.Draw();
 	m_EditPW.Draw();
@@ -223,6 +236,7 @@ void gLoginCore::Release()
 	int		i;
 
 	m_ImgBack.Release();
+	m_ImgLogBox.Release();
 
 	for(i = 0; i < ELB_END; i++)
 		m_Btn[i].Release();
