@@ -62,6 +62,7 @@ public:
 	RECT		m_rcPos[UIT_END];
 
 	bool		m_bShowSubWnd;				// 수강편람 윈도우
+	int			m_nSubSel;					// 수강편람 누구 보고있나
 
 private:
 	RECT		m_rcBarDest, m_rcBarSour;

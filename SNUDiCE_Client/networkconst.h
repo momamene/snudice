@@ -379,6 +379,9 @@ struct GAMEPLAYER
 	BYTE		nDice4, nDice6;
 
 	float		fGrade[MAXSUBJECT];
+	float		fAvGrade;
+	BYTE		bySubIdx[MAXSUBJECT];
+	int			nRank;
 
 	WORD		nPos;
 };

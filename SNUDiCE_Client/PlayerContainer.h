@@ -45,6 +45,7 @@ public:
 	int				m_movePosition[ROOMMAXPLAYER];
 
 public:
+	int				GetMyGPIndex();
 	bool			isTurn(int turn);				
 
 	void			SetMyPlayer(PK_LOGIN_REP *rep);

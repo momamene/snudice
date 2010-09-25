@@ -1,9 +1,11 @@
+#include <stdio.h>
 #include "UIGame.h"
 #include "Util.h"
 #include "PlayerContainer.h"
 #include "GameCore.h"
 #include "Mouse.h"
 #include "MainWin.h"
+#include "SubjectContainer.h"
 
 #define	UI_FILE_MAININFO					".\\Data\\Interface\\game_maininfo.img"
 #define UI_SIZE_MAININFO_W					220
@@ -54,11 +56,21 @@
 #define SUBINFO_SUBJECT_SIZE_H				30
 #define SUBINFO_SUBJECT_POS_X				283
 #define SUBINFO_SUBJECT_POS_Y				5
+
 #define SUBINFO_SUBWND_FILE					".\\Data\\Interface\\game_sub_subwnd.img"
 #define SUBINFO_SUBWND_SIZE_W				270
 #define SUBINFO_SUBWND_SIZE_H				216
 #define SUBINFO_SUBWND_POS_X				((WNDSIZEW - SUBINFO_SUBWND_SIZE_W) / 2)
 #define SUBINFO_SUBWND_POS_Y				((WNDSIZEH - SUBINFO_SUBWND_SIZE_H) / 2)
+#define SUBINFO_ID_POS_X					200
+#define SUBINFO_ID_POS_Y					200
+#define SUBINFO_SUBNAME_POS_X				200
+#define SUBINFO_GRADE_POS_X					300
+#define SUBINFO_SUBNAME_POS_Y				220
+#define SUBINFO_SUBNAME_TERM_Y				20
+#define SUBINFO_AVGRADE_POS_X				300
+#define SUBINFO_AVGRADE_POS_Y				360
+
 
 #define PINFO_FILE_BACK						".\\Data\\Interface\\game_pinfo_back.img"
 #define PINFO_SIZE_W						160
@@ -181,6 +193,7 @@ void gUIGame::Draw()
 {
 	gPlayerContainer	*gPC	= gPlayerContainer::GetIF();
 	gGameCore			*gc		= gGameCore::GetIF();
+	gSubjectContainer	*sc		= gSubjectContainer::GetIF();
 
 	// MainInfo
 	gPC->m_ImgInfo[gPC->m_MyGamePlayer.ctype].ImgPic.Draw(MAININFO_PIC_POS_X, MAININFO_PIC_POS_Y);
@@ -208,6 +221,7 @@ void gUIGame::Draw()
 	m_BtnUI[UIBTN_DICE].Draw();
 	
 
+	int		i;
 	char	szBuf[128];
 	gUtil::BeginText();
 	// MainInfo
@@ -229,8 +243,34 @@ void gUIGame::Draw()
 		else
 			gUtil::Text(MAININFO_NAME_POS_X, MAININFO_NAME_POS_Y, gPC->m_CharInfo[gPC->m_MyGamePlayer.ctype].szName);
 
+	// sub - subwnd
+		GAMEPLAYER	*gp = &gPC->m_GPlayerList[gPC->GetMyGPIndex()];
+		for(i = 0; i < MAXSUBJECT; i++)
+		{	
+			gUtil::Text(SUBINFO_SUBNAME_POS_X, SUBINFO_SUBNAME_POS_Y + (SUBINFO_SUBNAME_TERM_Y * i),
+					sc->m_subject[ gp->bySubIdx[i] ].subject);
+
+			sprintf_s(szBuf, ".1f", gp->fGrade[i]);
+			gUtil::Text(SUBINFO_GRADE_POS_X, SUBINFO_SUBNAME_POS_Y + (SUBINFO_SUBNAME_TERM_Y * i),
+				szBuf);
+		}
+		//sprintf_s(szBuf, ".1f", )
+
+
 	gUtil::EndText();
 }
+
+
+/*
+#define SUBINFO_ID_POS_X					200
+#define SUBINFO_ID_POS_Y					200
+#define SUBINFO_SUBNAME_POS_X				200
+#define SUBINFO_GRADE_POS_X					300
+#define SUBINFO_SUBNAME_POS_Y				220
+#define SUBINFO_SUBNAME_TERM_Y				20
+#define SUBINFO_AVGRADE_POS_X				300
+#define SUBINFO_AVGRADE_POS_Y				360
+*/
 
 void gUIGame::Release()
 {
@@ -261,6 +301,9 @@ bool gUIGame::OnLButtonDown()
 	}
 	if(m_BtnUI[UIBTN_SUBJECT].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 	{
+		if(!m_bShowSubWnd)
+			m_nSubSel = gPC->GetMyGPIndex();
+
 		m_bShowSubWnd = !m_bShowSubWnd;
 		return true;
 	}

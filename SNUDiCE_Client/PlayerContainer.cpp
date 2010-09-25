@@ -350,3 +350,15 @@ bool gPlayerContainer::isTurn(int turn)
 	else
 		return false;
 }
+
+int gPlayerContainer::GetMyGPIndex()
+{
+	int			i;
+
+	for(i = 0; i < ROOMMAXPLAYER; i++)
+	{
+		if(strcmp(m_MyGamePlayer.szID, m_GPlayerList[i].szID) == 0)
+			return i;
+	}
+	return -1;
+}
