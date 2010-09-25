@@ -17,6 +17,9 @@ enum UIIMAGE
 	UIIMG_BARGUAGE,
 
 	UIIMG_SUBINFO,
+
+	UIIMG_PINFO,
+
 	UIIMG_END,
 };
 
@@ -24,6 +27,7 @@ enum UIBTN
 {
 	UIBTN_ITEMCARD,
 	UIBTN_SUBJECT,
+	UIBTN_DICE,
 
 	UIBTN_END,
 };
@@ -32,6 +36,9 @@ enum UITYPE
 {
 	UIT_MAININFO,
 	UIT_SUBINFO,
+	UIT_PINFO,
+	UIT_DICE,
+
 	UIT_END,
 };
 
@@ -61,7 +68,7 @@ public:
 	void		Draw();
 	void		Release();
 	
-	void		OnLButtonDown();
+	bool		OnLButtonDown();
 	void		OnLButtonUp();
 	void		OnMouseMove();
 	void		OnRButtonDown();

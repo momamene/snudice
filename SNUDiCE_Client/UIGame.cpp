@@ -43,7 +43,6 @@
 #define SUBINFO_SIZE_H						40
 #define SUBINFO_POS_X						220
 #define SUBINFO_POS_Y						0
-
 #define SUBINFO_ITEM_FILE					".\\Data\\Interface\\game_sub_item.img"
 #define SUBINFO_ITEM_SIZE_W					50
 #define SUBINFO_ITEM_SIZE_H					30
@@ -54,6 +53,19 @@
 #define SUBINFO_SUBJECT_SIZE_H				30
 #define SUBINFO_SUBJECT_POS_X				283
 #define SUBINFO_SUBJECT_POS_Y				5
+
+#define PINFO_FILE_BACK						".\\Data\\Interface\\game_pinfo_back.img"
+#define PINFO_SIZE_W						160
+#define PINFO_SIZE_H						120
+#define PINFO_POS_X							480
+#define PINFO_POS_Y							360
+
+#define DICEBTN_FILE						".\\Data\\Interface\\game_btn_dice.img"
+#define DICEBTN_SIZE_W						100
+#define DICEBTN_SIZE_H						101
+#define DICEBTN_POS_X						515
+#define DICEBTN_POS_Y						247
+
 
 static gUIGame s_UIGame;
 
@@ -72,6 +84,8 @@ gUIGame::~gUIGame(void)
 
 bool gUIGame::SetUp()
 {
+	RECT		rcDest;
+
 	// Maininfo
 	if(!m_ImgUI[UIIMG_MAININFO].Load(UI_FILE_MAININFO))
 		return false;
@@ -105,9 +119,6 @@ bool gUIGame::SetUp()
 			SUBINFO_POS_Y + SUBINFO_SIZE_H);
 
 
-	// btn
-	RECT		rcDest;
-
 	SetRect(&rcDest,
 			SUBINFO_ITEM_POS_X,
 			SUBINFO_ITEM_POS_Y,
@@ -123,6 +134,23 @@ bool gUIGame::SetUp()
 	if(!m_BtnUI[UIBTN_SUBJECT].SetUp(SUBINFO_SUBJECT_FILE, false, rcDest))
 		return false;
 
+	// players info
+	if(!m_ImgUI[UIIMG_PINFO].Load(PINFO_FILE_BACK))
+		return false;
+	SetRect(&m_rcPos[UIT_SUBINFO],
+			PINFO_POS_X,
+			PINFO_POS_Y,
+			PINFO_POS_X + PINFO_SIZE_W,
+			PINFO_POS_Y + PINFO_SIZE_H);
+
+	// dice btn
+	SetRect(&m_rcPos[UIT_DICE],
+			DICEBTN_POS_X,
+			DICEBTN_POS_Y,
+			DICEBTN_POS_X + DICEBTN_SIZE_W,
+			DICEBTN_POS_Y + DICEBTN_SIZE_H );
+	if(!m_BtnUI[UIBTN_DICE].SetUp(DICEBTN_FILE, false, m_rcPos[UIT_DICE]))
+		return false;
 
 	return true;
 }
@@ -134,7 +162,8 @@ void gUIGame::MainLoop()
 
 void gUIGame::Draw()
 {
-	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
+	gPlayerContainer	*gPC	= gPlayerContainer::GetIF();
+	gGameCore			*gc		= gGameCore::GetIF();
 
 	// MainInfo
 	gPC->m_ImgInfo[gPC->m_MyGamePlayer.ctype].ImgPic.Draw(MAININFO_PIC_POS_X, MAININFO_PIC_POS_Y);
@@ -148,6 +177,15 @@ void gUIGame::Draw()
 	m_ImgUI[UIIMG_SUBINFO].Draw(SUBINFO_POS_X, SUBINFO_POS_Y);
 	m_BtnUI[UIBTN_ITEMCARD].Draw();
 	m_BtnUI[UIBTN_SUBJECT].Draw();
+
+	// playersInfo
+	m_ImgUI[UIIMG_PINFO].Draw(PINFO_POS_X, PINFO_POS_Y);
+	
+	// dice btn
+	if(!gPC->isTurn(gc->m_nTurn))
+		m_BtnUI[UIBTN_DICE].m_eBtnMode = EBM_CLICK;
+
+	m_BtnUI[UIBTN_DICE].Draw();
 	
 
 	char	szBuf[128];
@@ -186,9 +224,19 @@ void gUIGame::Release()
 
 }
 
-void gUIGame::OnLButtonDown()
+bool gUIGame::OnLButtonDown()
 {
+	gPlayerContainer	*gPC	= gPlayerContainer::GetIF();
+	gMouse				*mouse	= gMouse::GetIF();
+	gGameCore			*gc		= gGameCore::GetIF();
 
+	if(m_BtnUI[UIBTN_DICE].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+	{
+		if(gPC->isTurn(gc->m_nTurn))
+			gc->SendMoveAsk();
+	}
+
+	return false;
 }
 
 void gUIGame::OnLButtonUp()

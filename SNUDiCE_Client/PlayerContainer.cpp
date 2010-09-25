@@ -339,3 +339,11 @@ void gPlayerContainer::PutFootPosition(int nInRoomIndex,int nframe,int nCutline)
 	else if(nframeLocal % 4 == 3)
 		m_moveFoot[nInRoomIndex] = 2;
 }
+
+bool gPlayerContainer::isTurn(int turn)
+{
+	if(strcmp(m_GPlayerList[turn].szID, m_MyGamePlayer.szID) == 0)
+		return true;
+	else
+		return false;
+}

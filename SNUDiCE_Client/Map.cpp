@@ -14,7 +14,7 @@
 #define TILE_LANG_IMG		".\\Data\\Map\\lang.img"
 #define TILE_MATH_IMG		".\\Data\\Map\\math.img"
 #define TILE_ART_IMG		".\\Data\\Map\\art.img"
-#define TILE_TITLE_IMG		".\\Data\\Map\\title.img"
+//#define TILE_TITLE_IMG		".\\Data\\Map\\title.img"
 
 #define TILE_SMALLTILE		".\\Data\\Map\\smallmapchip.img"
 
@@ -82,8 +82,8 @@ bool gMap::Setup()
 	if(!m_ImgTile[8].Load(TILE_ART_IMG))
 		return false;
 
-	if(!m_ImgTileBack.Load(TILE_TITLE_IMG))
-		return false;
+//	if(!m_ImgTileBack.Load(TILE_TITLE_IMG))
+//		return false;
 
 	if(!m_ImgSmallTile.Load(TILE_SMALLTILE))
 		return false;
@@ -244,7 +244,7 @@ void gMap::Draw()
 	int n = 1; // √‡º“¿≤
 	int start_x = m_nAbsDrawlineX;
 	int start_y = m_nAbsDrawlineY;
-	m_ImgTileBack.Draw(0, 0);
+//	m_ImgTileBack.Draw(0, 0);
 	
 	DrawHexagon(0, 0, n);	
 
@@ -396,6 +396,8 @@ void gMap::Release()
 
 	for(i = 0; i < 9; i++)
 		m_ImgTile[i].Release();
+
+//	m_ImgTileBack.Release();
 
 	m_ImgSmallTile.Release();
 }

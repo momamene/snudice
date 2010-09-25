@@ -32,8 +32,10 @@ gGameCore::~gGameCore(void)
 
 bool gGameCore::SetUp()
 {
-	m_spacor = 0;
-	m_bMoved = false;
+	m_spacor	= 0;
+	m_bMoved	= false;
+	m_bMoving	= false;
+
 	return true;
 }
 
@@ -144,6 +146,12 @@ void gGameCore::OnLButtonDown()
 		chat->OnLbuttonDown(mouse->m_nPosX, mouse->m_nPosY);
 		return;
 	}
+
+	if(m_bMoving)
+		return;
+
+	if(gUIGame::GetIF()->OnLButtonDown())
+		return;
 }
 
 void gGameCore::OnLButtonUp()
@@ -151,11 +159,14 @@ void gGameCore::OnLButtonUp()
 	gMouse		*mouse	= gMouse::GetIF();
 	gChat		*chat	= gChat::GetIF();
 
+	
 	if(chat->PointInUI(mouse->m_nPosX, mouse->m_nPosY))
 	{
 		chat->OnLbuttonUp(mouse->m_nPosX, mouse->m_nPosY);
 		return;
 	}
+	if(m_bMoving)
+		return;
 }
 
 void gGameCore::OnMouseMove()
@@ -164,17 +175,21 @@ void gGameCore::OnMouseMove()
 	gChat		*chat	= gChat::GetIF();
 	gUIGame		*ui		= gUIGame::GetIF();
 
+
 	if(chat->PointInUI(mouse->m_nPosX, mouse->m_nPosY))
 	{
 		chat->OnMouseMove(mouse->m_nPosX, mouse->m_nPosY);
 		return;
 	}
+
 	ui->OnMouseMove();
 
 }
 
 void gGameCore::OnRButtonDown()
 {
+	if(m_bMoving)
+		return;
 
 }
 
@@ -239,7 +254,7 @@ void gGameCore::pk_movestart_rep(PK_MOVESTART_REP *rep)
 {
 	gPlayerContainer *gPC = gPlayerContainer::GetIF();
 	
-	if(gDice::GetIF()->m_start)
+	if(m_bMoving)
 		return;
 
 	int d1 = 0, d2 = 0;		// 4 ,6 면체 갯수
@@ -270,6 +285,7 @@ void gGameCore::pk_movestart_rep(PK_MOVESTART_REP *rep)
 	int ntPos = gPC->m_GPlayerList[ gGameCore::GetIF()->m_nTurn ].nPos;
 	gMap::GetIF()->posSetter(ntPos / LINEY, ntPos % LINEY);
 	gDice::GetIF()->DiceStart(d1, d2, c1 - 1, c2 - 1);
+	m_bMoving = true;
 }
 
 void gGameCore::Start(int spacor)
@@ -351,6 +367,8 @@ void gGameCore::End()		// 이동 끝남
 	strcpy(ask.szID, gPC->m_MyGamePlayer.szID);
 
 	gServer::GetIF()->Send(PL_MOVEEND_ASK, sizeof ask, &ask);
+
+	m_bMoving = false;
 	
 
 	//pk_stepFinish_ask(gtc->m_xSpacePos,gtc->m_ySpacePos);

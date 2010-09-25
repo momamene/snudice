@@ -45,6 +45,8 @@ public:
 	int				m_movePosition[ROOMMAXPLAYER];
 
 public:
+	bool			isTurn(int turn);				
+
 	void			SetMyPlayer(PK_LOGIN_REP *rep);
 	void			RefreshChannel(CHANNEL *channel);
 
