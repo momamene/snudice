@@ -3,8 +3,29 @@
 #include "Util.h"
 #include "MainWin.h"
 #include "Mouse.h"
-#include "utilconst.h"
 
+#define POPUP_IMG_BACK			".\\Data\\Interface\\popup.img"
+#define POPUP_IMG_OK			".\\Data\\Interface\\popup_ok.img"
+#define POPUP_IMG_CANCEL		".\\Data\\Interface\\popup_cancel.img"
+#define POPUP_WIDTH				242
+#define POPUP_HEIGHT			122
+#define POPUP_X					((WNDSIZEW - POPUP_WIDTH) / 2)
+#define POPUP_Y					((WNDSIZEH - POPUP_HEIGHT) / 2)
+#define POPUP_BTNW				60
+#define POPUP_BTNH				24
+#define POPUP_ONEBTNX			(POPUP_X + (POPUP_WIDTH - POPUP_BTNW) / 2)
+#define POPUP_ONEBTNY			(POPUP_Y + 83)
+#define POPUP_1STBTNX			(WNDSIZEW / 2 - 70)
+#define POPUP_1STBTNY			POPUP_ONEBTNY
+#define POPUP_2NDBTNX			(WNDSIZEW / 2 + 10)
+#define POPUP_2NDBTNY			POPUP_ONEBTNY
+#define POPUP_1STTEXTY			(POPUP_Y + 32)
+#define POPUP_2NDTEXTY			(POPUP_Y + 52)
+#define POPUP_IMG_W				48			// popup창에 띄우는 이미지
+#define POPUP_IMG_H				48
+#define POPUP_IMG_X				(POPUP_X + 10)
+#define POPUP_IMG_Y				(POPUP_Y + 10)
+#define POPUP_PIXEL_PER_LETTER	6
 
 gPopUp::gPopUp()
 {
