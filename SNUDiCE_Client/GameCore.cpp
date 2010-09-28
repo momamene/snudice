@@ -272,7 +272,8 @@ void gGameCore::SendMoveAsk()
 	// 내 차례가 아님
 	if(strcmp(gPC->m_MyGamePlayer.szID, gPC->m_GPlayerList[m_nTurn].szID) != 0)
 		return;
-	if(m_bMoved)		// 움직이는 중임
+	// 이미 움직였음, 스크롤링 중임
+	if(m_bMoved || m_bScrolling)
 		return;
 
 	PK_MOVESTART_ASK		ask;
