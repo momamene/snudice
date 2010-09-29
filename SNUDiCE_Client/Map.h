@@ -133,6 +133,7 @@ public:
 
 	int		viewabsToCon(POINT ij);
 	// 마우스 좌표 받아서, nPos return
+	POINT	ConToViewabs(int nPos);
 
 	void	Release();	
 

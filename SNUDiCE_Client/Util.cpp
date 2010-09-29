@@ -86,3 +86,22 @@ void gUtil::SetDefaultFont()
 	s_nSize = UTIL_DEFAULT_FONTSIZE;
 	strcpy(s_szFont, UTIL_DEFAULT_FONT);
 }
+
+int gUtil::TextLength(char *sz)
+{
+	int		length;
+	int		i;
+
+	if(sz != NULL)
+	{
+		length = strlen(sz);
+		length *= (s_nSize/2);		// 글자 하나당 6pixel이라고 가정(한글기준)
+
+		for(i = 0; i < (int)strlen(sz); i++)
+			if(sz[i] == ' ' || sz[i] == ',' || sz[i] == '.')
+				length -= 2;
+
+		return length;
+	}
+	return -1;
+}

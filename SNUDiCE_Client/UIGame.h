@@ -24,6 +24,9 @@ enum UIIMAGE
 
 	UIIMG_NUMBER,		// 숫자 1 ~ 8 랭킹표시에쓸거
 
+	UIIMG_POPINFO1,		// 말풍선 info 정보
+	UIIMG_POPINFO2,
+
 	UIIMG_END,
 };
 
@@ -78,12 +81,22 @@ public:
 	int			m_nCurPInfo;				// 우하단 pinfo, cursor
 	int			m_nMaxPInfo;
 
+	bool		m_bPopInfo;					// 말풍선 인포
+
 private:
 	RECT		m_rcBarDest, m_rcBarSour;
 	int			m_rankIdx[ROOMMAXPLAYER];	// 랭킹인덱스
 
+	// 말풍선 info 정보
+	int			m_nTimer;
+	int			m_nShowTime;
+	PK_POPINFO_REP		m_popinfo;
+	int			m_szID[IDLENGTH];
+
 public:
 	bool		IsUIRange(int x, int y);
+
+	void		SetPopInfo(PK_POPINFO_REP *rep, int ms = 1000);
 
 	void		SetRankList();
 	void		FirstInit();

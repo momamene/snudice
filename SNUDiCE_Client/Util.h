@@ -24,5 +24,6 @@ public:
 	static void DebugMsg(char *msg);
 
 	static bool PointInRect(int x, int y, RECT rc);
+	static int	TextLength(char *sz);
 };
 

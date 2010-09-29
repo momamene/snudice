@@ -484,6 +484,19 @@ int gMap::viewabsToCon(POINT ij)
 	return con;
 }
 
+POINT gMap::ConToViewabs(int nPos)
+{
+	POINT	pt;
+
+	pt.x = nPos/LINEY;
+	pt.y = nPos%LINEY;
+	pt = conToAbs(pt);
+	pt.x -= m_nAbsDrawlineX;
+	pt.y -= m_nAbsDrawlineY;
+
+	return pt;
+}
+
 // 4. Essential for All Line End
 
 // 6. ?

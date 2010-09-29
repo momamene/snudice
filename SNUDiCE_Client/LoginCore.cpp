@@ -9,6 +9,7 @@
 #include "Dice.h"
 #include "PlayerContainer.h"
 
+
 #define LOGIN_FILE_CONNECTBTN		".\\Data\\Login\\connect.img"
 #define LOGIN_SIZE_CONNECTBTNW		160
 #define LOGIN_SIZE_CONNECTBTNH		30
@@ -35,6 +36,9 @@
 #define LOGIN_EDIT_PW_H				20
 #define LOGIN_EDIT_PW_X				((WNDSIZEW - LOGIN_EDIT_ID_W) / 2 + 25)
 #define LOGIN_EDIT_PW_Y				330
+
+#define LOGIN_VER_POS_X				10
+#define LOGIN_VER_POS_Y				10
 
 
 static gLoginCore s_LoginCore;
@@ -229,6 +233,11 @@ void gLoginCore::Draw()
 	for(i = 0; i < ELB_END; i++)
 		m_Btn[i].Draw();
 
+	char	szBuf[32];
+	wsprintf(szBuf, "Ver %s", SNUDICE_VERSION);
+	gUtil::BeginText();
+		gUtil::Text(LOGIN_VER_POS_Y, LOGIN_VER_POS_Y, szBuf);
+	gUtil::EndText();
 }
 
 void gLoginCore::Release()

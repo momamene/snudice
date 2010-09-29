@@ -48,6 +48,7 @@ public:
 	int				GetGPNum();			// 게임 플레이어 수
 	int				GetMyGPIndex();		// 게임 플레이어 인덱스
 	int				GetMyPIndex();		// 걍 플레이어 인덱스
+	int				GetGPIndex(char* id); // id 로 게임 플레이어 찾기
 	bool			isTurn(int turn);				
 
 	void			SetMyPlayer(PK_LOGIN_REP *rep);

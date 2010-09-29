@@ -137,7 +137,7 @@ void gGameCore::Draw()
 {
 	gMap::GetIF()->Draw();
 	gPlayerContainer::GetIF()->MainLoop();
-	gChat::GetIF()->Draw();
+//	gChat::GetIF()->Draw();
 	gUIGame::GetIF()->Draw();
 }
 
@@ -273,7 +273,7 @@ void gGameCore::SendMoveAsk()
 	if(strcmp(gPC->m_MyGamePlayer.szID, gPC->m_GPlayerList[m_nTurn].szID) != 0)
 		return;
 	// 이미 움직였음, 스크롤링 중임
-	if(m_bMoved || m_bScrolling)
+	if(m_bMoved) //|| m_bScrolling)
 		return;
 
 	PK_MOVESTART_ASK		ask;
@@ -575,7 +575,7 @@ void gGameCore::pk_gameplayerinfo_rep(PK_GAMEPLAYERINFO_REP *rep)
 
 void gGameCore::pk_popinfo_rep(PK_POPINFO_REP *rep)
 {
-
+	gUIGame::GetIF()->SetPopInfo(rep);
 }
 
 void gGameCore::pk_gameend_rep(PK_GAMEEND_REP *rep)

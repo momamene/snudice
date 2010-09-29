@@ -6,6 +6,7 @@
 #include "Mouse.h"
 #include "MainWin.h"
 #include "SubjectContainer.h"
+#include "Chat.h"
 
 #define	UI_FILE_MAININFO					".\\Data\\Interface\\game_maininfo.img"
 #define UI_SIZE_MAININFO_W					220
@@ -113,6 +114,20 @@
 #define UI_NUMBER_SIZE_H					16
 #define UI_NUMBER_TERM_X					0
 #define UI_NUMBER_TERM_Y					0
+
+#define UI_POPINFO1_FILE					".\\Data\\Interface\\game_popinfo1.img"
+#define UI_POPINFO1_SIZE_W					120
+#define UI_POPINFO1_SIZE_H					48
+#define UI_POPINFO1_TERM_X					0
+#define UI_POPINFO1_TERM_Y					-70
+#define UI_POPINFO2_FILE					".\\Data\\Interface\\game_popinfo2.img"
+#define UI_POPINFO2_SIZE_W					120
+#define UI_POPINFO2_SIZE_H					63
+#define UI_POPINFO2_TERM_X					0
+#define UI_POPINFO2_TERM_Y					-60
+#define UI_POPSTR1_TERM_Y					14
+#define UI_POPSTR2_1_TERM_Y					11
+#define UI_POPSTR2_2_TERM_Y					29
 
 
 static gUIGame s_UIGame;
@@ -242,6 +257,14 @@ bool gUIGame::SetUp()
 	if(!m_BtnUI[UIBTN_DICE].SetUp(DICEBTN_FILE, false, m_rcPos[UIT_DICE]))
 		return false;
 
+	// popinfo 말풍선 인포
+	if(!m_ImgUI[UIIMG_POPINFO1].Load(UI_POPINFO1_FILE))
+		return false;
+	if(!m_ImgUI[UIIMG_POPINFO2].Load(UI_POPINFO2_FILE))
+		return false;
+
+	m_bPopInfo = false;
+
 	m_nCurPInfo = 0;
 
 	return true;
@@ -249,6 +272,11 @@ bool gUIGame::SetUp()
 
 void gUIGame::MainLoop()
 {
+	if(m_bPopInfo)
+	{
+		if((int)GetTickCount() - m_nTimer > m_nShowTime)
+			m_bPopInfo = false;
+	}
 	
 }
 
@@ -257,6 +285,79 @@ void gUIGame::Draw()
 	gPlayerContainer	*gPC	= gPlayerContainer::GetIF();
 	gGameCore			*gc		= gGameCore::GetIF();
 	gSubjectContainer	*sc		= gSubjectContainer::GetIF();
+	gMap				*map	= gMap::GetIF();
+
+
+	// popinfo
+	if(m_bPopInfo)
+	{
+		char	szPop[2][32];
+		int		nPopX, nPopY;
+		int		nCount = 0;
+
+		int		playeridx	= gPC->GetGPIndex(m_popinfo.szID);
+		int		nPos		= gPC->m_GPlayerList[playeridx].nPos;
+		if(playeridx != -1)
+		{
+			if(m_popinfo.nStamina != 0)
+			{
+				if(m_popinfo.nStamina > 0)
+					wsprintf(szPop[nCount], "체력 +%d", m_popinfo.nStamina);
+				else
+					wsprintf(szPop[nCount], "체력 %d", m_popinfo.nStamina);
+
+				nCount++;
+			}
+			if(m_popinfo.nGrade != 0)
+			{
+				if(m_popinfo.nGrade > 0)
+					wsprintf(szPop[nCount], "%s +%d", map->tileMap[nPos].subject, m_popinfo.nGrade);
+				else
+					wsprintf(szPop[nCount], "%s %d", map->tileMap[nPos].subject, m_popinfo.nGrade);
+
+				nCount++;
+			}
+
+			POINT	ptTemp;
+			switch(nCount)
+			{
+			case 1:
+				ptTemp = map->ConToViewabs(nPos);
+				nPopX = ptTemp.x + UI_POPINFO1_TERM_X;
+				nPopY = ptTemp.y + UI_POPINFO1_TERM_Y;
+				m_ImgUI[UIIMG_POPINFO1].Draw(nPopX, nPopY);
+				break;
+			case 2:
+				ptTemp = map->ConToViewabs(nPos);
+				nPopX = ptTemp.x + UI_POPINFO2_TERM_X;
+				nPopY = ptTemp.y + UI_POPINFO2_TERM_Y;
+				m_ImgUI[UIIMG_POPINFO2].Draw(nPopX, nPopY);
+				break;
+			}
+		}
+		gUtil::BeginText();
+		int		len;
+		switch(nCount)
+		{
+		case 1:
+			{
+				len = gUtil::TextLength(szPop[0]);
+				gUtil::Text( nPopX + (UI_POPINFO1_SIZE_W - len) / 2, nPopY + UI_POPSTR1_TERM_Y, szPop[0]);
+			}
+			break;
+		case 2:
+			{
+				len = gUtil::TextLength(szPop[0]);
+				gUtil::Text( nPopX + (UI_POPINFO1_SIZE_W - len) / 2, nPopY + UI_POPSTR2_1_TERM_Y, szPop[0]);
+				len = gUtil::TextLength(szPop[1]);
+				gUtil::Text( nPopX + (UI_POPINFO1_SIZE_W - len) / 2, nPopY + UI_POPSTR2_2_TERM_Y, szPop[1]);
+			}
+			break;
+		}
+		gUtil::EndText();
+	}
+
+	gChat::GetIF()->Draw();
 
 
 	RECT	rcDest, rcSour;
@@ -315,7 +416,7 @@ void gUIGame::Draw()
 		m_BtnUI[UIBTN_DICE].m_eBtnMode = EBM_CLICK;
 
 	m_BtnUI[UIBTN_DICE].Draw();
-	
+
 	int		i;
 	char	szBuf[128];
 	gUtil::BeginText();
@@ -367,6 +468,7 @@ void gUIGame::Draw()
 			sprintf_s(szBuf, "%.1f", gp->fAvGrade);
 		}
 		//sprintf_s(szBuf, ".1f", )
+
 	gUtil::EndText();
 
 	gUtil::SetSize(SUBINFO_AVGRADE_FONTSIZE);
@@ -559,4 +661,17 @@ void gUIGame::FirstInit()
 // 			return;
 // 		}
 // 	}
+}
+
+
+void gUIGame::SetPopInfo(PK_POPINFO_REP *rep, int ms)
+{
+	if(m_bPopInfo)
+		return;
+
+	m_bPopInfo	= true;
+	m_nTimer	= GetTickCount();
+	m_nShowTime	= ms;
+
+	memcpy(&m_popinfo, rep, sizeof(PK_POPINFO_REP));
 }

@@ -413,3 +413,15 @@ void gPlayerContainer::FootClear()
 	for(i = 0; i < ROOMMAXPLAYER; i++)
 		m_moveFoot[i] = 1;
 }
+
+int	gPlayerContainer::GetGPIndex(char* id)
+{
+	int		i;
+
+	for(i = 0; i < ROOMMAXPLAYER; i++)
+	{
+		if(strcmp(m_GPlayerList[i].szID, id) == 0)
+			return i;
+	}
+	return -1;
+}
