@@ -7,6 +7,8 @@
 #include "MainWin.h"
 #include "SubjectContainer.h"
 #include "Chat.h"
+#include "ItemContainer.h"
+#include "Server.h"
 
 #define	UI_FILE_MAININFO					".\\Data\\Interface\\game_maininfo.img"
 #define UI_SIZE_MAININFO_W					220
@@ -129,8 +131,8 @@
 #define UI_POPSTR2_1_TERM_Y					11
 #define UI_POPSTR2_2_TERM_Y					29
 
-#define ITEMCARD_POS_X						10
-#define ITEMCARD_POS_Y						50
+#define ITEMCARD_POS_X						22
+#define ITEMCARD_POS_Y						120
 #define ITEMCARD_TERM_X						10
 
 
@@ -425,15 +427,17 @@ void gUIGame::Draw()
 	m_BtnUI[UIBTN_DICE].Draw();
 
 	// item
+	gItemContainer	*ic = gItemContainer::GetIF();
 	if(m_bItem)
 	{
+		int		j = 0;
 		for(i = 0; i < MAXITEMNUM; i++)
 		{
 			if(gPC->m_MyGamePlayer.nItem[i] == -1)
 				continue;
 			
-			//ITEMCARD_POS_X
-
+			ic->m_ItemImg[ gPC->m_MyGamePlayer.nItem[i] ].Draw(ITEMCARD_POS_X + (ITEMCARD_TERM_X + ITEMCARDIMG_W) * j, ITEMCARD_POS_Y);
+			j++;
 		}
 	}
 
@@ -545,19 +549,75 @@ bool gUIGame::OnLButtonDown()
 	if(m_BtnUI[UIBTN_SUBJECT].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 	{
 		if(!m_bShowSubWnd)
+		{
 			m_nSubSel = gPC->GetMyGPIndex();
+			m_bItem = false;
+		}
+			
 
 		m_bShowSubWnd = !m_bShowSubWnd;
 		return true;
 	}
 	if(m_BtnUI[UIBTN_ITEMCARD].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 	{
-		if(m_bShowSubWnd)
+		if(!m_bItem)
+		{
 			m_bShowSubWnd = false;
+		}
+
 		m_bItem = !m_bItem;
 		return true;
 	}
 
+	if(m_bItem)
+	{
+		if(gPC->GetMyGPIndex() != gGameCore::GetIF()->m_nTurn)
+			return false;
+
+		gItemContainer	*ic = gItemContainer::GetIF();
+
+		int		i, j = 0;
+		for(i = 0; i < MAXITEMNUM; i++)
+		{
+			if(gPC->m_MyGamePlayer.nItem[i] == -1)
+				continue;
+
+			RECT	rcTemp;
+			rcTemp.left		= ITEMCARD_POS_X + (ITEMCARD_POS_X + ITEMCARDIMG_W) * j;
+			rcTemp.right	= rcTemp.left + ITEMCARDIMG_W;
+			rcTemp.top		= ITEMCARD_POS_Y;
+			rcTemp.bottom	= rcTemp.top + ITEMCARDIMG_H;
+
+			if(gUtil::PointInRect(mouse->m_nPosX, mouse->m_nPosY, rcTemp))
+			{
+				ITEMCARD	*item = &ic->m_ItemList[ gPC->m_MyGamePlayer.nItem[i] ];
+				PK_ITEMUSE_ASK		ask;
+
+				switch(item->type)
+				{
+					case ITEM_STAT:
+						{
+							if(item->target == TARGET_OTHER || item->target == TARGET_MEOTHER)
+							{
+							}
+							else
+							{
+								strcpy(ask.szID, gPC->m_MyGamePlayer.szID);
+								ask.nItemID = gPC->m_MyGamePlayer.nItem[i];
+
+								gServer::GetIF()->Send(PL_ITEMUSE_ASK, sizeof ask, &ask);
+							}
+						}
+						break;
+				}
+				return true;
+			}
+
+			j++;
+		}
+
+		return false;
+	}
 	if(m_bShowSubWnd)
 	{
 		if(m_BtnUI[UIBTN_SUBPREV].PointInButton(mouse->m_nPosX, mouse->m_nPosY))

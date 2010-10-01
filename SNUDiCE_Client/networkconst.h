@@ -529,6 +529,7 @@ struct PK_ITEMUSE_ASK
 	char		szID[IDLENGTH];			// 사용자
 	char		szTarget[IDLENGTH];		// 대상
 	int			nItemID;
+	int			nPos;					// move일 때
 };
 
 enum ITEMREPRESULT
