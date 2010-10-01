@@ -18,6 +18,8 @@
 
 #define PK_HEADER_SIZE			4
 
+#define SNUDICE_VERSION			"0.5002"
+
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 //	통신 프로토콜
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
@@ -73,6 +75,16 @@ enum ePROTOCOL
 	PL_GAMEEND_REP,
 
 	PL_NEXTTURN_REP,
+
+	PL_ITEMUSE_ASK,
+	PL_ITEMUSE_REP,
+
+	PL_WARPSTART_ASK,		// 한명 워프.
+	PL_WARPSTART_REP,
+	PL_WARPEND_ASK,
+
+	PL_WARPLISTSTART_REP,	// 유저 여러명 워프시킬떄
+	PL_WARPLISTEND_ASK,
 
 };
 
@@ -376,6 +388,7 @@ struct PK_SUBMITREADY_REP
 };
 
 #define MAXSUBJECT				6	// 한사람당 들을수잇는 과목수
+#define MAXITEMNUM				4	// 한사람당 갖고있을 수 있는 아이템 수
 
 struct GAMEPLAYER
 {
@@ -393,6 +406,8 @@ struct GAMEPLAYER
 	float		fAvGrade;
 	BYTE		bySubIdx[MAXSUBJECT];
 	int			nRank;
+
+	int			nItem[MAXITEMNUM];		// 없으면 -1
 
 	WORD		nPos;
 };
@@ -472,4 +487,86 @@ struct PK_POPINFO_REP
 struct PK_GAMEEND_REP
 {
 	char		szID[IDLENGTH];		// 이긴넘
+};
+
+#define ITEMNUM		20
+
+enum ITEMTARGET
+{
+	TARGET_ME,				// 나
+	TARGET_ALL,				// 나 포함 모든 유저
+	TARGET_ALLEXCEPTME,		// 나 빼고 모든 유저
+	TARGET_OTHER,			// 다른 유저 하나
+	TARGET_MEOTHER,			// 나랑 상대
+};
+
+enum ITEMTYPE
+{
+	ITEM_STAT,
+	ITEM_STAMINA,
+	ITEM_MOVESELECT,		// 내가 선택한 칸으로 이동
+	ITEM_MOVEPLACE,			// 스크립트에 지정된 장소로 이동
+	ITEM_NOCLASS,			// 휴강. 상대의 다음 수업을 무효화
+	ITEM_TOGETHERCLASS,		// 상대가 내 수업과 겹칠 때, 나도 성취도 +
+};
+
+struct ITEMCARD
+{
+	ITEMTYPE	type;
+	ITEMTARGET	target;
+	int			nLang;			// ITEM_STAT
+	int			nMath;			//
+	int			nArt;			//
+	int			nMove;			// 얜 지금 안쓸거야
+	int			nStamina;		// ITEM_STAMINA
+	int			nMulti;			// ITEM_STAT
+	int			nExistTurn;		// 지속 턴
+	int			nPos;			// ITEM_MOVEPLACE
+};
+
+struct PK_ITEMUSE_ASK
+{
+	char		szID[IDLENGTH];			// 사용자
+	char		szTarget[IDLENGTH];		// 대상
+	int			nItemID;
+};
+
+enum ITEMREPRESULT
+{
+	ITEMUSE_SUCCESS,
+	ITEMUSE_MOVESELECT,
+	ITEMUSE_ERROR,
+};
+
+struct PK_ITEMUSE_REP
+{
+	ITEMREPRESULT	result;
+};
+
+
+struct PK_WARPSTART_ASK
+{
+	char		szID[IDLENGTH];
+	int			nCurPos;			// 출발 좌표
+};
+
+struct PK_WARPSTART_REP
+{
+	int			nDist;
+};
+
+struct PK_WARPEND_ASK
+{
+	char		szID[IDLENGTH];
+	int			nDestPos;			// 도착 좌표
+};
+
+struct PK_WARPLISTSTART_REP
+{
+	int			nDestPos[ROOMMAXPLAYER];		// 해당사항 없는 놈은 -1로 채워서.
+};
+
+struct PK_WARPLISTEND_ASK
+{
+	int			nDestPos[ROOMMAXPLAYER];		// 해당사항 없는 놈은 -1로 채워서 보냄
 };

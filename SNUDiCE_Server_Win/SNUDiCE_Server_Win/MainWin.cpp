@@ -15,6 +15,7 @@
 #include "GamePlayerContainer.h"
 
 #include "time.h"
+#include "ItemContainer.h"
 		
 
 static gMainWin	s_MainWin;		// for singleton
@@ -153,7 +154,10 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 	if(!gGamePlayerContainer::GetIF()->SetUp())
 		return false;
 
-	srand(NULL);
+	if(!gItemContainer::GetIF()->SetUp())
+		return false;
+
+//	srand(NULL);
 	
 	return true;
 }

@@ -138,6 +138,9 @@ bool gGamePlayerContainer::init(int nRoomIndex)
 			memcpy(m_GamePlayer[nRoomIndex][i].bySubIdx,
 				gSC->m_submitSubjectPlayer[nRoomIndex][i],
 				sizeof(BYTE)*MAXSUBJECT);
+
+			for(int j = 0 ; j < MAXITEMNUM ; j++)
+				m_GamePlayer[nRoomIndex][i].nItem[j] = -1;
 		}
 		m_bSyncronize[nRoomIndex][i] = true;
 	}
@@ -338,7 +341,7 @@ void gGamePlayerContainer::pk_moveend_ask(PK_DEFAULT *pk,SOCKET sock)
 
 
 			}
-			else if(gTC->m_tileMap[ask.nDestPos].tileType=TY_DRINK) {
+			else if(gTC->m_tileMap[ask.nDestPos].tileType==TY_DRINK) {
 				OutputDebugString("TY_DRINK\n");
 				staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],-1);
 				pk_popinfo_rep(nRoomIndex,-1,0);
@@ -377,8 +380,7 @@ void gGamePlayerContainer::pk_moveend_ask(PK_DEFAULT *pk,SOCKET sock)
 			m_nTurn[nRoomIndex],
 			nRoomIndex);
 		OutputDebugString("[pk_moveend_ask] 심각한 Error, 보안 주의 요망, 서버와 클라이언트의 연산 결과가 다름\n");
-		OutputDebugString(buf);
-		OutputDebugString("이 방은 더 이상 동작하지 않습니다.\n");
+		OutputDebugString(buf);		OutputDebugString("이 방은 더 이상 동작하지 않습니다.\n");
 	}
 }
 

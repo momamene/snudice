@@ -218,6 +218,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\ItemContainer.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\SubjectContainer.cpp"
 					>
 				</File>
@@ -281,6 +285,10 @@
 				>
 				<File
 					RelativePath=".\GamePlayerContainer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ItemContainer.h"
 					>
 				</File>
 				<File

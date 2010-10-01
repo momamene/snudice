@@ -3,6 +3,7 @@
 #include "PlayerContainer.h"
 #include "ChannelContainer.h"
 #include "SubmitCore.h"
+#include "ChannelCore.h"
 
 static gRoomCore s_RoomCore;
 
@@ -172,6 +173,7 @@ void gRoomCore::pk_roommaker_ask(PK_DEFAULT *pk, SOCKET sock)
 {
 	PK_ROOMMAKER_ASK		ask;		//from client
 	gPlayerContainer *gPC = gPlayerContainer::GetIF();
+	gChannelCore *gCC = gChannelCore::GetIF();
 	gChannelContainer *gCCt = gChannelContainer::GetIF();
 
 	SOCKADDR_IN			clientAddr;
@@ -200,6 +202,8 @@ void gRoomCore::pk_roommaker_ask(PK_DEFAULT *pk, SOCKET sock)
 		rep.result = ERM_USINGNAME;
 	}
 	else {
+
+		int befCoreFlag = gPC->GetCoreFlag(ask.szID);
 	
 		m_isRoom[emptyRoom] = true;
 		m_rooms[emptyRoom] = ask.room;
@@ -212,6 +216,7 @@ void gRoomCore::pk_roommaker_ask(PK_DEFAULT *pk, SOCKET sock)
 		wsprintf(buf,"[PK_ROOMMAKER_REP] Index : %d 성공! \n",emptyRoom);
 		OutputDebugString(buf);
 
+		gCC->pk_channelrefresh_rep(befCoreFlag);
 		SendRoomListCauseChange(emptyRoom/MAXROOMFORPAGE);
 	}
 	gMainWin::GetIF()->Send(PL_ROOMMAKER_REP, sizeof(rep), &rep, sock);
@@ -222,6 +227,7 @@ void gRoomCore::pk_roommaker_ask(PK_DEFAULT *pk, SOCKET sock)
 void gRoomCore::pk_roomlist_ask(PK_DEFAULT *pk, SOCKET sock)
 {
 	gPlayerContainer *gPC = gPlayerContainer::GetIF();
+	gChannelCore *gCC = gChannelCore::GetIF();
 
 	PK_ROOMLIST_ASK ask;
 
@@ -240,6 +246,7 @@ void gRoomCore::pk_roomlist_ask(PK_DEFAULT *pk, SOCKET sock)
 	if(ask.nPage==0||isRoomInPage(ask.nPage)) {
 		gPC->PutMode(ask.szID,ECM_ROOMJOIN);
 		gPC->PutCoreFlag(ask.szID,ask.nPage);
+
 		SendRoomListCauseChange(ask.nPage);
 	}
 }
@@ -362,7 +369,8 @@ void gRoomCore::pk_gamestart_ask(PK_DEFAULT *pk, SOCKET sock)
 void gRoomCore::pk_roomjoin_ask(PK_DEFAULT *pk, SOCKET sock)
 {
 	gPlayerContainer *gPC = gPlayerContainer::GetIF();
-	gChannelContainer *gCC = gChannelContainer::GetIF();
+	gChannelContainer *gCCt = gChannelContainer::GetIF();
+	gChannelCore *gCC = gChannelCore::GetIF();
 
 	PK_ROOMJOIN_ASK ask;
 
@@ -399,10 +407,15 @@ void gRoomCore::pk_roomjoin_ask(PK_DEFAULT *pk, SOCKET sock)
 	}
 	else // 논리적으로 rep와 rep2의 중복이...
 	{
+		int befCoreFlag = gPC->GetCoreFlag(ask.szID); 
+		int befChannelNum = gCCt->FindPlayer(ask.szID);
 
 		EnterTheRoom(nRoomIndex,ask.szID); 
 
-		SendRoomRefreshCauseChange(nRoomIndex);
+		
+
+		SendRoomListCauseChange(befCoreFlag);	// 채널의 정보를 갱신
+		SendRoomRefreshCauseChange(nRoomIndex); // 방 내부의 정보를 갱신
 
 		PLAYER l_playerlist[ROOMMAXPLAYER];
 		FindPlayersFromIDs_RMP(nRoomIndex,l_playerlist);
@@ -410,9 +423,10 @@ void gRoomCore::pk_roomjoin_ask(PK_DEFAULT *pk, SOCKET sock)
 		rep.result = ERJ_SUCCESS;
 		gPC->PutMode(ask.szID,ECM_ROOM);
 		gPC->PutCoreFlag(ask.szID,nRoomIndex);
-		gCC->DeletePlayer(ask.szID);
+		gCCt->DeletePlayer(ask.szID);
+
+		gCC->pk_channelrefresh_rep(befChannelNum);
 		
-		// rep.playerlist = l_playerlist; // 왼쪽 피연산자는 l-value이어야 합니다. (?)
 		rep.joinroom = m_rooms[nRoomIndex]; 
 		memcpy(&rep.playerlist,&l_playerlist,sizeof(PLAYER)*ROOMMAXPLAYER);
 
