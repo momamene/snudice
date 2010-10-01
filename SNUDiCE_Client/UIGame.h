@@ -83,6 +83,8 @@ public:
 
 	bool		m_bPopInfo;					// 말풍선 인포
 
+	bool		m_bItem;					// 아이템 모드냐
+
 private:
 	RECT		m_rcBarDest, m_rcBarSour;
 	int			m_rankIdx[ROOMMAXPLAYER];	// 랭킹인덱스

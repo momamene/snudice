@@ -14,6 +14,7 @@
 #include "ChannelUI.h"
 #include "TopUI.h"
 #include "PlayerContainer.h"
+#include "ItemContainer.h"
 #include "Map.h"
 #include "UIGame.h"
 
@@ -78,6 +79,9 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 		return false;
 
 	if(!gMap::GetIF()->Setup())
+		return false;
+
+	if(!gItemContainer::GetIF()->SetUp())
 		return false;
 
 	if(!m_ImgBack.Load(BACKBUFFERIMG))
@@ -155,6 +159,7 @@ void gMainWin::Release()
 	gTopUI::GetIF()->Release();
 	gDice::GetIF()->Release();
 	gUIGame::GetIF()->Release();
+	gItemContainer::GetIF()->Release();
 	SAFE_RELEASE(m_lpDDBack);
 	SAFE_RELEASE(m_lpDDPrimary);
 	SAFE_RELEASE(m_lpDD);

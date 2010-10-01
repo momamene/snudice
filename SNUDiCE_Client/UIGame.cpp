@@ -37,7 +37,7 @@
 #define MAININFO_BARLINE_POS_X				13
 #define MAININFO_BARLINE_POS_Y				91
 #define MAININFO_FILE_BARGUAGE				".\\Data\\Interface\\game_bar_guage.img"
-#define MAININFO_BARGUAGE_SIZE_W			150
+#define MAININFO_BARGUAGE_SIZE_W			148
 #define MAININFO_BARGUAGE_SIZE_H			8
 #define MAININFO_BARGUAGE_POS_X				14
 #define MAININFO_BARGUAGE_POS_Y				92
@@ -128,6 +128,10 @@
 #define UI_POPSTR1_TERM_Y					14
 #define UI_POPSTR2_1_TERM_Y					11
 #define UI_POPSTR2_2_TERM_Y					29
+
+#define ITEMCARD_POS_X						10
+#define ITEMCARD_POS_Y						50
+#define ITEMCARD_TERM_X						10
 
 
 static gUIGame s_UIGame;
@@ -267,6 +271,8 @@ bool gUIGame::SetUp()
 
 	m_nCurPInfo = 0;
 
+	m_bItem = false;
+
 	return true;
 }
 
@@ -287,6 +293,7 @@ void gUIGame::Draw()
 	gSubjectContainer	*sc		= gSubjectContainer::GetIF();
 	gMap				*map	= gMap::GetIF();
 
+	int		i;
 
 	// popinfo
 	if(m_bPopInfo)
@@ -417,7 +424,19 @@ void gUIGame::Draw()
 
 	m_BtnUI[UIBTN_DICE].Draw();
 
-	int		i;
+	// item
+	if(m_bItem)
+	{
+		for(i = 0; i < MAXITEMNUM; i++)
+		{
+			if(gPC->m_MyGamePlayer.nItem[i] == -1)
+				continue;
+			
+			//ITEMCARD_POS_X
+
+		}
+	}
+
 	char	szBuf[128];
 	gUtil::BeginText();
 	// MainInfo
@@ -529,6 +548,13 @@ bool gUIGame::OnLButtonDown()
 			m_nSubSel = gPC->GetMyGPIndex();
 
 		m_bShowSubWnd = !m_bShowSubWnd;
+		return true;
+	}
+	if(m_BtnUI[UIBTN_ITEMCARD].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+	{
+		if(m_bShowSubWnd)
+			m_bShowSubWnd = false;
+		m_bItem = !m_bItem;
 		return true;
 	}
 

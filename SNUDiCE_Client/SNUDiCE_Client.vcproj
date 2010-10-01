@@ -181,6 +181,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ItemContainer.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\main.cpp"
 				>
 			</File>
@@ -302,6 +306,10 @@
 			</File>
 			<File
 				RelativePath=".\ImgButton.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ItemContainer.h"
 				>
 			</File>
 			<File

@@ -1,0 +1,23 @@
+// item script
+// itemtype,		target,			lang,	math,	art,	move,	stam,	multi,	turn,	pos,	imgfile
+ITEM_STAT,		TARGET_ME,		0,	0,	0,	0,	0,	2,	3,	0,	.\\Data\\Item\\item00.img,
+ITEM_STAT,		TARGET_ME,		1,	0,	0,	0,	0,	0,	99,	0,	.\\Data\\Item\\item01.img,
+ITEM_STAT,		TARGET_ME,		0,	1,	0,	0,	0,	0,	99,	0,	.\\Data\\Item\\item02.img,
+ITEM_STAT,		TARGET_ME,		0,	0,	1,	0,	0,	0,	99,	0,	.\\Data\\Item\\item03.img,
+ITEM_STAT,		TARGET_ME,		2,	2,	2,	0,	0,	0,	3,	0,	.\\Data\\Item\\item04.img,
+ITEM_STAT,		TARGET_ME,		2,	2,	2,	0,	0,	0,	5,	0,	.\\Data\\Item\\item05.img,
+ITEM_STAT,		TARGET_OTHER,		-2,	-2,	-2,	0,	0,	0,	3,	0,	.\\Data\\Item\\item06.img,
+ITEM_STAT,		TARGET_OTHER,		-2,	-2,	-2,	0,	0,	0,	2,	0,	.\\Data\\Item\\item07.img,
+ITEM_STAT,		TARGET_OTHER,		-2,	-2,	-2,	0,	0,	0,	5,	0,	.\\Data\\Item\\item08.img,
+ITEM_STAT,		TARGET_MEOTHER,		-2,	-2,	-2,	0,	0,	0,	2,	0,	.\\Data\\Item\\item09.img,
+ITEM_STAT,		TARGET_MEOTHER		-3,	-3,	-3,	0,	0,	0,	3,	0,	.\\Data\\Item\\item10.img,
+ITEM_STAMINA,		TARGET_OTHER,		0,	0,	0,	0,	-2,	0,	0,	0,	.\\Data\\Item\\item11.img,
+ITEM_STAMINA,		TARGET_OTHER,		0,	0,	0,	0,	-4,	0,	0,	0,	.\\Data\\Item\\item12.img,
+ITEM_STAMINA,		TARGET_ALLEXCEPTME,	0,	0,	0,	0,	-2,	0,	0,	0,	.\\Data\\Item\\item13.img,
+ITEM_STAMINA,		TARGET_ME,		0,	0,	0,	0,	3,	0,	0,	0,	.\\Data\\Item\\item14.img,
+ITEM_TOGETHERCLASS	TARGET_OTHER,		0,	0,	0,	0,	0,	0,	3,	0,	.\\Data\\Item\\item15.img,
+ITEM_NOCLASS,		TARGET_OTHER,		0,	0,	0,	0,	0,	0,	0,	0,	.\\Data\\Item\\item16.img,
+ITEM_MOVESELECT,	TARGET_ME,		0,	0,	0,	0,	0,	0,	0,	0,	.\\Data\\Item\\item17.img,
+ITEM_MOVEPLACE,		TARGET_ME,		0,	0,	0,	0,	0,	0,	0,	109,	.\\Data\\Item\\item18.img,
+ITEM_MOVEPLACE,		TARGET_OTHER,		0,	0,	0,	0,	0,	0,	0,	55,	.\\Data\\Item\\item19.img,
+
