@@ -170,4 +170,69 @@ channel에 있던 애가 방만들면, 채널에 그 애가 남아있음
 
  // 10월 1일
  (1) 
-  아이템...
+  아이템... start 다양한 것들을 구현했는데.
+  이제는 오리무중.. (주석 10월 5일)
+
+(2) 버그
+// - 아이템 3번째 칸에...
+// - 플레이어1이 먹었는데, 플레이어2가 가지고...
+// - 아이템이 안먹어짐
+// - 스태미너가 다 찼는데도 오름.
+
+ // [10월 5일]
+  (1)
+//	ITEM_STAT 계열의 아이템 사용을 완료
+//  ITEM_STAMINA 계열의 아이템 사용을 완료
+
+  (2) itemUse 의 난점.
+  bool 값은, nextturn을 시전하는 지 여부.
+  int 로 바뀔 가능성.
+  즉, 통제권을 bTemp에서 더 다양하게 가지고 싶어하는...
+
+  (3) 
+// releaseItemGlobal 함수에서, cooltime 100이 넘는 값들을 따로 관리한다.
+//  m_ItemCoolTime에서는 0~99 와 0~800 의 값을 따로 처리하게 되었다...
+
+//  이것은, cooltime2를 만들기 귀찮아서 고안된 것.
+//  if(m_ItemCoolTime[nRoomIndex][i][j] > 100) {
+//	  m_ItemCoolTime[nRoomIndex][i][j]--;
+//	  if(m_ItemCoolTime[nRoomIndex][i][j]%100 == 0)
+//		  m_ItemCoolTime[nRoomIndex][i][j] = 0;
+ 
+// m_ItemCoolTime[MAXROOM][ROOMMAXPLAYER][ITEMNUM];
+// 쿨 타임으로 사용되지만,
+// 100단위에서 flag로 사용되기도 함
+// 예컨대, 3번째 유저의 쿨타임 4는 304 값으로 저장됨
+// releaseItemGlobal 함수와 연동되니 참고
+   개인적으로 m_ItemCoolTimeSub 를 만드는 것을 추천
+   아마, ITEM_TOGETHERCLASS 와 ITEM_CLASS 그리고 ITEM_MOVEPLACE 가 100대 단위를 사용할 것으로 추정
+	ITEM_MOVESELECT는 잘 모르겠음. 
+
+  (4) 진행 보고
+  현재 진행은 대부분 itemUse 함수에서 이루어지고 있습니다.
+
+//  (5) ITEM_TOGETHERCLASS 쪽을 컨트롤 하기 위해, meetGrade 함수에 하드코딩을 진행중.
+//  그래도 item_togetherclass 모든 함수를 컨트롤 하므로, for문 정도는 사용...
+//  현재는 대출해준 사람의 학습 성취를 실제 학생의 학습 성취와 동일하게 해둠.
+
+  (6)
+  턴 99가 영원한 지속을 의미로 사용
+  (ITEM_NOCLASS에서도 사용됨)
+  오늘자의 (3) 구현과도 관계 있음
+
+  (7) ItemUse에서...
+  switch 구문 (type에 따라서 구분하는..)
+  이 범용적이지는 않음.
+  좀 하드코딩 적임.
+  어떤 if문에는 case TARGET_OTHER 만 구현이 되어 있음.
+
+//  (8) ITEM_NOCLASS 역시
+//  meetGrade 에서 이루어질 예정.! (meetGrade 는 중요하다)
+//  성공!
+
+   (9) GamePlayerContainer의 itemUse에서 
+   gRC->FindPlayerIndexInTheRoom 부분을 하나의 변수로 통일 하는 것을 추천
+
+   (10) ITEM_MOVEPLACE 가 진행중입니다.
+   case에 삽입 하는 데 성공했습니다.
+   PK_WARPSTART_ASK 를 만들고 있습니다. 실패했습니다.

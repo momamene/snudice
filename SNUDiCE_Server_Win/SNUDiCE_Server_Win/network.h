@@ -526,9 +526,10 @@ struct ITEMCARD
 
 struct PK_ITEMUSE_ASK
 {
-	char		szID[IDLENGTH];			// 사용자
-	char		szTarget[IDLENGTH];		// 대상
-	int			nItemID;
+	char  szID[IDLENGTH];   // 사용자
+	char  szTarget[IDLENGTH];  // 대상
+	int   nItemID;
+	int   nPos;     // move일 때 추가
 };
 
 enum ITEMREPRESULT
@@ -570,3 +571,4 @@ struct PK_WARPLISTEND_ASK
 {
 	int			nDestPos[ROOMMAXPLAYER];		// 해당사항 없는 놈은 -1로 채워서 보냄
 };
+
