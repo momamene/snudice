@@ -17,44 +17,7 @@ bool gTileContainer::Setup()
 		}
 	}
 
-
 	Load();
-
-	// sangwoo temp
-	/*
-	char buf[128];
-	OutputDebugString("Test in TileContainer\n");
-	int a = distance(5*LINEY+14,5*LINEY+15);
-	wsprintf(buf,"%d\n",a);
-	OutputDebugString(buf);
-
-	a = distance(5*LINEY+14,5*LINEY+14);
-	wsprintf(buf,"%d\n",a);
-	OutputDebugString(buf);
-
-	a = distance(5*LINEY+14,6*LINEY+14);
-	wsprintf(buf,"%d\n",a);
-	OutputDebugString(buf);
-
-	a = distance(5*LINEY+14,4*LINEY+15);
-	wsprintf(buf,"%d\n",a);
-	OutputDebugString(buf);
-
-	a = distance(4*LINEY+15,5*LINEY+15);
-	wsprintf(buf,"%d\n",a);
-	OutputDebugString(buf);
-
-	a = destination(5*LINEY+14,6);
-	wsprintf(buf,"%d %d\n",a/LINEY,a%LINEY);
-	OutputDebugString(buf);
-
-	a = destination(5*LINEY+14,7);
-	wsprintf(buf,"%d %d\n",a/LINEY,a%LINEY);
-	OutputDebugString(buf);
-	*/
-	// end
-
-
 
 	return true;
 }

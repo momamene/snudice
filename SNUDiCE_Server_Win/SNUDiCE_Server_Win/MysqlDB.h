@@ -4,7 +4,7 @@
 //#define DB_HOST "211.169.219.71"
 #define DB_HOST "127.0.0.1"
 #define DB_USER "root"
-#define DB_PASS "autoset"
+#define DB_PASS "apmsetup"
 #define DB_NAME "mydb"
 
 

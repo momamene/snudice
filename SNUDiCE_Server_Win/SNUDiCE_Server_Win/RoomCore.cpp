@@ -360,6 +360,7 @@ void gRoomCore::pk_gamestart_ask(PK_DEFAULT *pk, SOCKET sock)
 
 	else {
 		m_rooms[nRoomIndex].isGaming = true;
+		SendRoomListCauseChange(nRoomIndex/MAXROOMFORPAGE);
 		gSubmitCore::GetIF()->pk_gamestart_rep(nRoomIndex);
 	}
 }
