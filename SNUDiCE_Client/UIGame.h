@@ -98,7 +98,7 @@ private:
 public:
 	bool		IsUIRange(int x, int y);
 
-	void		SetPopInfo(PK_POPINFO_REP *rep, int ms = 1000);
+	void		SetPopInfo(PK_POPINFO_REP *rep, int ms = 2000);
 
 	void		SetRankList();
 	void		FirstInit();

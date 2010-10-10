@@ -313,11 +313,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 			mouse->OnRButtonDown();
 			return 0;
 		case WM_MOUSEMOVE:
+			mouse->m_nPosX = LOWORD(lParam);
+			mouse->m_nPosY = HIWORD(lParam);
+
 			if(!mw->m_bActive)
 				return 0;
 
-			mouse->m_nPosX = LOWORD(lParam);
-			mouse->m_nPosY = HIWORD(lParam);
 			mouse->OnMouseMove();
 			return 0;
 
@@ -327,9 +328,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 			{
 				case WA_ACTIVE: case WA_CLICKACTIVE:
 					mw->m_bActive = true;
+					ShowCursor(FALSE);
 					break;
 				case WA_INACTIVE:
 					mw->m_bActive = false;
+					ShowCursor(TRUE);
 					break;
 			}
 			return 0;

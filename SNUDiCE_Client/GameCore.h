@@ -28,6 +28,10 @@ public:
 	bool		m_bBusSel;		// 버스 이동 선택모드
 	bool		m_bBusing;		// 버스로 움직이는 중이냐
 
+	PK_NEXTTURN_REP		m_pkNext;
+	int			m_nKeepStart;
+	bool		m_bNextTurnKeep;	// 턴 넘기는거 Keep. true면 keep 해뒀다 나중에 처리
+
 public:
 
 	bool		PreTransMsg(MSG &msg);
