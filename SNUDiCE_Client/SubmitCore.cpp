@@ -50,6 +50,9 @@
 #define SUB_BTN_POS_READY_X			490
 #define SUB_BTN_POS_READY_Y			400
 
+#define SCRIPT_SUBJECT_COUNT_X		550
+#define SCRIPT_SUBJECT_COUNT_Y		60
+
 
 static gSubmitCore s_SubmitCore;
 
@@ -148,7 +151,7 @@ void gSubmitCore::Draw()
 {
 	m_ImgBack.Draw();
 
-	int		i, j;
+	int		i, j, count=0;
 
 
 	RECT	rcDest, rcSour;
@@ -178,10 +181,18 @@ void gSubmitCore::Draw()
 			}
 			else
 			{
+				if(m_subject[i][j]==gPlayerContainer::GetIF()->GetMyPIndex()) {
+					count++;
+				}
 				OffsetRect(&rcSour, 0, m_subject[i][j] * SUB_SIZE_ICONPLAYER_H);
 			}
 			m_ImgIconPlayer.Draw(rcDest, rcSour);
 		}
+	}
+	char szTemp[50]={0,};
+	wsprintf(szTemp,"%d / 6 °ú¸ñ", count);
+	if(count>=2) {
+		i=i;
 	}
 
 	for(i = 0; i < CLASSNUM; i++)
@@ -203,7 +214,7 @@ void gSubmitCore::Draw()
 
 	// map
 	//gMap::GetIF()->DrawHexagon(SUB_MINI_START_X, SUB_MINI_START_Y, SUB_MINI_SOLUTION, true);
-	gMap::GetIF()->DrawSubmit(SUB_MINI_START_X, SUB_MINI_START_Y, SUB_MINI_SOLUTION);
+	gMap::GetIF()->DrawSubmit(SUB_MINI_START_X, SUB_MINI_START_Y, SUB_MINI_SOLUTION, m_nSelected);
 
 	gUtil::BeginText();
 		for(i = 0; i < CLASSNUM; i++)
@@ -214,7 +225,7 @@ void gSubmitCore::Draw()
 			gUtil::Text(m_BtnClass[i].m_rcPos.left + SUB_TERM_COLLEGE_X, m_BtnClass[i].m_rcPos.top + SUB_TERM_COLLEGE_Y,
 				gSubjectContainer::GetIF()->m_subject[i].college);
 		}
-
+		gUtil::Text(SCRIPT_SUBJECT_COUNT_X, SCRIPT_SUBJECT_COUNT_Y, szTemp, 15); //Modified
 	gUtil::EndText();
 }
 

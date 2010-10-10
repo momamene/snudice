@@ -39,3 +39,5 @@ todo
 
 
 
+map이랑 submitCore 깜빡깜빡 거릴 수 있고, x / 6과목 표시되도록 했습니다.
+Script만 만들면 각 과목마다 description 뜨게 하는것은 금방 할 수 있고.

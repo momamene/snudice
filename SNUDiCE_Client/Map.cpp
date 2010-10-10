@@ -306,7 +306,8 @@ void gMap::DrawSubmit(int x0, int y0, int n, int subjectIndex, int frameOn) // f
 	int nMyInRoomIndex = gPC->GetMyPIndex();
 	int nSubjectIndexInTempTile;		// 각 타일의 과목의 subjectIndex;
 	bool bTemp;
-
+	static int tick = GetTickCount(), state=0;
+	static int state2 = 2;
 
 	for(int i = 0 ; i < LINEX ; i++)
 	{ 
@@ -323,10 +324,25 @@ void gMap::DrawSubmit(int x0, int y0, int n, int subjectIndex, int frameOn) // f
 				for(int k = 0 ; k < CLASSSEAT ; k++) {
 					if(gSC->m_subject[nSubjectIndexInTempTile][k] == nMyInRoomIndex) bTemp = true;
 				}
-				if(bTemp) 
-					DrawHexagonSubmitOne(x0, y0, i, j, n, tileMap[i*LINEY+j].flag1, 2);
-				else if (subjectIndex > 0 && frameOn && subjectIndex == nSubjectIndexInTempTile)
-					DrawHexagonSubmitOne(x0, y0, i, j, n, tileMap[i*LINEY+j].flag1, 1);
+
+				if(bTemp) {
+					if(subjectIndex == nSubjectIndexInTempTile) {
+						if(GetTickCount() - tick > 300) { //Sung Managed Here!
+							state2 = 3 - state2;
+							tick = GetTickCount();
+						}
+						DrawHexagonSubmitOne(x0, y0, i, j, n, tileMap[i*LINEY+j].flag1, state2);
+					}
+					else 
+						DrawHexagonSubmitOne(x0, y0, i, j, n, tileMap[i*LINEY+j].flag1, 2);
+				}
+				else if (subjectIndex >= 0 && subjectIndex == nSubjectIndexInTempTile) {
+					if(GetTickCount() - tick > 300) {
+						state = 1 - state;     //Modified
+						tick = GetTickCount(); //By Sung
+					}
+					DrawHexagonSubmitOne(x0, y0, i, j, n, tileMap[i*LINEY+j].flag1, state);
+				}
 				else
 					DrawHexagonSubmitOne(x0, y0, i, j, n, tileMap[i*LINEY+j].flag1, 0);
 			}
