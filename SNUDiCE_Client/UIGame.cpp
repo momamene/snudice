@@ -285,7 +285,50 @@ void gUIGame::MainLoop()
 		if((int)GetTickCount() - m_nTimer > m_nShowTime)
 			m_bPopInfo = false;
 	}
-	
+	static int tick=GetTickCount();
+	const int MouseTick=300;
+//	gMouse *mouse=gMouse::GetIF();
+//	RECT rcTemp;
+
+//	if(gUtil::PointInRect(mouse->m_nPosX, mouse->m_nPosY, rcTemp)) {
+		switch(m_Scroll.whatIsClicked())
+		{
+			case SCR_DOWN:
+				if(GetTickCount() - tick > MouseTick) 
+				{
+					if(m_nCurPInfo < m_nMaxPInfo - 2) {
+						m_nCurPInfo++;
+						m_Scroll.ChangeCursor(m_nCurPInfo, m_nMaxPInfo-2);
+					}
+					tick=GetTickCount();
+				}
+				break;
+			case SCR_UP:
+				if(GetTickCount() - tick > MouseTick) 
+				{
+					if(m_nCurPInfo > 0) {
+						m_nCurPInfo--;
+						m_Scroll.ChangeCursor(m_nCurPInfo, m_nMaxPInfo-2);
+					}
+					tick=GetTickCount();
+				}
+				break;
+				//m_nMaxPInfo가 2인 경우에는 아예 SCR_DOWN으로 들어가질 않으므로 m_nSize가 0으로 보내지는 일 없고 안심.
+			case SCR_BAR:
+				int		nScrollSize = m_Scroll.m_rcPosScroll.bottom - m_Scroll.m_rcPosScroll.top;
+				int		nCur = m_Scroll.m_ImgBtn[SCR_BAR].m_rcPos.top + SCROLL_SIZE_BAR_H - m_Scroll.m_rcPosScroll.top;
+		
+				if(nCur == nScrollSize) {
+					m_nCurPInfo = m_nMaxPInfo - 2;
+					break;
+				}
+				float	fTemp = (float)nCur / nScrollSize;	
+				m_nCurPInfo = (int)((m_nMaxPInfo-2) * fTemp);
+				break;
+		}
+//	}
+
+					
 }
 
 void gUIGame::Draw()
@@ -536,6 +579,10 @@ bool gUIGame::OnLButtonDown()
 	gGameCore			*gc		= gGameCore::GetIF();
 
 	m_Scroll.OnLbuttonDown(mouse->m_nPosX, mouse->m_nPosY);
+	
+	//switch(m_Scroll.whatIsClicked())
+	//{
+	//	case SCR_DOWN:
 
 	if(m_BtnUI[UIBTN_DICE].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 	{
