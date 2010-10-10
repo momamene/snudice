@@ -30,6 +30,7 @@ public:
 public:
 	gImage			m_ImgBack;
 	gImage			m_ImgIconPlayer;
+	gImage			m_ImgMiniMap;
 	gImgButton		m_BtnClass[CLASSNUM];
 	int				m_nSelected;				// 마우스 hover된 과목
 	gImgButton		m_BtnSub[BSUB_END];

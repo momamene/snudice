@@ -29,8 +29,8 @@
 #define SUB_POS_INFO_X				368
 #define SUB_POS_INFO_Y				88
 
-#define SUB_MINI_START_X			360
-#define SUB_MINI_START_Y			175
+#define SUB_MINI_START_X			366
+#define SUB_MINI_START_Y			193
 #define SUB_MINI_SOLUTION			9
 
 #define SUB_FILE_ICONPLAYER			".\\Data\\Submit\\sub_icon_player.img"
@@ -39,7 +39,7 @@
 #define SUB_POS_ICONPLAYER_X		210
 #define SUB_POS_ICONPLAYER_Y		88
 
-#define SUB_BTN_FILE_CHANGE			".\\Data\\SUbmit\\sub_btn_change.img"
+#define SUB_BTN_FILE_CHANGE			".\\Data\\Submit\\sub_btn_change.img"
 #define SUB_BTN_SIZE_CHANGE_W		125
 #define SUB_BTN_SIZE_CHANGE_H		60
 #define SUB_BTN_POS_CHANGE_X		363
@@ -51,8 +51,11 @@
 #define SUB_BTN_POS_READY_Y			400
 
 #define SCRIPT_SUBJECT_COUNT_X		550
-#define SCRIPT_SUBJECT_COUNT_Y		60
+#define SCRIPT_SUBJECT_COUNT_Y		62
 
+#define SUB_FILE_MINIMAP			".\\Data\\Map\\minimap.img"
+#define SUB_POS_MINIMAP_X			365
+#define SUB_POS_MINIMAP_Y			190
 
 static gSubmitCore s_SubmitCore;
 
@@ -72,6 +75,9 @@ gSubmitCore::~gSubmitCore(void)
 bool gSubmitCore::SetUp()
 {
 	if(!m_ImgBack.Load(SUB_FILE_BACK))
+		return false;
+
+	if(!m_ImgMiniMap.Load(SUB_FILE_MINIMAP))
 		return false;
 
 	int		i;
@@ -149,6 +155,7 @@ void gSubmitCore::MainLoop()
 
 void gSubmitCore::Draw()
 {
+	m_ImgMiniMap.Draw(SUB_POS_MINIMAP_X, SUB_POS_MINIMAP_Y);
 	m_ImgBack.Draw();
 
 	int		i, j, count=0;
@@ -232,6 +239,7 @@ void gSubmitCore::Draw()
 void gSubmitCore::Release()
 {
 	m_ImgBack.Release();
+	m_ImgMiniMap.Release();
 
 	int			i;
 	

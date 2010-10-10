@@ -71,6 +71,10 @@
 #define ROOM_POS_PASS_X				95
 #define ROOM_POS_PASS_Y				335
 
+#define ROOM_FILE_MINIMAP			".\\Data\\Map\\minimap2.img"
+#define ROOM_POS_MINIMAP_X			286
+#define ROOM_POS_MINIMAP_Y			115
+
 // join
 #define ROOM_FILE_JOIN_BACK			".\\Data\\Room\\join_back.img"
 #define ROOM_POS_JOIN_X				0
@@ -291,6 +295,8 @@ void gRoomCore::Release()
 
 	m_EditRoom.Release();
 	m_EditPass.Release();
+
+	m_ImgMinimap.Release();
 
 	// join
 	m_ImgRoomName.Release();
@@ -582,6 +588,9 @@ bool gRoomCore::SetUp_Make()
 	if(!m_ImgBack[ERM_MAKE].Load(ROOM_FILE_MAKE_BACK))
 		return false;
 
+	if(!m_ImgMinimap.Load(ROOM_FILE_MINIMAP))
+		return false;
+
 	// pass check
 	if(!m_ImgPass.Load(ROOM_FILE_PASS))
 		return false;
@@ -723,6 +732,7 @@ void gRoomCore::MainLoop_Make()
 void gRoomCore::Draw_Make()
 {
 	m_ImgBack[ERM_MAKE].Draw(ROOM_POS_MAKE_X, ROOM_POS_MAKE_Y);
+	m_ImgMinimap.Draw(ROOM_POS_MINIMAP_X, ROOM_POS_MINIMAP_Y);
 
 	if(strlen(m_EditPass.m_szEdit) > 0)
 	{

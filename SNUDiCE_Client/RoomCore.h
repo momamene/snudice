@@ -114,6 +114,7 @@ public:
 	gImgButton	m_MakeBtn[BMM_END];
 	gImage		m_ImgNum;
 	gImage		m_ImgPass;
+	gImage		m_ImgMinimap;
 	int			m_nPlayer;				// 몇명이 하냐
 	bool		m_bIsPull;				// 게임인원 리스트 박스 열려있냐
 	gEdit		m_EditRoom;
