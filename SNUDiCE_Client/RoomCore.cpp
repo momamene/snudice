@@ -527,6 +527,7 @@ bool gRoomCore::PreTransMsg(MSG &msg)
 							return true;
 						case VK_ESCAPE:
 							SetFocus(gMainWin::GetIF()->m_hWnd);
+							gChat::GetIF()->MsgClear();
 							return true;
 						}
 					}
