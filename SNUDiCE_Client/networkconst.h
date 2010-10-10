@@ -18,7 +18,7 @@
 
 #define PK_HEADER_SIZE			4
 
-#define SNUDICE_VERSION			"0.5002"
+#define SNUDICE_VERSION			"0.5084"
 
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 //	통신 프로토콜
