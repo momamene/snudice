@@ -17,6 +17,7 @@
 #include "ItemContainer.h"
 #include "Map.h"
 #include "UIGame.h"
+#include "networkconst.h"
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
@@ -42,6 +43,9 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 	// Initialize
 	memset(this, 0, sizeof(gMainWin));
 
+	char	szBuf[128];
+	wsprintf(szBuf, "%s Ver %s", GAMENAME, SNUDICE_VERSION);
+	
 	m_hInst	= hInstance;
 	// Make Window
 	WNDCLASS	WndClass;
@@ -51,7 +55,7 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 	WndClass.hIcon			= LoadIcon(NULL, IDI_APPLICATION);
 	WndClass.hInstance		= hInstance;
 	WndClass.lpfnWndProc	= (WNDPROC)WndProc;
-	WndClass.lpszClassName	= GAMENAME;
+	WndClass.lpszClassName	= szBuf;
 	WndClass.lpszMenuName	= NULL;
 	WndClass.style			= CS_HREDRAW | CS_VREDRAW;
 	RegisterClass(&WndClass);
@@ -61,7 +65,7 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 						CW_USEDEFAULT, CW_USEDEFAULT, WNDSIZEW, WNDSIZEH,
 						NULL, (HMENU)NULL, hInstance, NULL);
 #else
-	m_hWnd = CreateWindow(GAMENAME, GAMENAME, WNDSTYLE, 
+	m_hWnd = CreateWindow(szBuf, szBuf, WNDSTYLE, 
 						CW_USEDEFAULT, CW_USEDEFAULT, WNDSIZEW, WNDSIZEH,
 						NULL, (HMENU)NULL, hInstance, NULL);
 

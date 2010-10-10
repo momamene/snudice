@@ -17,7 +17,7 @@
 #define BIT				32
 #define	WNDSIZEW		640
 #define WNDSIZEH		480
-#define GAMENAME		"SNU Dice"
+#define GAMENAME		"SNUDiCE"
 #define WNDSTYLE		(WS_CAPTION | WS_SYSMENU)
 #define BEEPHACKREG		"Control Panel\\Sound"
 #define BEEPHACKREG2	"AppEvents\\Schemes\\Apps\\.Default\\.Default\\.Current"

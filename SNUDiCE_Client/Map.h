@@ -71,6 +71,8 @@ public:
 //	gImage	m_ImgTileBack;
 	gImage	m_ImgSmallTile;
 
+	gImage	m_ImgMapBG;
+
 	int		count; // 아마 이것이 tile의 갯수갰지.
 
 	//bool	m_minimapOn;

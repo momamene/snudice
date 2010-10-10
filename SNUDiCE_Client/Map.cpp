@@ -7,6 +7,8 @@
 
 #define MAPFILE				".\\Data\\map.xy"
 
+#define MAPFILEIMG			".\\Data\\Map\\mapbg.img"
+
 #define TILE_FOOD_IMG		".\\Data\\Map\\food.img"
 #define TILE_CARD_IMG		".\\Data\\Map\\card.img"
 #define TILE_NOKDU_IMG		".\\Data\\Map\\nokdu.img"
@@ -48,6 +50,8 @@ gMap *gMap::GetIF() // 3
 
 bool gMap::Setup()
 {
+	if(!m_ImgMapBG.Load(MAPFILEIMG))
+		return false;
 
 	for(int i = 0 ; i < LINEX ; i++)
 	{
@@ -334,9 +338,25 @@ void gMap::DrawSubmit(int x0, int y0, int n, int subjectIndex, int frameOn) // f
 void gMap::Draw()
 {
 	int n = 1; // Ãà¼ÒÀ²
-	int start_x = m_nAbsDrawlineX;
-	int start_y = m_nAbsDrawlineY;
+//	int start_x = m_nAbsDrawlineX;
+//	int start_y = m_nAbsDrawlineY;
 //	m_ImgTileBack.Draw(0, 0);
+
+	RECT	rcDest, rcSour;
+
+//	float	fRateX, fRateY;
+//	fRateX = m_ImgMapBG.m_nWidth / WNDSIZEW;
+//	fRateY = m_ImgMapBG.m_nHeight / WNDSIZEH;
+
+	SetRect(&rcDest,
+		0, 0, WNDSIZEW, WNDSIZEH);
+	rcSour = rcDest;
+	if(m_nAbsDrawlineX < 0)
+		m_nAbsDrawlineX = 0;
+	OffsetRect(&rcSour,
+		m_nAbsDrawlineX, m_nAbsDrawlineY);
+
+	m_ImgMapBG.Draw(rcDest, rcSour, false);
 	
 	DrawHexagon(0, 0, n);	
 
@@ -516,6 +536,7 @@ void gMap::Release()
 //	m_ImgTileBack.Release();
 
 	m_ImgSmallTile.Release();
+	m_ImgMapBG.Release();
 }
 
 int gMap::PositionFor_gPC()

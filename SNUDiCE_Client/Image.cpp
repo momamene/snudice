@@ -154,6 +154,11 @@ void gImage::Draw(RECT rcDest, RECT rcSour, bool stretch)
 			rcSour.top -= rcDest.top;
 			rcDest.top = 0;
 		}
+		if(rcSour.bottom > m_nHeight)
+		{
+			rcDest.bottom-= (rcSour.bottom - m_nHeight);
+			rcSour.bottom = m_nHeight;
+		}
 
 		int		noverr;
 		int		noverb;
