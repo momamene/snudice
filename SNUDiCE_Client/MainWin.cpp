@@ -18,6 +18,7 @@
 #include "Map.h"
 #include "UIGame.h"
 #include "networkconst.h"
+#include "resource.h"
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
@@ -52,7 +53,7 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 	memset(&WndClass, 0, sizeof(WNDCLASS));
 	WndClass.hbrBackground	= (HBRUSH)GetStockObject(WHITE_BRUSH);
 	WndClass.hCursor		= LoadCursor(NULL, IDC_ARROW);
-	WndClass.hIcon			= LoadIcon(NULL, IDI_APPLICATION);
+	WndClass.hIcon			= LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1));
 	WndClass.hInstance		= hInstance;
 	WndClass.lpfnWndProc	= (WNDPROC)WndProc;
 	WndClass.lpszClassName	= szBuf;
@@ -60,8 +61,10 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 	WndClass.style			= CS_HREDRAW | CS_VREDRAW;
 	RegisterClass(&WndClass);
 
+	ShowCursor(FALSE);
+
 #ifdef FULLSCREEN
-	m_hWnd = CreateWindow(GAMENAME, GAMENAME, WS_POPUP, 
+	m_hWnd = CreateWindow(szBuf, szBuf, WS_POPUP, 
 						CW_USEDEFAULT, CW_USEDEFAULT, WNDSIZEW, WNDSIZEH,
 						NULL, (HMENU)NULL, hInstance, NULL);
 #else
@@ -80,6 +83,9 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 #endif
 
 	if(!SetUpDirect())
+		return false;
+
+	if(!gMouse::GetIF()->SetUp())
 		return false;
 
 	if(!gMap::GetIF()->Setup())
@@ -245,6 +251,7 @@ void gMainWin::MainLoop()
 			gGameCore::GetIF()->MainLoop();
 			break;
 	}
+	gMouse::GetIF()->MainLoop();
 
 	// backbuffer 에 그려진 것들을 출력
 #ifdef FULLSCREEN

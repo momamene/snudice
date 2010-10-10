@@ -8,6 +8,14 @@
 //------------------------------------------------------------------------------------
 #pragma once
 #include "Core.h"
+#include "Image.h"
+
+enum MOUSEMODE
+{
+	MM_DEFAULT1,
+	MM_DEFAULT2,
+	MM_END,
+};
 
 class gMouse : public Core
 {
@@ -17,8 +25,10 @@ public:
 	gMouse();
 	virtual ~gMouse();
 public:
+	gImage		m_ImgMouse;
 	int			m_nPosX;		// ¸¶¿ì½º x, y ÁÂÇ¥
 	int			m_nPosY;
+	MOUSEMODE	m_modeMouse;
 
 	// overriding
 	bool		SetUp();

@@ -287,6 +287,14 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
+				RelativePath=".\snudice.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\SNUDiCE_Client.rc"
+				>
+			</File>
+			<File
 				RelativePath=".\work.txt"
 				>
 			</File>
@@ -326,6 +334,14 @@
 			</File>
 			<File
 				RelativePath=".\PlayerContainer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\resource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\resource1.h"
 				>
 			</File>
 			<File

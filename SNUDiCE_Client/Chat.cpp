@@ -168,6 +168,9 @@ void gChat::MsgClear()
 
 void gChat::SendMsg()
 {
+	if(strlen(m_Edit.m_szEdit) == 0)
+		return;
+
 	PK_MESSAGE_ASK		ask;
 
 	PLAYER*		myplayer;

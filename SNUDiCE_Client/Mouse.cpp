@@ -7,6 +7,10 @@
 #include "RoomCore.h"
 #include "GameCore.h"
 
+#define MOUSEIMG			".\\Data\\Interface\\mouse.img"
+#define MOUSESIZEW			25
+#define MOUSESIZEH			25
+
 static gMouse s_Mouse;
 
 gMouse *gMouse::GetIF()
@@ -17,6 +21,7 @@ gMouse *gMouse::GetIF()
 gMouse::gMouse()
 {
 
+
 }
 
 gMouse::~gMouse()
@@ -26,22 +31,39 @@ gMouse::~gMouse()
 
 bool gMouse::SetUp()
 {
+	if(!m_ImgMouse.Load(MOUSEIMG))
+		return false;
+
+	m_modeMouse = MM_DEFAULT1;
+
 	return true;
 }
 
 // 이넘의 mainloop 에서는 추후에 마우스가 깜빡인다던지 그럴때 활용
 void gMouse::MainLoop()
 {
-
+	Draw();
 }
 
 void gMouse::Draw()
 {
+	RECT	rcDest, rcSour;
 
+	SetRect(&rcDest,
+		0, 0, MOUSESIZEW, MOUSESIZEH);
+	rcSour = rcDest;
+	OffsetRect(&rcDest,
+		m_nPosX, m_nPosY);
+	OffsetRect(&rcSour,
+		0, m_modeMouse * MOUSESIZEH);
+
+	m_ImgMouse.Draw(rcDest, rcSour, false);
 }
 
 void gMouse::OnLButtonDown()
 {
+	m_modeMouse = MM_DEFAULT2;
+
 	if(gPopUp::GetIF()->isPopUp())
 	{
 		gPopUp::GetIF()->OnLButtonDown();
@@ -71,6 +93,8 @@ void gMouse::OnLButtonDown()
 
 void gMouse::OnLButtonUp()
 {
+	m_modeMouse = MM_DEFAULT1;
+
 	if(gPopUp::GetIF()->isPopUp())
 	{
 		gPopUp::GetIF()->OnLButtonUp();
