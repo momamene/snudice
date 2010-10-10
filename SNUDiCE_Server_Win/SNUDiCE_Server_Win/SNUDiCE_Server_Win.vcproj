@@ -214,6 +214,10 @@
 				Name="NewFilter1"
 				>
 				<File
+					RelativePath=".\Charinfo.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\GamePlayerContainer.cpp"
 					>
 				</File>
@@ -283,6 +287,10 @@
 			<Filter
 				Name="NewFilter1"
 				>
+				<File
+					RelativePath=".\Charinfo.h"
+					>
+				</File>
 				<File
 					RelativePath=".\GamePlayerContainer.h"
 					>

@@ -16,6 +16,7 @@
 
 #include "time.h"
 #include "ItemContainer.h"
+#include "Charinfo.h"
 		
 
 static gMainWin	s_MainWin;		// for singleton
@@ -157,9 +158,27 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 	if(!gItemContainer::GetIF()->SetUp())
 		return false;
 
-//	srand(NULL);
+	if(!gCharinfo::GetIF()->SetUp())
+		return false;
 	
 	return true;
+}
+
+void gMainWin::Release()
+{
+	closesocket(m_listen_sock);
+	WSACleanup();
+
+	gLoginCore::GetIF()->Release();
+	gPlayerContainer::GetIF()->Release();
+	gMessageCore::GetIF()->Release();
+	gChannelContainer::GetIF()->Release();
+	gChannelCore::GetIF()->Release();
+	gRoomCore::GetIF()->Release();
+	gSubmitCore::GetIF()->Release();
+	gGamePlayerContainer::GetIF()->Release();
+	gCharinfo::GetIF()->Release();
+
 }
 
 bool gMainWin::MakeListenThread()
@@ -196,18 +215,6 @@ int gMainWin::Run()
 			if(Msg.message == WM_QUIT)
 				break;
 
-// 			switch(m_eCoreMode)
-// 			{
-// 			case ECM_LOGIN:
-// 				if(gLoginCore::GetIF()->PreTransMsg(Msg))
-// 					continue;
-// 				break;
-// 			case ECM_BATTLENET:
-// 				if(gBattleNetCore::GetIF()->PreTransMsg(Msg))
-// 					continue;
-// 				break;
-// 			}
-
 			TranslateMessage(&Msg);
 			DispatchMessage(&Msg);
 		}
@@ -220,20 +227,7 @@ int gMainWin::Run()
 
 }
 
-void gMainWin::Release()
-{
-	closesocket(m_listen_sock);
-	WSACleanup();
-	gLoginCore::GetIF()->Release();
-	gPlayerContainer::GetIF()->Release();
-	gMessageCore::GetIF()->Release();
-	gChannelContainer::GetIF()->Release();
-	gChannelCore::GetIF()->Release();
-	gRoomCore::GetIF()->Release();
-	gSubmitCore::GetIF()->Release();
-	gGamePlayerContainer::GetIF()->Release();
-	
-}
+
 
 
 

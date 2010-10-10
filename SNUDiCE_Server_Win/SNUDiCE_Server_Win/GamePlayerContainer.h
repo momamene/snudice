@@ -1,22 +1,31 @@
 #pragma once
 #include "network.h"
+#include "Charinfo.h"
 
 class gGamePlayerContainer
 {
 public:
 	static gGamePlayerContainer *GetIF();
 
-	CHARINFO	m_CharInfo[CLASS_END];
+	//CHARINFO	m_CharInfo[CLASS_END];
+	gCharinfo	m_CharInfo;
 
 	GAMEPLAYER	m_GamePlayer[MAXROOM][ROOMMAXPLAYER];
 	bool		m_isGamePlayer[MAXROOM][ROOMMAXPLAYER];		
 	// 깜빡 잊고 호환시키지 않는...
 	// 그래도 잘 사용될 수 있는 거니 호환시키도록 하자.
+	// (아냐 이거 잘 사용되는 거임)
+
 	bool		m_isNokdu[MAXROOM][ROOMMAXPLAYER];
+	// 그 플레이어는 녹두에 있는가?
+
 	int			m_nTurn[MAXROOM];
 	int			m_nRound[MAXROOM];	
 
 	int			m_nSubjectCount[MAXROOM][ROOMMAXPLAYER][MAXSUBJECT];
+	// 학점 관련 성취도
+	// 기본적으로 능력 * 20 만큼 증가한다.
+	// grade는 subjectContainer에서 확인할 수 있다.
 	
 	int			m_ItemCoolTime[MAXROOM][ROOMMAXPLAYER][ITEMNUM];
 	// 쿨 타임으로 사용되지만,
@@ -70,5 +79,7 @@ private:
 	// nInRoomIndex는 아이템을 사용한 유저, itemIndex는 0-19 까지의 말그대로의...
 	// bool 값은, nextturn을 시전하는 지 여부.
 	// int 로 바뀔 가능성.
+
+	void		movePlayer(int nRoomIndex,int nInRoomIndex,int des,bool bIsBus = false);
 	
 };

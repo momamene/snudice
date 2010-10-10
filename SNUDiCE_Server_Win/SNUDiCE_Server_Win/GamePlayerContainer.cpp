@@ -7,10 +7,10 @@
 #include "SubjectContainer.h"
 #include "ItemContainer.h"
 
-#include <stdio.h>
+
 #include <time.h>
 
-#define CHARDATAFILE ".\\chardata.dat"
+
 #define ENDROUND	20
 
 static gGamePlayerContainer s_GamePlayerContainer;
@@ -27,71 +27,7 @@ gGamePlayerContainer *gGamePlayerContainer::GetIF()
 
 bool gGamePlayerContainer::SetUp()
 {
-	srand((unsigned)time(NULL));
-
-	FILE  *fp;
-	fp = fopen(CHARDATAFILE, "rt");
-	if(!fp)
-		return false;
-	int   i, k;
-	int   nIndex = 0;  // 몇번째 캐릭터 입력중이냐
-	int   nCount;   // 뭐입력중이나. 0 ; 이름, 1; 단대 .. .
-	char  szBuf[256];
-	char  szTemp[256];
-	while( fgets(szBuf, 256, fp) != NULL)
-	{
-		if(szBuf[0] == '/' && szBuf[1] == '/')
-			continue;        // 주석 건너뛰기
-		i = 0;
-		k = 0;
-		nCount = 0;
-		while(szBuf[i] != '\n')
-		{
-			if(szBuf[i] == ',')
-			{
-				szTemp[k] = NULL;
-				switch(nCount++)
-				{
-				case 0: // 이름
-					strcpy(m_CharInfo[nIndex].szName, szTemp);
-					break;
-				case 1: // 단과대학
-					strcpy(m_CharInfo[nIndex].szCollege, szTemp);
-					break;
-				case 2: // 성별
-					if( strcmp(szTemp, "남") == 0 )
-						m_CharInfo[nIndex].bMale = true;
-					else
-						m_CharInfo[nIndex].bMale = false;
-					break;
-				case 3: // 언어
-					m_CharInfo[nIndex].nLang = atoi(szTemp);
-					break;
-				case 4: // 수리
-					m_CharInfo[nIndex].nMath = atoi(szTemp);
-					break;
-				case 5: // 예술
-					m_CharInfo[nIndex].nArt = atoi(szTemp);
-					break;
-				case 6: // 체력
-					m_CharInfo[nIndex].nStamina = atoi(szTemp);
-					break;
-				case 7: // 4면체
-					m_CharInfo[nIndex].nDice4 = atoi(szTemp);
-					break;
-				case 8: // 6면체
-					m_CharInfo[nIndex].nDice6 = atoi(szTemp);
-					break;
-				}
-				k = 0;
-			}
-			else if(szBuf[i] != '\t')
-				szTemp[k++] = szBuf[i];
-			i++;
-		}
-		nIndex++;
-	}
-	fclose(fp);
+//	srand((unsigned)time(NULL));
 
 	return true;
 }
@@ -104,6 +40,7 @@ bool gGamePlayerContainer::init(int nRoomIndex)
 	gTileContainer *gTC = gTileContainer::GetIF();
 	gSubmitCore *gSC = gSubmitCore::GetIF();
 	gRC->FindClasstypeFromIDs_RMP(nRoomIndex,classtype);
+	gCharinfo	*gC = gCharinfo::GetIF();
 
 	memset(m_GamePlayer[nRoomIndex], 0, sizeof(GAMEPLAYER) * ROOMMAXPLAYER);
 
@@ -122,14 +59,17 @@ bool gGamePlayerContainer::init(int nRoomIndex)
 			//m_isNokdu[nRoomIndex][i] = true;			
 
 			strcpy(m_GamePlayer[nRoomIndex][i].szID,gRC->m_rooms[nRoomIndex].szRoomMaxPlayer[i]);
+			
 			m_GamePlayer[nRoomIndex][i].ctype = classtype[i];
-			m_GamePlayer[nRoomIndex][i].nLang = m_CharInfo[classtype[i]].nLang;
-			m_GamePlayer[nRoomIndex][i].nMath = m_CharInfo[classtype[i]].nMath;
-			m_GamePlayer[nRoomIndex][i].nArt = m_CharInfo[classtype[i]].nArt;
-			m_GamePlayer[nRoomIndex][i].nStamina = m_CharInfo[classtype[i]].nStamina;
-			m_GamePlayer[nRoomIndex][i].nMaxStamina = m_CharInfo[classtype[i]].nStamina;
-			m_GamePlayer[nRoomIndex][i].nDice4 = m_CharInfo[classtype[i]].nDice4;
-			m_GamePlayer[nRoomIndex][i].nDice6 = m_CharInfo[classtype[i]].nDice6;
+
+			m_GamePlayer[nRoomIndex][i].nLang = gC->m_CharInfo[classtype[i]].nLang;
+			m_GamePlayer[nRoomIndex][i].nMath = gC->m_CharInfo[classtype[i]].nMath;
+			m_GamePlayer[nRoomIndex][i].nArt = gC->m_CharInfo[classtype[i]].nArt;
+			m_GamePlayer[nRoomIndex][i].nStamina = gC->m_CharInfo[classtype[i]].nStamina;
+			m_GamePlayer[nRoomIndex][i].nMaxStamina = gC->m_CharInfo[classtype[i]].nStamina;
+			m_GamePlayer[nRoomIndex][i].nDice4 = gC->m_CharInfo[classtype[i]].nDice4;
+			m_GamePlayer[nRoomIndex][i].nDice6 = gC->m_CharInfo[classtype[i]].nDice6;
+			
 			// sangwoo temp (grade 관련)
 			for(int j = 0 ; j < MAXSUBJECT ; j++) 
 				m_GamePlayer[nRoomIndex][i].fGrade[j] = 0.7;
@@ -250,16 +190,32 @@ void gGamePlayerContainer::pk_movestart_ask(PK_DEFAULT *pk,SOCKET sock)
 	rep.nDist = nSum;
 
 	int des = gTC->destination(m_GamePlayer[nRoomIndex][nInRoomIndex].nPos,rep.nDist);
-	if(des == gTC->m_xInitSpacePos * LINEY + gTC->m_yInitSpacePos) { // flip
-		if(m_isNokdu[nRoomIndex][nInRoomIndex]) m_isNokdu[nRoomIndex][nInRoomIndex] = false;
-		else m_isNokdu[nRoomIndex][nInRoomIndex] = true;
-	}
-	m_GamePlayer[nRoomIndex][nInRoomIndex].nPos = des;
+	movePlayer(nRoomIndex,nInRoomIndex,des);
 
 	PushbSynAllPlayer(nRoomIndex,false);
 
 	gPC->SendSelect(PL_MOVESTART_REP,sizeof(PK_MOVESTART_REP),&rep,ECM_GAME,nRoomIndex);
 	//gMainWin::GetIF()->Send(PL_MOVESTART_REP,sizeof(PK_MOVESTART_REP),&rep,ask.szID);
+}
+
+void gGamePlayerContainer::movePlayer(int nRoomIndex,int nInRoomIndex,int des,bool bIsBus)
+{
+	gTileContainer *gTC = gTileContainer::GetIF();
+	if(bIsBus)
+	{
+		if(des == 2*LINEY+17) 
+			m_isNokdu[nRoomIndex][nInRoomIndex] = true;
+		else
+			m_isNokdu[nRoomIndex][nInRoomIndex] = false;
+	}
+	else if(!bIsBus && des == gTC->m_xInitSpacePos * LINEY + gTC->m_yInitSpacePos) 
+	{ // flip
+		if(m_isNokdu[nRoomIndex][nInRoomIndex]) 
+			m_isNokdu[nRoomIndex][nInRoomIndex] = false;
+		else 
+			m_isNokdu[nRoomIndex][nInRoomIndex] = true;
+	}
+	m_GamePlayer[nRoomIndex][nInRoomIndex].nPos = des;
 }
 
 
@@ -298,9 +254,7 @@ void gGamePlayerContainer::pk_moveend_ask(PK_DEFAULT *pk,SOCKET sock)
 
 	if(m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nPos == ask.nDestPos) {
 		m_bSyncronize[nRoomIndex][nInRoomIndex] = true;
-		
-
-		
+			
 		if(isbSynAllTrue(nRoomIndex)) {	// 모든 무브가 끝나면...
 			PushbSynAllPlayer(nRoomIndex,false);
 			if(gTC->m_tileMap[ask.nDestPos].tileType==TY_BUS) {
@@ -321,10 +275,7 @@ void gGamePlayerContainer::pk_moveend_ask(PK_DEFAULT *pk,SOCKET sock)
 
 				}
 				pk_gameplayerinfo_rep(nRoomIndex);
-				OutputDebugString(buf);
 				pk_nextturn_rep(nRoomIndex);
-
-
 			}
 			else if(gTC->m_tileMap[ask.nDestPos].tileType==TY_DRINK) {
 				OutputDebugString("TY_DRINK\n");
@@ -368,6 +319,7 @@ void gGamePlayerContainer::pk_moveend_ask(PK_DEFAULT *pk,SOCKET sock)
 	}
 }
 
+
 void gGamePlayerContainer::pk_nextturn_rep (int nRoomIndex)
 {
 	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
@@ -397,46 +349,7 @@ void gGamePlayerContainer::pk_busmovechoose_rep(int nRoomIndex,char* szID)
 }
 
 
-void gGamePlayerContainer::pk_gameplayerinfo_rep (int nRoomIndex)
-{
-	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
 
-	PK_GAMEPLAYERINFO_REP		rep;
-	pk_subGameplayerinfo_rep(nRoomIndex,&rep);
-
-	memcpy(rep.list,m_GamePlayer[nRoomIndex],sizeof(GAMEPLAYER)*ROOMMAXPLAYER);
-
-	gPC->SendSelect(PL_GAMEPLAYERINFO_REP,sizeof(rep),&rep,ECM_GAME,nRoomIndex);
-}
-
-void gGamePlayerContainer::pk_subGameplayerinfo_rep(int nRoomIndex,PK_GAMEPLAYERINFO_REP* rep)
-{
-	for(int i = 0 ; i < ROOMMAXPLAYER ; i++) {
-		if(m_ItemCoolTime[nRoomIndex][i][0] > 0) {
-			rep->list[i].nLang *= 2;
-			rep->list[i].nMath *= 2;
-			rep->list[i].nArt *= 2;
-		}
-	}
-}
-
-
-void gGamePlayerContainer::pk_popinfo_rep(int nRoomIndex,int stamina,int accomplishment) {
-
-	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
-
-	PK_POPINFO_REP				rep;
-
-	int nInRoomIndex= m_nTurn[nRoomIndex];
-	strcpy(rep.szID,m_GamePlayer[nRoomIndex][nInRoomIndex].szID);
-	rep.nLang = 0;
-	rep.nMath = 0;
-	rep.nArt = 0;
-	rep.nStamina = stamina;
-	rep.nGrade = accomplishment;
-
-	gPC->SendSelect(PL_POPINFO_REP,sizeof(rep),&rep,ECM_GAME,nRoomIndex);
-}
 
 
 void gGamePlayerContainer::pk_busmoveselect_ask(PK_DEFAULT *pk,SOCKET sock)
@@ -465,13 +378,8 @@ void gGamePlayerContainer::pk_busmoveselect_ask(PK_DEFAULT *pk,SOCKET sock)
 	if(nInRoomIndex != m_nTurn[nRoomIndex])
 		return; // 보낸 놈이 지금 턴 놈이 아님.
 	int dis = gTC->distance(m_GamePlayer[nRoomIndex][nInRoomIndex].nPos,ask.nPos);
-	m_GamePlayer[nRoomIndex][nInRoomIndex].nPos = ask.nPos;
-	// hard coding
-	if(ask.nPos == 2*LINEY+17) 
-		m_isNokdu[nRoomIndex][nInRoomIndex] = true;
-	else
-		m_isNokdu[nRoomIndex][nInRoomIndex] = false;
-	// end
+	
+	movePlayer(nRoomIndex,nInRoomIndex,ask.nPos,true);
 
 	rep.nDist = dis;
 
@@ -534,6 +442,63 @@ void gGamePlayerContainer::pk_gameend_rep(int nRoomIndex)
 	strcpy(rep.szID,m_GamePlayer[nRoomIndex][nWinnerIndex].szID);
 
 	gPC->SendSelect(PL_GAMEEND_REP,sizeof(rep),&rep,ECM_GAME,nRoomIndex);
+}
+
+//////////////////////////////////////////////////////////////////////////
+/// info 관련 rep 함수
+//////////////////////////////////////////////////////////////////////////
+
+void gGamePlayerContainer::pk_gameplayerinfo_rep (int nRoomIndex)
+{
+	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
+
+	PK_GAMEPLAYERINFO_REP		rep;
+	pk_subGameplayerinfo_rep(nRoomIndex,&rep);
+
+	memcpy(rep.list,m_GamePlayer[nRoomIndex],sizeof(GAMEPLAYER)*ROOMMAXPLAYER);
+
+	gPC->SendSelect(PL_GAMEPLAYERINFO_REP,sizeof(rep),&rep,ECM_GAME,nRoomIndex);
+}
+
+void gGamePlayerContainer::pk_subGameplayerinfo_rep(int nRoomIndex,PK_GAMEPLAYERINFO_REP* rep)
+{	// 순수하게 stat 아이템 관련 함수. 
+	// stat 아이템에 의해 능력치가 변경되면, rep의 정보를 낚아채서 정보를 변경하는 함수이다.
+	gItemContainer		*gIC = gItemContainer::GetIF();
+	for(int i = 0 ; i < ROOMMAXPLAYER ; i++) {
+		for(int j = 0 ; j < ITEMNUM ; j++) {	// multi item
+			if(gIC->m_ItemList[j].nMulti>0 && m_ItemCoolTime[nRoomIndex][i][j] > 0) {
+				rep->list[i].nLang *= gIC->m_ItemList[j].nMulti;
+				rep->list[i].nMath *= gIC->m_ItemList[j].nMulti;
+				rep->list[i].nArt *= gIC->m_ItemList[j].nMulti;
+			}
+		}
+		for(int j = 0 ; j < ITEMNUM ; j++) {	// plusminus item
+			if(gIC->m_ItemList[j].nLang + gIC->m_ItemList[j].nMath + gIC->m_ItemList[j].nArt > 0
+				&& m_ItemCoolTime[nRoomIndex][i][j] > 0) {
+				rep->list[i].nLang += gIC->m_ItemList[j].nLang;
+				rep->list[i].nMath += gIC->m_ItemList[j].nMath;
+				rep->list[i].nArt += gIC->m_ItemList[j].nArt;
+			}
+		}
+	}
+}
+
+
+void gGamePlayerContainer::pk_popinfo_rep(int nRoomIndex,int stamina,int accomplishment) {
+
+	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
+
+	PK_POPINFO_REP				rep;
+
+	int nInRoomIndex= m_nTurn[nRoomIndex];
+	strcpy(rep.szID,m_GamePlayer[nRoomIndex][nInRoomIndex].szID);
+	rep.nLang = 0;
+	rep.nMath = 0;
+	rep.nArt = 0;
+	rep.nStamina = stamina;
+	rep.nGrade = accomplishment;
+
+	gPC->SendSelect(PL_POPINFO_REP,sizeof(rep),&rep,ECM_GAME,nRoomIndex);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -802,6 +767,7 @@ int gGamePlayerContainer::staminaConvert(int nRoomIndex,int nInRoomIndex,int nPl
 	}
 }
 
+
 //////////////////////////////////////////////////////////////////////////
 /// item use 부터...
 //////////////////////////////////////////////////////////////////////////
@@ -822,7 +788,7 @@ void gGamePlayerContainer::pk_itemuse_ask(PK_DEFAULT *pk,SOCKET sock)
 
 	ask = *((PK_ITEMUSE_ASK*)pk->strPacket);
 
-	wsprintf(buf,"[PK_ITEMUSE_ASK] %s\t message : %s\n", inet_ntoa(clientAddr.sin_addr), ask.szID);
+	wsprintf(buf,"[PK_ITEMUSE_ASK] %s\t message : %s %d \n", inet_ntoa(clientAddr.sin_addr), ask.szID, ask.nItemID);
 	OutputDebugString(buf);
 
 	PK_ITEMUSE_REP		rep;
@@ -845,6 +811,8 @@ void gGamePlayerContainer::pk_itemuse_ask(PK_DEFAULT *pk,SOCKET sock)
 
 	//gPC->SendSelect(PL_ITEMUSE_REP,sizeof(rep),&rep,ECM_GAME,gPC->GetCoreFlag(ask.szID));
 }
+
+
 
 
 bool gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, int nInRoomIndex, int itemIndex)
@@ -965,6 +933,7 @@ bool gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, int nInR
 	OutputDebugString("itemUse 분류되지 않은 case 오류\n");
 	return false;
 }
+
 
 /*
 

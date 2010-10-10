@@ -11,15 +11,6 @@ gMessageCore *gMessageCore::GetIF()
 	return &s_MessageCore;
 }
 
-gMessageCore::gMessageCore()
-{
-//	gMysql::GetIF()->init();
-}
-
-gMessageCore::~gMessageCore()
-{
-
-}
 
 bool gMessageCore::SetUp()
 {
