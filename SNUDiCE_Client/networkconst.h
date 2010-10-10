@@ -85,6 +85,8 @@ enum ePROTOCOL
 
 	PL_WARPLISTSTART_REP,	// 유저 여러명 워프시킬떄
 	PL_WARPLISTEND_ASK,
+
+	PL_INFOCHANGE_REP,		// 아이템 사용 -> 캐릭터 스탯같은 수치 변화 표시
 	
 };
 
@@ -474,7 +476,7 @@ struct PK_GAMEPLAYERINFO_REP
 	GAMEPLAYER	list[ROOMMAXPLAYER];
 };
 
-struct PK_POPINFO_REP
+typedef struct
 {
 	char		szID[IDLENGTH];
 	int			nLang;
@@ -482,7 +484,8 @@ struct PK_POPINFO_REP
 	int			nArt;
 	int			nStamina;
 	int			nGrade;				// 성취도. 학점이 아님
-};
+}
+ PK_POPINFO_REP, CHANGEINFO;
 
 struct PK_GAMEEND_REP
 {
@@ -570,4 +573,9 @@ struct PK_WARPLISTSTART_REP
 struct PK_WARPLISTEND_ASK
 {
 	int			nDestPos[ROOMMAXPLAYER];		// 해당사항 없는 놈은 -1로 채워서 보냄
+};
+
+struct PK_INFOCHANGE_REP
+{
+	CHANGEINFO	info[ROOMMAXPLAYER];
 };
