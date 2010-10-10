@@ -261,6 +261,9 @@ void gMainWin::Recv(PK_DEFAULT *pk, SOCKET sock)
 		case PL_ROOMJOIN_ASK:
 			gRoomCore::GetIF()->pk_roomjoin_ask(pk,sock);
 			break;
+			//수정사항
+		case PL_ROOMBACK_ASK:
+			gRoomCore::GetIF()->pk_roomback_ask(pk,sock);
 		case PL_CHARSELECT_ASK:
 			gRoomCore::GetIF()->pk_charselect_ask(pk,sock);
 			break;

@@ -11,7 +11,7 @@
 #include <time.h>
 
 
-#define ENDROUND	20
+#define ENDROUND	1
 
 static gGamePlayerContainer s_GamePlayerContainer;
 

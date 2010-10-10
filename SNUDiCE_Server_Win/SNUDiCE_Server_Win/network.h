@@ -12,7 +12,7 @@
 #define WM_SOCKET				WM_USER + 1
 
 #define	WINSOCK_VERSION_2_2		MAKEWORD(2, 2)
-#define SERVER_IP				"211.169.219.71"
+#define SERVER_IP				"211.169.219.88"
 #define SERVER_PORT				9000
 #define BUFFERSIZE				2048
 
@@ -43,6 +43,9 @@ enum ePROTOCOL
 
 	PL_ROOMJOIN_ASK,
 	PL_ROOMJOIN_REP,
+
+	PL_ROOMBACK_ASK,	//수정사항
+	PL_ROOMBACK_REP,
 
 	PL_ROOMREFRESH_REP,
 
@@ -319,6 +322,19 @@ struct PK_ROOMJOIN_REP
 	ROOM				joinroom;
 	PLAYER				playerlist[ROOMMAXPLAYER];
 };
+
+//수정사항
+struct PK_ROOMBACK_ASK
+{
+	char		szID[IDLENGTH];
+};
+
+struct PK_ROOMBACK_REP
+{
+	ROOM	room;
+	PLAYER	playerlist[ROOMMAXPLAYER];
+};
+
 
 struct PK_ROOMREFRESH_REP
 {

@@ -22,6 +22,7 @@ public:
 	void			pk_roommaker_ask(PK_DEFAULT *pk, SOCKET sock);
 	void			pk_roomlist_ask(PK_DEFAULT *pk, SOCKET sock);
 	void			pk_roomjoin_ask(PK_DEFAULT *pk, SOCKET sock);
+	void			pk_roomback_ask(PK_DEFAULT *pk, SOCKET sock);	//수정사항
 	void			pk_charselect_ask(PK_DEFAULT *pk, SOCKET sock);
 	void			pk_gameready_ask(PK_DEFAULT *pk, SOCKET sock);
 	void			pk_gamestart_ask(PK_DEFAULT *pk,SOCKET sock);

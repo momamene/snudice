@@ -438,6 +438,56 @@ void gRoomCore::pk_roomjoin_ask(PK_DEFAULT *pk, SOCKET sock)
 	}
 }
 
+
+// 수정사항
+
+void gRoomCore::pk_roomback_ask(PK_DEFAULT *pk, SOCKET sock)
+{
+
+	gRoomCore *gRC = gRoomCore::GetIF();
+	gPlayerContainer *gPC = gPlayerContainer::GetIF();
+
+	PK_ROOMBACK_ASK ask;
+
+	SOCKADDR_IN			clientAddr;
+	int					addrLen;
+	char				buf [1024];
+
+	addrLen = sizeof(clientAddr);
+	getpeername(sock, (SOCKADDR*)&clientAddr, &addrLen);
+
+	ask = *((PK_ROOMBACK_ASK*)pk->strPacket);
+
+	wsprintf(buf,"[PK_ROOMBACK_ASK] %s\n", inet_ntoa(clientAddr.sin_addr) );
+	OutputDebugString(buf);
+
+
+	int nRoomIndex = gPC->GetCoreFlag(ask.szID);	//	방의 index를 획득
+
+	m_rooms[nRoomIndex].isGaming = false;
+	gPC->PutMode(ask.szID ,ECM_ROOM);	//서버에서룸상태변경
+	gPC->PutBoolReady(ask.szID,false);	//레디모드해제
+
+	//	패킷보낼준비
+	PK_ROOMBACK_REP rep;
+	rep.room = m_rooms[nRoomIndex];
+	PLAYER l_playerlist[ROOMMAXPLAYER];
+	FindPlayersFromIDs_RMP(nRoomIndex,l_playerlist);
+
+	for(int j = 0 ; j < ROOMMAXPLAYER ; j++) {
+		if(m_rooms[nRoomIndex].szRoomMaxPlayer[j][0]!='\0') {
+			l_playerlist[j].bReady = false;
+		}
+	}
+
+	memcpy(&rep.playerlist,&l_playerlist,sizeof(PLAYER)*ROOMMAXPLAYER);
+
+	gPC->SendSelect(PL_ROOMBACK_REP,sizeof(PK_ROOMBACK_REP),&rep,ECM_ROOM,nRoomIndex);
+
+}
+
+
+
 //////////////////////////////////////////////////////////////////////////
 /// ???
 //////////////////////////////////////////////////////////////////////////
