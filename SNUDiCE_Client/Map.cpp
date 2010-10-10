@@ -334,6 +334,8 @@ void gMap::DrawSubmit(int x0, int y0, int n, int subjectIndex, int frameOn) // f
 	}
 }
 
+#define BACKMAPX 2255
+#define BACKMAPY 1639
 
 void gMap::Draw()
 {
@@ -351,8 +353,16 @@ void gMap::Draw()
 	SetRect(&rcDest,
 		0, 0, WNDSIZEW, WNDSIZEH);
 	rcSour = rcDest;
+
 	if(m_nAbsDrawlineX < 0)
 		m_nAbsDrawlineX = 0;
+	if(m_nAbsDrawlineY < 0)
+		m_nAbsDrawlineY = 0;
+	if(m_nAbsDrawlineX > BACKMAPX - WNDSIZEW) 
+		m_nAbsDrawlineX = BACKMAPX - WNDSIZEW;
+	if(m_nAbsDrawlineY > BACKMAPY - WNDSIZEH) 
+		m_nAbsDrawlineY = BACKMAPY - WNDSIZEH;
+
 	OffsetRect(&rcSour,
 		m_nAbsDrawlineX, m_nAbsDrawlineY);
 
