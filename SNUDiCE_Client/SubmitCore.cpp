@@ -160,9 +160,10 @@ void gSubmitCore::Draw()
 	m_ImgMiniMap.Draw(SUB_POS_MINIMAP_X, SUB_POS_MINIMAP_Y);
 	m_ImgBack.Draw();
 
-	int		i, j, count=0;
+	int		i, j, count = 0;
 
 
+	char	szTemp[128];
 	RECT	rcDest, rcSour;
 
 	// 수강신청버튼
@@ -190,7 +191,7 @@ void gSubmitCore::Draw()
 			}
 			else
 			{
-				if(m_subject[i][j]==gPlayerContainer::GetIF()->GetMyPIndex()) {
+				if(m_subject[i][j] == gPlayerContainer::GetIF()->GetMyPIndex()) {
 					count++;
 				}
 				OffsetRect(&rcSour, 0, m_subject[i][j] * SUB_SIZE_ICONPLAYER_H);
@@ -198,7 +199,7 @@ void gSubmitCore::Draw()
 			m_ImgIconPlayer.Draw(rcDest, rcSour);
 		}
 	}
-	char szTemp[50]={0,};
+
 	wsprintf(szTemp,"%d / 6 과목", count);
 
 	for(i = 0; i < CLASSNUM; i++)
@@ -219,7 +220,6 @@ void gSubmitCore::Draw()
 
 
 	// map
-	//gMap::GetIF()->DrawHexagon(SUB_MINI_START_X, SUB_MINI_START_Y, SUB_MINI_SOLUTION, true);
 	gMap::GetIF()->DrawSubmit(SUB_MINI_START_X, SUB_MINI_START_Y, SUB_MINI_SOLUTION, m_nSelected);
 
 	gUtil::BeginText();
@@ -233,34 +233,17 @@ void gSubmitCore::Draw()
 		}
 		gUtil::Text(SCRIPT_SUBJECT_COUNT_X, SCRIPT_SUBJECT_COUNT_Y, szTemp, 15); //Modified
 		
-		if(m_nSelected!=-1) {
-			i=m_nSelected;
-			char szScript[200]={0,};
+		if(m_nSelected != -1)
+		{
 			gSubjectContainer *gSC=gSubjectContainer::GetIF();
 
-			wsprintf(szScript, "강의 장소: %s", gSC->m_subject[i].building);
-			gUtil::Text(SCRIPT_SUBJECT_SCRIPT_X, SCRIPT_SUBJECT_SCRIPT_Y, szScript);
-			wsprintf(szScript,"담당교수: %s", gSC->m_subject[i].professor);
-			gUtil::Text(SCRIPT_SUBJECT_SCRIPT_X+120, SCRIPT_SUBJECT_SCRIPT_Y, szScript);
-			wsprintf(szScript,"%s", gSC->m_subject[i].script);
-			
-			int len=strlen(szScript), y=SCRIPT_SUBJECT_SCRIPT_Y+20, c=0;
-			bool lineChange=0;
-			char imsi[120]={0,}, temp2[200]={0,};
+			wsprintf(szTemp, "강의실 : %s", gSC->m_subject[m_nSelected].building);
+			gUtil::Text(SCRIPT_SUBJECT_SCRIPT_X, SCRIPT_SUBJECT_SCRIPT_Y, szTemp);
+			wsprintf(szTemp, "담당교수 : %s", gSC->m_subject[m_nSelected].professor);
+			gUtil::Text(SCRIPT_SUBJECT_SCRIPT_X + 143, SCRIPT_SUBJECT_SCRIPT_Y, szTemp);
 
-			for(i=0;i<len;i++) {
-				if(i>23 && szScript[i]>0 && !lineChange) {
-					imsi[c]=0; lineChange=1;
-					wsprintf(temp2,"강의평가: %s", imsi);
-					gUtil::Text(SCRIPT_SUBJECT_SCRIPT_X, y, temp2);
-					y+=12; c=0;
-				}
-				else imsi[c++]=szScript[i];
-			}
-			if(c) {
-				imsi[c]=0;
-				gUtil::Text(SCRIPT_SUBJECT_SCRIPT_X, y, imsi);
-			}
+			gUtil::Text(SCRIPT_SUBJECT_SCRIPT_X, SCRIPT_SUBJECT_SCRIPT_Y + 25, gSC->m_subject[m_nSelected].script, 17);
+	
 		}
 
 	gUtil::EndText();

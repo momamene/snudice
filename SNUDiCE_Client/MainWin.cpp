@@ -328,11 +328,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 			{
 				case WA_ACTIVE: case WA_CLICKACTIVE:
 					mw->m_bActive = true;
-					ShowCursor(FALSE);
+					//ShowCursor(FALSE);
 					break;
 				case WA_INACTIVE:
 					mw->m_bActive = false;
-					ShowCursor(TRUE);
+					//ShowCursor(TRUE);
 					break;
 			}
 			return 0;

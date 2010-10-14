@@ -60,7 +60,7 @@ public:
 	SUBJECT		m_subject[CLASSNUM]; // -1Àº ºó°Å,
 
 public:
-	bool		SetUp();
+//	bool		SetUp();
 	bool		putSubject(gTile tile,int conPosIndex);
 };
 
