@@ -123,22 +123,22 @@ void gGameCore::MainLoopMouse()
 	if(mouse->m_nPosX < MINMOVE)
 	{
 		if(map->m_nAbsDrawlineX > 0)
-			map->m_nAbsDrawlineX -= 2;
+			map->m_nAbsDrawlineX -= 3;
 	}
 	if(mouse->m_nPosY < MINMOVE)
 	{
 		if(map->m_nAbsDrawlineY > 0)
-			map->m_nAbsDrawlineY -= 2;
+			map->m_nAbsDrawlineY -= 3;
 	}
 	if(mouse->m_nPosX > WNDSIZEW - MINMOVE)
 	{ 
 		if(map->m_nAbsDrawlineX < WORLDX - WNDSIZEW + MINMOVE)
-			map->m_nAbsDrawlineX += 2;
+			map->m_nAbsDrawlineX += 3;
 	}
 	if(mouse->m_nPosY > WNDSIZEH - MINMOVE)
 	{ // 수학적 공식
 		if(map->m_nAbsDrawlineY < WORLDY + FULLY * 2 - WNDSIZEH + MINMOVE)
-			map->m_nAbsDrawlineY += 2;
+			map->m_nAbsDrawlineY += 3;
 	}
 }
 
