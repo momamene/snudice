@@ -9,6 +9,7 @@
 #include "networkconst.h"
 
 #define MAXSUBJECTINFOLENGTH	32
+#define MAXSCRIPTLENGTH			80
 
 /* subject index
 	언어계열
@@ -44,7 +45,10 @@ public:
 	char	college[MAXSUBJECTINFOLENGTH];
 	char	building[MAXSUBJECTINFOLENGTH];
 	char	subject[MAXSUBJECTINFOLENGTH];
+	char	script[MAXSCRIPTLENGTH+2];
+	char	professor[13];
 
+	void	putScript(int n);
 	SUBJECT();
 };
 
@@ -53,11 +57,10 @@ class gSubjectContainer
 {
 public:
 	static gSubjectContainer *GetIF();
-
 	SUBJECT		m_subject[CLASSNUM]; // -1은 빈거,
 
 public:
-	//bool SetUp();
+	bool		SetUp();
 	bool		putSubject(gTile tile,int conPosIndex);
 };
 

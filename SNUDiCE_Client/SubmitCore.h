@@ -10,6 +10,7 @@
 #include "Image.h"
 #include "ImgButton.h"
 #include "Core.h"
+#define MAX_CHAR 50
 
 enum SUBBTN
 {

@@ -1,5 +1,7 @@
 #include "SubjectContainer.h"
 #include "Map.h"
+#define SCRIPT_FILE "Subject_Script.txt"
+#include <stdio.h>
 
 SUBJECT::SUBJECT()
 {
@@ -10,15 +12,35 @@ SUBJECT::SUBJECT()
 	memset(subject,0,sizeof(char)*MAXSUBJECTINFOLENGTH);
 }
 
-/*
-bool gSubjectContainer::SetUp()
-{
-	for(int i = 0 ; i < MAXSUBJECT_N ; i++) {
-		m_subject[i] = -1;
-	}
 
+void SUBJECT::putScript(int n)
+{
+	char szTemp[MAXSCRIPTLENGTH+1];
+	//반드시 스크립트는 
+	//교수이름
+	//강의평가
+	//교수이름
+	//강의평가
+	//이런식으로 써주십시오 아니면 요도됩니다.
+	//그리고 강의평가 길이는 왠만하면 25자 내외로...
+	FILE *fp=fopen(SCRIPT_FILE, "rt");
+	for(int i = 0 ; i <= n ; i++) {
+		if(i==n) {
+			fgets(szTemp, 10, fp);
+			if(szTemp[strlen(szTemp)-1]=='\n') szTemp[strlen(szTemp)-1]=0;
+			strcpy(professor, szTemp);
+			fgets(szTemp, MAXSCRIPTLENGTH, fp);
+			if(szTemp[strlen(szTemp)-1]=='\n') szTemp[strlen(szTemp)-1]=0;
+			strcpy(script, szTemp);
+		}
+		else {
+			fgets(szTemp, 10, fp);
+			fgets(szTemp, MAXSCRIPTLENGTH, fp);
+		}
+	}
+	fclose(fp);
 }
-*/
+
 
 static gSubjectContainer s_subjectContainer; // 2
 
@@ -36,7 +58,7 @@ bool gSubjectContainer::putSubject(gTile tile, int conPosIndex)
 		strcpy(m_subject[tile.flag2].college,tile.college);
 		strcpy(m_subject[tile.flag2].building,tile.building);
 		strcpy(m_subject[tile.flag2].subject,tile.subject);
-
+		m_subject[tile.flag2].putScript(tile.flag2);
 		return true;
 	} 
 	else

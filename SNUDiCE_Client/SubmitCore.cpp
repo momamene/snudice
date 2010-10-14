@@ -52,6 +52,8 @@
 
 #define SCRIPT_SUBJECT_COUNT_X		550
 #define SCRIPT_SUBJECT_COUNT_Y		62
+#define SCRIPT_SUBJECT_SCRIPT_X		365
+#define SCRIPT_SUBJECT_SCRIPT_Y		86
 
 #define SUB_FILE_MINIMAP			".\\Data\\Map\\minimap.img"
 #define SUB_POS_MINIMAP_X			365
@@ -198,9 +200,6 @@ void gSubmitCore::Draw()
 	}
 	char szTemp[50]={0,};
 	wsprintf(szTemp,"%d / 6 과목", count);
-	if(count>=2) {
-		i=i;
-	}
 
 	for(i = 0; i < CLASSNUM; i++)
 		m_BtnClass[i].Draw();
@@ -233,6 +232,37 @@ void gSubmitCore::Draw()
 				gSubjectContainer::GetIF()->m_subject[i].college);
 		}
 		gUtil::Text(SCRIPT_SUBJECT_COUNT_X, SCRIPT_SUBJECT_COUNT_Y, szTemp, 15); //Modified
+		
+		if(m_nSelected!=-1) {
+			i=m_nSelected;
+			char szScript[200]={0,};
+			gSubjectContainer *gSC=gSubjectContainer::GetIF();
+
+			wsprintf(szScript, "강의 장소: %s", gSC->m_subject[i].building);
+			gUtil::Text(SCRIPT_SUBJECT_SCRIPT_X, SCRIPT_SUBJECT_SCRIPT_Y, szScript);
+			wsprintf(szScript,"담당교수: %s", gSC->m_subject[i].professor);
+			gUtil::Text(SCRIPT_SUBJECT_SCRIPT_X+120, SCRIPT_SUBJECT_SCRIPT_Y, szScript);
+			wsprintf(szScript,"%s", gSC->m_subject[i].script);
+			
+			int len=strlen(szScript), y=SCRIPT_SUBJECT_SCRIPT_Y+20, c=0;
+			bool lineChange=0;
+			char imsi[120]={0,}, temp2[200]={0,};
+
+			for(i=0;i<len;i++) {
+				if(i>23 && szScript[i]>0 && !lineChange) {
+					imsi[c]=0; lineChange=1;
+					wsprintf(temp2,"강의평가: %s", imsi);
+					gUtil::Text(SCRIPT_SUBJECT_SCRIPT_X, y, temp2);
+					y+=12; c=0;
+				}
+				else imsi[c++]=szScript[i];
+			}
+			if(c) {
+				imsi[c]=0;
+				gUtil::Text(SCRIPT_SUBJECT_SCRIPT_X, y, imsi);
+			}
+		}
+
 	gUtil::EndText();
 }
 
