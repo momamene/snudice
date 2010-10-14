@@ -1,6 +1,6 @@
 #include "SubjectContainer.h"
 #include "Map.h"
-#define SCRIPT_FILE "Subject_Script.txt"
+#define SCRIPT_FILE "Subject_Script.txt" //스크립트 파일 있는 곳인데, 알아서 바까주십쇼 ㅠ
 #include <stdio.h>
 
 SUBJECT::SUBJECT()
