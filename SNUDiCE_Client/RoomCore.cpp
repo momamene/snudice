@@ -1844,3 +1844,74 @@ void gRoomCore::pk_gamestart_rep(PK_GAMESTART_REP *rep)
 			break;
 	}
 }
+
+bool gRoomCore::Restore()
+{
+	int		i;
+
+	for(i = 0; i < ERM_END; i++)
+		if(!m_ImgBack[i].Restore())
+			return false;
+
+	// make
+	for(i = 0; i < BMM_END; i++)
+		if(!m_MakeBtn[i].Restore())
+			return false;
+
+	if(!m_ImgNum.Restore())
+		return false;
+	if(!m_ImgPass.Restore())
+		return false;
+	if(!m_ImgMinimap.Restore())
+		return false;
+
+	// join
+	if(!m_ImgRNameBack.Restore())
+		return false;
+	if(!m_ImgRoomName.Restore())
+		return false;
+	
+	for(i = 0; i < BJM_END; i++)
+		if(!m_JoinBtn[i].Restore())
+			return false;
+
+	if(!m_ImgPassBack.Restore())
+		return false;
+
+	if(!m_EditPassEnter.Restore())
+		return false;
+
+	// room == wait
+	if(!m_ImgCharBack.Restore())
+		return false;
+
+	for(i = 0; i < BWM_END; i++)
+		if(!m_WaitBtn[i].Restore())
+			return false;
+
+	if(!m_ImgSelBack.Restore())
+		return false;
+
+	// room - select
+	if(!m_ImgCNameBack.Restore())
+		return false;
+	if(!m_ImgBarStudy.Restore())
+		return false;
+	if(!m_ImgBarStamina.Restore())
+		return false;
+	if(!m_ImgBarMove.Restore())
+		return false;
+
+	for(i = 0; i < BSM_END; i++)
+		if(!m_SelBtn[i].Restore())
+			return false;
+
+	if(!m_ImgMySel.Restore())
+		return false;
+	if(!m_ImgReady.Restore())
+		return false;
+	if(!m_ImgCrown.Restore())
+		return false;
+
+	return true;
+}

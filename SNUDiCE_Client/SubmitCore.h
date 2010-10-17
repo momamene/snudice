@@ -51,6 +51,8 @@ public:
 	void			MainLoop();
 	void			Draw();
 	void			Release();
+
+	bool			Restore();
 	
 	void			OnLButtonDown();
 	void			OnLButtonUp();

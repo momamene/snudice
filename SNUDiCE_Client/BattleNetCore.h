@@ -68,6 +68,8 @@ public:
 	void		MainLoop();
 	void		Draw();
 	void		Release();
+
+	bool		Restore();
 	
 	//about mouse
 	void		OnLButtonDown();

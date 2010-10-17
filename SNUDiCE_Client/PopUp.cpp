@@ -314,3 +314,16 @@ void gPopUp::DoEsc()
 			break;
 	}		
 }
+
+
+bool gPopUp::Restore()
+{
+	if(!m_ImgPopup.Restore())
+		return false;
+	if(!m_ImgBtn[ECLK_OK].Restore())
+		return false;
+	if(!m_ImgBtn[ECLK_CANCEL].Restore())
+		return false;
+
+	return true;
+}

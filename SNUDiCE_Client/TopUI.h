@@ -32,4 +32,6 @@ public:
 	bool		SetUp();
 	void		Draw();
 	void		Release();
+
+	bool		Restore();
 };

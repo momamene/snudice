@@ -61,26 +61,44 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 	WndClass.style			= CS_HREDRAW | CS_VREDRAW;
 	RegisterClass(&WndClass);
 
-#ifdef FULLSCREEN
-	m_hWnd = CreateWindow(szBuf, szBuf, WS_POPUP, 
-						CW_USEDEFAULT, CW_USEDEFAULT, WNDSIZEW, WNDSIZEH,
-						NULL, (HMENU)NULL, hInstance, NULL);
-#else
-	m_hWnd = CreateWindow(szBuf, szBuf, WNDSTYLE, 
-						CW_USEDEFAULT, CW_USEDEFAULT, WNDSIZEW, WNDSIZEH,
-						NULL, (HMENU)NULL, hInstance, NULL);
+	m_bFullScreen = DEFAULT_FULLSCREEN;
+	if(m_bFullScreen)
+	{
+		m_hWnd = CreateWindow(szBuf, szBuf, WS_POPUP, 
+			CW_USEDEFAULT, CW_USEDEFAULT, WNDSIZEW, WNDSIZEH,
+			NULL, (HMENU)NULL, hInstance, NULL);
+	}
+	else
+	{
+		m_hWnd = CreateWindow(szBuf, szBuf, WNDSTYLE, 
+			CW_USEDEFAULT, CW_USEDEFAULT, WNDSIZEW, WNDSIZEH,
+			NULL, (HMENU)NULL, hInstance, NULL);
 
-	// ReSize Window
-	RECT	rcWin = {0, 0, WNDSIZEW, WNDSIZEH};
-	AdjustWindowRect(&rcWin, WNDSTYLE, false);
-	SetWindowPos(m_hWnd, NULL, 0, 0,
-			rcWin.right - rcWin.left, rcWin.bottom - rcWin.top,
-			SWP_NOMOVE | SWP_NOZORDER);
+		ResizeWindow();
+	}
 
-	MoveWindow();
-#endif
+	HDC		hdc;
+	int		nBit;
+
+	hdc = GetDC(m_hWnd);
+	nBit = GetDeviceCaps(hdc, BITSPIXEL);
+	ReleaseDC(m_hWnd, hdc);
+
+	if(nBit == 32)
+		m_bit = BIT_32;
+	else if(nBit == 16)
+		m_bit = BIT_16;
+	else
+	{
+		MessageBox(m_hWnd, "디스플레이가 16비트 또는 32비트여야 합니다.", "Error", MB_OK);
+		return false;
+	}
 
 	if(!SetUpDirect())
+		return false;
+	m_bRestore = true;
+
+	if(!m_ImgBack.Load(BACKBUFFERIMG))
 		return false;
 
 	if(!gMouse::GetIF()->SetUp())
@@ -90,9 +108,6 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 		return false;
 
 	if(!gItemContainer::GetIF()->SetUp())
-		return false;
-
-	if(!m_ImgBack.Load(BACKBUFFERIMG))
 		return false;
 
 	if(!gPopUp::GetIF()->SetUp())
@@ -168,6 +183,8 @@ void gMainWin::Release()
 	gDice::GetIF()->Release();
 	gUIGame::GetIF()->Release();
 	gItemContainer::GetIF()->Release();
+	gChat::GetIF()->Release();
+	gMap::GetIF()->Release();
 	SAFE_RELEASE(m_lpDDBack);
 	SAFE_RELEASE(m_lpDDPrimary);
 	SAFE_RELEASE(m_lpDD);
@@ -252,11 +269,10 @@ void gMainWin::MainLoop()
 	gMouse::GetIF()->MainLoop();
 
 	// backbuffer 에 그려진 것들을 출력
-#ifdef FULLSCREEN
-	m_lpDDPrimary->Flip(NULL, DDFLIP_WAIT);
-#else
-	m_lpDDPrimary->Blt(&m_rcScr, m_lpDDBack, NULL, DDBLT_WAIT, NULL);
-#endif
+	if(m_bFullScreen)
+		m_lpDDPrimary->Flip(NULL, DDFLIP_WAIT);
+	else
+		m_lpDDPrimary->Blt(&m_rcScr, m_lpDDBack, NULL, DDBLT_WAIT, NULL);
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
@@ -268,11 +284,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 
 	switch(iMsg)
 	{
-#ifndef FULLSCREEN
 		case WM_MOVE:
-			mw->MoveWindow();
+			if(!mw->m_bFullScreen)
+				mw->MoveWindow();
 		break;
-#endif
 		// keyboard
 		case WM_KEYDOWN:
 			if(!mw->m_bActive)
@@ -305,6 +320,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 			mouse->OnLButtonUp();
 			return 0;
 		case WM_RBUTTONDOWN:
+			if(!gMainWin::GetIF()->FullScreen(!gMainWin::GetIF()->m_bFullScreen))
+			{
+				MessageBox(hWnd, "Display 변경 실패", "Error", MB_OK);
+				gMainWin::GetIF()->Exit();
+			}
+
 			if(!mw->m_bActive)
 				return 0;
 
@@ -313,7 +334,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 			mouse->OnRButtonDown();
 			return 0;
 		case WM_MOUSEMOVE:
-			gMouse::GetIF()->SetShow(false);
+			mouse->SetShow(false);
 			mouse->m_nPosX = LOWORD(lParam);
 			mouse->m_nPosY = HIWORD(lParam);
 
@@ -323,7 +344,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 			mouse->OnMouseMove();
 			return 0;
 		case WM_NCMOUSEMOVE:
-			gMouse::GetIF()->SetShow(true);
+			mouse->SetShow(true);
 			return 0;
 		// active
 		case WM_ACTIVATE:
@@ -347,6 +368,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			return 0;
+
+		// display change
+ 		case WM_DISPLAYCHANGE:
+ 			if(!gMainWin::GetIF()->Restore())
+ 			{
+ 				MessageBox(hWnd, "Display 변경 실패", "Error", MB_OK);
+ 				gMainWin::GetIF()->Exit();
+ 			}
+ 			return 0;
 	}
 	return(DefWindowProc(hWnd, iMsg, wParam, lParam));
 }
@@ -358,78 +388,83 @@ void gMainWin::Exit()
 
 bool gMainWin::SetUpDirect()
 {
-	if(FAILED(DirectDrawCreate(NULL, &m_lpDD, NULL)))
+	if(!m_lpDD)
+		if(FAILED(DirectDrawCreate(NULL, &m_lpDD, NULL)))
+		{
+			MessageBox(m_hWnd, "DirectDraw : Interface 생성 실패", "Error", MB_OK);
+			return false;
+		}
+
+	if(m_bFullScreen)
 	{
-		MessageBox(m_hWnd, "DirectDraw : Interface 생성 실패", "Error", MB_OK);
-		return false;
+		if(FAILED(m_lpDD->SetCooperativeLevel(m_hWnd, DDSCL_EXCLUSIVE | DDSCL_FULLSCREEN)))
+		{
+			MessageBox(m_hWnd, "DirectDraw : Cooperative Level 설정 실패", "Error", MB_OK);
+			return false;
+		}
+		
+		if(FAILED(m_lpDD->SetDisplayMode(WNDSIZEW, WNDSIZEH, m_bit)))
+		{
+			MessageBox(m_hWnd, "DirectDraw : 디스플레이 변경 실패", "Error", MB_OK);
+			return false;
+		}
+		
+		// Primary Buffer
+		DDSURFACEDESC	ddsd;
+		memset(&ddsd, 0, sizeof(DDSURFACEDESC));
+		ddsd.dwSize				= sizeof(DDSURFACEDESC);
+		ddsd.dwFlags			= DDSD_CAPS | DDSD_BACKBUFFERCOUNT;
+		ddsd.ddsCaps.dwCaps		= DDSCAPS_PRIMARYSURFACE | DDSCAPS_FLIP | DDSCAPS_COMPLEX | DDSCAPS_VIDEOMEMORY;
+		ddsd.dwBackBufferCount	= 1;
+		
+		if(FAILED(m_lpDD->CreateSurface(&ddsd, &m_lpDDPrimary, NULL)))
+		{
+			MessageBox(m_hWnd, "DirectDraw : Primary Surface 생성 실패", "Error", MB_OK);
+			return false;
+		}
+		
+		// Backbuffer
+		DDSCAPS		ddsCaps;
+		memset(&ddsCaps, 0, sizeof(DDSCAPS));
+		ddsCaps.dwCaps = DDSCAPS_BACKBUFFER;
+		
+		m_lpDDPrimary->GetAttachedSurface(&ddsCaps, &m_lpDDBack);
 	}
-#ifdef FULLSCREEN
-	if(FAILED(m_lpDD->SetCooperativeLevel(m_hWnd, DDSCL_EXCLUSIVE | DDSCL_FULLSCREEN)))
+	else
 	{
-		MessageBox(m_hWnd, "DirectDraw : Cooperative Level 설정 실패", "Error", MB_OK);
-		return false;
+		if(FAILED(m_lpDD->SetCooperativeLevel(m_hWnd, DDSCL_NORMAL)))
+		{
+			MessageBox(m_hWnd, "DirectDraw : Cooperative Level 설정 실패", "Error", MB_OK);
+			return false;
+		}
+		
+		// Primary Buffer
+		DDSURFACEDESC	ddsd;
+		memset(&ddsd, 0, sizeof(DDSURFACEDESC));
+		ddsd.dwSize			= sizeof(DDSURFACEDESC);
+		ddsd.dwFlags		= DDSD_CAPS;
+		ddsd.ddsCaps.dwCaps	= DDSCAPS_PRIMARYSURFACE;
+		
+		if(FAILED(m_lpDD->CreateSurface(&ddsd, &m_lpDDPrimary, NULL)))
+		{
+			MessageBox(m_hWnd, "DirectDraw : Primary Surface 생성 실패", "Error", MB_OK);
+			return false;
+		}
+		
+		// Back Buffer
+		memset(&ddsd, 0, sizeof(ddsd));
+		ddsd.dwSize			= sizeof(ddsd);
+		ddsd.dwFlags		= DDSD_CAPS | DDSD_WIDTH | DDSD_HEIGHT;
+		ddsd.ddsCaps.dwCaps	= DDSCAPS_OFFSCREENPLAIN | DDSCAPS_VIDEOMEMORY;//DDSCAPS_SYSTEMMEMORY; //DDSCAPS_VIDEOMEMORY
+		ddsd.dwWidth		= WNDSIZEW;
+		ddsd.dwHeight		= WNDSIZEH;
+		
+		if(FAILED(m_lpDD->CreateSurface(&ddsd, &m_lpDDBack, NULL)))
+		{
+			MessageBox(m_hWnd, "DirectDraw : BackBuffer Surface 생성 실패", "Error", MB_OK);
+			return false;
+		}
 	}
-	
-	if(FAILED(m_lpDD->SetDisplayMode(WNDSIZEW, WNDSIZEH, BIT)))
-	{
-		MessageBox(m_hWnd, "DirectDraw : 디스플레이 변경 실패", "Error", MB_OK);
-		return false;
-	}
-	
-	// Primary Buffer
-	DDSURFACEDESC	ddsd;
-	memset(&ddsd, 0, sizeof(DDSURFACEDESC));
-	ddsd.dwSize				= sizeof(DDSURFACEDESC);
-	ddsd.dwFlags			= DDSD_CAPS | DDSD_BACKBUFFERCOUNT;
-	ddsd.ddsCaps.dwCaps		= DDSCAPS_PRIMARYSURFACE | DDSCAPS_FLIP | DDSCAPS_COMPLEX | DDSCAPS_VIDEOMEMORY;
-	ddsd.dwBackBufferCount	= 1;
-	
-	if(FAILED(m_lpDD->CreateSurface(&ddsd, &m_lpDDPrimary, NULL)))
-	{
-		MessageBox(m_hWnd, "DirectDraw : Primary Surface 생성 실패", "Error", MB_OK);
-		return false;
-	}
-	
-	// Backbuffer
-	DDSCAPS		ddsCaps;
-	memset(&ddsCaps, 0, sizeof(DDSCAPS));
-	ddsCaps.dwCaps = DDSCAPS_BACKBUFFER;
-	
-	m_lpDDPrimary->GetAttachedSurface(&ddsCaps, &m_lpDDBack);
-#else
-	if(FAILED(m_lpDD->SetCooperativeLevel(m_hWnd, DDSCL_NORMAL)))
-	{
-		MessageBox(m_hWnd, "DirectDraw : Cooperative Level 설정 실패", "Error", MB_OK);
-		return false;
-	}
-	
-	// Primary Buffer
-	DDSURFACEDESC	ddsd;
-	memset(&ddsd, 0, sizeof(DDSURFACEDESC));
-	ddsd.dwSize			= sizeof(DDSURFACEDESC);
-	ddsd.dwFlags		= DDSD_CAPS;
-	ddsd.ddsCaps.dwCaps	= DDSCAPS_PRIMARYSURFACE;
-	
-	if(FAILED(m_lpDD->CreateSurface(&ddsd, &m_lpDDPrimary, NULL)))
-	{
-		MessageBox(m_hWnd, "DirectDraw : Primary Surface 생성 실패", "Error", MB_OK);
-		return false;
-	}
-	
-	// Back Buffer
-	memset(&ddsd, 0, sizeof(ddsd));
-	ddsd.dwSize			= sizeof(ddsd);
-	ddsd.dwFlags		= DDSD_CAPS | DDSD_WIDTH | DDSD_HEIGHT;
-	ddsd.ddsCaps.dwCaps	= DDSCAPS_OFFSCREENPLAIN | DDSCAPS_VIDEOMEMORY;//DDSCAPS_SYSTEMMEMORY; //DDSCAPS_VIDEOMEMORY
-	ddsd.dwWidth		= WNDSIZEW;
-	ddsd.dwHeight		= WNDSIZEH;
-	
-	if(FAILED(m_lpDD->CreateSurface(&ddsd, &m_lpDDBack, NULL)))
-	{
-		MessageBox(m_hWnd, "DirectDraw : BackBuffer Surface 생성 실패", "Error", MB_OK);
-		return false;
-	}
-#endif
 
 	// Create the clipper using the DirectDraw object 
 
@@ -440,7 +475,7 @@ bool gMainWin::SetUpDirect()
 	lpDDClipper->SetHWnd(0, m_hWnd); 
 
 	// Attach the clipper to the primary surface 
-	m_lpDDPrimary->SetClipper(lpDDClipper); 
+	m_lpDDPrimary->SetClipper(lpDDClipper);
 	
 	return true;
 }
@@ -511,5 +546,125 @@ bool gMainWin::EnableBeep()
 	
 	RegCloseKey(key);
 
+	return true;
+}
+
+bool gMainWin::Restore()
+{
+	if(!m_bRestore)
+		return true;
+
+	SAFE_RELEASE(m_lpDDBack);
+	SAFE_RELEASE(m_lpDDPrimary);
+
+	HDC		hdc;
+	int		nBit;
+
+	hdc = GetDC(m_hWnd);
+	nBit = GetDeviceCaps(hdc, BITSPIXEL);
+	ReleaseDC(m_hWnd, hdc);
+
+	BIT		bitbef = m_bit;
+	if(nBit == 32)
+		m_bit = BIT_32;
+	else if(nBit == 16)
+		m_bit = BIT_16;
+	else
+		return false;
+
+	if(m_bRestore)
+		if(!SetUpDirect())
+			return false;
+
+	if(!m_bFullScreen)
+		ResizeWindow();
+
+	if(m_bit != bitbef)
+	{
+		if(!RestoreRes())
+			return false;
+	}
+	return true;
+}
+
+bool gMainWin::RestoreRes()
+{
+	if(!m_ImgBack.Restore())
+		return false;
+
+	if(!gPopUp::GetIF()->Restore())
+		return false;
+	if(!gMouse::GetIF()->Restore())
+		return false;
+	if(!gLoginCore::GetIF()->Restore())
+		return false;
+	if(!gBattleNetCore::GetIF()->Restore())
+		return false;
+	if(!gRoomCore::GetIF()->Restore())
+		return false;
+	if(!gSubmitCore::GetIF()->Restore())
+		return false;
+	if(!gGameCore::GetIF()->Restore())
+		return false;
+	if(!gPlayerContainer::GetIF()->Restore())
+		return false;
+	if(!gTopUI::GetIF()->Restore())
+		return false;
+	if(!gDice::GetIF()->Restore())
+		return false;
+	if(!gUIGame::GetIF()->Restore())
+		return false;
+	if(!gItemContainer::GetIF()->Restore())
+		return false;
+	if(!gChat::GetIF()->Restore())
+		return false;
+	if(!gMap::GetIF()->Restore())
+		return false;
+
+	return true;
+}
+
+void gMainWin::ResizeWindow()
+{
+	// ReSize Window
+	RECT	rcWin = {0, 0, WNDSIZEW, WNDSIZEH};
+	AdjustWindowRect(&rcWin, WNDSTYLE, false);
+	SetWindowPos(m_hWnd, NULL, 0, 0,
+		rcWin.right - rcWin.left, rcWin.bottom - rcWin.top,
+		SWP_NOMOVE | SWP_NOZORDER);
+
+	MoveWindow();
+}
+
+bool gMainWin::FullScreen(bool bfull)
+{
+	if(m_bFullScreen == bfull)
+		return true;
+
+	m_bRestore = false;
+
+	m_bFullScreen = bfull;
+	if(!bfull)
+	{
+		if(!SetWindowLong(m_hWnd, GWL_STYLE, WNDSTYLE))
+			return false;
+
+		if(FAILED(m_lpDD->RestoreDisplayMode()))
+			return false;
+
+		ResizeWindow();
+	}
+	else
+	{
+		if(!SetWindowLong(m_hWnd, GWL_STYLE, WS_POPUP))
+			return false;
+	}
+
+	SAFE_RELEASE(m_lpDDBack);
+	SAFE_RELEASE(m_lpDDPrimary);
+	if(!SetUpDirect())
+		return false;
+
+	m_bRestore = true;
 	return true;
 }

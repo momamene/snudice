@@ -252,7 +252,6 @@ void gLoginCore::Release()
 
 	m_EditID.Release();
 	m_EditPW.Release();
-
 }
 
 void gLoginCore::SendLogin()
@@ -338,4 +337,25 @@ void gLoginCore::pk_login_rep(PK_LOGIN_REP *rep)
 			gUtil::DebugMsg("login success\n");
 			break;
 	}
+}
+
+bool gLoginCore::Restore()
+{
+	int		i;
+
+	if(!m_ImgBack.Restore())
+		return false;
+	if(!m_ImgLogBox.Restore())
+		return false;
+
+	for(i = 0; i < ELB_END; i++)
+		if(!m_Btn[i].Restore())
+			return false;
+
+	if(!m_EditID.Restore())
+		return false;
+	if(!m_EditPW.Restore())
+		return false;
+
+	return true;
 }

@@ -57,3 +57,8 @@ void gImgButton::Release()
 {
 	m_Img.Release();
 }
+
+bool gImgButton::Restore()
+{
+	return m_Img.Restore();
+}

@@ -5,9 +5,13 @@
 #include "SubmitCore.h"
 #include "PlayerContainer.h"
 
+#define TILENUM				9
+
 #define MAPFILE				".\\Data\\map.xy"
 
 #define MAPFILEIMG			".\\Data\\Map\\mapbg.img"
+#define BACKMAPX			2255
+#define BACKMAPY			1639
 
 #define TILE_FOOD_IMG		".\\Data\\Map\\food.img"
 #define TILE_CARD_IMG		".\\Data\\Map\\card.img"
@@ -350,9 +354,6 @@ void gMap::DrawSubmit(int x0, int y0, int n, int subjectIndex, int frameOn) // f
 	}
 }
 
-#define BACKMAPX 2255
-#define BACKMAPY 1639
-
 void gMap::Draw()
 {
 	int n = 1; // √‡º“¿≤
@@ -556,13 +557,30 @@ void gMap::Release()
 {
 	int		i;
 
-	for(i = 0; i < 9; i++)
+	for(i = 0; i < TILENUM; i++)
 		m_ImgTile[i].Release();
 
 //	m_ImgTileBack.Release();
 
 	m_ImgSmallTile.Release();
 	m_ImgMapBG.Release();
+}
+
+bool gMap::Restore()
+{
+	int		i;
+
+	for(i = 0; i < TILENUM; i++)
+		if(!m_ImgTile[i].Restore())
+			return false;
+
+	if(!m_ImgSmallTile.Restore())
+		return false;
+
+	if(!m_ImgMapBG.Restore())
+		return false;
+
+	return true;
 }
 
 int gMap::PositionFor_gPC()

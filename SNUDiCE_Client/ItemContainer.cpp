@@ -132,5 +132,20 @@ bool gItemContainer::SetUp()
 
 void gItemContainer::Release()
 {
+	int			i;
 
+	for(i = 0; i < ITEMNUM; i++)
+		m_ItemImg[i].Release();
+
+}
+
+bool gItemContainer::Restore()
+{
+	int			i;
+
+	for(i = 0; i < ITEMNUM; i++)
+		if(!m_ItemImg[i].Restore())
+			return false;
+
+	return true;
 }

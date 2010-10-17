@@ -199,3 +199,16 @@ void gScrollbar::ChangeCursor(int cur, int size)
 	m_ImgBtn[SCR_BAR].m_rcPos.top = (int)newCur;
 	m_ImgBtn[SCR_BAR].m_rcPos.bottom = m_ImgBtn[SCR_BAR].m_rcPos.top + SCROLL_SIZE_BAR_H;
 }
+
+bool gScrollbar::Restore()
+{
+	int		i;
+	if(!m_ImgBack.Restore())
+		return false;
+
+	for(i = 0; i < SCR_END; i++)
+		if(!m_ImgBtn[i].Restore())
+			return false;
+
+	return true;
+}

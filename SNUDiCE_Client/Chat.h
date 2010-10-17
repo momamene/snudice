@@ -65,7 +65,10 @@ public:
 public:
 	bool		SetUp();
 	void		Release();
+	bool		Restore();
+
 	void		Draw();
+
 	void		AddStr(char* szID, char* szMsg);
 	void		MsgClear();					// 메시지 입력 창 클리어
 	void		SendMsg();

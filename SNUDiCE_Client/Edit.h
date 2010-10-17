@@ -49,8 +49,11 @@ public:
 	void		Draw();
 	bool		isFocus();
 	void		SetFocusOn();
+
 	bool		SetUp(RECT rcPos, char *img, int strsize, EDITTYPE type);
 	void		Release();
+	bool		Restore();
+
 	bool		isPointInEdit(int nX, int nY);
 	int			GetszLength();
 	void		Clear();

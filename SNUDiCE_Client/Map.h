@@ -99,6 +99,11 @@ public:
 
 public:
 	bool	Setup();			// setup
+	void	Release();	
+
+	bool	Restore();
+
+
 	void	MainLoop();
 	void	Draw();				// 그리는 함수
 
@@ -136,9 +141,6 @@ public:
 	int		viewabsToCon(POINT ij);
 	// 마우스 좌표 받아서, nPos return
 	POINT	ConToViewabs(int nPos);
-
-	void	Release();	
-
 
 private:
 	// Setup의 떨거지 (subfunction)

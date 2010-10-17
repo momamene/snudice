@@ -54,6 +54,7 @@ void gChat::Release()
 {
 	m_Edit.Release();
 	m_ImgBack.Release();
+	m_scroll.Release();
 }
 
 void gChat::Draw()
@@ -322,4 +323,16 @@ void gChat::MsgStackClear()
 
 	memset(m_szID, 0, MSGSTACKSIZE * IDLENGTH );
 	memset(m_szMsg, 0, MSGSTACKSIZE * MSGLENGTH );
+}
+
+bool gChat::Restore()
+{
+	if(!m_ImgBack.Restore())
+		return false;
+	if(!m_Edit.Restore())
+		return false;
+	if(!m_scroll.Restore())
+		return false;
+
+	return true;
 }

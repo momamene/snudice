@@ -602,3 +602,8 @@ void gGameCore::pk_gameend_rep(PK_GAMEEND_REP *rep)
 {
 	gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_EXIT, rep->szID, STR_17);
 }
+
+bool gGameCore::Restore()
+{
+	return true;
+}

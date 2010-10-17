@@ -82,7 +82,6 @@ enum CHANNELMODE
 enum CH_CHANGE_BTN
 {
 	CCB_CHANGE,
-	CCB_CANCEL,
 	CCB_CH1,
 	CCB_CH2,
 	CCB_CH3,
@@ -114,6 +113,8 @@ public:
 	bool			SetUp();
 	void			Draw();
 	void			Release();
+
+	bool			Restore();
 
 	bool			isPointInUI(int x, int y);
 

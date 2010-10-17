@@ -808,3 +808,20 @@ void gUIGame::SetPopInfo(PK_POPINFO_REP *rep, int ms)
 
 	memcpy(&m_popinfo, rep, sizeof(PK_POPINFO_REP));
 }
+
+bool gUIGame::Restore()
+{
+	int			i;
+
+	for(i = 0; i < UIIMG_END; i++)
+		if(!m_ImgUI[i].Restore())
+			return false;
+	for(i = 0; i < UIBTN_END; i++)
+		if(!m_BtnUI[i].Restore())
+			return false;
+
+	if(!m_Scroll.Restore())
+		return false;
+
+	return true;
+}

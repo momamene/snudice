@@ -47,6 +47,8 @@ public:
 public:
 	bool		SetUp();
 	void		Release();
+	bool		Restore();
+
 	void		DiceStart(int, int, int, int, int);
 	void		DiceThrow();
 

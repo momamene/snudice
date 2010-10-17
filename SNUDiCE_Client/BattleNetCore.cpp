@@ -285,3 +285,22 @@ void gBattleNetCore::pk_channelchange_rep(PK_CHANNELCHANGE_REP* rep)
 			break;
 	}
 }
+
+bool gBattleNetCore::Restore()
+{
+	if(!m_ImgOutline.Restore())
+		return false;
+	if(!m_ImgBack.Restore())
+		return false;
+
+	int		i;
+
+	for(i = 0; i < BBTN_END; i++)
+		if(!m_ImgBtn[i].Restore())
+			return false;
+
+	if(!m_ChannelUI.Restore())
+		return false;
+
+	return true;
+}

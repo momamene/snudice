@@ -27,4 +27,6 @@ public:
 public:
 	bool		SetUp();
 	void		Release();
+
+	bool		Restore();
 };

@@ -14,7 +14,8 @@
 
 //#define FULLSCREEN		//	define 풀었다 해제하면서 fullscreen 체크
 
-#define BIT				32
+#define DEFAULT_FULLSCREEN		false
+
 #define	WNDSIZEW		640
 #define WNDSIZEH		480
 #define GAMENAME		"SNUDiCE"
@@ -24,6 +25,11 @@
 
 #define BACKBUFFERIMG	".\\Data\\Login\\backbuffer.img"
 
+enum BIT
+{
+	BIT_16 = 16,
+	BIT_32 = 32,
+};
 
 class gMainWin  
 {
@@ -44,7 +50,9 @@ public:
 
 	eCOREMODE	m_eCoreMode;				// 게임이 어떤 모드냐
 
+	// display
 	bool		m_bFullScreen;
+	BIT			m_bit;
 
 	//	direct x
 	LPDIRECTDRAW			m_lpDD;
@@ -52,19 +60,26 @@ public:
 	LPDIRECTDRAWSURFACE		m_lpDDBack;
 
 	bool		SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow);
+	bool		Restore();					// display 변경으로 인한 다이렉트 서피스 재셋팅
 	void		Release();
+
+	bool		FullScreen(bool bfull);
+
 	int			Run();
 	void		MoveWindow();
 	void		Exit();
 
 private:
 	char		m_szTempReg[128];
+	bool		m_bRestore;
 
 private:
 	bool		DisableBeep();
 	bool		EnableBeep();
 	bool		SetUpDirect();
 	void		MainLoop();
+	void		ResizeWindow();
+	bool		RestoreRes();				// bit 바뀔 때만.
 };
 
  

@@ -34,8 +34,14 @@ public:
 	int			m_nHeight;
 
 	bool		Load(char *szFileName);									// img 파일만 읽어짐
+	bool		Restore();
+
 	void		Draw(int nX = 0, int nY = 0);							// 출력은 무조건 gMainWin의 백버퍼에
 	void		Draw(RECT rcDest, RECT rcSour, bool stretch = true);	// bool 값으로 확대축소. true면 클리핑 안됨.
 
 	void		Release();
+
+private:
+	bool		Load16(char *szFileName);
+	bool		Load32(char *szFileName);
 };

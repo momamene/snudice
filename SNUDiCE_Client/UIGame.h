@@ -108,6 +108,8 @@ public:
 	void		MainLoop();
 	void		Draw();
 	void		Release();
+
+	bool		Restore();
 	
 	bool		OnLButtonDown();
 	void		OnLButtonUp();

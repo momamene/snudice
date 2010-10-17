@@ -54,7 +54,7 @@ bool gChannelUI::SetUp()
 	*/
 	
 	m_eChannel = CM_CHANNEL;
-	m_BtnMode[m_eChannel].m_eBtnMode = EBM_CLICK;
+//	m_BtnMode[m_eChannel].m_eBtnMode = EBM_CLICK;
 
 	if(!m_ImgChName.Load(CH_FILE_CHNAME))
 		return false;
@@ -184,10 +184,10 @@ void gChannelUI::DrawChannelChange()
 
 	int		i;
 
-	for(i = 0; i < CM_END; i++)
-		m_BtnMode[i].Draw();
+//	for(i = 0; i < CM_END; i++)
+//		m_BtnMode[i].Draw();
 
-	for(i = CCB_CANCEL; i < CCB_END; i++)
+	for(i = CCB_CHANGE; i < CCB_END; i++)
 		m_BtnChChange[i].Draw();
 }
 
@@ -198,8 +198,8 @@ void gChannelUI::Release()
 
 	int		i;
 	
-	for(i = 0; i < CM_END; i++)
-		m_BtnMode[i].Release();
+//	for(i = 0; i < CM_END; i++)
+//		m_BtnMode[i].Release();
 
 	for(i = 0; i < CCB_END; i++)
 		m_BtnChChange[i].Release();
@@ -215,16 +215,16 @@ void gChannelUI::OnLButtonDown(int x, int y)
 	int			i;
 
 	m_scroll.OnLbuttonDown(x, y);
-	for(i = 0; i < CM_END; i++)
-	{
-		if(m_BtnMode[i].PointInButton(x, y))
-		{
-			m_eChannel = (CHANNELMODE)i;
-			m_BtnMode[i].m_eBtnMode = EBM_CLICK;
-			OnMouseMove(x, y);
-			return;
-		}
-	}
+// 	for(i = 0; i < CM_END; i++)
+// 	{
+// 		if(m_BtnMode[i].PointInButton(x, y))
+// 		{
+// 			m_eChannel = (CHANNELMODE)i;
+// 			m_BtnMode[i].m_eBtnMode = EBM_CLICK;
+// 			OnMouseMove(x, y);
+// 			return;
+// 		}
+// 	}
 
 	switch(m_eChannel)
 	{
@@ -236,7 +236,7 @@ void gChannelUI::OnLButtonDown(int x, int y)
 		break;
 		case CM_CHANNELCHANGE:
 			{
-				if(m_BtnChChange[CCB_CANCEL].PointInButton(x, y))
+				if(m_BtnChChange[CCB_CHANGE].PointInButton(x, y))
 					m_eChannel = CM_CHANNEL;
 
 				for(i = CCB_CH1; i < CCB_END; i++)
@@ -270,16 +270,16 @@ void gChannelUI::OnMouseMove(int x, int y)
 	{
 		case CM_CHANNEL:
 			{
-				for(i = 0; i < CM_END; i++)
-				{
-					if(i == CM_CHANNEL)
-						continue;
-
-					if(m_BtnMode[i].PointInButton(x, y))
-						m_BtnMode[i].m_eBtnMode = EBM_HOVER;
-					else
-						m_BtnMode[i].m_eBtnMode	= EBM_NONE;
-				}
+// 				for(i = 0; i < CM_END; i++)
+// 				{
+// 					if(i == CM_CHANNEL)
+// 						continue;
+// 
+// 					if(m_BtnMode[i].PointInButton(x, y))
+// 						m_BtnMode[i].m_eBtnMode = EBM_HOVER;
+// 					else
+// 						m_BtnMode[i].m_eBtnMode	= EBM_NONE;
+// 				}
 
 				if(m_BtnChChange[CCB_CHANGE].PointInButton(x, y))
 					m_BtnChChange[CCB_CHANGE].m_eBtnMode = EBM_HOVER;
@@ -290,18 +290,18 @@ void gChannelUI::OnMouseMove(int x, int y)
 		break;
 		case CM_CHANNELCHANGE:
 			{
-				for(i = 0; i < CM_END; i++)
-				{
-					if(i == CM_CHANNEL)
-						continue;
+// 				for(i = 0; i < CM_END; i++)
+// 				{
+// 					if(i == CM_CHANNEL)
+// 						continue;
+// 
+// 					if(m_BtnMode[i].PointInButton(x, y))
+// 						m_BtnMode[i].m_eBtnMode = EBM_HOVER;
+// 					else
+// 						m_BtnMode[i].m_eBtnMode	= EBM_NONE;
+// 				}
 
-					if(m_BtnMode[i].PointInButton(x, y))
-						m_BtnMode[i].m_eBtnMode = EBM_HOVER;
-					else
-						m_BtnMode[i].m_eBtnMode	= EBM_NONE;
-				}
-
-				for(i = CCB_CANCEL; i < CCB_END; i++)
+				for(i = CCB_CHANGE; i < CCB_END; i++)
 				{
 					if(m_BtnChChange[i].PointInButton(x, y))
 						m_BtnChChange[i].m_eBtnMode = EBM_HOVER;
@@ -316,4 +316,29 @@ void gChannelUI::OnMouseMove(int x, int y)
 void gChannelUI::OnRButtonDown(int x, int y)
 {
 
+}
+
+
+bool gChannelUI::Restore()
+{
+	int		i;
+
+	if(!m_ImgBack.Restore())
+		return false;
+
+// 	for(i = 0; i < CM_END; i++)
+// 		if(!m_BtnMode[i].Restore())
+// 			return false;
+
+	if(!m_ImgChName.Restore())
+		return false;
+
+	for(i = 0; i < CCB_END; i++)
+		if(!m_BtnChChange[i].Restore())
+			return false;
+
+	if(!m_scroll.Restore())
+		return false;
+
+	return true;
 }

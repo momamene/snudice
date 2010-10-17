@@ -52,6 +52,8 @@ public:
 	void			Draw();
 	void			Release();
 
+	bool			Restore();
+
 	SCROLLBTN		whatIsClicked();
 	void			ChangeCursor(int cur, int size);
 

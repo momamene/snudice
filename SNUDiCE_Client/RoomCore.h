@@ -157,6 +157,8 @@ public:
 	void		Draw();
 	void		Release();
 
+	bool		Restore();
+
 	void		OnLButtonDown();
 	void		OnLButtonUp();
 	void		OnMouseMove();

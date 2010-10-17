@@ -158,3 +158,12 @@ void gEdit::Clear()
 	strcpy(m_szEdit, "");
 	SendMessage(m_hEdit, WM_SETTEXT, (WPARAM)m_szEdit, 0);
 }
+
+bool gEdit::Restore()
+{
+	if(m_bImg)
+		if(!m_ImgEdit.Restore())
+			return false;
+
+	return true;
+}

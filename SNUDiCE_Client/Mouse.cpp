@@ -191,3 +191,11 @@ void gMouse::SetShow(bool show)
 		m_bShow = show;
 	}
 }
+
+bool gMouse::Restore()
+{
+	if(!m_ImgMouse.Restore())
+		return false;
+
+	return true;
+}

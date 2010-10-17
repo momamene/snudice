@@ -31,6 +31,8 @@ public:
 	bool		m_bShow;
 
 	bool		SetUp(char *szImgName, bool vertical, RECT rcPos);
+	bool		Restore();
+
 	void		Draw();
 
 	bool		PointInButton(int nX, int nY);

@@ -384,3 +384,25 @@ void gSubmitCore::pk_maingametart_rep(PK_MAINGAMESTART_REP *rep)
 	gUIGame::GetIF()->SetRankList();
 
 }
+
+bool gSubmitCore::Restore()
+{
+	int		i;
+
+	if(!m_ImgBack.Restore())
+		return false;
+	if(!m_ImgIconPlayer.Restore())
+		return false;
+	if(!m_ImgMiniMap.Restore())
+		return false;
+
+	for(i = 0; i < CLASSNUM; i++)
+		if(!m_BtnClass[i].Restore())
+			return false;
+	
+	for(i = 0; i < BSUB_END; i++)
+		if(!m_BtnSub[i].Restore())
+			return false;
+
+	return true;
+}

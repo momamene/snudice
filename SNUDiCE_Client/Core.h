@@ -15,6 +15,8 @@ class Core
 	virtual void Draw() = 0;
 	virtual	void Release() = 0;
 
+	virtual bool Restore() = 0;
+
 	//about mouse
 	virtual void OnLButtonDown() = 0;
 	virtual void OnLButtonUp() = 0;

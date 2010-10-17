@@ -39,3 +39,11 @@ void gTopUI::Release()
 {
 	m_ImgBack.Release();
 }
+
+bool gTopUI::Restore()
+{
+	if(!m_ImgBack.Restore())
+		return false;
+
+	return true;
+}

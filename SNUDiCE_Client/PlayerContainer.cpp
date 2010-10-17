@@ -425,3 +425,19 @@ int	gPlayerContainer::GetGPIndex(char* id)
 	}
 	return -1;
 }
+
+bool gPlayerContainer::Restore()
+{
+	int		i;
+
+	for(i = 0; i < MAXCHARNUM; i++)
+	{
+		if(!m_ImgInfo[i].ImgCharSel.Restore())
+			return false;
+		if(!m_ImgInfo[i].ImgDot.Restore())
+			return false;
+		if(!m_ImgInfo[i].ImgPic.Restore())
+			return false;
+	}
+	return true;
+}

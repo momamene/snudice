@@ -156,3 +156,22 @@ void gDice::DiceThrow()
 		m_ImgCubeWin.Draw(m_winPos, rcSour);
 	}
 }
+
+bool gDice::Restore()
+{
+	int		i;
+
+	for(i = 0; i < 4; i++)
+		if(!m_ImgHed[i].Restore())
+			return false;
+	if(!m_ImgHedWin.Restore())
+		return false;
+
+	for(i = 0; i < 6; i++)
+		if(!m_ImgCube[i].Restore())
+			return false;
+	if(!m_ImgCubeWin.Restore())
+		return false;
+
+	return true;
+}
