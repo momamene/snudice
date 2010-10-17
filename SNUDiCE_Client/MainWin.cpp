@@ -61,8 +61,6 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 	WndClass.style			= CS_HREDRAW | CS_VREDRAW;
 	RegisterClass(&WndClass);
 
-	ShowCursor(FALSE);
-
 #ifdef FULLSCREEN
 	m_hWnd = CreateWindow(szBuf, szBuf, WS_POPUP, 
 						CW_USEDEFAULT, CW_USEDEFAULT, WNDSIZEW, WNDSIZEH,
@@ -142,7 +140,7 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 
 	m_eCoreMode = ECM_LOGIN;
 
-	srand(NULL);
+	//srand(NULL);
 
 	return true;
 }
@@ -266,6 +264,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 	gMainWin	*mw		= gMainWin::GetIF();
 	gMouse		*mouse	= gMouse::GetIF();
 
+	static bool bshow = false;
+
 	switch(iMsg)
 	{
 #ifndef FULLSCREEN
@@ -313,6 +313,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 			mouse->OnRButtonDown();
 			return 0;
 		case WM_MOUSEMOVE:
+			gMouse::GetIF()->SetShow(false);
 			mouse->m_nPosX = LOWORD(lParam);
 			mouse->m_nPosY = HIWORD(lParam);
 
@@ -321,7 +322,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 
 			mouse->OnMouseMove();
 			return 0;
-
+		case WM_NCMOUSEMOVE:
+			gMouse::GetIF()->SetShow(true);
+			return 0;
 		// active
 		case WM_ACTIVATE:
 			switch(LOWORD(wParam))

@@ -35,7 +35,8 @@ bool gMouse::SetUp()
 		return false;
 
 	m_modeMouse = MM_DEFAULT1;
-
+	m_bShow = true;		// true는 setup하기위해서. m_bShow != bShow 비교떄메
+	SetShow(false);
 	return true;
 }
 
@@ -179,5 +180,14 @@ void gMouse::OnRButtonDown()
 
 void gMouse::Release()
 {
+	m_ImgMouse.Release();
+}
 
+void gMouse::SetShow(bool show)
+{
+	if(m_bShow != show)
+	{
+		ShowCursor(show);
+		m_bShow = show;
+	}
 }

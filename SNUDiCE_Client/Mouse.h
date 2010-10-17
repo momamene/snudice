@@ -30,7 +30,10 @@ public:
 	int			m_nPosY;
 	MOUSEMODE	m_modeMouse;
 
+	bool		m_bShow;
+
 	// overriding
+	void		SetShow(bool show);
 	bool		SetUp();
 	void		MainLoop();
 	void		Draw();

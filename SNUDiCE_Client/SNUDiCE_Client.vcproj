@@ -181,10 +181,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ItemContainer.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\main.cpp"
 				>
 			</File>
@@ -194,10 +190,6 @@
 			</File>
 			<File
 				RelativePath=".\Mouse.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\PlayerContainer.cpp"
 				>
 			</File>
 			<File
@@ -224,19 +216,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Map.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\PopUp.cpp"
 					>
 				</File>
 				<File
 					RelativePath=".\Scrollbar.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\SubjectContainer.cpp"
 					>
 				</File>
 				<File
@@ -280,6 +264,26 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Container"
+				>
+				<File
+					RelativePath=".\ItemContainer.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Map.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\PlayerContainer.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\SubjectContainer.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="리소스 파일"
@@ -317,10 +321,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ItemContainer.h"
-				>
-			</File>
-			<File
 				RelativePath=".\MainWin.h"
 				>
 			</File>
@@ -333,15 +333,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\PlayerContainer.h"
-				>
-			</File>
-			<File
 				RelativePath=".\resource.h"
-				>
-			</File>
-			<File
-				RelativePath=".\resource1.h"
 				>
 			</File>
 			<File
@@ -372,19 +364,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Map.h"
-					>
-				</File>
-				<File
 					RelativePath=".\PopUp.h"
 					>
 				</File>
 				<File
 					RelativePath=".\Scrollbar.h"
-					>
-				</File>
-				<File
-					RelativePath=".\SubjectContainer.h"
 					>
 				</File>
 				<File
@@ -437,6 +421,26 @@
 				</File>
 				<File
 					RelativePath=".\SubmitCore.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Container"
+				>
+				<File
+					RelativePath=".\ItemContainer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Map.h"
+					>
+				</File>
+				<File
+					RelativePath=".\PlayerContainer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\SubjectContainer.h"
 					>
 				</File>
 			</Filter>

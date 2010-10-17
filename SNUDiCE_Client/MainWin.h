@@ -44,6 +44,8 @@ public:
 
 	eCOREMODE	m_eCoreMode;				// 게임이 어떤 모드냐
 
+	bool		m_bFullScreen;
+
 	//	direct x
 	LPDIRECTDRAW			m_lpDD;
 	LPDIRECTDRAWSURFACE		m_lpDDPrimary;
@@ -56,7 +58,7 @@ public:
 	void		Exit();
 
 private:
-	char		m_szTempReg[128];	
+	char		m_szTempReg[128];
 
 private:
 	bool		DisableBeep();
