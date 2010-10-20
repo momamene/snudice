@@ -231,7 +231,7 @@ void gSubmitCore::Draw()
 			gUtil::Text(m_BtnClass[i].m_rcPos.left + SUB_TERM_COLLEGE_X, m_BtnClass[i].m_rcPos.top + SUB_TERM_COLLEGE_Y,
 				gSubjectContainer::GetIF()->m_subject[i].college);
 		}
-		gUtil::Text(SCRIPT_SUBJECT_COUNT_X, SCRIPT_SUBJECT_COUNT_Y, szTemp, 15); //Modified
+		gUtil::Text(SCRIPT_SUBJECT_COUNT_X, SCRIPT_SUBJECT_COUNT_Y, szTemp, true, 15); //Modified
 		
 		if(m_nSelected != -1)
 		{
@@ -242,7 +242,7 @@ void gSubmitCore::Draw()
 			wsprintf(szTemp, "담당교수 : %s", gSC->m_subject[m_nSelected].professor);
 			gUtil::Text(SCRIPT_SUBJECT_SCRIPT_X + 143, SCRIPT_SUBJECT_SCRIPT_Y, szTemp);
 
-			gUtil::Text(SCRIPT_SUBJECT_SCRIPT_X, SCRIPT_SUBJECT_SCRIPT_Y + 25, gSC->m_subject[m_nSelected].script, 17);
+			gUtil::Text(SCRIPT_SUBJECT_SCRIPT_X, SCRIPT_SUBJECT_SCRIPT_Y + 25, gSC->m_subject[m_nSelected].script, true, 17);
 	
 		}
 

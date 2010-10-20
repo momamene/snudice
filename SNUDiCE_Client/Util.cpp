@@ -18,7 +18,7 @@ void gUtil::BeginText()
 	s_ofont = (HFONT)SelectObject(s_hdc, s_font);
 }
 
-void gUtil::Text(int x, int y, char *str, int lineterm)
+void gUtil::Text(int x, int y, char *str, bool newline, int lineterm)
 {
 	if(s_hdc == NULL) return;
 
@@ -27,22 +27,27 @@ void gUtil::Text(int x, int y, char *str, int lineterm)
 	int		k = 0;
 	int		line = 0;
 
-	for(int i = 0; i < len; i++)
+	if(newline)
 	{
-		if(str[i] != '_')
+		for(int i = 0; i < len; i++)
 		{
-			szBuf[k++] = str[i];
+			if(str[i] != '_')
+			{
+				szBuf[k++] = str[i];
+			}
+			else
+			{
+				szBuf[k] = NULL;
+				TextOut(s_hdc, x, y + lineterm * line, szBuf, strlen(szBuf));
+				k = 0;
+				line++;
+			}
 		}
-		else
-		{
-			szBuf[k] = NULL;
-			TextOut(s_hdc, x, y + lineterm * line, szBuf, strlen(szBuf));
-			k = 0;
-			line++;
-		}
+		szBuf[k] = '\0';
+		TextOut(s_hdc, x, y + lineterm * line, szBuf, strlen(szBuf));
 	}
-	szBuf[k] = '\0';
-	TextOut(s_hdc, x, y + lineterm * line, szBuf, strlen(szBuf));
+	else
+		TextOut(s_hdc, x, y, str, strlen(str));
 }
 
 void gUtil::EndText()

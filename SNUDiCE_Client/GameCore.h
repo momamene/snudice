@@ -10,6 +10,19 @@
 #pragma once
 #include "networkconst.h"
 #include "Core.h"
+#include "Image.h"
+
+enum BUSMOVE
+{
+	BUS_COME,
+	BUS_BOARD,
+	BUS_START,
+	BUS_SCROLLSTART,
+	BUS_SCROLLEND,
+	BUS_COME2,
+	BUS_BOARD2,
+	BUS_START2,
+};
 
 class gGameCore : Core
 {
@@ -25,12 +38,23 @@ public:
 	bool		m_bMoved;		// 해당 턴에 움직엿냐, 즉 movestart_ask 보냇으면 true
 	bool		m_bMoving;		// 움직이는 중이냐
 	bool		m_bScrolling;	// 스크롤하는 중이냐, m_bMoving과 충돌될 우려가 있다.
+
 	bool		m_bBusSel;		// 버스 이동 선택모드
 	bool		m_bBusing;		// 버스로 움직이는 중이냐
+	gImage		m_ImgBus;
+	int			m_curframe;		// 버스 프레임
+//	POINT		m_ptBusPos;		// 버스 출력 위치
+
+
 
 	PK_NEXTTURN_REP		m_pkNext;
 	int			m_nKeepStart;
 	bool		m_bNextTurnKeep;	// 턴 넘기는거 Keep. true면 keep 해뒀다 나중에 처리
+
+private:
+	BUSMOVE		m_busmode;
+	int			m_buspos;			// 버스 도착 장소
+	
 
 public:
 
@@ -71,11 +95,7 @@ private:
 	void		ScrollOn();
 	void		ScrollEnd();
 
-	void		BusStart(int spacor);
-	void		BusStart(int spacor,int conPosX, int conPosY);
-	void		BusStepStart();
-	void		BusStepOn();
-	void		BusStepEnd();
-	void		BusEnd();
+	void		DrawBus();
+	void		BusComeStart(int nPos);
 
 };

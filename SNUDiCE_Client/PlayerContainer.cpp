@@ -162,6 +162,8 @@ bool gPlayerContainer::SetUp()
 	for(i = 0; i < ROOMMAXPLAYER; i++)
 		m_moveFoot[i] = 1;
 
+	m_nNoDraw = -1;
+
 	return true;
 }
 
@@ -291,23 +293,6 @@ void gPlayerContainer::MainLoop()
 	Draw();
 }
 
-void gPlayerContainer::PacketalDrawFix() {
-
-	POINT		pt;
-
-	for(int i = 0 ; i < ROOMMAXPLAYER ; i++)
-	{
-		if(m_MyRoom.szRoomMaxPlayer[i][0] != '\0')
-		{
-			pt.x	= m_GPlayerList[i].nPos / LINEY;
-			pt.y	= m_GPlayerList[i].nPos % LINEY;
-			pt		= gMap::GetIF()->conToAbs(pt);
-			m_nAbsDrawlineX[i] = pt.x;
-			m_nAbsDrawlineY[i] = pt.y;
-		}
-	}
-}
-
 void gPlayerContainer::Draw()
 {
 	RECT	rcScr;
@@ -335,6 +320,70 @@ void gPlayerContainer::Draw()
 		}
 	}
 }
+
+
+void gPlayerContainer::MainLoop_Busing(gImage *bus, RECT *rcDest, RECT *rcSour, int turn)
+{
+	Draw_Busing(bus, rcDest, rcSour, turn);
+}
+
+void gPlayerContainer::Draw_Busing(gImage *bus, RECT *rcDest, RECT *rcSour, int turn)
+{
+	RECT	rcScr;
+	RECT	rcImg;
+
+	gMap* gmap = gMap::GetIF();
+
+	int		busY = m_GPlayerList[turn].nPos % LINEY - 1;
+
+	for(int h = 0 ; h < LINEY ; h++)		// yÁÂÇ¥ ¼øÀ¸·Î sorting
+	{	
+		if(h == busY)
+		{
+			if(bus)
+				bus->Draw(*rcDest, *rcSour, false);
+		}
+
+		for(int i = 0 ; i < ROOMMAXPLAYER ; i++)
+		{
+			if(m_nNoDraw == i)
+				continue;
+
+			if(m_MyRoom.szRoomMaxPlayer[i][0] != '\0' && m_GPlayerList[i].nPos%LINEY == h)
+			{
+				SetRect(&rcScr, 
+					-gmap->m_nAbsDrawlineX + m_nAbsDrawlineX[i] + 15 ,
+					-gmap->m_nAbsDrawlineY + m_nAbsDrawlineY[i] - FULLY ,
+					-gmap->m_nAbsDrawlineX + m_nAbsDrawlineX[i] + 15 + 70 ,
+					-gmap->m_nAbsDrawlineY + m_nAbsDrawlineY[i] - FULLY + 130 );
+				SetRect(&rcImg, 
+					m_moveFoot[i]*70,
+					m_movePosition[i]*130,
+					(m_moveFoot[i]+1)*70, 
+					(m_movePosition[i]+1)*130);
+				m_ImgInfo[ m_GPlayerList[i].ctype ].ImgDot.Draw(rcScr, rcImg, false);
+			}
+		}
+	}
+}
+
+void gPlayerContainer::PacketalDrawFix() {
+
+	POINT		pt;
+
+	for(int i = 0 ; i < ROOMMAXPLAYER ; i++)
+	{
+		if(m_MyRoom.szRoomMaxPlayer[i][0] != '\0')
+		{
+			pt.x	= m_GPlayerList[i].nPos / LINEY;
+			pt.y	= m_GPlayerList[i].nPos % LINEY;
+			pt		= gMap::GetIF()->conToAbs(pt);
+			m_nAbsDrawlineX[i] = pt.x;
+			m_nAbsDrawlineY[i] = pt.y;
+		}
+	}
+}
+
 
 void gPlayerContainer::SyncronizeToMap(int nInRoomIndex)
 {

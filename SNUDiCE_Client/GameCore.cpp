@@ -13,9 +13,21 @@
 #include "PopUp.h"
 #include "RoomCore.h"
 
-#define MINMOVE			10
-#define WORLDX			2228
-#define WORLDY			1520
+#define MINMOVE					10
+#define WORLDX					2228
+#define WORLDY					1520
+
+#define GAME_BUS_FILE			".\\Data\\Interface\\game_bus.img"
+#define GAME_BUS_SIZE_W			222
+#define GAME_BUS_SIZE_H			154
+#define GAME_BUS_FRAMEX			4
+#define GAME_BUS_TERM_X			0
+#define GAME_BUS_TERM_Y			-110
+
+#define BUSMOVETICK				200 * 3
+#define BUSMOVEFRAME			8
+#define BUSBOARDTICK			500 * 3
+#define BUSMOVELENGTH			160
 
 static gGameCore s_GameCore;
 
@@ -42,6 +54,9 @@ bool gGameCore::SetUp()
 	m_bBusing   = false;
 	m_bNextTurnKeep = false;
 
+	if(!m_ImgBus.Load(GAME_BUS_FILE))
+		return false;
+
 	return true;
 }
 
@@ -50,8 +65,8 @@ void gGameCore::MainLoop()
 	if(m_spacor!=0)
 		if(m_bMoving)
 			StepOn();
-		if(m_bBusing)
-			BusStepOn();
+//		if(m_bBusing)			-> DrawBus에서 처리
+//			BusStepOn();
 	if(m_bScrolling)
 		ScrollOn();
 
@@ -147,14 +162,337 @@ void gGameCore::MainLoopMouse()
 void gGameCore::Draw()
 {
 	gMap::GetIF()->Draw();
-	gPlayerContainer::GetIF()->MainLoop();
+	DrawBus();
+	if(!m_bBusing)
+		gPlayerContainer::GetIF()->MainLoop();
+
 //	gChat::GetIF()->Draw();
 	gUIGame::GetIF()->Draw();
 }
 
+void gGameCore::DrawBus()
+{
+	if(!m_bBusing)
+		return;
+
+	gTimer			 *gt = gTimer::GetIF();
+	gMap			*map = gMap::GetIF();
+	gPlayerContainer *pc = gPlayerContainer::GetIF();
+
+	switch(m_busmode)
+	{
+		// 출발
+		case BUS_COME:
+			{
+				int		dist = BUSMOVELENGTH / BUSMOVEFRAME;	// 1프레임당 가는 픽셀
+
+				int		nPos		= pc->m_GPlayerList[m_nTurn].nPos;
+				POINT	pt = map->ConToViewabs(nPos);
+				pt.x	-= GAME_BUS_SIZE_W / 2;
+				pt.x	+= GAME_BUS_TERM_X;
+				pt.y	+= GAME_BUS_TERM_Y;
+				pt.x	-= BUSMOVELENGTH;
+
+				int		nFrame = gt->frame();
+
+				if(nFrame >= BUSMOVEFRAME)
+				{
+					m_busmode = BUS_BOARD;
+					gt->frameEnd();
+					gt->frameStart(BUSBOARDTICK, 4);
+
+					RECT	rcDest, rcSour;
+
+					SetRect(&rcDest,
+						pt.x + dist * (BUSMOVEFRAME - 1),
+						pt.y,
+						pt.x + dist * (BUSMOVEFRAME - 1) + GAME_BUS_SIZE_W,
+						pt.y + GAME_BUS_SIZE_H);
+					SetRect(&rcSour,
+						0, 0, GAME_BUS_SIZE_W, GAME_BUS_SIZE_H);
+					OffsetRect(&rcSour, GAME_BUS_SIZE_W * m_curframe, 0);
+
+					pc->MainLoop_Busing(&m_ImgBus, &rcDest, &rcSour, m_nTurn);
+					m_curframe = 0;
+				}
+				else
+				{
+					RECT	rcDest, rcSour;
+
+					SetRect(&rcDest,
+							pt.x + dist * nFrame,
+							pt.y,
+							pt.x + dist * nFrame + GAME_BUS_SIZE_W,
+							pt.y + GAME_BUS_SIZE_H);
+					SetRect(&rcSour,
+							0, 0, GAME_BUS_SIZE_W, GAME_BUS_SIZE_H);
+					m_curframe = nFrame % GAME_BUS_FRAMEX;
+					OffsetRect(&rcSour, GAME_BUS_SIZE_W * m_curframe, 0);
+
+					pc->MainLoop_Busing(&m_ImgBus, &rcDest, &rcSour, m_nTurn);
+				} 
+			}
+			break;
+		case BUS_BOARD:
+			{
+				int		nFrame = gt->frame();
+
+				int		nPos		= pc->m_GPlayerList[m_nTurn].nPos;
+				POINT	pt = map->ConToViewabs(nPos);
+				pt.x	-= GAME_BUS_SIZE_W / 2;
+				pt.x	+= GAME_BUS_TERM_X;
+				pt.y	+= GAME_BUS_TERM_Y;
+
+				if(nFrame >= 3)
+				{
+					gt->frameEnd();
+					m_curframe = 0;
+					gt->frameStart(BUSMOVETICK, BUSMOVEFRAME + 1);
+					m_busmode = BUS_START;
+				}
+				if(nFrame >= 2)
+				{
+					pc->m_nNoDraw = m_nTurn;
+				}
+				if(nFrame >= 1)
+				{
+					pc->m_movePosition[m_nTurn] = 2; 
+				}
+
+				RECT	rcDest, rcSour;
+
+				SetRect(&rcDest,
+					pt.x,
+					pt.y,
+					pt.x + GAME_BUS_SIZE_W,
+					pt.y + GAME_BUS_SIZE_H);
+				SetRect(&rcSour,
+					0, 0, GAME_BUS_SIZE_W, GAME_BUS_SIZE_H);
+				OffsetRect(&rcSour, GAME_BUS_SIZE_W * m_curframe, 0);
+				
+				pc->MainLoop_Busing(&m_ImgBus, &rcDest, &rcSour, m_nTurn);
+			}
+			break;
+		case BUS_START:
+			{
+				int		dist = BUSMOVELENGTH / BUSMOVEFRAME;	// 1프레임당 가는 픽셀
+
+				int		nPos		= pc->m_GPlayerList[m_nTurn].nPos;
+				POINT	pt = map->ConToViewabs(nPos);
+				pt.x	-= GAME_BUS_SIZE_W / 2;
+				pt.x	+= GAME_BUS_TERM_X;
+				pt.y	+= GAME_BUS_TERM_Y;
+
+				int		nFrame = gt->frame();
+
+				if(nFrame >= BUSMOVEFRAME)
+				{
+					m_busmode = BUS_SCROLLSTART;
+					gt->frameEnd();
+					m_curframe = 0;
+					ScrollStart(m_buspos);
+				}
+				else
+				{
+					RECT	rcDest, rcSour;
+
+					SetRect(&rcDest,
+						pt.x + dist * nFrame,
+						pt.y,
+						pt.x + dist * nFrame + GAME_BUS_SIZE_W,
+						pt.y + GAME_BUS_SIZE_H);
+					SetRect(&rcSour,
+						0, 0, GAME_BUS_SIZE_W, GAME_BUS_SIZE_H);
+					m_curframe = nFrame % GAME_BUS_FRAMEX;
+					OffsetRect(&rcSour, GAME_BUS_SIZE_W * m_curframe, 0);
+					
+					pc->MainLoop_Busing(&m_ImgBus, &rcDest, &rcSour, m_nTurn);
+				} 
+
+			}
+			break;
+
+			// 스크롤
+		case BUS_SCROLLSTART:
+			{
+				if(!m_bScrolling)
+				{
+					m_busmode = BUS_SCROLLEND;
+					gt->frameStart(500, 2);
+				}
+				pc->MainLoop_Busing(NULL, NULL, NULL, m_nTurn);
+			}
+			break;
+		case BUS_SCROLLEND:
+			{
+				int		nPos		= pc->m_GPlayerList[m_nTurn].nPos;
+				POINT	pt = map->ConToViewabs(nPos);
+				pt.x	-= GAME_BUS_SIZE_W / 2;
+				pt.x	+= GAME_BUS_TERM_X;
+				pt.y	+= GAME_BUS_TERM_Y;
+				pt.x	-= BUSMOVELENGTH;
+
+				int		nFrame = gt->frame();
+
+				if(nFrame >= 1)
+				{
+					gTimer::GetIF()->frameStart(BUSMOVETICK, BUSMOVEFRAME + 1);
+					m_curframe = 0;	
+					m_busmode = BUS_COME2;
+					pc->m_GPlayerList[m_nTurn].nPos = m_buspos;
+					map->posSetter(m_buspos / LINEY, m_buspos % LINEY);
+					pc->SyncronizeToMap(m_nTurn);
+				}
+				pc->MainLoop_Busing(NULL, NULL, NULL, m_nTurn);
+			}
+			break;
+
+			// 도착
+		case BUS_COME2:
+			{
+				int		dist = BUSMOVELENGTH / BUSMOVEFRAME;	// 1프레임당 가는 픽셀
+
+				int		nPos		= pc->m_GPlayerList[m_nTurn].nPos;
+				POINT	pt = map->ConToViewabs(nPos);
+				pt.x	-= GAME_BUS_SIZE_W / 2;
+				pt.x	+= GAME_BUS_TERM_X;
+				pt.y	+= GAME_BUS_TERM_Y;
+				pt.x	-= BUSMOVELENGTH;
+
+				int		nFrame = gt->frame();
+
+				if(nFrame >= BUSMOVEFRAME)
+				{
+					m_busmode = BUS_BOARD2;
+					gt->frameEnd();
+					gt->frameStart(BUSBOARDTICK, 4);
+
+					RECT	rcDest, rcSour;
+
+					SetRect(&rcDest,
+						pt.x + dist * (BUSMOVEFRAME - 1),
+						pt.y,
+						pt.x + dist * (BUSMOVEFRAME - 1) + GAME_BUS_SIZE_W,
+						pt.y + GAME_BUS_SIZE_H);
+					SetRect(&rcSour,
+						0, 0, GAME_BUS_SIZE_W, GAME_BUS_SIZE_H);
+					OffsetRect(&rcSour, GAME_BUS_SIZE_W * m_curframe, 0);
+
+					pc->MainLoop_Busing(&m_ImgBus, &rcDest, &rcSour, m_nTurn);
+					m_curframe = 0;
+				}
+				else
+				{
+					RECT	rcDest, rcSour;
+
+					SetRect(&rcDest,
+						pt.x + dist * nFrame,
+						pt.y,
+						pt.x + dist * nFrame + GAME_BUS_SIZE_W,
+						pt.y + GAME_BUS_SIZE_H);
+					SetRect(&rcSour,
+						0, 0, GAME_BUS_SIZE_W, GAME_BUS_SIZE_H);
+					m_curframe = nFrame % GAME_BUS_FRAMEX;
+					OffsetRect(&rcSour, GAME_BUS_SIZE_W * m_curframe, 0);
+					
+					pc->MainLoop_Busing(&m_ImgBus, &rcDest, &rcSour, m_nTurn);
+				} 
+			}
+			break;
+		case BUS_BOARD2:
+			{
+				int		nFrame = gt->frame();
+
+				int		nPos		= pc->m_GPlayerList[m_nTurn].nPos;
+				POINT	pt = map->ConToViewabs(nPos);
+				pt.x	-= GAME_BUS_SIZE_W / 2;
+				pt.x	+= GAME_BUS_TERM_X;
+				pt.y	+= GAME_BUS_TERM_Y;
+
+				if(nFrame >= 3)
+				{
+					gt->frameEnd();
+					m_curframe = 0;
+					gt->frameStart(BUSMOVETICK, BUSMOVEFRAME + 1);
+					m_busmode = BUS_START2;
+				}
+				if(nFrame >= 1)
+				{
+					pc->m_nNoDraw = -1;
+					pc->m_movePosition[m_nTurn] = 0; 
+				}
+
+				RECT	rcDest, rcSour;
+
+				SetRect(&rcDest,
+					pt.x,
+					pt.y,
+					pt.x + GAME_BUS_SIZE_W,
+					pt.y + GAME_BUS_SIZE_H);
+				SetRect(&rcSour,
+					0, 0, GAME_BUS_SIZE_W, GAME_BUS_SIZE_H);
+				OffsetRect(&rcSour, GAME_BUS_SIZE_W * m_curframe, 0);
+				
+				pc->MainLoop_Busing(&m_ImgBus, &rcDest, &rcSour, m_nTurn);
+			}
+			break;
+		case BUS_START2:
+			{
+				int		dist = BUSMOVELENGTH / BUSMOVEFRAME;	// 1프레임당 가는 픽셀
+
+				int		nPos		= pc->m_GPlayerList[m_nTurn].nPos;
+				POINT	pt = map->ConToViewabs(nPos);
+				pt.x	-= GAME_BUS_SIZE_W / 2;
+				pt.x	+= GAME_BUS_TERM_X;
+				pt.y	+= GAME_BUS_TERM_Y;
+
+				int		nFrame = gt->frame();
+
+				if(nFrame >= BUSMOVEFRAME)
+				{
+					gt->frameEnd(); 
+					pc->FootClear();
+					m_bBusing = false;
+
+//					pc->m_GPlayerList[ m_nTurn ].nPos = map->m_xSpacePos * LINEY + map->m_ySpacePos;
+
+					if(strcmp(pc->m_MyGamePlayer.szID, pc->m_GPlayerList[m_nTurn].szID) == 0)
+						pc->m_MyGamePlayer.nPos = pc->m_GPlayerList[ m_nTurn ].nPos;
+
+					// TODO : BusEnd의 패킷을 보냄
+
+					PK_BUSMOVEEND_ASK   ask;
+
+					ask.nDestPos = pc->m_GPlayerList[ m_nTurn ].nPos;
+					strcpy(ask.szID, pc->m_MyGamePlayer.szID);
+
+					gServer::GetIF()->Send(PL_BUSMOVEEND_ASK, sizeof ask, &ask);
+				}
+				else
+				{
+					RECT	rcDest, rcSour;
+
+					SetRect(&rcDest,
+						pt.x + dist * nFrame,
+						pt.y,
+						pt.x + dist * nFrame + GAME_BUS_SIZE_W,
+						pt.y + GAME_BUS_SIZE_H);
+					SetRect(&rcSour,
+						0, 0, GAME_BUS_SIZE_W, GAME_BUS_SIZE_H);
+					m_curframe = nFrame % GAME_BUS_FRAMEX;
+					OffsetRect(&rcSour, GAME_BUS_SIZE_W * m_curframe, 0);
+					
+					pc->MainLoop_Busing(&m_ImgBus, &rcDest, &rcSour, m_nTurn);
+				} 
+
+			}
+			break;
+	}
+}
+
 void gGameCore::Release()
 {
-
+	m_ImgBus.Release();
 }
 
 void gGameCore::OnLButtonDown()
@@ -490,101 +828,39 @@ void gGameCore::pk_busmovestart_rep(PK_BUSMOVESTART_REP *rep)
 
 	int  nPos = gPC->m_GPlayerList[m_nTurn].nPos;
 
-	if(rep->nDist ==0) {
-		BusEnd();
+	if(rep->nDist == 0)
+	{
+		PK_BUSMOVEEND_ASK   ask;
+
+		ask.nDestPos = gPC->m_GPlayerList[ m_nTurn ].nPos;
+		strcpy(ask.szID, gPC->m_MyGamePlayer.szID);
+
+		gServer::GetIF()->Send(PL_BUSMOVEEND_ASK, sizeof ask, &ask);
+		m_bBusing = false;
 	}
-	else {
+	else
+	{
 		m_bBusing = true;
-		BusStart(rep->nDist,nPos/LINEY,nPos%LINEY);
+		BusComeStart(nPos);
+		m_buspos = gMap::GetIF()->Destination(nPos, rep->nDist);
+		if(rep->nDist >= 0)
+			gMap::GetIF()->posSpacor();
+		else 
+			gMap::GetIF()->posSpacor(true);
 	}
 }
 
-void gGameCore::BusStart(int spacor)
+void gGameCore::BusComeStart(int nPos)
 {
-	m_spacor = spacor;
-	//gMap::GetIF()->posSpacor();
-	gTimer::GetIF()->frameStart(100,60);
-	BusStepStart();
-}
+	gMap				*map = gMap::GetIF();
+	gPlayerContainer	*pc = gPlayerContainer::GetIF();
 
-void gGameCore::BusStart(int spacor,int conPosX, int conPosY)
-{
-	gMap::GetIF()->posSetter(conPosX,conPosY);
-	BusStart(spacor);
-}
+	map->posSetter(nPos / LINEY, nPos % LINEY);
+	gTimer::GetIF()->frameStart(BUSMOVETICK, BUSMOVEFRAME + 1);
 
-void gGameCore::BusStepStart()
-{
-	if(m_spacor>=0)
-		gMap::GetIF()->posSpacor();
-	else 
-		gMap::GetIF()->posSpacor(true);
-}
+	m_curframe = 0;	
 
-void gGameCore::BusStepOn()
-{
-	gTimer    *gt = gTimer::GetIF();
-	gPlayerContainer *gPC = gPlayerContainer::GetIF();
-
-
-	int l_frame = gt->frame();
-
-	if(gt->m_turn > 0)
-	{
-		BusStepEnd();
-	}
-	else
-	{
-		gMap::GetIF()->posMover(l_frame, gt->m_frame);
-		gPC->SyncronizeToMap(m_nTurn);
-		gPC->PutFootPosition(m_nTurn,l_frame,60/4);
-	} 
-}
-
-void gGameCore::BusStepEnd()
-{
-	gTimer *gt = gTimer::GetIF();
-
-	gMap::GetIF()->posStoper();
-
-	if(m_spacor > 0)
-		m_spacor--;
-	else if(m_spacor < 0)
-		m_spacor++;
-
-	gt->m_turn--;
-
-	if(m_spacor!=0)
-		BusStepStart();
-	else
-		BusEnd();
-}
-
-void gGameCore::BusEnd()  // 이동 끝남
-{
-	gPlayerContainer *gPC = gPlayerContainer::GetIF();
-	gMap    *map = gMap::GetIF();
-
-	gTimer::GetIF()->frameEnd(); 
-	gPC->FootClear();
-	m_bBusing = false;
-
-	gPC->m_GPlayerList[ m_nTurn ].nPos = map->m_xSpacePos * LINEY + map->m_ySpacePos;
-
-	if(strcmp(gPC->m_MyGamePlayer.szID, gPC->m_GPlayerList[m_nTurn].szID) == 0)
-		gPC->m_MyGamePlayer.nPos = gPC->m_GPlayerList[ m_nTurn ].nPos;
-
-	// TODO : BusEnd의 패킷을 보냄
-
-	PK_BUSMOVEEND_ASK   ask;
-
-	ask.nDestPos = gPC->m_GPlayerList[ m_nTurn ].nPos;
-	strcpy(ask.szID, gPC->m_MyGamePlayer.szID);
-
-	gServer::GetIF()->Send(PL_BUSMOVEEND_ASK, sizeof ask, &ask);
-
-	//m_bBusing = false;
-	//pk_stepFinish_ask(gtc->m_xSpacePos,gtc->m_ySpacePos);
+	m_busmode = BUS_COME;
 }
 
 void gGameCore::pk_gameplayerinfo_rep(PK_GAMEPLAYERINFO_REP *rep)
@@ -605,5 +881,8 @@ void gGameCore::pk_gameend_rep(PK_GAMEEND_REP *rep)
 
 bool gGameCore::Restore()
 {
+	if(!m_ImgBus.Restore())
+		return false;
+
 	return true;
 }

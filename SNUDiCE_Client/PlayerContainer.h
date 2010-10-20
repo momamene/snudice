@@ -44,6 +44,8 @@ public:
 	int				m_moveFoot[ROOMMAXPLAYER];
 	int				m_movePosition[ROOMMAXPLAYER];
 
+	int				m_nNoDraw;			// 해당 index인 캐릭터 안 그림. default == -1			
+
 public:
 	int				GetGPNum();			// 게임 플레이어 수
 	int				GetMyGPIndex();		// 게임 플레이어 인덱스
@@ -66,7 +68,10 @@ public:
 	bool			Restore();
 
 	void			MainLoop();
+	void			MainLoop_Busing(gImage *bus, RECT *rcDest, RECT *rcSour, int turn);
+
 	void			Draw();
+	void			Draw_Busing(gImage *bus, RECT *rcDest, RECT *rcSour, int turn);
 
 	void			FootClear();			// 이동완료됬을 때, 서있는 프레임 아닐 경우 있어서, 막아줌
 

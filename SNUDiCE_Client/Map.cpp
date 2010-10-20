@@ -591,3 +591,22 @@ int gMap::PositionFor_gPC()
 	else if(m_ySpacePos > m_Next_ySpacePos) return 2;
 	else return 0;
 }
+
+int gMap::Destination(int mapA, int spacor)
+{
+	int iter = mapA;
+	while(spacor!=0){
+		if(spacor>0) {
+			iter = tileMap[iter].nextTile.x*LINEY + tileMap[iter].nextTile.y;
+			spacor--;
+		}
+		else if(spacor<0) {
+			if(iter/LINEY == m_xInitSpacePos && iter%LINEY == m_yInitSpacePos) 
+				iter = tileMap[iter].flag1 * LINEY + tileMap[iter].flag2;
+			else 
+				iter = tileMap[iter].nextTile.x*LINEY + tileMap[iter].nextTile.y;
+			spacor++;
+		}
+	}
+	return iter;
+}

@@ -142,6 +142,8 @@ public:
 	// 마우스 좌표 받아서, nPos return
 	POINT	ConToViewabs(int nPos);
 
+	int		Destination(int mapA, int spacor);
+
 private:
 	// Setup의 떨거지 (subfunction)
 	void	Load();				// 파일을 불러오는 함수
