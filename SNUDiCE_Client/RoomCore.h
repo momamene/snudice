@@ -172,8 +172,12 @@ public:
 	void		pk_roommake_rep(PK_ROOMMAKER_REP *rep);
 	void		pk_roomlist_rep(PK_ROOMLIST_REP *rep);
 	void		pk_roomjoin_rep(PK_ROOMJOIN_REP *rep);
+	void		pk_roomback_rep(PK_ROOMBACK_REP *rep);	//방나가고돌아오기수정
 	void		pk_roomrefresh_rep(PK_ROOMREFRESH_REP *rep);
 	void		pk_gamestart_rep(PK_GAMESTART_REP *rep);
+
+	//방나가고돌아오기수정	back -0-;;; public 접근이 필요해..ㅜ.ㅡ;
+	void		SendRoomBack();
 
 private:
 	// make

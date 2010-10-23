@@ -12,7 +12,7 @@
 #define WM_SOCKET				WM_USER + 1
 
 #define	WINSOCK_VERSION_2_2		MAKEWORD(2, 2)
-#define SERVER_IP				"211.169.219.71"
+#define SERVER_IP				"211.169.219.88"
 #define SERVER_PORT				9000
 #define BUFFERSIZE				2048
 
@@ -87,7 +87,11 @@ enum ePROTOCOL
 	PL_WARPLISTEND_ASK,
 
 	PL_INFOCHANGE_REP,		// 아이템 사용 -> 캐릭터 스탯같은 수치 변화 표시
-	
+
+	PL_ROOMBACK_ASK,		//방나가고돌아오기수정
+	PL_ROOMBACK_REP,		//방나가고돌아오기수정
+	PL_EXIT_ASK,			//게임중강제종료시처리수정
+	PL_EXIT_REP,			//게임중강제종료시처리수정
 };
 
 enum eCOREMODE
@@ -322,6 +326,21 @@ struct PK_ROOMJOIN_REP
 	PLAYER				playerlist[ROOMMAXPLAYER];
 };
 
+
+//방나가고돌아오기수정
+
+struct PK_ROOMBACK_ASK
+{
+	char		szID[IDLENGTH];	
+};
+
+struct PK_ROOMBACK_REP
+{
+	ROOM		room;
+	PLAYER				playerlist[ROOMMAXPLAYER];
+};
+
+
 struct PK_ROOMREFRESH_REP
 {
 	ROOM				room;
@@ -485,6 +504,7 @@ typedef struct
 	int			nStamina;
 	int			nGrade;				// 성취도. 학점이 아님
 }
+
  PK_POPINFO_REP, CHANGEINFO;
 
 struct PK_GAMEEND_REP
@@ -578,4 +598,17 @@ struct PK_WARPLISTEND_ASK
 struct PK_INFOCHANGE_REP
 {
 	CHANGEINFO	info[ROOMMAXPLAYER];
+};
+
+
+//게임중강제종료시처리수정
+struct PK_EXIT_ASK
+{
+	char		szID[IDLENGTH];
+};
+
+struct PK_EXIT_REP
+{
+	char		szID[IDLENGTH];
+	int flag;	//남은 사람 수
 };

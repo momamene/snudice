@@ -1598,6 +1598,26 @@ void gRoomCore::SendRoomJoin()
 	gServer::GetIF()->Send(PL_ROOMJOIN_ASK, sizeof ask, &ask);
 }
 
+
+//방나가고돌아오기수정
+void gRoomCore::SendRoomBack()
+{
+	PK_ROOMBACK_ASK			ask;
+	strcpy(ask.szID, gPlayerContainer::GetIF()->m_MyPlayer.szID);
+
+	gServer::GetIF()->Send(PL_ROOMBACK_ASK, sizeof ask, &ask);
+}
+
+//방나가고돌아오기수정
+void gRoomCore::pk_roomback_rep(PK_ROOMBACK_REP *rep)
+{
+	gPlayerContainer::GetIF()->SetMyRoom(&rep->room);
+	gPlayerContainer::GetIF()->SetPlayerList(rep->playerlist);
+	gSubmitCore::GetIF()->m_bChange = false;
+	gSubmitCore::GetIF()->m_bReady = false;
+}
+
+
 void gRoomCore::pk_roomjoin_rep(PK_ROOMJOIN_REP *rep)
 {
 	switch(rep->result)

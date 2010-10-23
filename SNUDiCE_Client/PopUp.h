@@ -21,7 +21,8 @@ enum ePOPTYPE			// 팝업창 타입
 {
 	EPOP_RECONNECT = 0,
 	EPOP_DISCONNECT = 1,
-	EPOP_EXIT = 1,
+	EPOP_EXIT = 1,	//?????????????????
+	EPOP_ROOMBACK,	//방나가고돌아오기수정
 	EPOP_OK,			// 걍 OK 눌러서 메시지 확인하는 팝업
 };
 

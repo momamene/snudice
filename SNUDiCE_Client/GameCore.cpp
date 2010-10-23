@@ -97,14 +97,23 @@ void gGameCore::MainLoop()
 	{
 		switch(gPopUp::GetIF()->m_ePop)
 		{
-			case EPOP_DISCONNECT: // == EPOP_EXIT:
-				switch(gPopUp::GetIF()->m_eBtnClk)
-				{
-					case ECLK_OK:
-						gMainWin::GetIF()->Exit();
-						break;
-				}
+			//방나가고돌아오기수정
+		case EPOP_ROOMBACK: // 게임 끝:
+			switch(gPopUp::GetIF()->m_eBtnClk)
+			{
+			case ECLK_OK:
+				gMainWin::GetIF()->m_eCoreMode = ECM_ROOM;//클라이언트에서룸상태변경
 				break;
+			}
+			break;
+			//수정 ; 아직 건들지 않고 있음.
+		case EPOP_EXIT: // 게임 끝:
+			switch(gPopUp::GetIF()->m_eBtnClk)
+			{
+			case ECLK_OK:
+				break;
+			}
+			break;
 		}
 		gPopUp::GetIF()->m_bReturn = false;
 	}
@@ -876,7 +885,8 @@ void gGameCore::pk_popinfo_rep(PK_POPINFO_REP *rep)
 
 void gGameCore::pk_gameend_rep(PK_GAMEEND_REP *rep)
 {
-	gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_EXIT, rep->szID, STR_17);
+	gRoomCore::GetIF()->SendRoomBack();	//방나가고돌아오기수정
+	gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_ROOMBACK, rep->szID, STR_17);	//방나가고돌아오기수정
 }
 
 bool gGameCore::Restore()
