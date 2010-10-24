@@ -108,6 +108,7 @@ void gTopUI::OnLButtonDown_Back()
 			gServer::GetIF()->Send(PL_GOLOGIN_ASK, sizeof(ask), &ask);
 
 			chat->MsgStackClear();
+			gMainWin::GetIF()->m_eCoreMode = ECM_LOGIN;
 		}
 		break;
 	case ECM_ROOMMAKE:

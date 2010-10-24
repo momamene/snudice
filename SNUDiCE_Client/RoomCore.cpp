@@ -1272,7 +1272,6 @@ void gRoomCore::MainLoop_Room()
 		gMainWin::GetIF()->m_Keys[VK_ESCAPE] = false;
 		return;
 	}
-
 	gChat::GetIF()->MainLoop();
 }
 
