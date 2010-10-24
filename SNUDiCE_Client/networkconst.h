@@ -12,8 +12,9 @@
 #define WM_SOCKET				WM_USER + 1
 
 #define	WINSOCK_VERSION_2_2		MAKEWORD(2, 2)
-#define SERVER_IP				"211.169.219.88"
-#define SERVER_PORT				9000
+//#define SERVER_IP				"211.169.219.88"		// 현탁
+#define SERVER_IP				"211.169.219.71"		// 상우
+#define SERVER_PORT				9001
 #define BUFFERSIZE				2048
 
 #define PK_HEADER_SIZE			4
@@ -88,10 +89,12 @@ enum ePROTOCOL
 
 	PL_INFOCHANGE_REP,		// 아이템 사용 -> 캐릭터 스탯같은 수치 변화 표시
 
-	PL_ROOMBACK_ASK,		//방나가고돌아오기수정
-	PL_ROOMBACK_REP,		//방나가고돌아오기수정
-	PL_EXIT_ASK,			//게임중강제종료시처리수정
-	PL_EXIT_REP,			//게임중강제종료시처리수정
+	PL_ROOMBACK_ASK,		// 게임끝 -> 방으로
+	PL_ROOMBACK_REP,		//
+
+	PL_EXIT_REP,			// 게임중 강제종료 처리
+
+	PL_GOLOGIN_ASK,
 };
 
 enum eCOREMODE
@@ -249,7 +252,6 @@ struct PK_CHANNELCHANGE_REP
 {
 	CH_CHANGE_ERROR	error;
 	CHANNEL			channel;
-
 };
 
 #define MAXROOMFORPAGE		8								// 한 페이지에 표시될 수 있는 방 개수
@@ -542,7 +544,7 @@ struct ITEMCARD
 	int			nArt;			//
 	int			nMove;			// 얜 지금 안쓸거야
 	int			nStamina;		// ITEM_STAMINA
-	int			nMulti;			// ITEM_STAT
+	int			nMulti;			// ITEM_STAT		*
 	int			nExistTurn;		// 지속 턴
 	int			nPos;			// ITEM_MOVEPLACE
 };
@@ -601,14 +603,14 @@ struct PK_INFOCHANGE_REP
 };
 
 
-//게임중강제종료시처리수정
-struct PK_EXIT_ASK
-{
-	char		szID[IDLENGTH];
-};
-
 struct PK_EXIT_REP
 {
 	char		szID[IDLENGTH];
 	int flag;	//남은 사람 수
+};
+
+
+struct PK_GOLOGIN_ASK
+{
+	char		szID[IDLENGTH];
 };

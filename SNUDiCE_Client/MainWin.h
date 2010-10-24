@@ -68,7 +68,6 @@ public:
 	int			Run();
 	void		MoveWindow();
 	void		Exit();
-	void		SendExit();	//게임중강제종료시처리수정
 
 private:
 	char		m_szTempReg[128];

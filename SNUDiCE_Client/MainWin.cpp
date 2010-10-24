@@ -366,7 +366,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 			gServer::GetIF()->Receive(lParam);
 			return 0;
 		case WM_DESTROY:
-			gMainWin::GetIF()->SendExit();	//게임중강제종료시처리수정 , 왜 걍 SendExit를 쓰면 안되는거지??
 			PostQuitMessage(0);
 			return 0;
 
@@ -382,13 +381,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 	return(DefWindowProc(hWnd, iMsg, wParam, lParam));
 }
 
-//게임중강제종료시처리수정
-void gMainWin::SendExit()
-{
-	PK_EXIT_ASK ask;
-	strcpy(ask.szID, gPlayerContainer::GetIF()->m_MyPlayer.szID);
-	gServer::GetIF()->Send(PL_EXIT_ASK , sizeof ask , &ask);
-}
 
 void gMainWin::Exit()
 {

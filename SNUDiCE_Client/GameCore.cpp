@@ -98,22 +98,22 @@ void gGameCore::MainLoop()
 		switch(gPopUp::GetIF()->m_ePop)
 		{
 			//방나가고돌아오기수정
-		case EPOP_ROOMBACK: // 게임 끝:
-			switch(gPopUp::GetIF()->m_eBtnClk)
-			{
-			case ECLK_OK:
-				gMainWin::GetIF()->m_eCoreMode = ECM_ROOM;//클라이언트에서룸상태변경
+			case EPOP_ROOMBACK: // 게임 끝:
+				switch(gPopUp::GetIF()->m_eBtnClk)
+				{
+					case ECLK_OK:
+						gMainWin::GetIF()->m_eCoreMode = ECM_ROOM;//클라이언트에서룸상태변경
+						break;
+					}
 				break;
-			}
-			break;
-			//수정 ; 아직 건들지 않고 있음.
-		case EPOP_EXIT: // 게임 끝:
-			switch(gPopUp::GetIF()->m_eBtnClk)
-			{
-			case ECLK_OK:
+				//수정 ; 아직 건들지 않고 있음.
+			case EPOP_EXIT: // 게임 끝:
+				switch(gPopUp::GetIF()->m_eBtnClk)
+				{
+					case ECLK_OK:
+						break;
+				}
 				break;
-			}
-			break;
 		}
 		gPopUp::GetIF()->m_bReturn = false;
 	}
