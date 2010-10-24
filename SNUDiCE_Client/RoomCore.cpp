@@ -1646,6 +1646,7 @@ void gRoomCore::pk_roomback_rep(PK_ROOMBACK_REP *rep)
 	gPlayerContainer::GetIF()->SetPlayerList(rep->playerlist);
 	gSubmitCore::GetIF()->m_bChange = false;
 	gSubmitCore::GetIF()->m_bReady = false;
+	m_nSelChar = -1;
 }
 
 

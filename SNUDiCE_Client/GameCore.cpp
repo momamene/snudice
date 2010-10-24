@@ -29,6 +29,9 @@
 #define BUSBOARDTICK			500 * 3
 #define BUSMOVELENGTH			160
 
+#define MAPSCROLLSPEED			5 // 마우스로 화면 스크롤 속도
+#define MAPSCROLLTICK			100
+
 static gGameCore s_GameCore;
 
 gGameCore *gGameCore::GetIF()
@@ -144,25 +147,31 @@ void gGameCore::MainLoopMouse()
 	gMouse	*mouse	= gMouse::GetIF();
 	gMap	*map	= gMap::GetIF();
 
-	if(mouse->m_nPosX < MINMOVE)
+	static DWORD tick = GetTickCount();
+
+	if(GetTickCount() - tick > MAPSCROLLTICK)
 	{
-		if(map->m_nAbsDrawlineX > 0)
-			map->m_nAbsDrawlineX -= 3;
-	}
-	if(mouse->m_nPosY < MINMOVE)
-	{
-		if(map->m_nAbsDrawlineY > 0)
-			map->m_nAbsDrawlineY -= 3;
-	}
-	if(mouse->m_nPosX > WNDSIZEW - MINMOVE)
-	{ 
-		if(map->m_nAbsDrawlineX < WORLDX - WNDSIZEW + MINMOVE)
-			map->m_nAbsDrawlineX += 3;
-	}
-	if(mouse->m_nPosY > WNDSIZEH - MINMOVE)
-	{ // 수학적 공식
-		if(map->m_nAbsDrawlineY < WORLDY + FULLY * 2 - WNDSIZEH + MINMOVE)
-			map->m_nAbsDrawlineY += 3;
+		if(mouse->m_nPosX < MINMOVE)
+		{
+			if(map->m_nAbsDrawlineX > 0)
+				map->m_nAbsDrawlineX -= MAPSCROLLSPEED;
+		}
+		if(mouse->m_nPosY < MINMOVE)
+		{
+			if(map->m_nAbsDrawlineY > 0)
+				map->m_nAbsDrawlineY -= MAPSCROLLSPEED;
+		}
+		if(mouse->m_nPosX > WNDSIZEW - MINMOVE)
+		{ 
+			if(map->m_nAbsDrawlineX < WORLDX - WNDSIZEW + MINMOVE)
+				map->m_nAbsDrawlineX += MAPSCROLLSPEED;
+		}
+		if(mouse->m_nPosY > WNDSIZEH - MINMOVE)
+		{
+			if(map->m_nAbsDrawlineY < WORLDY + FULLY * 2 - WNDSIZEH + MINMOVE)
+				map->m_nAbsDrawlineY += MAPSCROLLSPEED;
+		}
+		tick = GetTickCount();
 	}
 }
 

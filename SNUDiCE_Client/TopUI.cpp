@@ -125,6 +125,7 @@ void gTopUI::OnLButtonDown_Back()
 
 			gServer::GetIF()->Send(PL_CHANNELCHANGE_ASK, sizeof(ask), &ask);
 			chat->MsgStackClear();
+			gMainWin::GetIF()->m_eCoreMode = ECM_BATTLENET;
 		}
 		break;
 	}

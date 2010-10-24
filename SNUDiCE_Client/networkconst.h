@@ -595,6 +595,7 @@ struct PK_WARPLISTSTART_REP
 
 struct PK_WARPLISTEND_ASK
 {
+	char		szID[IDLENGTH];
 	int			nDestPos[ROOMMAXPLAYER];		// 해당사항 없는 놈은 -1로 채워서 보냄
 };
 

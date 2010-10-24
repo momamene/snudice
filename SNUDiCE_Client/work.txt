@@ -46,14 +46,18 @@
 	gamecore, playercontainer, map
 	-> 버스로 이동하는거 애니메이션 재정비.
 	
-2010 10 23 - 현탁
+2010 10 23 - CoderK		/ server : 현탁
 	패킷 3개 추가.
 		PL_ROOMBACK_ASK,		게임끝 -> 방으로
 		PL_ROOMBACK_REP,									]
 
 		PL_EXIT_REP,			게임중 강제종료 처리
 		
-2010 10 24
+2010 10 24 - CoderK		/ server : 현탁
+	패킷 1개 추가
+		뒤로가기 버튼
+		PL_GOLOGIN_ASK,			배틀넷모드 -> 로그인모드
+		PL_CHANNELCHANGE_ASK,	ECM_ROOM, ECM_ROOMJOIN -> BattleNet 모드
 
 --
 	
