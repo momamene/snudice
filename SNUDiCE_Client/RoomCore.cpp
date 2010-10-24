@@ -260,13 +260,6 @@ bool gRoomCore::SetUp()
 
 void gRoomCore::MainLoop()
 {
-	if(gMainWin::GetIF()->m_Keys[VK_ESCAPE])
-	{
-		gTopUI::GetIF()->OnLButtonDown_Back();
-		gMainWin::GetIF()->m_Keys[VK_ESCAPE] = false;
-		return;
-	}
-
 	switch(m_eRoom)
 	{
 		case ERM_MAKE:
@@ -1014,6 +1007,13 @@ void gRoomCore::MainLoop_Join()
 		}
 		gPopUp::GetIF()->m_bReturn = false;
 	}
+
+	if(gMainWin::GetIF()->m_Keys[VK_ESCAPE])
+	{
+		gTopUI::GetIF()->OnLButtonDown_Back();
+		gMainWin::GetIF()->m_Keys[VK_ESCAPE] = false;
+		return;
+	}
 }
 
 void gRoomCore::Draw_Join()
@@ -1264,6 +1264,13 @@ void gRoomCore::MainLoop_Room()
 	{
 		gChat::GetIF()->m_Edit.SetFocusOn();
 		gMainWin::GetIF()->m_Keys[VK_RETURN] = false;
+	}
+
+	if(gMainWin::GetIF()->m_Keys[VK_ESCAPE])
+	{
+		gTopUI::GetIF()->OnLButtonDown_Back();
+		gMainWin::GetIF()->m_Keys[VK_ESCAPE] = false;
+		return;
 	}
 
 	gChat::GetIF()->MainLoop();
