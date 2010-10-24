@@ -333,6 +333,7 @@ void gLoginCore::pk_login_rep(PK_LOGIN_REP *rep)
 			SetFocus(gMainWin::GetIF()->m_hWnd);
 			gChat::GetIF()->m_bShow = true;
 			gPlayerContainer::GetIF()->SetMyPlayer(rep);
+			ClearEdit();
 
 			gUtil::DebugMsg("login success\n");
 			break;
@@ -358,4 +359,12 @@ bool gLoginCore::Restore()
 		return false;
 
 	return true;
+}
+
+void gLoginCore::ClearEdit()
+{
+	m_EditID.Clear();
+	m_EditPW.Clear();
+
+	m_EditID.SetFocusOn();
 }

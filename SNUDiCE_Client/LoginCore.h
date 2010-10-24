@@ -52,6 +52,8 @@ public:
 	void		OnRButtonDown();
 	// end overridng
 
+	void		ClearEdit();
+
 	bool		PreTransMsg(MSG &msg);
 private:
 	void		SendLogin();

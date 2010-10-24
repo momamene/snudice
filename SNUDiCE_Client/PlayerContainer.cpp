@@ -305,6 +305,9 @@ void gPlayerContainer::Draw()
 		{
 			if(m_MyRoom.szRoomMaxPlayer[i][0] != '\0' && m_GPlayerList[i].nPos%LINEY == h)
 			{
+				if(m_nNoDraw == i)
+					continue;
+
 				SetRect(&rcScr, 
 					-gmap->m_nAbsDrawlineX + m_nAbsDrawlineX[i] + 15 ,
 					-gmap->m_nAbsDrawlineY + m_nAbsDrawlineY[i] - FULLY ,

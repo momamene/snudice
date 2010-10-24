@@ -21,8 +21,6 @@ gChat::~gChat(void)
 
 bool gChat::SetUp()
 {
-	MsgStackClear();
-
 	SetRect(&m_rcPos,
 			CHAT_POS_X,
 			CHAT_POS_Y,
@@ -46,8 +44,9 @@ bool gChat::SetUp()
 	if(!m_Edit.SetUp(rcPos, NULL, MSGLENGTH, EDIT_AVAILSPACESTRING))
 		return false;
 
-	return true;
+	MsgStackClear();
 
+	return true;
 }
 
 void gChat::Release()
@@ -323,6 +322,8 @@ void gChat::MsgStackClear()
 
 	memset(m_szID, 0, MSGSTACKSIZE * IDLENGTH );
 	memset(m_szMsg, 0, MSGSTACKSIZE * MSGLENGTH );
+
+	MsgClear();
 }
 
 bool gChat::Restore()

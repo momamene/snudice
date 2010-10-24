@@ -16,6 +16,19 @@
 #define TOP_POS_BACK_W			640
 #define TOP_POS_BACK_H			60
 
+#define TOP_BTN_BACK_FILE			".\\Data\\Interface\\top_btn_back.img"
+#define TOP_BTN_SIZEW			30
+#define TOP_BTN_SIZEH			30
+#define TOP_BTN_POS_X			595
+#define TOP_BTN_POS_Y			15
+#define TOP_BTN_TERM_X			40
+
+enum TOPUIBTN
+{
+	TOP_BACK,			// 뒤로가기
+	TOP_END,
+};
+
 class gTopUI
 {
 public:
@@ -25,13 +38,21 @@ public:
 	~gTopUI(void);
 
 public:
-	RECT		m_rcPos;
-	gImage		m_ImgBack;
+	RECT			m_rcPos;
+	gImage			m_ImgBack;
+
+	gImgButton		m_Btn[TOP_END];
 
 public:
-	bool		SetUp();
-	void		Draw();
-	void		Release();
+	bool			SetUp();
+	void			Draw();
+	void			Release();
 
-	bool		Restore();
+	bool			PointInUI(int x, int y);
+	void			OnLButtonDown(int x, int y);
+	void			OnMouseMove(int x, int y);
+
+	void			OnLButtonDown_Back();		// 뒤로 가기 버튼
+
+	bool			Restore();
 };

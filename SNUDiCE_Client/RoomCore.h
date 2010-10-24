@@ -179,7 +179,7 @@ public:
 	//방나가고돌아오기수정	back -0-;;; public 접근이 필요해..ㅜ.ㅡ;
 	void		SendRoomBack();
 
-private:
+//private:
 	// make
 	bool		SetUp_Make();
 	void		MainLoop_Make();

@@ -260,6 +260,13 @@ bool gRoomCore::SetUp()
 
 void gRoomCore::MainLoop()
 {
+	if(gMainWin::GetIF()->m_Keys[VK_ESCAPE])
+	{
+		gTopUI::GetIF()->OnLButtonDown_Back();
+		gMainWin::GetIF()->m_Keys[VK_ESCAPE] = false;
+		return;
+	}
+
 	switch(m_eRoom)
 	{
 		case ERM_MAKE:
@@ -336,6 +343,15 @@ void gRoomCore::OnLButtonDown()
 	if(!gServer::GetIF()->m_bConnect)	// 서버랑 연결 안되었으면 입력 막자
 		return;
 
+	gTopUI		*top = gTopUI::GetIF();
+	gMouse		*mouse = gMouse::GetIF();
+
+	if(top->PointInUI(mouse->m_nPosX, mouse->m_nPosY))
+	{
+		top->OnLButtonDown(mouse->m_nPosX, mouse->m_nPosY);
+		return;
+	}
+
 	switch(m_eRoom)
 	{
 		case ERM_MAKE:
@@ -366,6 +382,15 @@ void gRoomCore::OnLButtonUp()
 
 void gRoomCore::OnMouseMove()
 {
+	gMouse		*mouse = gMouse::GetIF();
+	gTopUI		*top = gTopUI::GetIF();
+
+	if(top->PointInUI(mouse->m_nPosX, mouse->m_nPosY))
+	{
+		top->OnMouseMove(mouse->m_nPosX, mouse->m_nPosY);
+		return;
+	}
+
 	switch(m_eRoom)
 	{
 		case ERM_MAKE:

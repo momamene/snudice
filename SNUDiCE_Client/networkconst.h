@@ -12,9 +12,9 @@
 #define WM_SOCKET				WM_USER + 1
 
 #define	WINSOCK_VERSION_2_2		MAKEWORD(2, 2)
-//#define SERVER_IP				"211.169.219.88"		// ÇöÅ¹
-#define SERVER_IP				"211.169.219.71"		// »ó¿ì
-#define SERVER_PORT				9001
+#define SERVER_IP				"211.169.219.88"		// ÇöÅ¹
+//#define SERVER_IP				"211.169.219.71"		// »ó¿ì
+#define SERVER_PORT				9000
 #define BUFFERSIZE				2048
 
 #define PK_HEADER_SIZE			4
@@ -574,6 +574,7 @@ struct PK_WARPSTART_ASK
 {
 	char		szID[IDLENGTH];
 	int			nCurPos;			// Ãâ¹ß ÁÂÇ¥
+	int			nDestPos;
 };
 
 struct PK_WARPSTART_REP

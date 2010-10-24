@@ -320,11 +320,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 			mouse->OnLButtonUp();
 			return 0;
 		case WM_RBUTTONDOWN:
-			if(!gMainWin::GetIF()->FullScreen(!gMainWin::GetIF()->m_bFullScreen))
-			{
-				MessageBox(hWnd, "Display 변경 실패", "Error", MB_OK);
-				gMainWin::GetIF()->Exit();
-			}
+// 			if(!gMainWin::GetIF()->FullScreen(!gMainWin::GetIF()->m_bFullScreen))
+// 			{
+// 				MessageBox(hWnd, "Display 변경 실패", "Error", MB_OK);
+// 				gMainWin::GetIF()->Exit();
+// 			}
 
 			if(!mw->m_bActive)
 				return 0;

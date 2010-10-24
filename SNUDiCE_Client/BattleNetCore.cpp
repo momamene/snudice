@@ -97,6 +97,12 @@ void gBattleNetCore::MainLoop()
 		gChat::GetIF()->m_Edit.SetFocusOn();
 		gMainWin::GetIF()->m_Keys[VK_RETURN] = false;
 	}
+	else if(gMainWin::GetIF()->m_Keys[VK_ESCAPE])
+	{
+		gTopUI::GetIF()->OnLButtonDown_Back();
+		gMainWin::GetIF()->m_Keys[VK_ESCAPE] = false;
+		return;
+	}
 
 	gChat::GetIF()->MainLoop();
 }
@@ -134,6 +140,7 @@ void gBattleNetCore::OnLButtonDown()
 {
 	gMouse		*mouse	= gMouse::GetIF();
 	gChat		*chat	= gChat::GetIF();
+	gTopUI		*top	= gTopUI::GetIF();
 
 	if(chat->PointInUI(mouse->m_nPosX, mouse->m_nPosY))
 	{
@@ -144,6 +151,12 @@ void gBattleNetCore::OnLButtonDown()
 	if(m_ChannelUI.isPointInUI(mouse->m_nPosX, mouse->m_nPosY))
 	{
 		m_ChannelUI.OnLButtonDown(mouse->m_nPosX, mouse->m_nPosY);
+		return;
+	}
+
+	if(top->PointInUI(mouse->m_nPosX, mouse->m_nPosY))
+	{
+		top->OnLButtonDown(mouse->m_nPosX, mouse->m_nPosY);
 		return;
 	}
 
@@ -191,8 +204,9 @@ void gBattleNetCore::OnLButtonUp()
 
 void gBattleNetCore::OnMouseMove()
 {
-	gMouse		*mouse = gMouse::GetIF();
+	gMouse		*mouse	= gMouse::GetIF();
 	gChat		*chat	= gChat::GetIF();
+	gTopUI		*top	= gTopUI::GetIF();
 
 	if(chat->PointInUI(mouse->m_nPosX, mouse->m_nPosY))
 	{
@@ -203,6 +217,12 @@ void gBattleNetCore::OnMouseMove()
 	if(m_ChannelUI.isPointInUI(mouse->m_nPosX, mouse->m_nPosY))
 	{
 		m_ChannelUI.OnMouseMove(mouse->m_nPosX, mouse->m_nPosY);
+		return;
+	}
+
+	if(top->PointInUI(mouse->m_nPosX, mouse->m_nPosY))
+	{
+		top->OnMouseMove(mouse->m_nPosX, mouse->m_nPosY);
 		return;
 	}
 

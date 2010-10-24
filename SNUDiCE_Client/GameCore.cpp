@@ -300,6 +300,8 @@ void gGameCore::DrawBus()
 					gt->frameEnd();
 					m_curframe = 0;
 					ScrollStart(m_buspos);
+
+					pc->MainLoop_Busing(NULL, NULL, NULL, m_nTurn);
 				}
 				else
 				{
@@ -476,6 +478,8 @@ void gGameCore::DrawBus()
 					strcpy(ask.szID, pc->m_MyGamePlayer.szID);
 
 					gServer::GetIF()->Send(PL_BUSMOVEEND_ASK, sizeof ask, &ask);
+
+					pc->MainLoop_Busing(NULL, NULL, NULL, m_nTurn);
 				}
 				else
 				{

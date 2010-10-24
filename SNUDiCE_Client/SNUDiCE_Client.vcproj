@@ -192,10 +192,6 @@
 				RelativePath=".\Mouse.cpp"
 				>
 			</File>
-			<File
-				RelativePath=".\Server.cpp"
-				>
-			</File>
 			<Filter
 				Name="Interface / Util"
 				>
@@ -437,6 +433,10 @@
 				</File>
 				<File
 					RelativePath=".\PlayerContainer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Server.cpp"
 					>
 				</File>
 				<File
