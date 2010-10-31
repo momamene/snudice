@@ -20,7 +20,7 @@
 #include "UIGame.h"
 #include "networkconst.h"
 #include "resource.h"
-//#include "SoundFiles.h"
+#include "SoundFiles.h"
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
@@ -359,10 +359,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 				{
 					mw->m_bActive = true;
 					//ShowCursor(FALSE);
-//					if(!playSound->isBGMLoaded())						
-//						playSound->StartBGM(BGM_FILE_0);
-//					else
-//						playSound->ResumeBGM();
+					if(!playSound->isBGMLoaded())						
+						playSound->StartBGM(BGM_FILE_0);
+					else
+						playSound->ResumeBGM();
 					break;
 				}					
 				case WA_INACTIVE:
