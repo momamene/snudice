@@ -341,12 +341,6 @@ void gPlayerContainer::Draw_Busing(gImage *bus, RECT *rcDest, RECT *rcSour, int 
 
 	for(int h = 0 ; h < LINEY ; h++)		// yÁÂÇ¥ ¼øÀ¸·Î sorting
 	{	
-		if(h == busY)
-		{
-			if(bus)
-				bus->Draw(*rcDest, *rcSour, false);
-		}
-
 		for(int i = 0 ; i < ROOMMAXPLAYER ; i++)
 		{
 			if(m_nNoDraw == i)
@@ -359,6 +353,94 @@ void gPlayerContainer::Draw_Busing(gImage *bus, RECT *rcDest, RECT *rcSour, int 
 					-gmap->m_nAbsDrawlineY + m_nAbsDrawlineY[i] - FULLY ,
 					-gmap->m_nAbsDrawlineX + m_nAbsDrawlineX[i] + 15 + 70 ,
 					-gmap->m_nAbsDrawlineY + m_nAbsDrawlineY[i] - FULLY + 130 );
+				SetRect(&rcImg, 
+					m_moveFoot[i]*70,
+					m_movePosition[i]*130,
+					(m_moveFoot[i]+1)*70, 
+					(m_movePosition[i]+1)*130);
+				m_ImgInfo[ m_GPlayerList[i].ctype ].ImgDot.Draw(rcScr, rcImg, false);
+			}
+		}
+		if(h == busY)
+		{
+			if(bus)
+				bus->Draw(*rcDest, *rcSour, false);
+		}
+	}
+}
+
+void gPlayerContainer::MainLoop_Warp(int charidx, int dY)
+{
+	Draw_Warp(charidx, dY);
+}
+
+void gPlayerContainer::MainLoop_WarpList(int *dest, bool drawAll, int dY)
+{
+	Draw_WarpList(dest, drawAll, dY);
+}
+
+void gPlayerContainer::Draw_Warp(int charidx, int dY)
+{
+	RECT	rcScr;
+	RECT	rcImg;
+
+	gMap* gmap = gMap::GetIF();
+
+	for(int h = 0 ; h < LINEY ; h++)		// yÁÂÇ¥ ¼øÀ¸·Î sorting
+	{	
+		for(int i = 0 ; i < ROOMMAXPLAYER ; i++)
+		{
+			if(m_nNoDraw == i)
+				continue;
+
+			if(m_MyRoom.szRoomMaxPlayer[i][0] != '\0' && m_GPlayerList[i].nPos%LINEY == h)
+			{
+				SetRect(&rcScr, 
+					-gmap->m_nAbsDrawlineX + m_nAbsDrawlineX[i] + 15 ,
+					-gmap->m_nAbsDrawlineY + m_nAbsDrawlineY[i] - FULLY ,
+					-gmap->m_nAbsDrawlineX + m_nAbsDrawlineX[i] + 15 + 70 ,
+					-gmap->m_nAbsDrawlineY + m_nAbsDrawlineY[i] - FULLY + 130 );
+
+				if(i == charidx)
+					OffsetRect(&rcScr, 0, dY);
+
+				SetRect(&rcImg, 
+					m_moveFoot[i]*70,
+					m_movePosition[i]*130,
+					(m_moveFoot[i]+1)*70, 
+					(m_movePosition[i]+1)*130);
+				m_ImgInfo[ m_GPlayerList[i].ctype ].ImgDot.Draw(rcScr, rcImg, false);
+			}
+		}
+	}
+}
+
+void gPlayerContainer::Draw_WarpList(int *dest, bool drawAll, int dY)
+{
+	RECT	rcScr;
+	RECT	rcImg;
+
+	gMap* gmap = gMap::GetIF();
+
+	for(int h = 0 ; h < LINEY ; h++)		// yÁÂÇ¥ ¼øÀ¸·Î sorting
+	{	
+		for(int i = 0 ; i < ROOMMAXPLAYER ; i++)
+		{
+			if(!drawAll)
+				if(dest[i] == -1)
+					continue;
+
+			if(m_MyRoom.szRoomMaxPlayer[i][0] != '\0' && m_GPlayerList[i].nPos%LINEY == h)
+			{
+				SetRect(&rcScr, 
+					-gmap->m_nAbsDrawlineX + m_nAbsDrawlineX[i] + 15 ,
+					-gmap->m_nAbsDrawlineY + m_nAbsDrawlineY[i] - FULLY ,
+					-gmap->m_nAbsDrawlineX + m_nAbsDrawlineX[i] + 15 + 70 ,
+					-gmap->m_nAbsDrawlineY + m_nAbsDrawlineY[i] - FULLY + 130 );
+
+				if(dest[i] != -1)
+					OffsetRect(&rcScr, 0, dY);
+
 				SetRect(&rcImg, 
 					m_moveFoot[i]*70,
 					m_movePosition[i]*130,
@@ -492,4 +574,48 @@ bool gPlayerContainer::Restore()
 			return false;
 	}
 	return true;
+}
+
+int gPlayerContainer::GetMyItemNum()
+{
+	int		i;
+	int		count = 0;
+
+	for(i = 0; i < MAXITEMNUM; i++)
+	{
+		if(m_MyGamePlayer.nItem[i] != -1)
+			count++;
+	}
+	return count;
+}
+
+int	gPlayerContainer::GetCharNumPos(int nPos)
+{
+	int		i;
+	int		count = 0;
+
+	for(i = 0; i < ROOMMAXPLAYER; i++)
+	{
+		if(strlen(m_GPlayerList[i].szID) != 0)
+		{
+			if(m_GPlayerList[i].nPos == nPos)
+				count++;
+		}
+	}
+	return count;
+}
+
+GAMEPLAYER*	gPlayerContainer::GetPlayerByPos(int nPos)
+{
+	int		i;
+
+	for(i = 0; i < ROOMMAXPLAYER; i++)
+	{
+		if(strlen(m_GPlayerList[i].szID) != 0)
+		{
+			if(m_GPlayerList[i].nPos == nPos)
+				return &m_GPlayerList[i];
+		}
+	}
+	return NULL;
 }

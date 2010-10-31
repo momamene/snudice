@@ -54,6 +54,8 @@
 		PL_EXIT_REP,			게임중 강제종료 처리
 		
 2010 10 24 - CoderK		/ server : 현탁
+	~
+2010 10 31 - CoderK		/ server : 현탁
 	패킷 1개 추가
 		뒤로가기 버튼
 		PL_GOLOGIN_ASK,			배틀넷모드 -> 로그인모드

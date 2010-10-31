@@ -595,6 +595,7 @@ void gRoomCore::pk_roommake_rep(PK_ROOMMAKER_REP *rep)
 	{
 		gUtil::DebugMsg("Success\n");
 		m_eRoom = ERM_ROOM;
+		gMainWin::GetIF()->m_eCoreMode = ECM_ROOM;
 		gPlayerContainer::GetIF()->SetMyRoom(&rep->room);
 		gPlayerContainer::GetIF()->SetPlayerList(rep->playerlist);
 		SetFocus(gMainWin::GetIF()->m_hWnd);

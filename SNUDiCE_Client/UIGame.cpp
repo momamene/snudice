@@ -9,6 +9,9 @@
 #include "Chat.h"
 #include "ItemContainer.h"
 #include "Server.h"
+#include "PopUp.h"
+#include "stringconst.h"
+#include "Map.h"
 
 #define	UI_FILE_MAININFO					".\\Data\\Interface\\game_maininfo.img"
 #define UI_SIZE_MAININFO_W					220
@@ -133,8 +136,37 @@
 
 #define ITEMCARD_POS_X						22
 #define ITEMCARD_POS_Y						120
+#define ITEMCARD_SIZE_W						140
+#define ITEMCARD_SIZE_H						196
 #define ITEMCARD_TERM_X						10
 
+#define TARGET_OUTLINE_FILE					".\\Data\\Interface\\game_face_outline.img"
+#define TARGET_OUTLINE_SIZE_W				52
+#define TARGET_OUTLINE_SIZE_H				62
+#define TARGET_TERM_X						10
+#define TARGET_TERM_Y						10
+#define TARGET_POS_CENTER_X					320
+#define TARGET_POS_CENTER_Y					240
+
+#define USEINFO_CARD_POS_X					320
+#define USEINFO_CARD_POS_Y					ITEMCARD_POS_Y
+#define USEINFO_USER_POS_X					USEINFO_CARD_POS_X - 200													// 중점
+#define USEINFO_USER_POS_Y					(ITEMCARD_POS_Y + (ITEMCARD_SIZE_H - TARGET_OUTLINE_SIZE_H) / 2)			// 중점
+#define USEINFO_TARGET_POS_X				USEINFO_CARD_POS_X + 200													// 중점
+#define USEINFO_TARGET_POS_Y				USEINFO_USER_POS_Y															// 중점
+#define USEINFO_TARGET_TERM_X				10
+#define USEINFO_TARGET_TERM_Y				10
+
+#define USEINFO_TICK						3000	// 3초 보여줌
+#define INFOCHANGE_TICK						3000
+
+#define INFOCHANGE_POS_X					320
+#define	INFOCHANGE_POS_Y					180
+#define INFOCHANGE_TERM_X					10		
+#define INFOCHANGE_TERM_Y					10
+#define INFOCHANGE_INFOSIZE_W				50
+#define INFOCHANGE_INFOSIZE_H				12		// info 하나당 높이
+#define INFOCHANGE_INFOTERM_Y				10		// info끼리 텀
 
 static gUIGame s_UIGame;
 
@@ -212,8 +244,6 @@ bool gUIGame::SetUp()
 		SUBINFO_SUBWND_POS_X + SUBINFO_SUBWND_SIZE_W,
 		SUBINFO_SUBWND_POS_Y + SUBINFO_SUBWND_SIZE_H );
 
-	m_bShowSubWnd = false;
-
 	SetRect(&rcDest,
 		SUBINFO_BTN_PREV_POS_X,
 		SUBINFO_BTN_PREV_POS_Y,
@@ -269,11 +299,15 @@ bool gUIGame::SetUp()
 	if(!m_ImgUI[UIIMG_POPINFO2].Load(UI_POPINFO2_FILE))
 		return false;
 
-	m_bPopInfo = false;
+	// item 사용, 타겟 charface img
+	if(!m_ImgUI[UIIMG_FACEOUTLINE].Load(TARGET_OUTLINE_FILE))
+		return false;
 
 	m_nCurPInfo = 0;
-
-	m_bItem = false;
+	m_uimode = UIM_NONE;
+	m_bTargetByMove = false;
+	m_timer.SetUp();
+	m_bItemUsed = false;
 
 	return true;
 }
@@ -414,78 +448,131 @@ void gUIGame::Draw()
 
 	RECT	rcDest, rcSour;
 
-	// MainInfo
-	gPC->m_ImgInfo[gPC->m_MyGamePlayer.ctype].ImgPic.Draw(MAININFO_PIC_POS_X, MAININFO_PIC_POS_Y);
-	m_ImgUI[UIIMG_MAININFO].Draw(UI_POS_MAININFO_X, UI_POS_MAININFO_Y);
+	// image
+	// show always
+		// MainInfo
+		gPC->m_ImgInfo[gPC->m_MyGamePlayer.ctype].ImgPic.Draw(MAININFO_PIC_POS_X, MAININFO_PIC_POS_Y);
+		m_ImgUI[UIIMG_MAININFO].Draw(UI_POS_MAININFO_X, UI_POS_MAININFO_Y);
 
-	m_rcBarDest.right = m_rcBarDest.left + gPC->m_MyGamePlayer.nStamina * MAININFO_BARGUAGE_SIZE_W / 10;
-	m_ImgUI[UIIMG_BARGUAGE].Draw(m_rcBarDest, m_rcBarSour);
-	m_ImgUI[UIIMG_BAROUTLINE].Draw(MAININFO_BARLINE_POS_X, MAININFO_BARLINE_POS_Y);
+		m_rcBarDest.right = m_rcBarDest.left + gPC->m_MyGamePlayer.nStamina * MAININFO_BARGUAGE_SIZE_W / 10;
+		m_ImgUI[UIIMG_BARGUAGE].Draw(m_rcBarDest, m_rcBarSour);
+		m_ImgUI[UIIMG_BAROUTLINE].Draw(MAININFO_BARLINE_POS_X, MAININFO_BARLINE_POS_Y);
 
-	// Subinfo
-	m_ImgUI[UIIMG_SUBINFO].Draw(SUBINFO_POS_X, SUBINFO_POS_Y);
-	m_BtnUI[UIBTN_ITEMCARD].Draw();
-	m_BtnUI[UIBTN_SUBJECT].Draw();
+		// playersInfo
+		m_ImgUI[UIIMG_PINFO].Draw(PINFO_POS_X, PINFO_POS_Y);
+		SetRect(&rcDest,
+			PINFO_INFO_POS_X,
+			PINFO_INFO_POS_Y,
+			PINFO_INFO_POS_X + UI_NUMBER_SIZE_W,
+			PINFO_INFO_POS_Y + UI_NUMBER_SIZE_H );
+		OffsetRect(&rcDest, UI_NUMBER_TERM_X, UI_NUMBER_TERM_Y);
+		SetRect(&rcSour,
+			0, 0, UI_NUMBER_SIZE_W, UI_NUMBER_SIZE_H);
+		OffsetRect(&rcSour, (gPC->m_GPlayerList[ m_rankIdx[m_nCurPInfo] ].nRank - 1) * UI_NUMBER_SIZE_W, 0);
+		m_ImgUI[UIIMG_NUMBER].Draw(rcDest, rcSour);
+		
+		if(m_rankIdx[m_nCurPInfo + 1] != -1)
+		SetRect(&rcDest,
+			PINFO_INFO_POS_X,
+			PINFO_INFO_POS_Y,
+			PINFO_INFO_POS_X + UI_NUMBER_SIZE_W,
+			PINFO_INFO_POS_Y + UI_NUMBER_SIZE_H );
+		OffsetRect(&rcDest, UI_NUMBER_TERM_X, UI_NUMBER_TERM_Y + PINFO_INFO_TERM_Y);
+		SetRect(&rcSour,
+			0, 0, UI_NUMBER_SIZE_W, UI_NUMBER_SIZE_H);
+		OffsetRect(&rcSour, (gPC->m_GPlayerList[ m_rankIdx[m_nCurPInfo + 1] ].nRank - 1) * UI_NUMBER_SIZE_W, 0);
+		m_ImgUI[UIIMG_NUMBER].Draw(rcDest, rcSour);
+		m_Scroll.Draw();
+		
+		// menu
+		m_BtnUI[UIBTN_MENU].Draw();
 
-	if(m_bShowSubWnd)
+		// dice btn
+		if(!gPC->isTurn(gc->m_nTurn))
+			m_BtnUI[UIBTN_DICE].m_eBtnMode = EBM_CLICK;
+
+		m_BtnUI[UIBTN_DICE].Draw();
+
+		m_ImgUI[UIIMG_SUBINFO].Draw(SUBINFO_POS_X, SUBINFO_POS_Y);
+		m_BtnUI[UIBTN_ITEMCARD].Draw();
+		m_BtnUI[UIBTN_SUBJECT].Draw();
+
+	// show always end
+
+	switch(m_uimode)
 	{
-		m_ImgUI[UIIMG_SUBWND].Draw(SUBINFO_SUBWND_POS_X, SUBINFO_SUBWND_POS_Y);
-		m_BtnUI[UIBTN_SUBPREV].Draw();
-		m_BtnUI[UIBTN_SUBNEXT].Draw();
+		case UIM_SUGANG:
+			{
+				m_ImgUI[UIIMG_SUBWND].Draw(SUBINFO_SUBWND_POS_X, SUBINFO_SUBWND_POS_Y);
+				m_BtnUI[UIBTN_SUBPREV].Draw();
+				m_BtnUI[UIBTN_SUBNEXT].Draw();
+			}
+			break;
+		case UIM_ITEM:
+			{
+				gItemContainer	*ic = gItemContainer::GetIF();
+				int		j = 0;
+				for(i = 0; i < MAXITEMNUM; i++)
+				{
+					if(gPC->m_MyGamePlayer.nItem[i] == -1)
+						continue;
+
+					ic->m_ItemImg[ gPC->m_MyGamePlayer.nItem[i] ].Draw(ITEMCARD_POS_X + (ITEMCARD_TERM_X + ITEMCARDIMG_W) * j, ITEMCARD_POS_Y);
+					j++;
+				}
+			}
+			break;
+		case UIM_TARGETSELECT_MULTI:
+			{
+				DrawTargetButton();
+			}
+			break;
+		case UIM_ITEMUSEINFO:
+			{
+				int nFrame = m_timer.frame();
+
+				if(nFrame >= 1)
+				{
+					m_timer.frameEnd();
+					PK_ITEMUSESTART_ASK		ask;
+
+					strcpy(ask.szID, gPC->m_MyGamePlayer.szID);
+					gServer::GetIF()->Send(PL_ITEMUSESTART_ASK, sizeof(ask), &ask);
+					m_uimode = UIM_NONE;
+				}
+				gItemContainer	*ic = gItemContainer::GetIF();
+				gImage			*cardimg = &ic->m_ItemImg[m_nCardIdx];
+				DrawTargetButton();
+
+				m_itemuser.img->Draw(m_itemuser.rcPos.left + 1, m_itemuser.rcPos.top + 1);
+				m_ImgUI[UIIMG_FACEOUTLINE].Draw(m_itemuser.rcPos.left, m_itemuser.rcPos.top);
+
+				cardimg->Draw(USEINFO_CARD_POS_X - ITEMCARD_SIZE_W/2, USEINFO_CARD_POS_Y);
+			}
+			break;
+		case UIM_INFOCHANGE:
+			{
+				int nFrame = m_timer.frame();
+
+				if(nFrame >= 1)
+				{
+					m_timer.frameEnd();
+					PK_INFOCHANGEEND_ASK		ask;
+
+					strcpy(ask.szID, gPC->m_MyGamePlayer.szID);
+					gServer::GetIF()->Send(PL_INFOCHANGEEND_ASK, sizeof(ask), &ask);
+					m_uimode = UIM_NONE;
+				}
+				Draw_InfoChange();
+			}
+			break;
 	}
-
-	// playersInfo
-	m_ImgUI[UIIMG_PINFO].Draw(PINFO_POS_X, PINFO_POS_Y);
-	SetRect(&rcDest,
-		PINFO_INFO_POS_X,
-		PINFO_INFO_POS_Y,
-		PINFO_INFO_POS_X + UI_NUMBER_SIZE_W,
-		PINFO_INFO_POS_Y + UI_NUMBER_SIZE_H );
-	OffsetRect(&rcDest, UI_NUMBER_TERM_X, UI_NUMBER_TERM_Y);
-	SetRect(&rcSour,
-		0, 0, UI_NUMBER_SIZE_W, UI_NUMBER_SIZE_H);
-	OffsetRect(&rcSour, (gPC->m_GPlayerList[ m_rankIdx[m_nCurPInfo] ].nRank - 1) * UI_NUMBER_SIZE_W, 0);
-	m_ImgUI[UIIMG_NUMBER].Draw(rcDest, rcSour);
 	
-	if(m_rankIdx[m_nCurPInfo + 1] != -1)
-	SetRect(&rcDest,
-		PINFO_INFO_POS_X,
-		PINFO_INFO_POS_Y,
-		PINFO_INFO_POS_X + UI_NUMBER_SIZE_W,
-		PINFO_INFO_POS_Y + UI_NUMBER_SIZE_H );
-	OffsetRect(&rcDest, UI_NUMBER_TERM_X, UI_NUMBER_TERM_Y + PINFO_INFO_TERM_Y);
-	SetRect(&rcSour,
-		0, 0, UI_NUMBER_SIZE_W, UI_NUMBER_SIZE_H);
-	OffsetRect(&rcSour, (gPC->m_GPlayerList[ m_rankIdx[m_nCurPInfo + 1] ].nRank - 1) * UI_NUMBER_SIZE_W, 0);
-	m_ImgUI[UIIMG_NUMBER].Draw(rcDest, rcSour);
-	m_Scroll.Draw();
-	
-	// menu
-	m_BtnUI[UIBTN_MENU].Draw();
 
-	// dice btn
-	if(!gPC->isTurn(gc->m_nTurn))
-		m_BtnUI[UIBTN_DICE].m_eBtnMode = EBM_CLICK;
-
-	m_BtnUI[UIBTN_DICE].Draw();
-
-	// item
-	gItemContainer	*ic = gItemContainer::GetIF();
-	if(m_bItem)
-	{
-		int		j = 0;
-		for(i = 0; i < MAXITEMNUM; i++)
-		{
-			if(gPC->m_MyGamePlayer.nItem[i] == -1)
-				continue;
-			
-			ic->m_ItemImg[ gPC->m_MyGamePlayer.nItem[i] ].Draw(ITEMCARD_POS_X + (ITEMCARD_TERM_X + ITEMCARDIMG_W) * j, ITEMCARD_POS_Y);
-			j++;
-		}
-	}
-
+	// text
 	char	szBuf[128];
 	gUtil::BeginText();
+
 	// MainInfo
 		gUtil::Text(MAININFO_ID_POS_X, MAININFO_ID_POS_Y, gPC->m_MyGamePlayer.szID);
 		wsprintf(szBuf, "%d", gPC->m_MyGamePlayer.nLang);
@@ -514,7 +601,7 @@ void gUIGame::Draw()
 
 
 	// sub - subwnd
-		if(m_bShowSubWnd)
+		if(m_uimode == UIM_SUGANG)
 		{
 			GAMEPLAYER	*gp = &gPC->m_GPlayerList[m_nSubSel];
 
@@ -537,14 +624,14 @@ void gUIGame::Draw()
 
 	gUtil::EndText();
 
-	gUtil::SetSize(SUBINFO_AVGRADE_FONTSIZE);
-	gUtil::BeginText();
-	if(m_bShowSubWnd)
+	if(m_uimode == UIM_SUGANG)
 	{
-		gUtil::Text(SUBINFO_AVGRADE_POS_X, SUBINFO_AVGRADE_POS_Y, szBuf);
+		gUtil::SetSize(SUBINFO_AVGRADE_FONTSIZE);
+		gUtil::BeginText();
+			gUtil::Text(SUBINFO_AVGRADE_POS_X, SUBINFO_AVGRADE_POS_Y, szBuf);
+		gUtil::EndText();
+		gUtil::SetDefaultFont();
 	}
-	gUtil::EndText();
-	gUtil::SetDefaultFont();
 }
 
 
@@ -577,13 +664,15 @@ bool gUIGame::OnLButtonDown()
 	gPlayerContainer	*gPC	= gPlayerContainer::GetIF();
 	gMouse				*mouse	= gMouse::GetIF();
 	gGameCore			*gc		= gGameCore::GetIF();
+	gItemContainer		*ic		= gItemContainer::GetIF();
+	gMap				*map	= gMap::GetIF();
 
 	m_Scroll.OnLbuttonDown(mouse->m_nPosX, mouse->m_nPosY);
-	
-	//switch(m_Scroll.whatIsClicked())
-	//{
-	//	case SCR_DOWN:
 
+	if(m_uimode == UIM_INFOCHANGE
+		|| m_uimode == UIM_ITEMUSEINFO)
+		return false;
+	
 	if(m_BtnUI[UIBTN_DICE].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 	{
 		if(gc->m_bMoving || gc->m_bBusing)
@@ -595,111 +684,411 @@ bool gUIGame::OnLButtonDown()
 	}
 	if(m_BtnUI[UIBTN_SUBJECT].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 	{
-		if(!m_bShowSubWnd)
+		if(m_uimode != UIM_SUGANG)
 		{
-			m_nSubSel = gPC->GetMyGPIndex();
-			m_bItem = false;
+			m_nSubSel	= gPC->GetMyGPIndex();
+			m_uimode	= UIM_SUGANG;
 		}
-			
+		else
+			m_uimode	= UIM_NONE;
 
-		m_bShowSubWnd = !m_bShowSubWnd;
 		return true;
 	}
 	if(m_BtnUI[UIBTN_ITEMCARD].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 	{
-		if(!m_bItem)
+		if(m_uimode != UIM_ITEM)
 		{
-			m_bShowSubWnd = false;
+			if(gPC->GetMyItemNum() > 0)
+				m_uimode	= UIM_ITEM;
+			else
+				gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_20);
 		}
+		else
+			m_uimode	= UIM_NONE;
 
-		m_bItem = !m_bItem;
 		return true;
 	}
 
-	if(m_bItem)
+	switch(m_uimode)
 	{
-		if(gPC->GetMyGPIndex() != gGameCore::GetIF()->m_nTurn)
-			return false;
-
-		gItemContainer	*ic = gItemContainer::GetIF();
-
-		int		i, j = 0;
-		for(i = 0; i < MAXITEMNUM; i++)
-		{
-			if(gPC->m_MyGamePlayer.nItem[i] == -1)
-				continue;
-
-			RECT	rcTemp;
-			rcTemp.left		= ITEMCARD_POS_X + (ITEMCARD_POS_X + ITEMCARDIMG_W) * j;
-			rcTemp.right	= rcTemp.left + ITEMCARDIMG_W;
-			rcTemp.top		= ITEMCARD_POS_Y;
-			rcTemp.bottom	= rcTemp.top + ITEMCARDIMG_H;
-
-			if(gUtil::PointInRect(mouse->m_nPosX, mouse->m_nPosY, rcTemp))
+		case UIM_ITEM:				// 아이템 모드
 			{
-				ITEMCARD	*item = &ic->m_ItemList[ gPC->m_MyGamePlayer.nItem[i] ];
-				PK_ITEMUSE_ASK		ask;
+				if(gPC->GetMyGPIndex() != gGameCore::GetIF()->m_nTurn)
+					return true;
+				if(gGameCore::GetIF()->m_bMoved)
+					return true;
+				if(m_bItemUsed)
+					return true;
 
-				switch(item->type)
+				m_bTargetByMove = false;
+
+				int		i, j = 0;
+				for(i = 0; i < MAXITEMNUM; i++)
 				{
-					case ITEM_STAT:
-						{
-							if(item->target == TARGET_OTHER || item->target == TARGET_MEOTHER)
-							{
-							}
-							else
-							{
-								strcpy(ask.szID, gPC->m_MyGamePlayer.szID);
-								ask.nItemID = gPC->m_MyGamePlayer.nItem[i];
+					if(gPC->m_MyGamePlayer.nItem[i] == -1)
+						continue;
 
-								gServer::GetIF()->Send(PL_ITEMUSE_ASK, sizeof ask, &ask);
-							}
+					RECT	rcTemp;
+					rcTemp.left		= ITEMCARD_POS_X + (ITEMCARD_POS_X + ITEMCARDIMG_W) * j;
+					rcTemp.right	= rcTemp.left + ITEMCARDIMG_W;
+					rcTemp.top		= ITEMCARD_POS_Y;
+					rcTemp.bottom	= rcTemp.top + ITEMCARDIMG_H;
+
+					if(gUtil::PointInRect(mouse->m_nPosX, mouse->m_nPosY, rcTemp))
+					{
+						int					ItemIdx = gPC->m_MyGamePlayer.nItem[i];
+						ITEMCARD			*item = &ic->m_ItemList[ ItemIdx ];
+						PK_ITEMUSE_ASK		ask;
+
+						switch(item->type)
+						{
+							case ITEM_STAT: case ITEM_STAMINA: case ITEM_NOCLASS: case ITEM_TOGETHERCLASS:
+								{
+									if(item->target == TARGET_OTHER || item->target == TARGET_MEOTHER)
+									{
+										m_nItemID	= ItemIdx;
+										m_uimode	= UIM_TARGETSELECT;
+									}
+									else
+									{
+										strcpy(ask.szID, gPC->m_MyGamePlayer.szID);
+										ask.nItemID = ItemIdx;
+
+										gServer::GetIF()->Send(PL_ITEMUSE_ASK, sizeof ask, &ask);
+										m_bItemUsed = true;
+									}
+								}
+								break;
+							case ITEM_MOVEPLACE:
+								{
+									if(item->target == TARGET_OTHER || item->target == TARGET_MEOTHER)
+									{
+										m_nItemID	= ItemIdx;
+										m_uimode	= UIM_TARGETSELECT;
+										m_bTargetByMove = true;
+									}
+									else
+									{
+										strcpy(ask.szID, gPC->m_MyGamePlayer.szID);
+										ask.nItemID = ItemIdx;
+
+										gServer::GetIF()->Send(PL_ITEMUSE_ASK, sizeof ask, &ask);
+										m_bItemUsed = true;
+									}
+								}
+								break;
+							case ITEM_MOVESELECT:
+								{
+									if(item->target == TARGET_OTHER || item->target == TARGET_MEOTHER)
+									{
+										m_nItemID	= ItemIdx;
+										m_uimode	= UIM_TARGETSELECT;
+										m_bTargetByMove = true;
+									}
+									else
+									{
+										m_nItemID	= ItemIdx;
+										m_uimode	= UIM_PLACESELECT;
+									}
+								}
+								break;
 						}
+						return true;
+					}
+
+					j++;
+				}
+			}
+		break;
+	case UIM_TARGETSELECT:
+		{
+			POINT		pt;
+			pt.x = mouse->m_nPosX;
+			pt.y = mouse->m_nPosY;
+
+			int		nPos = map->viewabsToCon(pt);
+			int		numchar = gPC->GetCharNumPos(nPos);
+
+			if(numchar == 0)
+				break;
+			else if(numchar == 1)
+			{
+				GAMEPLAYER	*target = gPC->GetPlayerByPos(nPos);
+
+				if(m_bTargetByMove)
+				{
+					strcpy(m_szTarget, target->szID);
+					m_uimode = UIM_PLACESELECT;
+				}
+				else
+				{
+					PK_ITEMUSE_ASK		ask;
+					ask.nItemID	= m_nItemID;
+					strcpy(ask.szID, gPC->m_MyPlayer.szID);
+					strcpy(ask.szTarget, target->szID);
+
+					gServer::GetIF()->Send(PL_ITEMUSE_ASK, sizeof(ask), &ask);
+					m_uimode = UIM_NONE;
+					m_bItemUsed = true;
+				}
+			}
+			else
+			{
+				m_uimode = UIM_TARGETSELECT_MULTI;
+				SetTargetButton(nPos, numchar);
+			}
+		}
+		break;
+	case UIM_TARGETSELECT_MULTI:
+		{
+			int		i;
+
+			for(i = 0; i < m_nTargetNum; i++)
+			{
+				if(gUtil::PointInRect(mouse->m_nPosX, mouse->m_nPosY, m_target[i].rcPos))
+				{
+					if(m_bTargetByMove)
+					{
+						strcpy(m_szTarget, gPC->m_GPlayerList[ m_target[i].idx ].szID);
+						m_uimode = UIM_PLACESELECT;
+
 						break;
+					}
+					else
+					{
+						PK_ITEMUSE_ASK		ask;
+
+						strcpy(ask.szID, gPC->m_MyGamePlayer.szID);
+						strcpy(ask.szTarget, gPC->m_GPlayerList[ m_target[i].idx ].szID);
+						ask.nItemID = m_nItemID;
+
+						gServer::GetIF()->Send(PL_ITEMUSE_ASK, sizeof(ask), &ask);
+						m_uimode = UIM_NONE;
+						m_bItemUsed = true;
+						break;
+					}
+				}
+			}
+		}
+		break;
+	case UIM_PLACESELECT:
+		{
+			PK_ITEMUSE_ASK		ask;
+
+			POINT	pt;
+			pt.x = mouse->m_nPosX;
+			pt.y = mouse->m_nPosY;
+
+			int		nPos = map->viewabsToCon(pt);
+			if(map->tileMap[nPos].tileType != TY_NONE)
+			{
+				strcpy(ask.szID, gPC->m_MyGamePlayer.szID);
+				ask.nStartPos	= gPC->m_MyGamePlayer.nPos;
+				ask.nDestPos	= nPos;
+				if(m_bTargetByMove)
+				{
+					strcpy(ask.szTarget, m_szTarget);
+					m_bTargetByMove = false;
+				}
+
+				gServer::GetIF()->Send(PL_ITEMUSE_ASK, sizeof(ask), &ask);
+				m_uimode = UIM_NONE;
+				m_bItemUsed = true;
+			}
+		}
+		break;
+	case UIM_SUGANG:				// 수강현황 모드
+		{
+			if(m_BtnUI[UIBTN_SUBPREV].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+			{
+				while(true)
+				{
+					m_nSubSel--;
+					if(m_nSubSel < 0)
+						m_nSubSel = ROOMMAXPLAYER - 1;
+
+					if(strlen(gPC->m_GPlayerList[m_nSubSel].szID) == 0)
+						continue;
+
+					break;
 				}
 				return true;
 			}
-
-			j++;
-		}
-
-		return false;
-	}
-	if(m_bShowSubWnd)
-	{
-		if(m_BtnUI[UIBTN_SUBPREV].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
-		{
-			while(true)
+			if(m_BtnUI[UIBTN_SUBNEXT].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 			{
-				m_nSubSel--;
-				if(m_nSubSel < 0)
-					m_nSubSel = ROOMMAXPLAYER - 1;
+				while(true)
+				{
+					m_nSubSel++;
+					if(m_nSubSel >= ROOMMAXPLAYER)
+						m_nSubSel = 0;
 
-				if(strlen(gPC->m_GPlayerList[m_nSubSel].szID) == 0)
-					continue;
-				
-				break;
+					if(strlen(gPC->m_GPlayerList[m_nSubSel].szID) == 0)
+						continue;
+
+					break;
+				}
+				return true;
 			}
-			return true;
 		}
-		if(m_BtnUI[UIBTN_SUBNEXT].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
-		{
-			while(true)
-			{
-				m_nSubSel++;
-				if(m_nSubSel >= ROOMMAXPLAYER)
-					m_nSubSel = 0;
-
-				if(strlen(gPC->m_GPlayerList[m_nSubSel].szID) == 0)
-					continue;
-
-				break;
-			}
-			return true;
-		}
+		break;
 	}
 
 	return false;
+}
+
+void gUIGame::SetTargetButton(int nPos, int charmax)
+{
+	gPlayerContainer	*pc = gPlayerContainer::GetIF();
+
+	m_nTargetNum = charmax;
+
+	int			i;
+	int			nCount = 0;
+
+	for(i = 0; i < ROOMMAXPLAYER; i++)
+	{
+		if(strlen(pc->m_GPlayerList[i].szID) != 0)
+		{
+			if(pc->m_GPlayerList[i].nPos == nPos)
+			{
+				if(strcmp(pc->m_GPlayerList[i].szID, pc->m_MyGamePlayer.szID) != 0)
+				{
+					m_target[nCount].img = &pc->m_ImgInfo[ pc->m_GPlayerList[i].ctype ].ImgPic;
+					m_target[nCount].idx = i;
+					nCount++;
+				}
+			}
+		}
+	}
+
+	// pos set - 구찮다. 케이스별로 하드코딩하자
+	int		startx, starty;
+	switch(m_nTargetNum)
+	{
+		case 2:
+			{
+				// ㅁ ㅁ
+				startx = TARGET_POS_CENTER_X - TARGET_OUTLINE_SIZE_W - TARGET_TERM_X/2;
+				starty = TARGET_POS_CENTER_Y - TARGET_OUTLINE_SIZE_H / 2;
+				for(i = 0; i < m_nTargetNum; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx + i * (TARGET_OUTLINE_SIZE_W + TARGET_TERM_X),
+						starty,
+						startx + i * (TARGET_OUTLINE_SIZE_W + TARGET_TERM_X) + TARGET_OUTLINE_SIZE_W,
+						starty + TARGET_OUTLINE_SIZE_H);
+				}
+			}
+			break;
+		case 3:
+			{
+				// ㅁ ㅁ ㅁ 
+				startx = TARGET_POS_CENTER_X - TARGET_OUTLINE_SIZE_W * 3/2 - TARGET_TERM_X;
+				starty = TARGET_POS_CENTER_Y - TARGET_OUTLINE_SIZE_H / 2;
+				for(i = 0; i < m_nTargetNum; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx + i * (TARGET_OUTLINE_SIZE_W + TARGET_TERM_X),
+						starty,
+						startx + i * (TARGET_OUTLINE_SIZE_W + TARGET_TERM_X) + TARGET_OUTLINE_SIZE_W,
+						starty + TARGET_OUTLINE_SIZE_H);
+				}
+			}
+			break;
+		case 4:
+			{
+				// ㅁ ㅁ ㅁ ㅁ
+				startx = TARGET_POS_CENTER_X - TARGET_OUTLINE_SIZE_W * 2 - TARGET_TERM_X * 3/2;
+				starty = TARGET_POS_CENTER_Y - TARGET_OUTLINE_SIZE_H / 2;
+				for(i = 0; i < m_nTargetNum; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx + i * (TARGET_OUTLINE_SIZE_W + TARGET_TERM_X),
+						starty,
+						startx + i * (TARGET_OUTLINE_SIZE_W + TARGET_TERM_X) + TARGET_OUTLINE_SIZE_W,
+						starty + TARGET_OUTLINE_SIZE_H);
+				}
+			}
+			break;
+		case 5:
+			{
+				//  ㅁ ㅁ
+				// ㅁ ㅁ ㅁ 
+				startx = TARGET_POS_CENTER_X - TARGET_OUTLINE_SIZE_W - TARGET_TERM_X/2;
+				starty = TARGET_POS_CENTER_Y - TARGET_OUTLINE_SIZE_H - TARGET_TERM_Y/2;
+				for(i = 0; i < 2; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx + i * (TARGET_OUTLINE_SIZE_W + TARGET_TERM_X),
+						starty,
+						startx + i * (TARGET_OUTLINE_SIZE_W + TARGET_TERM_X) + TARGET_OUTLINE_SIZE_W,
+						starty + TARGET_OUTLINE_SIZE_H);
+				}
+				startx = TARGET_POS_CENTER_X - TARGET_OUTLINE_SIZE_W * 3/2 - TARGET_TERM_X;
+				starty += (TARGET_TERM_Y + TARGET_OUTLINE_SIZE_H);
+				for(; i < m_nTargetNum; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx + i * (TARGET_OUTLINE_SIZE_W + TARGET_TERM_X),
+						starty,
+						startx + i * (TARGET_OUTLINE_SIZE_W + TARGET_TERM_X) + TARGET_OUTLINE_SIZE_W,
+						starty + TARGET_OUTLINE_SIZE_H);
+				}
+			}
+			break;
+		case 6:
+			{
+				// ㅁ ㅁ ㅁ
+				// ㅁ ㅁ ㅁ 
+				startx = TARGET_POS_CENTER_X - TARGET_OUTLINE_SIZE_W * 3/2 - TARGET_TERM_X;
+				starty = TARGET_POS_CENTER_Y - TARGET_OUTLINE_SIZE_H - TARGET_TERM_Y/2;
+				for(i = 0; i < 3; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx + i * (TARGET_OUTLINE_SIZE_W + TARGET_TERM_X),
+						starty,
+						startx + i * (TARGET_OUTLINE_SIZE_W + TARGET_TERM_X) + TARGET_OUTLINE_SIZE_W,
+						starty + TARGET_OUTLINE_SIZE_H);
+				}
+				startx = TARGET_POS_CENTER_X - TARGET_OUTLINE_SIZE_W * 3/2 - TARGET_TERM_X;
+				starty += (TARGET_TERM_Y + TARGET_OUTLINE_SIZE_H);
+				for(; i < m_nTargetNum; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx + i * (TARGET_OUTLINE_SIZE_W + TARGET_TERM_X),
+						starty,
+						startx + i * (TARGET_OUTLINE_SIZE_W + TARGET_TERM_X) + TARGET_OUTLINE_SIZE_W,
+						starty + TARGET_OUTLINE_SIZE_H);
+				}
+			}
+			break;
+		case 7:
+			{
+				//  ㅁ ㅁ ㅁ
+				// ㅁ ㅁ ㅁ ㅁ
+				startx = TARGET_POS_CENTER_X - TARGET_OUTLINE_SIZE_W * 3/2 - TARGET_TERM_X;
+				starty = TARGET_POS_CENTER_Y - TARGET_OUTLINE_SIZE_H - TARGET_TERM_Y/2;
+				for(i = 0; i < 3; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx + i * (TARGET_OUTLINE_SIZE_W + TARGET_TERM_X),
+						starty,
+						startx + i * (TARGET_OUTLINE_SIZE_W + TARGET_TERM_X) + TARGET_OUTLINE_SIZE_W,
+						starty + TARGET_OUTLINE_SIZE_H);
+				}
+				startx = TARGET_POS_CENTER_X - TARGET_OUTLINE_SIZE_W * 2 - TARGET_TERM_X * 3/2;
+				starty += (TARGET_TERM_Y + TARGET_OUTLINE_SIZE_H);
+				for(; i < m_nTargetNum; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx + i * (TARGET_OUTLINE_SIZE_W + TARGET_TERM_X),
+						starty,
+						startx + i * (TARGET_OUTLINE_SIZE_W + TARGET_TERM_X) + TARGET_OUTLINE_SIZE_W,
+						starty + TARGET_OUTLINE_SIZE_H);
+				}
+			}
+			break;
+	}
 }
 
 void gUIGame::OnLButtonUp()
@@ -729,8 +1118,26 @@ void gUIGame::OnMouseMove()
 
 void gUIGame::OnRButtonDown()
 {
-	if(m_bShowSubWnd)
-		m_bShowSubWnd = !m_bShowSubWnd;
+	if(m_uimode == UIM_TARGETSELECT)
+	{
+		m_uimode = UIM_ITEM;
+		return;
+	}
+	if(m_uimode == UIM_TARGETSELECT_MULTI)
+	{
+		m_uimode = UIM_TARGETSELECT;
+		return;
+	}
+	if(m_uimode == UIM_PLACESELECT)
+	{
+		if(m_bTargetByMove)
+			m_uimode = UIM_TARGETSELECT;
+		else
+			m_uimode = UIM_ITEM;
+		return;
+	}
+	if(m_uimode != UIM_NONE)
+		m_uimode = UIM_NONE;
 }
 
 bool gUIGame::IsUIRange(int x, int y)
@@ -739,8 +1146,8 @@ bool gUIGame::IsUIRange(int x, int y)
 
 	for(i = 0; i < UIT_END; i++)
 	{
-		if( i == UIT_SUBWND && !m_bShowSubWnd )
-				continue;
+		if( i == UIT_SUBWND && m_uimode != UIM_SUGANG )
+			continue;
 
 		if(gUtil::PointInRect(x, y, m_rcPos[i]))
 			return true;
@@ -824,4 +1231,634 @@ bool gUIGame::Restore()
 		return false;
 
 	return true;
+}
+
+void gUIGame::DrawTargetButton()
+{
+	int		i;
+
+	for(i = 0; i < m_nTargetNum; i++)
+	{
+		m_target[i].img->Draw(m_target[i].rcPos.left + 1, m_target[i].rcPos.top + 1);
+		m_ImgUI[UIIMG_FACEOUTLINE].Draw(m_target[i].rcPos.left, m_target[i].rcPos.top);
+	}
+}
+
+void gUIGame::pk_itemuse_rep(PK_ITEMUSE_REP* rep)
+{
+	gItemContainer		*ic = gItemContainer::GetIF();
+	gPlayerContainer	*pc = gPlayerContainer::GetIF();
+
+	ITEMCARD	*item = &ic->m_ItemList[rep->nItemID];
+	int			userIdx	= pc->GetGPIndex(rep->szUser);
+
+	m_nCardIdx = rep->nItemID;
+
+	// 사용자 셋팅
+	m_itemuser.idx = userIdx;
+	m_itemuser.img = &pc->m_ImgInfo[ pc->m_GPlayerList[userIdx].ctype ].ImgPic;
+	SetRect(&m_itemuser.rcPos,
+		USEINFO_USER_POS_X - TARGET_OUTLINE_SIZE_W/2,
+		USEINFO_USER_POS_Y,
+		USEINFO_USER_POS_X - TARGET_OUTLINE_SIZE_W/2 + TARGET_OUTLINE_SIZE_W,
+		USEINFO_USER_POS_Y + TARGET_OUTLINE_SIZE_H );
+
+
+	switch(item->target)
+	{
+		case TARGET_ME:
+			{
+				m_nTargetNum = 1;
+				m_target[0] = m_itemuser;
+				m_target[0].rcPos.left = USEINFO_TARGET_POS_X - TARGET_OUTLINE_SIZE_W/2;
+				m_target[0].rcPos.right = m_target[0].rcPos.left + TARGET_OUTLINE_SIZE_W;
+			}
+			break;
+		case TARGET_OTHER:
+			{
+				m_nTargetNum = 1;
+				int	targetIdx = pc->GetGPIndex(rep->szTarget);
+
+				m_target[0].idx = targetIdx;
+				m_target[0].img = &pc->m_ImgInfo[ pc->m_GPlayerList[targetIdx].ctype ].ImgPic;
+				m_target[0].rcPos = m_itemuser.rcPos;
+				m_target[0].rcPos.left = USEINFO_TARGET_POS_X - TARGET_OUTLINE_SIZE_W/2;
+				m_target[0].rcPos.right = m_target[0].rcPos.left + TARGET_OUTLINE_SIZE_W;
+			}
+			break;
+		case TARGET_MEOTHER:
+			{
+				m_nTargetNum = 2;
+				// 나
+				m_target[0] = m_itemuser;
+
+				// 상대
+				int	targetIdx = pc->GetGPIndex(rep->szTarget);
+
+				m_target[1].idx = targetIdx;
+				m_target[1].img = &pc->m_ImgInfo[ pc->m_GPlayerList[targetIdx].ctype ].ImgPic;
+				m_target[1].rcPos = m_itemuser.rcPos;
+
+				int		i;
+				int		startx = USEINFO_TARGET_POS_X - TARGET_OUTLINE_SIZE_W/2;
+				int		starty = USEINFO_TARGET_POS_Y - TARGET_OUTLINE_SIZE_H - USEINFO_TARGET_TERM_Y/2;
+
+				for(i = 0; i < m_nTargetNum; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx,
+						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y),
+						startx + TARGET_OUTLINE_SIZE_W,
+						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y) + TARGET_OUTLINE_SIZE_H );
+				}
+			}
+			break;
+		case TARGET_ALL:
+			{
+				m_nTargetNum = pc->GetGPNum();
+
+				// 나
+				m_target[0] = m_itemuser;
+				// 다른 애들
+				int		i;
+				int		nCount = 1;
+				for(i = 0; i < ROOMMAXPLAYER; i++)
+				{
+					if(strlen(pc->m_GPlayerList[i].szID) != 0)
+					{
+						if(strcmp(pc->m_GPlayerList[i].szID, pc->m_MyGamePlayer.szID) == 0)
+							continue;
+
+						m_target[nCount].idx = i;
+						m_target[nCount].img = &pc->m_ImgInfo[ pc->m_GPlayerList[i].ctype ].ImgPic;
+						nCount++;
+					}
+				}
+				SetTargetButton_UseInfo();
+			}
+			break;
+		case TARGET_ALLEXCEPTME:
+			{
+				m_nTargetNum = pc->GetGPNum() - 1;
+
+				int		i;
+				for(i = 0; i < ROOMMAXPLAYER; i++)
+				{
+					if(strlen(pc->m_GPlayerList[i].szID) != 0)
+					{
+						if(strcmp(pc->m_GPlayerList[i].szID, pc->m_MyGamePlayer.szID) == 0)
+							continue;
+
+						m_target[i].idx = i;
+						m_target[i].img = &pc->m_ImgInfo[ pc->m_GPlayerList[i].ctype ].ImgPic;
+					}
+				}
+				SetTargetButton_UseInfo();
+			}
+			break;
+	}
+	m_uimode = UIM_ITEMUSEINFO;
+	m_timer.frameStart(USEINFO_TICK, 2);
+}
+
+void gUIGame::SetTargetButton_UseInfo()
+{
+	switch(m_nTargetNum)
+	{
+		case 2:
+			{
+				// ㅁ
+				// ㅁ
+				int		i;
+				int		startx = USEINFO_TARGET_POS_X - TARGET_OUTLINE_SIZE_W/2;
+				int		starty = USEINFO_TARGET_POS_Y - TARGET_OUTLINE_SIZE_H - USEINFO_TARGET_TERM_Y/2;
+
+				for(i = 0; i < m_nTargetNum; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx,
+						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y),
+						startx + TARGET_OUTLINE_SIZE_W,
+						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y) + TARGET_OUTLINE_SIZE_H );
+				}
+			}
+			break;
+		case 3:
+			{
+				// ㅁ
+				// ㅁ
+				// ㅁ
+				int		i;
+				int		startx = USEINFO_TARGET_POS_X - TARGET_OUTLINE_SIZE_W/2;
+				int		starty = USEINFO_TARGET_POS_Y - TARGET_OUTLINE_SIZE_H*3/2 - USEINFO_TARGET_TERM_Y;
+
+				for(i = 0; i < m_nTargetNum; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx,
+						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y),
+						startx + TARGET_OUTLINE_SIZE_W,
+						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y) + TARGET_OUTLINE_SIZE_H );
+				}
+			}
+			break;
+		case 4:
+			{
+				// ㅁ ㅁ
+				// ㅁ ㅁ
+				int		i;
+				int		startx = USEINFO_TARGET_POS_X - TARGET_OUTLINE_SIZE_W - USEINFO_TARGET_TERM_X/2;
+				int		starty = USEINFO_TARGET_POS_Y - TARGET_OUTLINE_SIZE_H - USEINFO_TARGET_TERM_Y/2;
+
+				for(i = 0; i < 2; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx,
+						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y),
+						startx + TARGET_OUTLINE_SIZE_W,
+						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y) + TARGET_OUTLINE_SIZE_H );
+				}
+
+				startx += (TARGET_OUTLINE_SIZE_W + USEINFO_TARGET_TERM_X);
+				starty = USEINFO_TARGET_POS_Y - TARGET_OUTLINE_SIZE_H - USEINFO_TARGET_TERM_Y/2;
+				for(; i < m_nTargetNum; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx,
+						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y),
+						startx + TARGET_OUTLINE_SIZE_W,
+						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y) + TARGET_OUTLINE_SIZE_H );
+				}
+			}
+			break;
+		case 5:
+			{
+				//   ㅁ
+				// ㅁ
+				//   ㅁ 
+				// ㅁ
+				//   ㅁ
+				int		i;
+				int		startx = USEINFO_TARGET_POS_X - TARGET_OUTLINE_SIZE_W - USEINFO_TARGET_TERM_X/2;
+				int		starty = USEINFO_TARGET_POS_Y - TARGET_OUTLINE_SIZE_H - USEINFO_TARGET_TERM_Y/2;
+
+				for(i = 0; i < 2; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx,
+						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y),
+						startx + TARGET_OUTLINE_SIZE_W,
+						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y) + TARGET_OUTLINE_SIZE_H );
+				}
+
+				startx += (TARGET_OUTLINE_SIZE_W + USEINFO_TARGET_TERM_X);
+				starty = USEINFO_TARGET_POS_Y - TARGET_OUTLINE_SIZE_H*3/2 - USEINFO_TARGET_TERM_Y;
+				for(; i < m_nTargetNum; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx,
+						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y),
+						startx + TARGET_OUTLINE_SIZE_W,
+						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y) + TARGET_OUTLINE_SIZE_H );
+				}
+			}
+			break;
+		case 6:
+			{
+				// ㅁ ㅁ
+				// ㅁ ㅁ
+				// ㅁ ㅁ
+				int		i;
+				int		startx = USEINFO_TARGET_POS_X - TARGET_OUTLINE_SIZE_W - USEINFO_TARGET_TERM_X/2;
+				int		starty = USEINFO_TARGET_POS_Y - TARGET_OUTLINE_SIZE_H*3/2 - USEINFO_TARGET_TERM_Y;
+
+				for(i = 0; i < 3; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx,
+						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y),
+						startx + TARGET_OUTLINE_SIZE_W,
+						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y) + TARGET_OUTLINE_SIZE_H );
+				}
+
+				startx += (TARGET_OUTLINE_SIZE_W + USEINFO_TARGET_TERM_X);
+				starty = USEINFO_TARGET_POS_Y - TARGET_OUTLINE_SIZE_H*3/2 - USEINFO_TARGET_TERM_Y;
+				for(; i < m_nTargetNum; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx,
+						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y),
+						startx + TARGET_OUTLINE_SIZE_W,
+						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y) + TARGET_OUTLINE_SIZE_H );
+				}
+			}
+			break;
+		case 7:
+			{
+				//       ㅁ
+				// ㅁ ㅁ
+				//       ㅁ
+				// ㅁ ㅁ
+				//       ㅁ
+				int		i;
+				int		startx = USEINFO_TARGET_POS_X - TARGET_OUTLINE_SIZE_W - USEINFO_TARGET_TERM_X/2;
+				int		starty = USEINFO_TARGET_POS_Y - TARGET_OUTLINE_SIZE_H - USEINFO_TARGET_TERM_Y/2;
+
+				for(i = 0; i < 2; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx,
+						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y),
+						startx + TARGET_OUTLINE_SIZE_W,
+						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y) + TARGET_OUTLINE_SIZE_H );
+				}
+
+				startx += (TARGET_OUTLINE_SIZE_W + USEINFO_TARGET_TERM_X);
+				starty = USEINFO_TARGET_POS_Y - TARGET_OUTLINE_SIZE_H - USEINFO_TARGET_TERM_Y/2;
+				for(; i < 4; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx,
+						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y),
+						startx + TARGET_OUTLINE_SIZE_W,
+						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y) + TARGET_OUTLINE_SIZE_H );
+				}
+				startx += (TARGET_OUTLINE_SIZE_W + USEINFO_TARGET_TERM_X);
+				starty = USEINFO_TARGET_POS_Y - TARGET_OUTLINE_SIZE_H*3/2 - USEINFO_TARGET_TERM_Y;
+				for(; i < m_nTargetNum; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx,
+						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y),
+						startx + TARGET_OUTLINE_SIZE_W,
+						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y) + TARGET_OUTLINE_SIZE_H );
+				}
+			}
+			break;
+		case 8:
+			{
+				//    ㅁ ㅁ
+				// ㅁ 
+				//    ㅁ ㅁ 
+				// ㅁ
+				//    ㅁ ㅁ
+				int		i;
+				int		startx = USEINFO_TARGET_POS_X - TARGET_OUTLINE_SIZE_W - USEINFO_TARGET_TERM_X/2;
+				int		starty = USEINFO_TARGET_POS_Y - TARGET_OUTLINE_SIZE_H - USEINFO_TARGET_TERM_Y/2;
+
+				for(i = 0; i < 2; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx,
+						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y),
+						startx + TARGET_OUTLINE_SIZE_W,
+						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y) + TARGET_OUTLINE_SIZE_H );
+				}
+				startx += (TARGET_OUTLINE_SIZE_W + USEINFO_TARGET_TERM_X);
+				starty = USEINFO_TARGET_POS_Y - TARGET_OUTLINE_SIZE_H*3/2 - USEINFO_TARGET_TERM_Y;
+
+				for(; i < 5; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx,
+						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y),
+						startx + TARGET_OUTLINE_SIZE_W,
+						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y) + TARGET_OUTLINE_SIZE_H );
+				}
+				startx += (TARGET_OUTLINE_SIZE_W + USEINFO_TARGET_TERM_X);
+				starty = USEINFO_TARGET_POS_Y - TARGET_OUTLINE_SIZE_H*3/2 - USEINFO_TARGET_TERM_Y;
+				for(; i < m_nTargetNum; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx,
+						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y),
+						startx + TARGET_OUTLINE_SIZE_W,
+						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y) + TARGET_OUTLINE_SIZE_H );
+				}
+			}
+			break;
+	}
+}
+
+void gUIGame::pk_infochange_rep(PK_INFOCHANGE_REP *rep)
+{
+	int		i;
+	int		nCount = 0;
+	
+	for(i = 0; i < ROOMMAXPLAYER; i++)
+	{
+		if(strlen(rep->info[i].szID) == 0)
+			continue;
+
+		m_info[nCount] = rep->info[i];
+		nCount++;
+	}
+	m_uimode = UIM_INFOCHANGE;
+	m_timer.frameStart(INFOCHANGE_TICK, 2);
+	m_nTargetNum = nCount;
+	SetTargetButton_InfoChange();
+}
+
+void gUIGame::SetTargetButton_InfoChange()
+{
+	gPlayerContainer	*pc = gPlayerContainer::GetIF();
+
+	int		i;
+
+	for(i = 0; i < m_nTargetNum; i++)
+	{
+		m_target[i].idx		= pc->GetGPIndex(m_info[i].szID);
+		m_target[i].img		= &pc->m_ImgInfo[ pc->m_GPlayerList[ m_target[i].idx ].ctype ].ImgPic;
+	}
+
+	switch(m_nTargetNum)
+	{
+		case 1:
+			{
+				//	ㅁ
+				int		startx = INFOCHANGE_POS_X - (TARGET_OUTLINE_SIZE_W + INFOCHANGE_INFOSIZE_W)/2;
+				int		starty = INFOCHANGE_POS_Y - TARGET_OUTLINE_SIZE_H/2;
+
+				SetRect(&m_target[0].rcPos,
+					startx, starty,
+					startx + TARGET_OUTLINE_SIZE_W,
+					starty + TARGET_OUTLINE_SIZE_H );
+			}
+			break;
+		case 2:
+			{
+				// ㅁ ㅁ
+				int		i;
+				int		startx = INFOCHANGE_POS_X - (TARGET_OUTLINE_SIZE_W + INFOCHANGE_INFOSIZE_W) - INFOCHANGE_TERM_X/2;
+				int		starty = INFOCHANGE_POS_Y - TARGET_OUTLINE_SIZE_H/2;
+
+				for(i = 0; i < m_nTargetNum; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx + i * (INFOCHANGE_INFOSIZE_W + INFOCHANGE_TERM_X + TARGET_OUTLINE_SIZE_W),
+						starty,
+						startx + TARGET_OUTLINE_SIZE_W,
+						starty + TARGET_OUTLINE_SIZE_H	);
+				}
+			}
+			break;
+		case 3:
+			{
+				// ㅁ ㅁ ㅁ
+				int		i;
+				int		startx = INFOCHANGE_POS_X - (TARGET_OUTLINE_SIZE_W + INFOCHANGE_INFOSIZE_W)*3/2 - INFOCHANGE_TERM_X;
+				int		starty = INFOCHANGE_POS_Y - TARGET_OUTLINE_SIZE_H/2;
+
+				for(i = 0; i < m_nTargetNum; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx + i * (INFOCHANGE_INFOSIZE_W + INFOCHANGE_TERM_X + TARGET_OUTLINE_SIZE_W),
+						starty,
+						startx + TARGET_OUTLINE_SIZE_W,
+						starty + TARGET_OUTLINE_SIZE_H	);
+				}
+			}
+			break;
+		case 4:
+			{
+				// ㅁ ㅁ ㅁ ㅁ
+				int		i;
+				int		startx = INFOCHANGE_POS_X - (TARGET_OUTLINE_SIZE_W + INFOCHANGE_INFOSIZE_W)*2 - INFOCHANGE_TERM_X/2;
+				int		starty = INFOCHANGE_POS_Y - TARGET_OUTLINE_SIZE_H/2;
+
+				for(i = 0; i < m_nTargetNum; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx + i * (INFOCHANGE_INFOSIZE_W + INFOCHANGE_TERM_X + TARGET_OUTLINE_SIZE_W),
+						starty,
+						startx + TARGET_OUTLINE_SIZE_W,
+						starty + TARGET_OUTLINE_SIZE_H	);
+				}
+			}
+			break;
+		case 5:
+			{
+				//  ㅁ ㅁ
+				// ㅁ ㅁ ㅁ
+				int		i;
+				int		startx = INFOCHANGE_POS_X - (TARGET_OUTLINE_SIZE_W + INFOCHANGE_INFOSIZE_W) - INFOCHANGE_TERM_X/2;
+				int		starty = INFOCHANGE_POS_Y - TARGET_OUTLINE_SIZE_H - INFOCHANGE_TERM_Y/2;
+
+				for(i = 0; i < 2; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx + i * (INFOCHANGE_INFOSIZE_W + INFOCHANGE_TERM_X + TARGET_OUTLINE_SIZE_W),
+						starty,
+						startx + TARGET_OUTLINE_SIZE_W,
+						starty + TARGET_OUTLINE_SIZE_H	);
+				}
+
+				startx = INFOCHANGE_POS_X - (TARGET_OUTLINE_SIZE_W + INFOCHANGE_INFOSIZE_W)*3/2 - INFOCHANGE_TERM_X;
+				starty += (TARGET_OUTLINE_SIZE_H + INFOCHANGE_TERM_Y);
+
+				for(; i < m_nTargetNum; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx + i * (INFOCHANGE_INFOSIZE_W + INFOCHANGE_TERM_X + TARGET_OUTLINE_SIZE_W),
+						starty,
+						startx + TARGET_OUTLINE_SIZE_W,
+						starty + TARGET_OUTLINE_SIZE_H	);
+				}
+			}
+			break;
+		case 6:
+			{
+				// ㅁ ㅁ ㅁ
+				// ㅁ ㅁ ㅁ
+				int		i;
+				int		startx = INFOCHANGE_POS_X - (TARGET_OUTLINE_SIZE_W + INFOCHANGE_INFOSIZE_W)*3/2 - INFOCHANGE_TERM_X;
+				int		starty = INFOCHANGE_POS_Y - TARGET_OUTLINE_SIZE_H - INFOCHANGE_TERM_Y/2;
+
+				for(i = 0; i < 3; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx + i * (INFOCHANGE_INFOSIZE_W + INFOCHANGE_TERM_X + TARGET_OUTLINE_SIZE_W),
+						starty,
+						startx + TARGET_OUTLINE_SIZE_W,
+						starty + TARGET_OUTLINE_SIZE_H	);
+				}
+
+				startx = INFOCHANGE_POS_X - (TARGET_OUTLINE_SIZE_W + INFOCHANGE_INFOSIZE_W)*3/2 - INFOCHANGE_TERM_X;
+				starty += (TARGET_OUTLINE_SIZE_H + INFOCHANGE_TERM_Y);
+
+				for(; i < m_nTargetNum; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx + i * (INFOCHANGE_INFOSIZE_W + INFOCHANGE_TERM_X + TARGET_OUTLINE_SIZE_W),
+						starty,
+						startx + TARGET_OUTLINE_SIZE_W,
+						starty + TARGET_OUTLINE_SIZE_H	);
+				}
+			}
+			break;
+		case 7:
+			{
+				//  ㅁ ㅁ ㅁ
+				// ㅁ ㅁ ㅁ ㅁ
+				int		i;
+				int		startx = INFOCHANGE_POS_X - (TARGET_OUTLINE_SIZE_W + INFOCHANGE_INFOSIZE_W)*3/2 - INFOCHANGE_TERM_X;
+				int		starty = INFOCHANGE_POS_Y - TARGET_OUTLINE_SIZE_H - INFOCHANGE_TERM_Y/2;
+
+				for(i = 0; i < 3; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx + i * (INFOCHANGE_INFOSIZE_W + INFOCHANGE_TERM_X + TARGET_OUTLINE_SIZE_W),
+						starty,
+						startx + TARGET_OUTLINE_SIZE_W,
+						starty + TARGET_OUTLINE_SIZE_H	);
+				}
+
+				startx = INFOCHANGE_POS_X - (TARGET_OUTLINE_SIZE_W + INFOCHANGE_INFOSIZE_W)*2 - INFOCHANGE_TERM_X/2;
+				starty += (TARGET_OUTLINE_SIZE_H + INFOCHANGE_TERM_Y);
+
+				for(; i < m_nTargetNum; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx + i * (INFOCHANGE_INFOSIZE_W + INFOCHANGE_TERM_X + TARGET_OUTLINE_SIZE_W),
+						starty,
+						startx + TARGET_OUTLINE_SIZE_W,
+						starty + TARGET_OUTLINE_SIZE_H	);
+				}
+			}
+			break;
+		case 8:
+			{
+				// ㅁ ㅁ ㅁ ㅁ
+				// ㅁ ㅁ ㅁ ㅁ
+				int		i;
+				int		startx = INFOCHANGE_POS_X - (TARGET_OUTLINE_SIZE_W + INFOCHANGE_INFOSIZE_W)*2 - INFOCHANGE_TERM_X/2;
+				int		starty = INFOCHANGE_POS_Y - TARGET_OUTLINE_SIZE_H - INFOCHANGE_TERM_Y/2;
+
+				for(i = 0; i < 4; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx + i * (INFOCHANGE_INFOSIZE_W + INFOCHANGE_TERM_X + TARGET_OUTLINE_SIZE_W),
+						starty,
+						startx + TARGET_OUTLINE_SIZE_W,
+						starty + TARGET_OUTLINE_SIZE_H	);
+				}
+
+				startx = INFOCHANGE_POS_X - (TARGET_OUTLINE_SIZE_W + INFOCHANGE_INFOSIZE_W)*2 - INFOCHANGE_TERM_X/2;
+				starty += (TARGET_OUTLINE_SIZE_H + INFOCHANGE_TERM_Y);
+
+				for(; i < m_nTargetNum; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx + i * (INFOCHANGE_INFOSIZE_W + INFOCHANGE_TERM_X + TARGET_OUTLINE_SIZE_W),
+						starty,
+						startx + TARGET_OUTLINE_SIZE_W,
+						starty + TARGET_OUTLINE_SIZE_H	);
+				}
+			}
+			break;
+	}
+}
+
+void gUIGame::Draw_InfoChange()
+{
+	DrawTargetButton();
+
+	int		i, j;
+	int		nCount;		// change info갯수
+
+	char	szBuf[5][64];
+	gUtil::BeginText();
+	for(i = 0; i < m_nTargetNum; i++)
+	{
+		nCount = 0;
+		if(m_info[i].nLang != 0)
+		{
+			if(m_info[i].nLang > 0)
+				wsprintf(szBuf[nCount], "언어 + %d", m_info[i].nLang);
+			else
+				wsprintf(szBuf[nCount], "언어 - %d", m_info[i].nLang);
+			nCount++;
+		}
+		if(m_info[i].nMath != 0)
+		{
+			if(m_info[i].nMath > 0)
+				wsprintf(szBuf[nCount], "수리 + %d", m_info[i].nMath);
+			else
+				wsprintf(szBuf[nCount], "수리 - %d", m_info[i].nMath);
+			nCount++;
+		}
+		if(m_info[i].nArt != 0)
+		{
+			if(m_info[i].nArt > 0)
+				wsprintf(szBuf[nCount], "예술 + %d", m_info[i].nArt);
+			else
+				wsprintf(szBuf[nCount], "예술 - %d", m_info[i].nArt);
+			nCount++;
+		}
+		if(m_info[i].nStamina != 0)
+		{
+			if(m_info[i].nStamina > 0)
+				wsprintf(szBuf[nCount], "체력 + %d", m_info[i].nStamina);
+			else
+				wsprintf(szBuf[nCount], "체력 - %d", m_info[i].nStamina);
+			nCount++;
+		}
+		if(m_info[i].nGrade != 0)
+		{
+			if(m_info[i].nGrade > 0)
+				wsprintf(szBuf[nCount], "수업 + %d", m_info[i].nGrade);
+			else
+				wsprintf(szBuf[nCount], "수업 - %d", m_info[i].nGrade);
+			nCount++;
+		}
+		int		startx, starty;
+
+		startx = m_target[i].rcPos.right + 10;
+		starty = m_target[i].rcPos.top + TARGET_OUTLINE_SIZE_H/2
+					- INFOCHANGE_INFOSIZE_H * nCount/2 - INFOCHANGE_INFOTERM_Y * (nCount - 1)/2;
+
+		for(j = 0; j < nCount; j++)
+			gUtil::Text(startx, starty + j * (INFOCHANGE_INFOSIZE_H + INFOCHANGE_INFOTERM_Y), szBuf[nCount]);
+	}
+	gUtil::EndText();
 }

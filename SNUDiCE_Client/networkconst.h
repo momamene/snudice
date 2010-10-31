@@ -80,14 +80,17 @@ enum ePROTOCOL
 	PL_ITEMUSE_ASK,
 	PL_ITEMUSE_REP,
 
-	PL_WARPSTART_ASK,		// 한명 워프.
-	PL_WARPSTART_REP,
+	PL_ITEMUSESTART_ASK,
+
+	PL_WARPSTART_REP,		// 유저 하나.
 	PL_WARPEND_ASK,
 
 	PL_WARPLISTSTART_REP,	// 유저 여러명 워프시킬떄
 	PL_WARPLISTEND_ASK,
 
 	PL_INFOCHANGE_REP,		// 아이템 사용 -> 캐릭터 스탯같은 수치 변화 표시
+
+	PL_INFOCHANGEEND_ASK,
 
 	PL_ROOMBACK_ASK,		// 게임끝 -> 방으로
 	PL_ROOMBACK_REP,		//
@@ -507,7 +510,7 @@ typedef struct
 	int			nGrade;				// 성취도. 학점이 아님
 }
 
- PK_POPINFO_REP, CHANGEINFO;
+PK_POPINFO_REP, CHANGEINFO;
 
 struct PK_GAMEEND_REP
 {
@@ -554,32 +557,28 @@ struct PK_ITEMUSE_ASK
 	char		szID[IDLENGTH];			// 사용자
 	char		szTarget[IDLENGTH];		// 대상
 	int			nItemID;
-	int			nPos;					// move일 때
-};
-
-enum ITEMREPRESULT
-{
-	ITEMUSE_SUCCESS,
-	ITEMUSE_MOVESELECT,
-	ITEMUSE_ERROR,
+	int			nStartPos;				// move일 때
+	int			nDestPos;				// move일 때
 };
 
 struct PK_ITEMUSE_REP
 {
-	ITEMREPRESULT	result;
+	char		szUser[IDLENGTH];		// 사용자
+	char		szTarget[IDLENGTH];		// 대상
+	int			nItemID;
 };
 
-
-struct PK_WARPSTART_ASK
+struct PK_ITEMUSESTART_ASK
 {
 	char		szID[IDLENGTH];
-	int			nCurPos;			// 출발 좌표
-	int			nDestPos;
 };
+
+
 
 struct PK_WARPSTART_REP
 {
-	int			nDist;
+	char  szID[IDLENGTH];  // 움직이는 넘.
+	int   nDest;    // 도착 좌표
 };
 
 struct PK_WARPEND_ASK
@@ -601,14 +600,12 @@ struct PK_WARPLISTEND_ASK
 
 struct PK_INFOCHANGE_REP
 {
-	CHANGEINFO	info[ROOMMAXPLAYER];
+	CHANGEINFO	info[ROOMMAXPLAYER];			// 해당 없는 놈 memset(info , 0)
 };
 
-
-struct PK_EXIT_REP
+struct PK_INFOCHANGEEND_ASK
 {
 	char		szID[IDLENGTH];
-	int flag;	//남은 사람 수
 };
 
 

@@ -47,6 +47,8 @@ public:
 	int				m_nNoDraw;			// 해당 index인 캐릭터 안 그림. default == -1			
 
 public:
+	int				GetMyItemNum();		// 내 아이템 갯수
+
 	int				GetGPNum();			// 게임 플레이어 수
 	int				GetMyGPIndex();		// 게임 플레이어 인덱스
 	int				GetMyPIndex();		// 걍 플레이어 인덱스
@@ -69,9 +71,13 @@ public:
 
 	void			MainLoop();
 	void			MainLoop_Busing(gImage *bus, RECT *rcDest, RECT *rcSour, int turn);
+	void			MainLoop_Warp(int charidx, int dY = 0);
+	void			MainLoop_WarpList(int *dest, bool drawAll, int dY = 0);
 
 	void			Draw();
 	void			Draw_Busing(gImage *bus, RECT *rcDest, RECT *rcSour, int turn);
+	void			Draw_Warp(int charidx, int dY);
+	void			Draw_WarpList(int *dest, bool drawAll, int dY = 0);
 
 	void			FootClear();			// 이동완료됬을 때, 서있는 프레임 아닐 경우 있어서, 막아줌
 
@@ -81,6 +87,9 @@ public:
 	// gMap class의 m_nAbsDrawline과 본 class의 m_nAbsDrawline 값을 싱크로나이즈 해주는 함수
 	void			PutFootPosition(int nInRoomIndex,int nframe,int nCutline);
 	// frame값과 nCutline (아마 nCutline은 15겠지?) 을 넣어서 gGameCore에서 캐릭터의 발을 결맞게 해주는 함수
+
+	int				GetCharNumPos(int nPos);		// nPos에 있는 캐릭터 갯수 return
+	GAMEPLAYER*		GetPlayerByPos(int nPos);		// nPos에 있는 캐릭터 정보 return
 
 private:
 	bool			SetUpCharInfo();

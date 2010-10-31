@@ -9,6 +9,7 @@
 #include "SubmitCore.h"
 #include "GameCore.h"
 #include "Chat.h"
+#include "UIGame.h"
 
 static SOCKET		s_sock = NULL;
 static SOCKADDR_IN	s_serverAddr;
@@ -256,6 +257,23 @@ void gServer::Recv()
 		case PL_GAMEEND_REP:
 			gGameCore::GetIF()->pk_gameend_rep((PK_GAMEEND_REP*)m_pkDefault.strPacket);
 			break;
+
+		case PL_ITEMUSE_REP:
+			gUIGame::GetIF()->pk_itemuse_rep((PK_ITEMUSE_REP*)m_pkDefault.strPacket);
+			break;
+
+		case PL_WARPSTART_REP:
+			gGameCore::GetIF()->pk_warpstart_rep((PK_WARPSTART_REP*)m_pkDefault.strPacket);
+			break;
+
+		case PL_WARPLISTSTART_REP:
+			gGameCore::GetIF()->pk_warpliststart_rep((PK_WARPLISTSTART_REP*)m_pkDefault.strPacket);
+			break;
+
+		case PL_INFOCHANGE_REP:
+			gUIGame::GetIF()->pk_infochange_rep((PK_INFOCHANGE_REP*)m_pkDefault.strPacket);
+			break;
+		
 	}
 }
 

@@ -29,8 +29,12 @@
 #define BUSBOARDTICK			500 * 3
 #define BUSMOVELENGTH			160
 
-#define MAPSCROLLSPEED			5 // 마우스로 화면 스크롤 속도
-#define MAPSCROLLTICK			100
+#define MAPSCROLLSPEED			7 // 마우스로 화면 스크롤 속도
+#define MAPSCROLLTICK			50
+
+#define WARPTICK				500 * 3
+#define WARPFRAME				8
+#define WARPDIST				10
 
 static gGameCore s_GameCore;
 
@@ -56,6 +60,8 @@ bool gGameCore::SetUp()
 	m_bBusSel	= false;
 	m_bBusing   = false;
 	m_bNextTurnKeep = false;
+	m_bWarping	= false;
+	m_bWarpingList = false;
 
 	if(!m_ImgBus.Load(GAME_BUS_FILE))
 		return false;
@@ -181,11 +187,199 @@ void gGameCore::Draw()
 {
 	gMap::GetIF()->Draw();
 	DrawBus();
-	if(!m_bBusing)
+	DrawWarp();
+	DrawWarpList();
+	if(!m_bBusing && !m_bWarping && !m_bWarpingList)
 		gPlayerContainer::GetIF()->MainLoop();
 
 //	gChat::GetIF()->Draw();
 	gUIGame::GetIF()->Draw();
+}
+
+void gGameCore::DrawWarp()
+{
+	if(!m_bWarping)
+		return;
+
+	gTimer				*gt = gTimer::GetIF();
+	gPlayerContainer	*pc = gPlayerContainer::GetIF();
+	gMap				*map = gMap::GetIF();
+
+	switch(m_warp)
+	{
+		case WARP_DISAPPEAR:
+			{
+				int		nFrame = gt->frame();
+
+				if(nFrame >= WARPFRAME)
+				{
+					m_warp = WARP_SCROLLSTART;
+					gt->frameEnd();
+					ScrollStart(m_warpDest);
+					pc->m_nNoDraw = m_warpCharIdx;
+				}
+				pc->MainLoop_Warp(m_warpCharIdx, -m_warpDY);
+				m_warpDY += WARPDIST;
+			}
+			break;
+		case WARP_SCROLLSTART:
+			{
+				if(!m_bScrolling)
+				{
+					m_warp = WARP_SCROLLEND;
+					gt->frameStart(500, 2);
+				}
+				pc->MainLoop_Warp(m_warpCharIdx);
+			}
+			break;
+		case WARP_SCROLLEND:
+			{
+				int		nFrame = gt->frame();
+
+				if(nFrame >= 1)
+				{
+					gt->frameEnd();
+					gt->frameStart(WARPTICK, WARPFRAME + 1);
+					m_warp = WARP_APPEAR;
+
+					pc->m_GPlayerList[m_warpCharIdx].nPos = m_warpDest;
+					if(strcmp(pc->m_MyGamePlayer.szID, pc->m_GPlayerList[m_warpCharIdx].szID) == 0)
+						pc->m_MyGamePlayer.nPos = pc->m_GPlayerList[m_warpCharIdx].nPos;
+
+					map->posSetter(m_warpDest / LINEY, m_warpDest % LINEY);
+					pc->SyncronizeToMap(m_warpCharIdx);
+				}
+				pc->MainLoop_Warp(m_warpCharIdx);
+			}
+			break;
+		case WARP_APPEAR:
+			{
+				int		nFrame = gt->frame();
+
+				if(nFrame >= WARPFRAME)
+				{
+					gt->frameEnd();
+					m_bWarping = false;
+
+					PK_WARPEND_ASK		ask;
+
+					strcpy(ask.szID, pc->m_MyGamePlayer.szID);
+					ask.nDestPos = pc->m_GPlayerList[m_warpCharIdx].nPos;
+
+					gServer::GetIF()->Send(PL_WARPEND_ASK, sizeof(ask), &ask);
+				}
+				if(nFrame >= 1)
+				{
+					pc->m_nNoDraw = -1;
+				}
+				pc->MainLoop_Warp(m_warpCharIdx, -m_warpDY);
+				m_warpDY -= WARPDIST;
+			}
+			break;
+	}
+}
+
+void gGameCore::DrawWarpList()
+{
+	if(!m_bWarpingList)
+		return;
+
+	gTimer				*gt = gTimer::GetIF();
+	gPlayerContainer	*pc = gPlayerContainer::GetIF();
+	gMap				*map = gMap::GetIF();
+
+	switch(m_warplist)
+	{
+		case WARPLIST_DISAPPEAR:
+			{
+				int		nFrame = gt->frame();
+				bool	bDrawAll = true;
+
+				if(nFrame >= WARPFRAME)
+				{
+					m_warplist = WARPLIST_SCROLLSTART;
+					gt->frameEnd();
+					ScrollStart(m_warpDest);
+					bDrawAll = false;
+				}
+				pc->MainLoop_WarpList(m_warplistDest, bDrawAll, -m_warpDY);
+				m_warpDY += WARPDIST;
+			}
+			break;
+		case WARPLIST_SCROLLSTART:
+			{
+				if(!m_bScrolling)
+				{
+					m_warplist = WARPLIST_SCROLLEND;
+					gt->frameStart(500, 2);
+				}
+				pc->MainLoop_WarpList(m_warplistDest, false);
+			}
+			break;
+		case WARPLIST_SCROLLEND:
+			{
+				int		nFrame = gt->frame();
+
+				if(nFrame >= 1)
+				{
+					gt->frameEnd();
+					gt->frameStart(WARPTICK, WARPFRAME + 1);
+					m_warplist = WARPLIST_APPEAR;
+
+					int		i;
+					int		charidx;		// for syncmap
+					for(i = 0; i < ROOMMAXPLAYER; i++)
+					{
+						if(strlen(pc->m_GPlayerList[i].szID) != 0)
+						{
+							pc->m_GPlayerList[i].nPos = m_warplistDest[i];
+							charidx = i;
+							if(strcmp(pc->m_MyGamePlayer.szID, pc->m_GPlayerList[i].szID) == 0)
+								pc->m_MyGamePlayer.nPos = pc->m_GPlayerList[i].nPos;
+						}
+					}
+					map->posSetter(m_warpDest / LINEY, m_warpDest % LINEY);
+					pc->SyncronizeToMap(charidx);
+				}
+				pc->MainLoop_WarpList(m_warplistDest, false);
+			}
+			break;
+		case WARPLIST_APPEAR:
+			{
+				int		nFrame = gt->frame();
+				bool	bDrawAll = false;
+
+				if(nFrame >= WARPFRAME)
+				{
+					gt->frameEnd();
+					m_bWarpingList = false;
+
+					PK_WARPLISTEND_ASK		ask;
+
+					strcpy(ask.szID, pc->m_MyGamePlayer.szID);
+					int		i;
+					for(i = 0; i < ROOMMAXPLAYER; i++)
+					{
+						if(strlen(pc->m_GPlayerList[i].szID) != 0)
+						{
+							ask.nDestPos[i] = pc->m_GPlayerList[i].nPos;
+						}
+						else
+						{
+							ask.nDestPos[i] = -1;
+						}
+					}
+					gServer::GetIF()->Send(PL_WARPLISTEND_ASK, sizeof(ask), &ask);
+				}
+				if(nFrame >= 1)
+				{
+					bDrawAll = true;
+				}
+				pc->MainLoop_WarpList(m_warplistDest, bDrawAll, -m_warpDY);
+				m_warpDY -= WARPDIST;
+			}
+			break;
+	}
 }
 
 void gGameCore::DrawBus()
@@ -796,6 +990,7 @@ void gGameCore::pk_nextturn_rep(PK_NEXTTURN_REP *rep)
 	{
 		m_nTurn		= rep->nNextTurn;
 		m_bMoved	= false;
+		gUIGame::GetIF()->m_bItemUsed = false;
 	}
 	
 	int nTempPos = gPlayerContainer::GetIF()->m_GPlayerList[m_nTurn].nPos;
@@ -908,4 +1103,45 @@ bool gGameCore::Restore()
 		return false;
 
 	return true;
+}
+
+void gGameCore::pk_warpstart_rep(PK_WARPSTART_REP *rep)
+{
+	gPlayerContainer	*pc = gPlayerContainer::GetIF();
+
+	m_warpDest = rep->nDest;
+	m_bWarping = true;
+
+	gTimer::GetIF()->frameStart(WARPTICK, WARPFRAME + 1);
+	m_warp = WARP_DISAPPEAR;
+	m_warpDY = WARPDIST;
+	m_warpCharIdx = pc->GetGPIndex(rep->szID);
+}
+
+void gGameCore::pk_warpliststart_rep(PK_WARPLISTSTART_REP* rep)
+{
+	gPlayerContainer	*pc = gPlayerContainer::GetIF();
+
+	int		i;
+	memset(m_warplistDest, -1, sizeof(int) * ROOMMAXPLAYER);
+	for(i = 0; i < ROOMMAXPLAYER; i++)
+	{
+		if(rep->nDestPos[i] == -1)
+			continue;
+
+		m_warplistDest[i] = rep->nDestPos[i];
+	}
+	for(i = 0; i < ROOMMAXPLAYER; i++)
+	{
+		if(m_warplistDest[i] != -1)
+		{
+			m_warpDest = m_warplistDest[i];
+			break;
+		}
+	}
+
+	m_bWarpingList = true;
+	m_warpDY = WARPDIST;
+	m_warplist = WARPLIST_DISAPPEAR;
+	gTimer::GetIF()->frameStart(WARPTICK, WARPFRAME + 1);
 }

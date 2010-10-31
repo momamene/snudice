@@ -24,6 +24,22 @@ enum BUSMOVE
 	BUS_START2,
 };
 
+enum WARP
+{
+	WARP_DISAPPEAR,
+	WARP_SCROLLSTART,
+	WARP_SCROLLEND,
+	WARP_APPEAR,
+};
+
+enum WARPLIST
+{
+	WARPLIST_DISAPPEAR,
+	WARPLIST_SCROLLSTART,
+	WARPLIST_SCROLLEND,
+	WARPLIST_APPEAR,
+};
+
 class gGameCore : Core
 {
 public:
@@ -45,6 +61,9 @@ public:
 	int			m_curframe;		// 버스 프레임
 //	POINT		m_ptBusPos;		// 버스 출력 위치
 
+	bool		m_bWarping;
+	bool		m_bWarpingList;
+
 
 
 	PK_NEXTTURN_REP		m_pkNext;
@@ -54,6 +73,15 @@ public:
 private:
 	BUSMOVE		m_busmode;
 	int			m_buspos;			// 버스 도착 장소
+
+	WARP		m_warp;
+	int			m_warpCharIdx;
+	int			m_warpDest;
+
+	WARPLIST	m_warplist;
+	int			m_warplistDest[ROOMMAXPLAYER];
+
+	int			m_warpDY;
 	
 
 public:
@@ -79,6 +107,8 @@ public:
 	void		pk_gameplayerinfo_rep(PK_GAMEPLAYERINFO_REP *rep);
 	void		pk_popinfo_rep(PK_POPINFO_REP *rep);
 	void		pk_gameend_rep(PK_GAMEEND_REP *rep);
+	void		pk_warpstart_rep(PK_WARPSTART_REP *rep);
+	void		pk_warpliststart_rep(PK_WARPLISTSTART_REP* rep);
 
 	void		Start(int spacor);
 	void		Start(int spacor,int conPosX,int conPosY);
@@ -96,6 +126,8 @@ private:
 	void		ScrollEnd();
 
 	void		DrawBus();
+	void		DrawWarp();
+	void		DrawWarpList();
 	void		BusComeStart(int nPos);
 
 };
