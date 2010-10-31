@@ -809,7 +809,10 @@ bool gUIGame::OnLButtonDown()
 			int		nPos = map->viewabsToCon(pt);
 			int		numchar = gPC->GetCharNumPos(nPos);
 
-			if(numchar == 0)
+			if(gPC->m_MyGamePlayer.nPos == nPos)
+				numchar--;
+
+			if(numchar <= 0)
 				break;
 			else if(numchar == 1)
 			{

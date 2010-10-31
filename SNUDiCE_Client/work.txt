@@ -50,6 +50,8 @@
 	패킷 3개 추가.
 		PL_ROOMBACK_ASK,		게임끝 -> 방으로
 		PL_ROOMBACK_REP,									]
+		
+	-> 쓰레기 패킷 오는거 버그 작업중
 
 		PL_EXIT_REP,			게임중 강제종료 처리
 		
@@ -60,6 +62,8 @@
 		뒤로가기 버튼
 		PL_GOLOGIN_ASK,			배틀넷모드 -> 로그인모드
 		PL_CHANNELCHANGE_ASK,	ECM_ROOM, ECM_ROOMJOIN -> BattleNet 모드
+		
+	-> 작업중
 
 --
 	

@@ -24,17 +24,6 @@ gPlaySoundCore::gPlaySoundCore()
 
 gPlaySoundCore::~gPlaySoundCore() {}
 
-bool gPlaySoundCore::SetUp(){ return false;}
-void gPlaySoundCore::MainLoop(){}
-void gPlaySoundCore::Draw(){}
-void gPlaySoundCore::Release(){}
-bool gPlaySoundCore::Restore(){ return false;}
-
-void gPlaySoundCore::OnLButtonDown(){}
-void gPlaySoundCore::OnLButtonUp(){}
-void gPlaySoundCore::OnMouseMove(){}
-void gPlaySoundCore::OnRButtonDown(){}
-
 bool gPlaySoundCore::isBGMLoaded()
 {
 	return (this->bgmState!=BGM_NOT_LOADED);

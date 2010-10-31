@@ -116,10 +116,11 @@ void gGameCore::MainLoop()
 					}
 				break;
 				//수정 ; 아직 건들지 않고 있음.
-			case EPOP_EXIT: // 게임 끝:
+			case EPOP_DISCONNECT:
 				switch(gPopUp::GetIF()->m_eBtnClk)
 				{
 					case ECLK_OK:
+						gMainWin::GetIF()->Exit();
 						break;
 				}
 				break;

@@ -12,7 +12,7 @@
 #include "Image.h"
 #include "networkconst.h"
 
-//#define FULLSCREEN		//	define 풀었다 해제하면서 fullscreen 체크
+//#define SOUND_ON
 
 #define DEFAULT_FULLSCREEN		false
 

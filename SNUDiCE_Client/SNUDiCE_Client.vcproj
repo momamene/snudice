@@ -193,6 +193,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PlaySoundCore.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Server.cpp"
 				>
 			</File>
@@ -253,10 +257,6 @@
 				</File>
 				<File
 					RelativePath=".\LoginCore.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\PlaySoundCore.cpp"
 					>
 				</File>
 				<File
@@ -338,6 +338,10 @@
 			</File>
 			<File
 				RelativePath=".\networkconst.h"
+				>
+			</File>
+			<File
+				RelativePath=".\PlaySoundCore.h"
 				>
 			</File>
 			<File
@@ -425,10 +429,6 @@
 				</File>
 				<File
 					RelativePath=".\LoginCore.h"
-					>
-				</File>
-				<File
-					RelativePath=".\PlaySoundCore.h"
 					>
 				</File>
 				<File

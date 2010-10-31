@@ -356,22 +356,26 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 			switch(LOWORD(wParam))
 			{
 				case WA_ACTIVE: case WA_CLICKACTIVE:
-				{
-					mw->m_bActive = true;
-					//ShowCursor(FALSE);
-					if(!playSound->isBGMLoaded())						
-						playSound->StartBGM(BGM_FILE_0);
-					else
-						playSound->ResumeBGM();
+					{
+						mw->m_bActive = true;
+						//ShowCursor(FALSE);
+#ifdef SOUND_ON
+						if(!playSound->isBGMLoaded())						
+							playSound->StartBGM(BGM_FILE_0);
+						else
+							playSound->ResumeBGM();
+#endif
+					}
 					break;
-				}					
 				case WA_INACTIVE:
-				{
-					mw->m_bActive = false;
-					//ShowCursor(TRUE);
-					playSound->PauseBGM();
-					break;					
-				}
+					{
+						mw->m_bActive = false;
+						//ShowCursor(TRUE);
+#ifdef SOUND_ON
+						playSound->PauseBGM();
+#endif
+					}
+					break;
 			}
 			return 0;
 		}

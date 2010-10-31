@@ -4,7 +4,7 @@
 
 
 
-class gPlaySoundCore : Core 
+class gPlaySoundCore
 {
 	enum SOUNDSTATE
 	{
@@ -20,19 +20,6 @@ public:
 
 public:
 	gPlaySoundCore();
-	bool		SetUp();
-	void		MainLoop();
-	void		Draw();
-	void		Release();
-
-	bool		Restore();
-	
-	void		OnLButtonDown();
-	void		OnLButtonUp();
-	void		OnMouseMove();
-	void		OnRButtonDown();
-
-	//////////////////////////////////////////////////////////////////////////
 
 	bool isBGMLoaded();
 	void StartBGM(const char* filename);
