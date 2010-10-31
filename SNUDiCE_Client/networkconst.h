@@ -613,3 +613,9 @@ struct PK_GOLOGIN_ASK
 {
 	char		szID[IDLENGTH];
 };
+
+struct PK_EXIT_REP
+{
+	char		szID[IDLENGTH];
+	int			flag;							//남은 사람 수 //아직까지는 그닥 있어야 할 이유는 없다.
+};
