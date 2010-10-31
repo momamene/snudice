@@ -230,8 +230,6 @@ int gMainWin::Run()
 
 
 
-
-
 void gMainWin::MainLoop()
 {
 	if(!m_bActive)
@@ -293,6 +291,23 @@ void gMainWin::Recv(PK_DEFAULT *pk, SOCKET sock)
 			break;
 		case PL_ITEMUSE_ASK:
 			gGamePlayerContainer::GetIF()->pk_itemuse_ask(pk,sock);
+			break;
+		case PL_ITEMUSESTART_ASK:
+			gGamePlayerContainer::GetIF()->pk_itemusestart_ask(pk,sock);
+			break;
+		case PL_INFOCHANGEEND_ASK:
+			gGamePlayerContainer::GetIF()->pk_infochangeend_ask(pk,sock);
+			break;
+			/*
+		case PL_WARPSTART_ASK:
+			gGamePlayerContainer::GetIF()->pk_warpstart_ask(pk,sock);
+			break;
+			*/
+		case PL_WARPEND_ASK:
+			gGamePlayerContainer::GetIF()->pk_warpend_ask(pk,sock);
+			break;
+		case PL_WARPLISTEND_ASK:
+			gGamePlayerContainer::GetIF()->pk_warplistend_ask(pk,sock);
 			break;
 	}
 }

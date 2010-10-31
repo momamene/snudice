@@ -246,9 +246,170 @@ channel에 있던 애가 방만들면, 채널에 그 애가 남아있음
    3> m_cooltime 에서, flag 부분을 변경할 것을 권고
    
 
-	// [10월 9일]
-//   (1) move 모듈 분리에 성공 - 디버깅 안해봄.
+	//		[10월 9일]
+	//   (1) move 모듈 분리에 성공 - 디버깅 안해봄.
 
    (2) 일반 디자인 패턴 원칙에 대해 고민해보다.
 	- 여튼 잘게 쪼개는 걸로는 한계가 있을 것 같다.
 	- int m_arr[30] 보다는 int30class m_cla 이 더 좋아보이지 않느냐?!
+
+	(3) 가끔씩 LOGIN에서 NOID ERROR가 뜨는데, 접속은 되게되는 경우가 있다...
+	=> 서버 키고 오랜 시간이 지나면 그런 오류가 나는 것 같은데?
+
+
+	//(4) clinet map 출력 문제 완료
+
+----- 여기서부터 시작 ----- (10월 24일자) 아이템 워프 관련 등 기타...
+
+	[참고 파일]
+	network.h 파일
+	GamePlayerContianer.h 의 State 두개
+	pk_itemuse_ask() 아래 쪽 부터
+	MainWin.cpp ask signal.
+	movePlayer 쪽 변경
+	pk_moveend_ask() 쪽 변경하려다 맘, 이거는 합체 뒤 변경. ㅇㅇ
+
+	// [10월 9일] (2) - item popinfoarr 관련.. (이건 커밋한 파일을 리로드 해서. ... 해야함;)
+	network.h network파일이 변경. // (10월 24일) 이거 창규형이 바꾼거다. 근데 network.h 뭐 많이 바뀌었더만. ㅇㅇ	
+	GamePlayerContainer.cpp 에서 state를 변경. 
+
+	[10월 24일]	모든 일은 item use 부터.. 하단부터 일어나고 있습니다.
+	(1) pk_itemuse_ask() 쪽을 들어가고 있습니다.
+	1> 질문 : 그래서 pk_itemuse_ask 에서 ITEMUSE_ERROR 가 아니면 Send도 안해준단 말이에요? 
+	2> if(iuState == IUS_NONE) 라면, 그냥 success만 내뿜을 거야, 그러면 패킷이 그 다음에 오겠지...
+	 그래서 itemUse에서 itemUse가 success했다고 보내지 뭐..
+	3> iuState 확장... 
+	4> pk_warpstart_ask, pk_warpstart_rep, , pk_warpend_ask,  동시 작업 시작
+	... MainWin.cpp 에도 이미 등록이 된 상태가 됬네..
+//	혹여나 중단하고 싶다면... 주석 처리 하고 위에 있는 관련 함수 역시 주석처리하면 돌아갈듯.
+	1차 패스.
+	5> 심각한 문제 :
+	 녹두 처리를 어떻게 해야할 지 모르겠다.
+	 방법 . (1) movePlayer의 state를 bool 에서 mPState = {move,bus,warp} 로 변경
+	 (2) warp 시 처리하는 함수를 만듬.
+
+    6> 이거 주석처리 해놔라. pk_moveend_ask() 에서..
+	 PushbSynAllPlayer(nRoomIndex,false); 
+	 그리고 pk_busmoveselect_ask() 애서
+	PushSynAllPlayer(nRoomIndex,false); 를 구현해라.
+	 그리고 새로 만든 함수에서 
+	 PushbSynAllPlayer(nRoomIndex,false); 이 녀석 주석 처리를 해노렴.
+	아니 왜냐하면, 이거 기본 값이 true야! /* */
+	(근데 기본 값이 false가 되어도 사실 상 별 문제가 안되어 보이기는 한다.)
+	예상되는 문제 : 뭐 주사위를 던졌는데, 안넘어간다던지..
+	예상되는 문제2 : 버스 문제
+	여튼 문제 있으면 이거 다시 주석 빼면 되겠네. 아니 수정 안했다. ㅇㅇ
+
+	7> 시작!
+	// pk_warplistend_rep, pk_warplistend_ask
+    7-1>
+	struct PK_WARPLISTEND_ASK 이녀석 에 id 추가 요청
+
+	뭐 여튼 완성!!
+	근데 디버깅은 하루 예상 중...
+
+
+----- 여기서부터 시작 ----- (10월 31일자) 디버깅 툴
+(1) 순조롭게 디버거를 만들고 있습니다.
+- MessageCore.cpp 에서 작업을 하고 있는데,
+- debuger_move 나, debuger_card 는 GamePlayerContainer.h 로 옮겨갈 듯 합니다.
+
+ㅇㅇ 완성!
+물론 디버깅 그런건 없음.
+
+(2)
+바뀐 패킷대로 다시 서버를 조정하고 있습니다.
+패킷이 모두 너무 근본적으로 바뀌었으므로 모든 가능성을 고려해야 할 듯.
+/*
+(1) ITEMUSE_ASK Series를 다 ITEMUSESTART_ASK 로 변경
+
+(3) ITEMUSE_ASK ITEMUSE_REP Series를 만든다.
+
+(2) INFOCHANGEEND_ASK 를 만든다.
+
+(4) INFOCHANGE_REP 등 뒤에 Turn End를 다 INFOCHANGEEND_ASK 로 만든다.
+
+아 그냥 다시 다 짜야할듯;;;
+
+(5)	struct PK_WARPSTART_REP 변경 공고!
+*/
+
+(3)
+ 0> notice
+ MainWin 처리는 아직 전혀 안되있음.
+ ... 뭔가 하고 있었는데 ...
+ nInRoomIndex 가 햇갈릴 가능성이 꽤 높다고 생각 중...
+
+ 1> itemuse_ask -> itemuse_rep -> itemusestart_ask ... 하다가...
+
+ m_struct_itemuse_ask 의 등장...
+ m_struct_itemuse_ask[nRoomIndex] = ask;	// 이거 잘 되겠지?
+
+ 뭐 일단 대충 완성
+
+ 
+
+ 2> itemusestart_sk 에서 moveselect 부분...
+
+ !! ITEM_MOVEPLACE 의 TARGE_OTHER 는 구현되어 있지 않음
+ !! 아마, 상당 수의 item case가 하드 코딩일 가능성...
+
+// putTargetTrue, putTargetInt 구현 중 
+// 하지만 이것은 other case 만 만족하는 가짜 함수
+ putTargetIntforOther 만 간신히 명맥을 유지...
+
+ 대충 완성됨
+ 
+ 5> 이제... warplistend_rep 부분에서 turnnext 하는 부분.
+ 완성 된 것 같던데?
+
+ 6> warpend_rep 에서 turnnext 내지는 infochange_rep2 하는 부분.
+ 완성했어.
+
+ 3> itemusestart_ask 의 infochange_rep (1) 부분...
+  대충 완성됨
+ 
+
+ 4> noclass, togetherclass 쪽이 
+  완성된 셈.
+
+ 7> 간단한 infochangeend_ask 함수
+ 완성!
+
+ 8> 마무리 단계
+ gMainWin 처리 해야지?
+ 함수도 다 잘 넣고.
+
+
+ ----- 여기서부터 시작 ----- (10월 31일자) 버그
+ (1) testset : 0번 아이템
+  아이템을 썻는데, 턴 넥스트가 아니네.
+  info도 안오네.
+
+  (1-1) 문제1 : 
+ 아이템을 썻는데, 한 명에게만 오는 부분 itemuse_ask 에서.. : 해결
+
+	 [PK_ITEMUSE_ASK] 211.169.219.68	 itemIndex : test1 0 
+	 a.b
+	 [PK_ITEMUSESTART_ASK] 211.169.219.68	 test2 
+	 a.b
+	 [PK_ITEMUSESTART_ASK] 211.169.219.68	 test1 
+	 itemUse(f) - nItemID : 0 type : ITEM_STAT
+	 IUS_INFOCHANGEpk_infochangeFirst_rep(f) 
+	 a.b
+	 [PK_INFOCHANGEEND_ASK] 211.169.219.68	 message : test1
+	 [PK_WARPEND_ASK] 211.169.219.68	 test1 
+	 [PK_WARPEND_ASK] 211.169.219.68	 test1 
+	 [pk_warpend_ask] 심각한 Error, 보안 주의 요망, 서버와 클라이언트의 연산 결과가 다름
+server : 5 14 , client : -45210182 -2 player : test1 etc : 0 0
+		 이 방은 더 이상 동작하지 않습니다.
+		 a.b
+		 [PK_INFOCHANGEEND_ASK] 211.169.219.68	 message : test2
+		 [PK_WARPEND_ASK] 211.169.219.68	 test2 
+		 [PK_WARPEND_ASK] 211.169.219.68	 test2 
+		 [pk_warpend_ask] 심각한 Error, 보안 주의 요망, 서버와 클라이언트의 연산 결과가 다름
+server : 5 14 , client : 13 16 player : test2 etc : 0 0
+		 이 방은 더 이상 동작하지 않습니다.
+
+
+		p"stat에 multi가 적용되지 않음

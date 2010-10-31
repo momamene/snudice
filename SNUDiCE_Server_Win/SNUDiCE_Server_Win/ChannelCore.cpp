@@ -52,10 +52,12 @@ void gChannelCore::pk_channelrefresh_rep (int channel) {
 	}
 }
 
+//수정사항, ㄱㄱ!
 void gChannelCore::pk_channelchange_ask (PK_DEFAULT *pk, SOCKET sock)
 {
 	PK_CHANNELCHANGE_ASK		ask;		//from client
 	PK_CHANNELCHANGE_REP		rep;		//from client
+
 
 	// for print (무슨 말이여 이게)
 	SOCKADDR_IN			clientAddr;
@@ -65,38 +67,62 @@ void gChannelCore::pk_channelchange_ask (PK_DEFAULT *pk, SOCKET sock)
 	addrLen = sizeof(clientAddr);
 	getpeername(sock, (SOCKADDR*)&clientAddr, &addrLen);
 
-	ask = *((PK_CHANNELCHANGE_ASK*)pk->strPacket);
+	ask = *((PK_CHANNELCHANGE_ASK*)pk->strPacket);	//수정사항
 
-	sprintf(buf,"[PK_CHANNELCHANGE_ASK] %s\tid : %s\t message : %d\n", inet_ntoa(clientAddr.sin_addr), ask.szID, ask.nChannel);
+
+
+	wsprintf(buf,"[PK_CHANNELCHANGE_ASK] %s\tid : %s\t message : %d\n", inet_ntoa(clientAddr.sin_addr), ask.szID, ask.nChannel);
 	OutputDebugString(buf);
 
-	
+	gPlayerContainer *gPC = gPlayerContainer::GetIF();
+	gRoomCore *gRC = gRoomCore::GetIF();
+
 	if(gChannelContainer::GetIF()->RoomClientNum(ask.nChannel-1)>=CHANNELUSERMAX) {
 		rep.error = ECE_CHANNELISOVER;
 	}
 	else {
 		int channelBefore = gChannelContainer::GetIF()->FindPlayer(ask.szID);
-		if(channelBefore == -1) {
-			// 에러 처리
-			OutputDebugString("(f)[pk_channelchange_ask] Cannot Find Player Error\n");
-		}
-		else {
-			rep.error = ECE_SUCCESS;
-			
-			gChannelContainer::GetIF()->DeletePlayer(ask.szID);
-			gChannelContainer::GetIF()->AddPlayer(ask.nChannel-1,ask.szID);
-			rep.channel = gChannelContainer::GetIF()->m_channelArray[ask.nChannel-1];
-			pk_channelrefresh_rep (channelBefore);
-			pk_channelrefresh_rep (ask.nChannel-1);
-			gPlayerContainer::GetIF()->PutMode(ask.szID,ECM_BATTLENET);
-			gPlayerContainer::GetIF()->PutCoreFlag(ask.szID,ask.nChannel-1);
-			gRoomCore::GetIF()->SendRoomListCauseChange(ask.nChannel-1);
+		int jjj= gPC->GetMode(ask.szID);
+		switch(gPC->GetMode(ask.szID))	{
+				case ECM_BATTLENET : 				case ECM_ROOMJOIN :
+					if(channelBefore == -1) {
+						// 에러 처리
+						OutputDebugString("(f)[pk_channelchange_ask] Cannot Find Player Error\n");
+					}
+					else {
+						rep.error = ECE_SUCCESS;
 
+						gChannelContainer::GetIF()->DeletePlayer(ask.szID);
+						gChannelContainer::GetIF()->AddPlayer(ask.nChannel-1,ask.szID);
+						rep.channel = gChannelContainer::GetIF()->m_channelArray[ask.nChannel-1];
+						pk_channelrefresh_rep (channelBefore);
+						pk_channelrefresh_rep (ask.nChannel-1);
+						gPC->PutCoreFlag(ask.szID,ask.nChannel-1);
+						gPC->PutMode(ask.szID,ECM_BATTLENET);
+						gRC->SendRoomListCauseChange(ask.nChannel-1);
+
+					}
+					break;
+				case ECM_ROOMMAKE :	
+					addrLen = addrLen;
+
+					break;
+				case ECM_ROOM : 
+					rep.error = ECE_SUCCESS;
+					gRC->ExitTheRoom(ask.szID);
+
+					gChannelContainer::GetIF()->AddPlayer(ask.nChannel-1,ask.szID);
+					rep.channel = gChannelContainer::GetIF()->m_channelArray[ask.nChannel-1];
+					pk_channelrefresh_rep (ask.nChannel-1);
+					gPC->PutCoreFlag(ask.szID,ask.nChannel-1);
+					gPC->PutMode(ask.szID,ECM_BATTLENET);
+					gRC->SendRoomListCauseChange(ask.nChannel-1);
+					break;
 		}
-	}	
+
+	}
 	gMainWin::GetIF()->Send(PL_CHANNELCHANGE_REP, sizeof(rep), &rep, sock);
 	gChannelContainer::GetIF()->fullDebuger();
 
 }
-
 

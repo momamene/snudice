@@ -89,6 +89,10 @@ enum ePROTOCOL
 	PL_WARPLISTSTART_REP,	// 유저 여러명 워프시킬떄
 	PL_WARPLISTEND_ASK,
 
+	PL_EXIT_REP,//게임중강제종료시처리수정
+
+	PL_GOLOGIN_ASK,
+
 };
 
 enum eCOREMODE
@@ -588,3 +592,14 @@ struct PK_WARPLISTEND_ASK
 	int			nDestPos[ROOMMAXPLAYER];		// 해당사항 없는 놈은 -1로 채워서 보냄
 };
 
+
+struct PK_EXIT_REP
+{
+	char		szID[IDLENGTH];
+	int			flag;	//남은 사람 수 //아직까지는 그닥 있어야 할 이유는 없다.
+};
+
+struct PK_GOLOGIN_ASK
+{
+	char		szID[IDLENGTH];
+};

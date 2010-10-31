@@ -2,6 +2,19 @@
 #include "network.h"
 #include "Charinfo.h"
 
+enum ItemUseState {
+	IUS_NONE,
+	IUS_NEXTTURN,
+	IUS_INFOCHANGE,
+	IUS_INVALIDSTATE,
+};
+
+enum MovePlayerState {
+	MPS_MOVE,
+	MPS_BUS,
+	MPS_WARP,
+};
+
 class gGamePlayerContainer
 {
 public:
@@ -39,6 +52,9 @@ public:
 	// m_bSyncornize 값들을 false로 바꾼 뒤, 클라이언트가 완료하는 경우 true로 바꾼다.
 	// 보통 user가 없는 값의 경우 항상 true, 아니면 false.
 
+	PK_ITEMUSE_ASK m_struct_itemuse_ask[MAXROOM];
+	// pk_itemuse_ask -> pk_itemuse_rep -> pk_itemusestart_ask 로 가는 과정에서 임시 저장되는 패킷.
+
 	void		pk_maingamestart_rep(int nRoomIndex);
 	void		pk_movestart_ask(PK_DEFAULT *pk,SOCKET sock);
 	void		pk_moveend_ask(PK_DEFAULT *pk,SOCKET sock);
@@ -54,32 +70,58 @@ public:
 
 	void		pk_itemuse_ask(PK_DEFAULT *pk,SOCKET sock);
 
+	void		pk_exit_ask(char*, SOCKET sock);//수정사항, 부뤸ㅋㅋ
+	void		pk_gologin_ask(PK_DEFAULT *pk,SOCKET sock);	//수정사항
+
+	//	void		pk_warpstart_ask (PK_DEFAULT *pk, SOCKET sock);
+	void		pk_warpstart_rep (int nRoomIndex, int nInRoomIndex, int des);
+	void		pk_warpend_ask (PK_DEFAULT *pk, SOCKET sock);
+	void		pk_warpliststart_rep (int nRoomIndex, bool* bInRoomIndex, int* des);
+	void		pk_warplistend_ask (PK_DEFAULT *pk, SOCKET sock);
+
+	void		pk_itemusestart_ask(PK_DEFAULT *pk,SOCKET sock);
+	void		pk_infochangeFirst_rep(PK_ITEMUSE_ASK ask);
+	void		pk_infochangeSecond_rep(int nRoomIndex,int stamina,int accomplishment);
+
+	void		pk_infochangeend_ask(PK_DEFAULT *pk, SOCKET sock);
+
+
 	bool		SetUp();
 	bool		init(int nRoomIndex);
 	void		Release();
 
+
+
+	void				debuger_move(int nDis,char* szID);
+	void				debuger_card(int nIndex,char* szID);
+
 private:
-	void		FirstTurn(int nRoomIndex);
-	void		NextTurn(int nRoomIndex);
+	void				FirstTurn(int nRoomIndex);
+	void				NextTurn(int nRoomIndex);
 
-	void		PushbSynAllPlayer(int nRoomIndex,bool bSyn);
-	bool		isbSynAllTrue(int nRoomIndex);
+	void				PushbSynAllPlayer(int nRoomIndex,bool bSyn);
+	bool				isbSynAllTrue(int nRoomIndex);
 
-	int			meetGrade(int nRoomIndex,int subjectIndex);  // subjectIndex = flag1
-	int			meetItemCalculator(int nRoomIndex,int nInRoomIndex,int classType,int originalVal);
-	void		GradeRankSyncronizer(int nRoomIndex);
-	int			Rank(int nRoomIndex,int nInRoomIndex);
+	int					meetGrade(int nRoomIndex,int subjectIndex);  // subjectIndex = flag1
+	int					meetItemCalculator(int nRoomIndex,int nInRoomIndex,int classType,int originalVal);
+	void				GradeRankSyncronizer(int nRoomIndex);
+	int					Rank(int nRoomIndex,int nInRoomIndex);
 
-	int			staminaConvert(int nRoomIndex,int nInRoomIndex,int nPlusMinus);
-	int			WhoIsRankOne(int nRoomIndex);
-	void		getItem(int nRoomIndex, int nInRoomIndex);
-	void		pushItem(int nRoomIndex, int nInRoomIndex,int nItemID);
-	void		releaseItemGlobal(int nRoomIndex);
-	bool		itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, int nInRoomIndex, int itemIndex);
+	int					staminaConvert(int nRoomIndex,int nInRoomIndex,int nPlusMinus);
+	int					WhoIsRankOne(int nRoomIndex);
+	void				getItem(int nRoomIndex, int nInRoomIndex);
+	void				pushItem(int nRoomIndex, int nInRoomIndex,int nItemID);
+	void				releaseItemGlobal(int nRoomIndex);
+	ItemUseState		itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, int nInRoomIndex, int itemIndex);
 	// nInRoomIndex는 아이템을 사용한 유저, itemIndex는 0-19 까지의 말그대로의...
 	// bool 값은, nextturn을 시전하는 지 여부.
 	// int 로 바뀔 가능성.
 
-	void		movePlayer(int nRoomIndex,int nInRoomIndex,int des,bool bIsBus = false);
-	
+	void				movePlayer(int nRoomIndex,int nInRoomIndex,int des,MovePlayerState mpState);
+	bool				isNokduFromPosByHardCoded(int nPos);
+
+	// void		putTargetTrueForOther(int nRoomIndex,int nInRoomIndex, bool* getBarrInRoomIndex,ITEMTARGET target); 
+	void		putTargetIntForOther(int nRoomIndex,int nInRoomIndex, int* getNarrDes,ITEMTARGET target,int nVal);
+	// 두 함수는 other일 때만 작동하는 가짜 함수이다.
+
 };

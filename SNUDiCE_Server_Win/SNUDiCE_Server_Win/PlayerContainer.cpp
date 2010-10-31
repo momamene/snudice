@@ -1,4 +1,5 @@
 #include "PlayerContainer.h"
+#include "GamePlayerContainer.h"	//수정사항, 에라 모르겟다 춤이나 추자
 #include "MainWin.h"
 
 static gPlayerContainer s_PlayerContainer;
@@ -74,7 +75,7 @@ bool gPlayerContainer::DeletePlayer(SOCKET sock,char clientID[IDLENGTH])
 		if(temp->sock == sock)
 		{
 			strcpy(clientID,temp->szID);
-
+			gGamePlayerContainer::GetIF()->pk_exit_ask(clientID , sock);	//수정사항 , 여기서 끗날때 보냄 ㅇㅇ;
 			delete temp;
 			temp = NULL;
 			m_PlayerList.erase(it);

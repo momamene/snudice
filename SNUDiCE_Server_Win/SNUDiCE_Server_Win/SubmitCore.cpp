@@ -130,6 +130,7 @@ bool gSubmitCore::putSubject(int nRoomIndex,int nInRoomIndex,int nSubjectIndex)
 	for(int i = 0 ; i < CLASSNUM ; i++)
 	{
 		if(m_submitSubject[nRoomIndex][nSubjectIndex][i]==NOSEAT) {
+			return false;	//수강2개 수정
 			continue;
 		}
 		else if(m_submitSubject[nRoomIndex][nSubjectIndex][i]==AVAILSEAT) {
