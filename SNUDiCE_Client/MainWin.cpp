@@ -7,6 +7,7 @@
 #include "SubmitCore.h"
 #include "GameCore.h"
 #include "RoomCore.h"
+#include "PlaySoundCore.h"
 #include "Server.h"
 #include "Util.h"
 #include "PopUp.h"
@@ -19,6 +20,7 @@
 #include "UIGame.h"
 #include "networkconst.h"
 #include "resource.h"
+#include "SoundFiles.h"
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
@@ -26,7 +28,7 @@ static gMainWin	s_MainWin;		// for singleton
 
 gMainWin::gMainWin()
 {
-
+	
 }
 
 gMainWin::~gMainWin()
@@ -278,7 +280,8 @@ void gMainWin::MainLoop()
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 {
 	gMainWin	*mw		= gMainWin::GetIF();
-	gMouse		*mouse	= gMouse::GetIF();
+	gMouse		*mouse	= gMouse::GetIF();	
+	gPlaySoundCore *playSound = gPlaySoundCore::GetIF();
 
 	static bool bshow = false;
 
@@ -341,25 +344,37 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 			if(!mw->m_bActive)
 				return 0;
 
-			mouse->OnMouseMove();
+			mouse->OnMouseMove();			
+
 			return 0;
 		case WM_NCMOUSEMOVE:
-			mouse->SetShow(true);
+			mouse->SetShow(true);			
 			return 0;
 		// active
-		case WM_ACTIVATE:
+		case WM_ACTIVATE:		
+		{
 			switch(LOWORD(wParam))
 			{
 				case WA_ACTIVE: case WA_CLICKACTIVE:
+				{
 					mw->m_bActive = true;
 					//ShowCursor(FALSE);
+					if(!playSound->isBGMLoaded())						
+						playSound->StartBGM(BGM_FILE_0);
+					else
+						playSound->ResumeBGM();
 					break;
+				}					
 				case WA_INACTIVE:
+				{
 					mw->m_bActive = false;
 					//ShowCursor(TRUE);
-					break;
+					playSound->PauseBGM();
+					break;					
+				}
 			}
 			return 0;
+		}
 
 		// network
 		case WM_SOCKET:

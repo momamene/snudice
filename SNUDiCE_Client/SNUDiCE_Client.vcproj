@@ -252,6 +252,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\PlaySoundCore.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\RoomCore.cpp"
 					>
 				</File>
@@ -309,6 +313,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\fmod.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Image.h"
 				>
 			</File>
@@ -334,6 +342,10 @@
 			</File>
 			<File
 				RelativePath=".\Server.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SoundFiles.h"
 				>
 			</File>
 			<File
@@ -412,6 +424,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\PlaySoundCore.h"
+					>
+				</File>
+				<File
 					RelativePath=".\RoomCore.h"
 					>
 				</File>
@@ -445,6 +461,10 @@
 				</File>
 			</Filter>
 		</Filter>
+		<File
+			RelativePath=".\fmodvc.lib"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>
