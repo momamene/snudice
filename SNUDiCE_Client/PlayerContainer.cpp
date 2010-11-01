@@ -613,6 +613,8 @@ GAMEPLAYER*	gPlayerContainer::GetPlayerByPos(int nPos)
 	{
 		if(strlen(m_GPlayerList[i].szID) != 0)
 		{
+			if(strcmp(m_GPlayerList[i].szID, m_MyGamePlayer.szID) == 0 )
+				continue;
 			if(m_GPlayerList[i].nPos == nPos)
 				return &m_GPlayerList[i];
 		}

@@ -89,7 +89,7 @@ public:
 	// frame값과 nCutline (아마 nCutline은 15겠지?) 을 넣어서 gGameCore에서 캐릭터의 발을 결맞게 해주는 함수
 
 	int				GetCharNumPos(int nPos);		// nPos에 있는 캐릭터 갯수 return
-	GAMEPLAYER*		GetPlayerByPos(int nPos);		// nPos에 있는 캐릭터 정보 return
+	GAMEPLAYER*		GetPlayerByPos(int nPos);		// nPos에 있는 캐릭터 정보 return. 단 나는 제외.!!!
 
 private:
 	bool			SetUpCharInfo();

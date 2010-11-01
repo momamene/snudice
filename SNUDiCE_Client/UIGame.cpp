@@ -153,7 +153,7 @@
 #define USEINFO_USER_POS_X					USEINFO_CARD_POS_X - 200													// 중점
 #define USEINFO_USER_POS_Y					(ITEMCARD_POS_Y + (ITEMCARD_SIZE_H - TARGET_OUTLINE_SIZE_H) / 2)			// 중점
 #define USEINFO_TARGET_POS_X				USEINFO_CARD_POS_X + 200													// 중점
-#define USEINFO_TARGET_POS_Y				USEINFO_USER_POS_Y															// 중점
+#define USEINFO_TARGET_POS_Y				(USEINFO_USER_POS_Y + TARGET_OUTLINE_SIZE_H / 2)							// 중점
 #define USEINFO_TARGET_TERM_X				10
 #define USEINFO_TARGET_TERM_Y				10
 
@@ -161,7 +161,7 @@
 #define INFOCHANGE_TICK						3000
 
 #define INFOCHANGE_POS_X					320
-#define	INFOCHANGE_POS_Y					180
+#define	INFOCHANGE_POS_Y					150
 #define INFOCHANGE_TERM_X					10		
 #define INFOCHANGE_TERM_Y					10
 #define INFOCHANGE_INFOSIZE_W				50
@@ -722,14 +722,14 @@ bool gUIGame::OnLButtonDown()
 
 				m_bTargetByMove = false;
 
-				int		i, j = 0;
+				int		i;
 				for(i = 0; i < MAXITEMNUM; i++)
 				{
 					if(gPC->m_MyGamePlayer.nItem[i] == -1)
 						continue;
 
 					RECT	rcTemp;
-					rcTemp.left		= ITEMCARD_POS_X + (ITEMCARD_POS_X + ITEMCARDIMG_W) * j;
+					rcTemp.left		= ITEMCARD_POS_X + (ITEMCARD_POS_X + ITEMCARDIMG_W) * i;
 					rcTemp.right	= rcTemp.left + ITEMCARDIMG_W;
 					rcTemp.top		= ITEMCARD_POS_Y;
 					rcTemp.bottom	= rcTemp.top + ITEMCARDIMG_H;
@@ -795,8 +795,6 @@ bool gUIGame::OnLButtonDown()
 						}
 						return true;
 					}
-
-					j++;
 				}
 			}
 		break;
@@ -1300,7 +1298,6 @@ void gUIGame::pk_itemuse_rep(PK_ITEMUSE_REP* rep)
 
 				m_target[1].idx = targetIdx;
 				m_target[1].img = &pc->m_ImgInfo[ pc->m_GPlayerList[targetIdx].ctype ].ImgPic;
-				m_target[1].rcPos = m_itemuser.rcPos;
 
 				int		i;
 				int		startx = USEINFO_TARGET_POS_X - TARGET_OUTLINE_SIZE_W/2;
@@ -1344,7 +1341,8 @@ void gUIGame::pk_itemuse_rep(PK_ITEMUSE_REP* rep)
 			{
 				m_nTargetNum = pc->GetGPNum() - 1;
 
-				int		i;
+				int		i, j;
+				j = 0;
 				for(i = 0; i < ROOMMAXPLAYER; i++)
 				{
 					if(strlen(pc->m_GPlayerList[i].szID) != 0)
@@ -1352,8 +1350,9 @@ void gUIGame::pk_itemuse_rep(PK_ITEMUSE_REP* rep)
 						if(strcmp(pc->m_GPlayerList[i].szID, pc->m_MyGamePlayer.szID) == 0)
 							continue;
 
-						m_target[i].idx = i;
-						m_target[i].img = &pc->m_ImgInfo[ pc->m_GPlayerList[i].ctype ].ImgPic;
+						m_target[j].idx = i;
+						m_target[j].img = &pc->m_ImgInfo[ pc->m_GPlayerList[i].ctype ].ImgPic;
+						j++;
 					}
 				}
 				SetTargetButton_UseInfo();
@@ -1368,6 +1367,15 @@ void gUIGame::SetTargetButton_UseInfo()
 {
 	switch(m_nTargetNum)
 	{
+		case 1:
+			{
+				// ㅁ
+				m_target[0].rcPos = m_itemuser.rcPos;
+				m_target[0].rcPos.left = USEINFO_TARGET_POS_X - TARGET_OUTLINE_SIZE_W/2;
+				m_target[0].rcPos.right = m_target[0].rcPos.left + TARGET_OUTLINE_SIZE_W;
+
+			}
+			break;
 		case 2:
 			{
 				// ㅁ
@@ -1819,7 +1827,7 @@ void gUIGame::Draw_InfoChange()
 			if(m_info[i].nLang > 0)
 				wsprintf(szBuf[nCount], "언어 + %d", m_info[i].nLang);
 			else
-				wsprintf(szBuf[nCount], "언어 - %d", m_info[i].nLang);
+				wsprintf(szBuf[nCount], "언어 - %d", -m_info[i].nLang);
 			nCount++;
 		}
 		if(m_info[i].nMath != 0)
@@ -1827,7 +1835,7 @@ void gUIGame::Draw_InfoChange()
 			if(m_info[i].nMath > 0)
 				wsprintf(szBuf[nCount], "수리 + %d", m_info[i].nMath);
 			else
-				wsprintf(szBuf[nCount], "수리 - %d", m_info[i].nMath);
+				wsprintf(szBuf[nCount], "수리 - %d", -m_info[i].nMath);
 			nCount++;
 		}
 		if(m_info[i].nArt != 0)
@@ -1835,7 +1843,7 @@ void gUIGame::Draw_InfoChange()
 			if(m_info[i].nArt > 0)
 				wsprintf(szBuf[nCount], "예술 + %d", m_info[i].nArt);
 			else
-				wsprintf(szBuf[nCount], "예술 - %d", m_info[i].nArt);
+				wsprintf(szBuf[nCount], "예술 - %d", -m_info[i].nArt);
 			nCount++;
 		}
 		if(m_info[i].nStamina != 0)
@@ -1843,7 +1851,7 @@ void gUIGame::Draw_InfoChange()
 			if(m_info[i].nStamina > 0)
 				wsprintf(szBuf[nCount], "체력 + %d", m_info[i].nStamina);
 			else
-				wsprintf(szBuf[nCount], "체력 - %d", m_info[i].nStamina);
+				wsprintf(szBuf[nCount], "체력 - %d", -m_info[i].nStamina);
 			nCount++;
 		}
 		if(m_info[i].nGrade != 0)
@@ -1851,7 +1859,7 @@ void gUIGame::Draw_InfoChange()
 			if(m_info[i].nGrade > 0)
 				wsprintf(szBuf[nCount], "수업 + %d", m_info[i].nGrade);
 			else
-				wsprintf(szBuf[nCount], "수업 - %d", m_info[i].nGrade);
+				wsprintf(szBuf[nCount], "수업 - %d", -m_info[i].nGrade);
 			nCount++;
 		}
 		int		startx, starty;
@@ -1861,7 +1869,7 @@ void gUIGame::Draw_InfoChange()
 					- INFOCHANGE_INFOSIZE_H * nCount/2 - INFOCHANGE_INFOTERM_Y * (nCount - 1)/2;
 
 		for(j = 0; j < nCount; j++)
-			gUtil::Text(startx, starty + j * (INFOCHANGE_INFOSIZE_H + INFOCHANGE_INFOTERM_Y), szBuf[nCount]);
+			gUtil::Text(startx, starty + j * (INFOCHANGE_INFOSIZE_H + INFOCHANGE_INFOTERM_Y), szBuf[j]);
 	}
 	gUtil::EndText();
 }

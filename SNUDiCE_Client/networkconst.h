@@ -422,11 +422,11 @@ struct GAMEPLAYER
 	// 게임정보
 	CLASSTYPE	ctype;
 
-	BYTE		nLang;
-	BYTE		nMath;
-	BYTE		nArt;
-	BYTE		nStamina, nMaxStamina;
-	BYTE		nDice4, nDice6;
+	int			nLang;
+	int			nMath;
+	int			nArt;
+	int			nStamina, nMaxStamina;
+	int			nDice4, nDice6;
 
 	float		fGrade[MAXSUBJECT];
 	float		fAvGrade;
