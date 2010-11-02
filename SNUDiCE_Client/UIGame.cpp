@@ -146,7 +146,7 @@
 #define TARGET_TERM_X						10
 #define TARGET_TERM_Y						10
 #define TARGET_POS_CENTER_X					320
-#define TARGET_POS_CENTER_Y					240
+#define TARGET_POS_CENTER_Y					200
 
 #define USEINFO_CARD_POS_X					320
 #define USEINFO_CARD_POS_Y					ITEMCARD_POS_Y

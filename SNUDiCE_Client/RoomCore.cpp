@@ -599,6 +599,8 @@ void gRoomCore::pk_roommake_rep(PK_ROOMMAKER_REP *rep)
 		gPlayerContainer::GetIF()->SetMyRoom(&rep->room);
 		gPlayerContainer::GetIF()->SetPlayerList(rep->playerlist);
 		SetFocus(gMainWin::GetIF()->m_hWnd);
+		m_EditRoom.Clear();
+		m_EditPass.Clear();
 		gChat::GetIF()->MsgStackClear();
 	}
 }
