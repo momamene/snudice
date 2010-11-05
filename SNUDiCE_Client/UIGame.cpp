@@ -891,7 +891,7 @@ bool gUIGame::OnLButtonDown()
 					strcpy(ask.szTarget, m_szTarget);
 					m_bTargetByMove = false;
 				}
-
+				ask.nItemID = m_nItemID;
 				gServer::GetIF()->Send(PL_ITEMUSE_ASK, sizeof(ask), &ask);
 				m_uimode = UIM_NONE;
 				m_bItemUsed = true;
@@ -1417,7 +1417,7 @@ void gUIGame::SetTargetButton_UseInfo()
 			{
 				// け け
 				// け け
-				int		i;
+				int		i, j;
 				int		startx = USEINFO_TARGET_POS_X - TARGET_OUTLINE_SIZE_W - USEINFO_TARGET_TERM_X/2;
 				int		starty = USEINFO_TARGET_POS_Y - TARGET_OUTLINE_SIZE_H - USEINFO_TARGET_TERM_Y/2;
 
@@ -1432,13 +1432,13 @@ void gUIGame::SetTargetButton_UseInfo()
 
 				startx += (TARGET_OUTLINE_SIZE_W + USEINFO_TARGET_TERM_X);
 				starty = USEINFO_TARGET_POS_Y - TARGET_OUTLINE_SIZE_H - USEINFO_TARGET_TERM_Y/2;
-				for(; i < m_nTargetNum; i++)
+				for(j = 0; i < m_nTargetNum; i++, j++)
 				{
 					SetRect(&m_target[i].rcPos,
 						startx,
-						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y),
+						starty + j * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y),
 						startx + TARGET_OUTLINE_SIZE_W,
-						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y) + TARGET_OUTLINE_SIZE_H );
+						starty + j * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y) + TARGET_OUTLINE_SIZE_H );
 				}
 			}
 			break;
@@ -1449,7 +1449,7 @@ void gUIGame::SetTargetButton_UseInfo()
 				//   け 
 				// け
 				//   け
-				int		i;
+				int		i, j;
 				int		startx = USEINFO_TARGET_POS_X - TARGET_OUTLINE_SIZE_W - USEINFO_TARGET_TERM_X/2;
 				int		starty = USEINFO_TARGET_POS_Y - TARGET_OUTLINE_SIZE_H - USEINFO_TARGET_TERM_Y/2;
 
@@ -1464,13 +1464,13 @@ void gUIGame::SetTargetButton_UseInfo()
 
 				startx += (TARGET_OUTLINE_SIZE_W + USEINFO_TARGET_TERM_X);
 				starty = USEINFO_TARGET_POS_Y - TARGET_OUTLINE_SIZE_H*3/2 - USEINFO_TARGET_TERM_Y;
-				for(; i < m_nTargetNum; i++)
+				for(j = 0; i < m_nTargetNum; i++, j++)
 				{
 					SetRect(&m_target[i].rcPos,
 						startx,
-						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y),
+						starty + j * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y),
 						startx + TARGET_OUTLINE_SIZE_W,
-						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y) + TARGET_OUTLINE_SIZE_H );
+						starty + j * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y) + TARGET_OUTLINE_SIZE_H );
 				}
 			}
 			break;
@@ -1479,7 +1479,7 @@ void gUIGame::SetTargetButton_UseInfo()
 				// け け
 				// け け
 				// け け
-				int		i;
+				int		i, j;
 				int		startx = USEINFO_TARGET_POS_X - TARGET_OUTLINE_SIZE_W - USEINFO_TARGET_TERM_X/2;
 				int		starty = USEINFO_TARGET_POS_Y - TARGET_OUTLINE_SIZE_H*3/2 - USEINFO_TARGET_TERM_Y;
 
@@ -1494,13 +1494,13 @@ void gUIGame::SetTargetButton_UseInfo()
 
 				startx += (TARGET_OUTLINE_SIZE_W + USEINFO_TARGET_TERM_X);
 				starty = USEINFO_TARGET_POS_Y - TARGET_OUTLINE_SIZE_H*3/2 - USEINFO_TARGET_TERM_Y;
-				for(; i < m_nTargetNum; i++)
+				for(j = 0; i < m_nTargetNum; i++, j++)
 				{
 					SetRect(&m_target[i].rcPos,
 						startx,
-						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y),
+						starty + j * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y),
 						startx + TARGET_OUTLINE_SIZE_W,
-						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y) + TARGET_OUTLINE_SIZE_H );
+						starty + j * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y) + TARGET_OUTLINE_SIZE_H );
 				}
 			}
 			break;
@@ -1511,7 +1511,7 @@ void gUIGame::SetTargetButton_UseInfo()
 				//       け
 				// け け
 				//       け
-				int		i;
+				int		i, j;
 				int		startx = USEINFO_TARGET_POS_X - TARGET_OUTLINE_SIZE_W - USEINFO_TARGET_TERM_X/2;
 				int		starty = USEINFO_TARGET_POS_Y - TARGET_OUTLINE_SIZE_H - USEINFO_TARGET_TERM_Y/2;
 
@@ -1526,23 +1526,23 @@ void gUIGame::SetTargetButton_UseInfo()
 
 				startx += (TARGET_OUTLINE_SIZE_W + USEINFO_TARGET_TERM_X);
 				starty = USEINFO_TARGET_POS_Y - TARGET_OUTLINE_SIZE_H - USEINFO_TARGET_TERM_Y/2;
-				for(; i < 4; i++)
+				for(j = 0; i < 4; i++, j++)
 				{
 					SetRect(&m_target[i].rcPos,
 						startx,
-						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y),
+						starty + j * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y),
 						startx + TARGET_OUTLINE_SIZE_W,
-						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y) + TARGET_OUTLINE_SIZE_H );
+						starty + j * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y) + TARGET_OUTLINE_SIZE_H );
 				}
 				startx += (TARGET_OUTLINE_SIZE_W + USEINFO_TARGET_TERM_X);
 				starty = USEINFO_TARGET_POS_Y - TARGET_OUTLINE_SIZE_H*3/2 - USEINFO_TARGET_TERM_Y;
-				for(; i < m_nTargetNum; i++)
+				for(j = 0; i < m_nTargetNum; i++, j++)
 				{
 					SetRect(&m_target[i].rcPos,
 						startx,
-						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y),
+						starty + j * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y),
 						startx + TARGET_OUTLINE_SIZE_W,
-						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y) + TARGET_OUTLINE_SIZE_H );
+						starty + j * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y) + TARGET_OUTLINE_SIZE_H );
 				}
 			}
 			break;
@@ -1553,7 +1553,7 @@ void gUIGame::SetTargetButton_UseInfo()
 				//    け け 
 				// け
 				//    け け
-				int		i;
+				int		i, j;
 				int		startx = USEINFO_TARGET_POS_X - TARGET_OUTLINE_SIZE_W - USEINFO_TARGET_TERM_X/2;
 				int		starty = USEINFO_TARGET_POS_Y - TARGET_OUTLINE_SIZE_H - USEINFO_TARGET_TERM_Y/2;
 
@@ -1568,23 +1568,23 @@ void gUIGame::SetTargetButton_UseInfo()
 				startx += (TARGET_OUTLINE_SIZE_W + USEINFO_TARGET_TERM_X);
 				starty = USEINFO_TARGET_POS_Y - TARGET_OUTLINE_SIZE_H*3/2 - USEINFO_TARGET_TERM_Y;
 
-				for(; i < 5; i++)
+				for(j = 0; i < 5; i++, j++)
 				{
 					SetRect(&m_target[i].rcPos,
 						startx,
-						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y),
+						starty + j * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y),
 						startx + TARGET_OUTLINE_SIZE_W,
-						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y) + TARGET_OUTLINE_SIZE_H );
+						starty + j * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y) + TARGET_OUTLINE_SIZE_H );
 				}
 				startx += (TARGET_OUTLINE_SIZE_W + USEINFO_TARGET_TERM_X);
 				starty = USEINFO_TARGET_POS_Y - TARGET_OUTLINE_SIZE_H*3/2 - USEINFO_TARGET_TERM_Y;
-				for(; i < m_nTargetNum; i++)
+				for(j = 0; i < m_nTargetNum; i++, j++)
 				{
 					SetRect(&m_target[i].rcPos,
 						startx,
-						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y),
+						starty + j * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y),
 						startx + TARGET_OUTLINE_SIZE_W,
-						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y) + TARGET_OUTLINE_SIZE_H );
+						starty + j * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y) + TARGET_OUTLINE_SIZE_H );
 				}
 			}
 			break;
@@ -1648,7 +1648,7 @@ void gUIGame::SetTargetButton_InfoChange()
 					SetRect(&m_target[i].rcPos,
 						startx + i * (INFOCHANGE_INFOSIZE_W + INFOCHANGE_TERM_X + TARGET_OUTLINE_SIZE_W),
 						starty,
-						startx + TARGET_OUTLINE_SIZE_W,
+						startx + i * (INFOCHANGE_INFOSIZE_W + INFOCHANGE_TERM_X + TARGET_OUTLINE_SIZE_W) + TARGET_OUTLINE_SIZE_W,
 						starty + TARGET_OUTLINE_SIZE_H	);
 				}
 			}
@@ -1665,7 +1665,7 @@ void gUIGame::SetTargetButton_InfoChange()
 					SetRect(&m_target[i].rcPos,
 						startx + i * (INFOCHANGE_INFOSIZE_W + INFOCHANGE_TERM_X + TARGET_OUTLINE_SIZE_W),
 						starty,
-						startx + TARGET_OUTLINE_SIZE_W,
+						startx + i * (INFOCHANGE_INFOSIZE_W + INFOCHANGE_TERM_X + TARGET_OUTLINE_SIZE_W) + TARGET_OUTLINE_SIZE_W,
 						starty + TARGET_OUTLINE_SIZE_H	);
 				}
 			}
@@ -1682,7 +1682,7 @@ void gUIGame::SetTargetButton_InfoChange()
 					SetRect(&m_target[i].rcPos,
 						startx + i * (INFOCHANGE_INFOSIZE_W + INFOCHANGE_TERM_X + TARGET_OUTLINE_SIZE_W),
 						starty,
-						startx + TARGET_OUTLINE_SIZE_W,
+						startx + i * (INFOCHANGE_INFOSIZE_W + INFOCHANGE_TERM_X + TARGET_OUTLINE_SIZE_W) + TARGET_OUTLINE_SIZE_W,
 						starty + TARGET_OUTLINE_SIZE_H	);
 				}
 			}
@@ -1700,7 +1700,7 @@ void gUIGame::SetTargetButton_InfoChange()
 					SetRect(&m_target[i].rcPos,
 						startx + i * (INFOCHANGE_INFOSIZE_W + INFOCHANGE_TERM_X + TARGET_OUTLINE_SIZE_W),
 						starty,
-						startx + TARGET_OUTLINE_SIZE_W,
+						startx + i * (INFOCHANGE_INFOSIZE_W + INFOCHANGE_TERM_X + TARGET_OUTLINE_SIZE_W) + TARGET_OUTLINE_SIZE_W,
 						starty + TARGET_OUTLINE_SIZE_H	);
 				}
 
@@ -1712,7 +1712,7 @@ void gUIGame::SetTargetButton_InfoChange()
 					SetRect(&m_target[i].rcPos,
 						startx + i * (INFOCHANGE_INFOSIZE_W + INFOCHANGE_TERM_X + TARGET_OUTLINE_SIZE_W),
 						starty,
-						startx + TARGET_OUTLINE_SIZE_W,
+						startx + i * (INFOCHANGE_INFOSIZE_W + INFOCHANGE_TERM_X + TARGET_OUTLINE_SIZE_W) + TARGET_OUTLINE_SIZE_W,
 						starty + TARGET_OUTLINE_SIZE_H	);
 				}
 			}
@@ -1730,7 +1730,7 @@ void gUIGame::SetTargetButton_InfoChange()
 					SetRect(&m_target[i].rcPos,
 						startx + i * (INFOCHANGE_INFOSIZE_W + INFOCHANGE_TERM_X + TARGET_OUTLINE_SIZE_W),
 						starty,
-						startx + TARGET_OUTLINE_SIZE_W,
+						startx + i * (INFOCHANGE_INFOSIZE_W + INFOCHANGE_TERM_X + TARGET_OUTLINE_SIZE_W) + TARGET_OUTLINE_SIZE_W,
 						starty + TARGET_OUTLINE_SIZE_H	);
 				}
 
@@ -1742,7 +1742,7 @@ void gUIGame::SetTargetButton_InfoChange()
 					SetRect(&m_target[i].rcPos,
 						startx + i * (INFOCHANGE_INFOSIZE_W + INFOCHANGE_TERM_X + TARGET_OUTLINE_SIZE_W),
 						starty,
-						startx + TARGET_OUTLINE_SIZE_W,
+						startx + i * (INFOCHANGE_INFOSIZE_W + INFOCHANGE_TERM_X + TARGET_OUTLINE_SIZE_W) + TARGET_OUTLINE_SIZE_W,
 						starty + TARGET_OUTLINE_SIZE_H	);
 				}
 			}
@@ -1760,7 +1760,7 @@ void gUIGame::SetTargetButton_InfoChange()
 					SetRect(&m_target[i].rcPos,
 						startx + i * (INFOCHANGE_INFOSIZE_W + INFOCHANGE_TERM_X + TARGET_OUTLINE_SIZE_W),
 						starty,
-						startx + TARGET_OUTLINE_SIZE_W,
+						startx + i * (INFOCHANGE_INFOSIZE_W + INFOCHANGE_TERM_X + TARGET_OUTLINE_SIZE_W) + TARGET_OUTLINE_SIZE_W,
 						starty + TARGET_OUTLINE_SIZE_H	);
 				}
 
@@ -1772,7 +1772,7 @@ void gUIGame::SetTargetButton_InfoChange()
 					SetRect(&m_target[i].rcPos,
 						startx + i * (INFOCHANGE_INFOSIZE_W + INFOCHANGE_TERM_X + TARGET_OUTLINE_SIZE_W),
 						starty,
-						startx + TARGET_OUTLINE_SIZE_W,
+						startx + i * (INFOCHANGE_INFOSIZE_W + INFOCHANGE_TERM_X + TARGET_OUTLINE_SIZE_W) + TARGET_OUTLINE_SIZE_W,
 						starty + TARGET_OUTLINE_SIZE_H	);
 				}
 			}
@@ -1790,7 +1790,7 @@ void gUIGame::SetTargetButton_InfoChange()
 					SetRect(&m_target[i].rcPos,
 						startx + i * (INFOCHANGE_INFOSIZE_W + INFOCHANGE_TERM_X + TARGET_OUTLINE_SIZE_W),
 						starty,
-						startx + TARGET_OUTLINE_SIZE_W,
+						startx + i * (INFOCHANGE_INFOSIZE_W + INFOCHANGE_TERM_X + TARGET_OUTLINE_SIZE_W) + TARGET_OUTLINE_SIZE_W,
 						starty + TARGET_OUTLINE_SIZE_H	);
 				}
 
@@ -1802,7 +1802,7 @@ void gUIGame::SetTargetButton_InfoChange()
 					SetRect(&m_target[i].rcPos,
 						startx + i * (INFOCHANGE_INFOSIZE_W + INFOCHANGE_TERM_X + TARGET_OUTLINE_SIZE_W),
 						starty,
-						startx + TARGET_OUTLINE_SIZE_W,
+						startx + i * (INFOCHANGE_INFOSIZE_W + INFOCHANGE_TERM_X + TARGET_OUTLINE_SIZE_W) + TARGET_OUTLINE_SIZE_W,
 						starty + TARGET_OUTLINE_SIZE_H	);
 				}
 			}

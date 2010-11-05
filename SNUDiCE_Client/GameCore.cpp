@@ -219,8 +219,7 @@ void gGameCore::DrawWarp()
 					ScrollStart(m_warpDest);
 					pc->m_nNoDraw = m_warpCharIdx;
 				}
-				pc->MainLoop_Warp(m_warpCharIdx, -m_warpDY);
-				m_warpDY += WARPDIST;
+				pc->MainLoop_Warp(m_warpCharIdx, -WARPDIST*nFrame);
 			}
 			break;
 		case WARP_SCROLLSTART:
@@ -273,8 +272,7 @@ void gGameCore::DrawWarp()
 				{
 					pc->m_nNoDraw = -1;
 				}
-				pc->MainLoop_Warp(m_warpCharIdx, -m_warpDY);
-				m_warpDY -= WARPDIST;
+				pc->MainLoop_Warp(m_warpCharIdx, (nFrame - WARPFRAME)*WARPDIST);
 			}
 			break;
 	}
@@ -303,8 +301,7 @@ void gGameCore::DrawWarpList()
 					ScrollStart(m_warpDest);
 					bDrawAll = false;
 				}
-				pc->MainLoop_WarpList(m_warplistDest, bDrawAll, -m_warpDY);
-				m_warpDY += WARPDIST;
+				pc->MainLoop_Warp(m_warpCharIdx, -WARPDIST*nFrame);
 			}
 			break;
 		case WARPLIST_SCROLLSTART:
@@ -376,8 +373,7 @@ void gGameCore::DrawWarpList()
 				{
 					bDrawAll = true;
 				}
-				pc->MainLoop_WarpList(m_warplistDest, bDrawAll, -m_warpDY);
-				m_warpDY -= WARPDIST;
+				pc->MainLoop_Warp(m_warpCharIdx, (WARPFRAME - nFrame)*WARPDIST);
 			}
 			break;
 	}
@@ -1115,7 +1111,6 @@ void gGameCore::pk_warpstart_rep(PK_WARPSTART_REP *rep)
 
 	gTimer::GetIF()->frameStart(WARPTICK, WARPFRAME + 1);
 	m_warp = WARP_DISAPPEAR;
-	m_warpDY = WARPDIST;
 	m_warpCharIdx = pc->GetGPIndex(rep->szID);
 }
 
@@ -1142,7 +1137,6 @@ void gGameCore::pk_warpliststart_rep(PK_WARPLISTSTART_REP* rep)
 	}
 
 	m_bWarpingList = true;
-	m_warpDY = WARPDIST;
 	m_warplist = WARPLIST_DISAPPEAR;
 	gTimer::GetIF()->frameStart(WARPTICK, WARPFRAME + 1);
 }

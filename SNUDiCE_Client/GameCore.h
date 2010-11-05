@@ -81,8 +81,6 @@ private:
 	WARPLIST	m_warplist;
 	int			m_warplistDest[ROOMMAXPLAYER];
 
-	int			m_warpDY;
-	
 
 public:
 

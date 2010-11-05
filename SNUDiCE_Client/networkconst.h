@@ -574,11 +574,10 @@ struct PK_ITEMUSESTART_ASK
 };
 
 
-
 struct PK_WARPSTART_REP
 {
-	char  szID[IDLENGTH];  // 움직이는 넘.
-	int   nDest;    // 도착 좌표
+	char		szID[IDLENGTH];  // 움직이는 넘.
+	int			nDest;    // 도착 좌표
 };
 
 struct PK_WARPEND_ASK
