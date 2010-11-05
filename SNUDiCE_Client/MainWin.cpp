@@ -22,6 +22,8 @@
 #include "resource.h"
 #include "SoundFiles.h"
 
+#define SOUND_ON 1
+
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 static gMainWin	s_MainWin;		// for singleton

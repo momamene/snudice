@@ -330,10 +330,11 @@ void gLoginCore::pk_login_rep(PK_LOGIN_REP *rep)
 			break;
 		case ELE_SUCCESS:
 			gMainWin::GetIF()->m_eCoreMode = ECM_BATTLENET;
+			ClearEdit();
+
 			SetFocus(gMainWin::GetIF()->m_hWnd);
 			gChat::GetIF()->m_bShow = true;
 			gPlayerContainer::GetIF()->SetMyPlayer(rep);
-			ClearEdit();
 
 			gUtil::DebugMsg("login success\n");
 			break;
@@ -365,6 +366,4 @@ void gLoginCore::ClearEdit()
 {
 	m_EditID.Clear();
 	m_EditPW.Clear();
-
-	m_EditID.SetFocusOn();
 }

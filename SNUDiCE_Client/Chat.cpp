@@ -3,7 +3,9 @@
 #include "Server.h"
 #include "Util.h"
 #include "Mouse.h"
+#include <string>
 
+using namespace std;
 static gChat s_Chat;
 
 gChat *gChat::GetIF()
@@ -134,6 +136,31 @@ void gChat::DrawMsg()
 	gUtil::EndText();
 }
 
+int ParseStr(const char *szMsg, char *opID, char *opMsg) 
+{
+	int i=1, c=0, len=strlen(szMsg);
+	string cmd, ID;
+	
+	cmd.clear(); ID.clear();
+	while(szMsg[i]!=' ' && i<len) cmd=cmd + szMsg[i++];
+	if(szMsg[i]!=' ') return 1;
+
+	if(cmd=="w") {
+		i++;
+		while(szMsg[i]!=' ' && i<len) ID=ID + szMsg[i++];
+		if(szMsg[i]!=' ') return 2;
+			
+		strcpy(opMsg, szMsg+i+1);
+		strcpy(opID, ID.c_str());
+
+		return 0;
+	}
+	else {
+		return 1;
+	}
+	return 0;
+}
+
 void gChat::AddStr(char* szID, char* szMsg)
 {
 	m_nCur++;
@@ -177,10 +204,34 @@ void gChat::SendMsg()
 
 	myplayer = &gPlayerContainer::GetIF()->m_MyPlayer;
 
-	strcpy(ask.szID, myplayer->szID);
-	strcpy(ask.szMsg, m_Edit.m_szEdit);
+	if(m_Edit.m_szEdit[0] == '/')
+	{
+		int		code;
+		char	opID[IDLENGTH], opMsg[MSGLENGTH];
 
-	gServer::GetIF()->Send(PL_MESSAGE_ASK, sizeof(ask), &ask);
+		code = ParseStr(m_Edit.m_szEdit, opID, opMsg);
+		if(code != 0)
+		{
+			//잘못된 명령어 처리
+			//code1: command 잘못
+			//code2: 인자 부족(Message를 입력하시오)
+		}
+		else 
+		{
+			PK_WHISPER_ASK	ask_w;
+
+			strcpy(ask_w.szToID, opID);
+			strcpy(ask_w.szFromID, myplayer->szID);
+			strcpy(ask_w.szComment, opMsg);
+			gServer::GetIF()->Send(PL_WHISPER_ASK, sizeof(ask_w), &ask_w);
+		}
+	}
+	else
+	{
+		strcpy(ask.szID, myplayer->szID);
+		strcpy(ask.szMsg, m_Edit.m_szEdit);
+		gServer::GetIF()->Send(PL_MESSAGE_ASK, sizeof(ask), &ask);
+	}
 
 	MsgClear();
 }

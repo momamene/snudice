@@ -99,7 +99,7 @@ void gBattleNetCore::MainLoop()
 	}
 	else if(gMainWin::GetIF()->m_Keys[VK_ESCAPE])
 	{
-		gTopUI::GetIF()->OnLButtonDown_Back();
+		//gTopUI::GetIF()->OnLButtonDown_Back();
 		gMainWin::GetIF()->m_Keys[VK_ESCAPE] = false;
 		return;
 	}

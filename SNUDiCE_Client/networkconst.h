@@ -12,8 +12,8 @@
 #define WM_SOCKET				WM_USER + 1
 
 #define	WINSOCK_VERSION_2_2		MAKEWORD(2, 2)
-//#define SERVER_IP				"211.169.219.88"		// 현탁
-#define SERVER_IP				"211.169.219.71"		// 상우
+#define SERVER_IP				"211.169.219.88"		// 현탁
+//#define SERVER_IP				"211.169.219.71"		// 상우
 #define SERVER_PORT				9000
 #define BUFFERSIZE				2048
 
@@ -98,6 +98,9 @@ enum ePROTOCOL
 	PL_EXIT_REP,			// 게임중 강제종료 처리
 
 	PL_GOLOGIN_ASK,
+
+	//Whisper
+	PL_WHISPER_ASK,
 };
 
 enum eCOREMODE
@@ -617,4 +620,12 @@ struct PK_EXIT_REP
 {
 	char		szID[IDLENGTH];
 	int			flag;							//남은 사람 수 //아직까지는 그닥 있어야 할 이유는 없다.
+};
+
+//WHISPER 구현
+struct PK_WHISPER_ASK
+{
+	char		szToID[IDLENGTH];
+	char		szFromID[IDLENGTH];
+	char		szComment[MSGLENGTH];
 };
