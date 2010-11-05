@@ -12,7 +12,7 @@
 #include <time.h>
 
 
-#define ENDROUND	1
+#define ENDROUND	100
 
 static gGamePlayerContainer s_GamePlayerContainer;
 
@@ -209,6 +209,10 @@ void gGamePlayerContainer::debuger_move(int nDis,char* szID) {
 
 	int nRoomIndex = gPCt->GetCoreFlag(szID);
 	int nInRoomIndex = gRC->FindPlayerIndexInTheRoom(szID,nRoomIndex);
+	
+	if(nInRoomIndex != m_nTurn[nRoomIndex]) return;
+	//디버그 명령어 보낼 때, 해당 turn이 아닌 넘이 보내면 무시할 것.
+
 
 	int des = gTCt->destination(m_GamePlayer[nRoomIndex][nInRoomIndex].nPos,nDis);
 	movePlayer(nRoomIndex,nInRoomIndex,des,MPS_MOVE);
@@ -219,10 +223,18 @@ void gGamePlayerContainer::debuger_move(int nDis,char* szID) {
 
 void gGamePlayerContainer::debuger_card(int nIndex,char* szID) {
 	gPlayerContainer	*gPCt = gPlayerContainer::GetIF();
+	gRoomCore			*gRC = gRoomCore::GetIF();
 	
 	int nRoomIndex = gPCt->GetCoreFlag(szID);
+	int nInRoomIndex = gRC->FindPlayerIndexInTheRoom(szID,nRoomIndex);
+
+	if(nInRoomIndex != m_nTurn[nRoomIndex]) return;
+	//디버그 명령어 보낼 때, 해당 turn이 아닌 넘이 보내면 무시할 것.
+	if(nIndex < 0 || nIndex >= ITEMNUM ) return;
+	// 잘못된 nIndex 값
+
 	
-	getItem(nRoomIndex,m_nTurn[nRoomIndex]);
+	getItem(nRoomIndex,m_nTurn[nRoomIndex],nIndex);
 	pk_gameplayerinfo_rep(nRoomIndex);
 }
 
@@ -506,9 +518,10 @@ void gGamePlayerContainer::pk_gameplayerinfo_rep (int nRoomIndex)
 	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
 
 	PK_GAMEPLAYERINFO_REP		rep;
-	pk_subGameplayerinfo_rep(nRoomIndex,&rep);
 
 	memcpy(rep.list,m_GamePlayer[nRoomIndex],sizeof(GAMEPLAYER)*ROOMMAXPLAYER);
+
+	pk_subGameplayerinfo_rep(nRoomIndex,&rep);
 
 	gPC->SendSelect(PL_GAMEPLAYERINFO_REP,sizeof(rep),&rep,ECM_GAME,nRoomIndex);
 }
@@ -526,7 +539,7 @@ void gGamePlayerContainer::pk_subGameplayerinfo_rep(int nRoomIndex,PK_GAMEPLAYER
 			}
 		}
 		for(int j = 0 ; j < ITEMNUM ; j++) {	// plusminus item
-			if(gIC->m_ItemList[j].nLang + gIC->m_ItemList[j].nMath + gIC->m_ItemList[j].nArt > 0
+			if((gIC->m_ItemList[j].nLang != 0 || gIC->m_ItemList[j].nMath != 0 || gIC->m_ItemList[j].nArt != 0)
 				&& m_ItemCoolTime[nRoomIndex][i][j] > 0) {
 				rep->list[i].nLang += gIC->m_ItemList[j].nLang;
 				rep->list[i].nMath += gIC->m_ItemList[j].nMath;
@@ -726,12 +739,13 @@ void gGamePlayerContainer::NextTurn(int nRoomIndex)
 /// 카드 private 아이템 함수
 //////////////////////////////////////////////////////////////////////////
 
-void gGamePlayerContainer::getItem(int nRoomIndex,int nInRoomIndex)
+void gGamePlayerContainer::getItem(int nRoomIndex,int nInRoomIndex,int nItemID)
 {
 	for(int i = 0 ; i < MAXITEMNUM ; i++)
 	{
 		if(m_GamePlayer[nRoomIndex][nInRoomIndex].nItem[i] == -1) {
-			m_GamePlayer[nRoomIndex][nInRoomIndex].nItem[i] = rand()%20;
+			if (nItemID >= 0) m_GamePlayer[nRoomIndex][nInRoomIndex].nItem[i] = nItemID;
+			else m_GamePlayer[nRoomIndex][nInRoomIndex].nItem[i] = rand()%20;
 			break;
 		}
 	}
@@ -844,12 +858,13 @@ void gGamePlayerContainer::pk_itemuse_ask(PK_DEFAULT *pk,SOCKET sock)
 	OutputDebugString(buf);
 
 	PK_ITEMUSE_REP		rep;
+	memset(&rep,0,sizeof(rep));
 
 	int nRoomIndex = gPCt->GetCoreFlag(ask.szID);
 //	int nInRoomIndex = gRC->FindPlayerIndexInTheRoom(ask.szID,nRoomIndex);	
 
 	PushbSynAllPlayer(nRoomIndex,false);
-
+ 
 	strcpy(rep.szUser,ask.szID); // 이게 맞겠지?
 	rep.nItemID = ask.nItemID;
 	strcpy(rep.szTarget,ask.szTarget);
@@ -891,6 +906,8 @@ void gGamePlayerContainer::pk_itemusestart_ask(PK_DEFAULT *pk,SOCKET sock)
 
 		//rep.result = ITEMUSE_SUCCESS;
 		ItemUseState iuState = itemUse(ask,nRoomIndex,nInRoomIndex,ask.nItemID);
+		pk_gameplayerinfo_rep(nRoomIndex);
+
 		
 		//if(rep.result == ITEMUSE_ERROR){
 	
@@ -1010,7 +1027,7 @@ ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, 
 			OutputDebugString("type : ITEM_NOCLASS\n");
 			switch(gIC->m_ItemList[ask.nItemID].target) {
 				case TARGET_OTHER:
-					m_ItemCoolTime[nRoomIndex][nInRoomIndex][ask.nItemID] = 99;
+					m_ItemCoolTime[nRoomIndex][gRC->FindPlayerIndexInTheRoom(ask.szTarget,nRoomIndex)][ask.nItemID] = 99;
 					break;
 			}
 			return IUS_NEXTTURN;
@@ -1037,9 +1054,10 @@ ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, 
 				case TARGET_OTHER:
 //					bool barrInRoomIndex[ROOMMAXPLAYER];
 //					putTargetTrueForOther(nRoomIndex,nInRoomIndex,barrInRoomIndex,TARGET_OTHER);
-					int narrDes[ROOMMAXPLAYER];
-					putTargetIntForOther(nRoomIndex,nInRoomIndex,narrDes,TARGET_OTHER,gIC->m_ItemList[ask.nItemID].nPos);
-					pk_warpliststart_rep(nRoomIndex,m_isGamePlayer[nRoomIndex],narrDes);
+//					int narrDes[ROOMMAXPLAYER];
+//					putTargetIntForOther(nRoomIndex,nInRoomIndex,narrDes,TARGET_OTHER,gIC->m_ItemList[ask.nItemID].nPos);
+//					pk_warpliststart_rep(nRoomIndex,m_isGamePlayer[nRoomIndex],narrDes);
+					pk_warpstart_rep(nRoomIndex,gRC->FindPlayerIndexInTheRoom(ask.szTarget,nRoomIndex),gIC->m_ItemList[ask.nItemID].nPos);
 					break;
 			}
 			return IUS_NONE;
@@ -1228,40 +1246,47 @@ void gGamePlayerContainer::pk_warplistend_ask (PK_DEFAULT *pk, SOCKET sock)
 void gGamePlayerContainer::pk_infochangeFirst_rep(PK_ITEMUSE_ASK ask)
 {
 	OutputDebugString("pk_infochangeFirst_rep(f) \n");
-	gPlayerContainer	*gPC =	gPlayerContainer::GetIF();
-	gRoomCore			*gRC =	gRoomCore::GetIF();
-	gItemContainer		*gICt = gItemContainer::GetIF();
+	gPlayerContainer	*gPC	=	gPlayerContainer::GetIF();
+	gRoomCore			*gRC	=	gRoomCore::GetIF();
+	gItemContainer		*gICt	= gItemContainer::GetIF();
+	gCharinfo			*gCi	= gCharinfo::GetIF();
 
 	PK_INFOCHANGE_REP rep;
 	memset(&rep,0,sizeof(PK_INFOCHANGE_REP));
 
 	int nRoomIndex = gPC->GetCoreFlag(ask.szID);
 	int nInRoomIndex = gRC->FindPlayerIndexInTheRoom(ask.szID,nRoomIndex);
+	int nTarget = gRC->FindPlayerIndexInTheRoom(ask.szTarget,nRoomIndex);
 
 	if(gICt->m_ItemList[ask.nItemID].type == ITEM_STAT) {
 		switch (gICt->m_ItemList[ask.nItemID].target) {
 		case TARGET_ME:
-			rep.info[nInRoomIndex].nArt = gICt->m_ItemList[ask.nItemID].nArt;
-			rep.info[nInRoomIndex].nLang = gICt->m_ItemList[ask.nItemID].nLang;
-			rep.info[nInRoomIndex].nMath = gICt->m_ItemList[ask.nItemID].nMath;
+			if(gICt->m_ItemList[ask.nItemID].nMulti == 0) {	// 이 부분이 전부분 확장되어야 함
+				rep.info[nInRoomIndex].nArt = gICt->m_ItemList[ask.nItemID].nArt;
+				rep.info[nInRoomIndex].nLang = gICt->m_ItemList[ask.nItemID].nLang;
+				rep.info[nInRoomIndex].nMath = gICt->m_ItemList[ask.nItemID].nMath;
+			}
+			else {
+				CLASSTYPE cType = m_GamePlayer[nRoomIndex][nInRoomIndex].ctype;
+				int nMulti = gICt->m_ItemList[ask.nItemID].nMulti;
+				rep.info[nInRoomIndex].nArt = gCi->m_CharInfo[cType].nArt * (nMulti - 1);
+				rep.info[nInRoomIndex].nLang = gCi->m_CharInfo[cType].nLang * (nMulti - 1);
+				rep.info[nInRoomIndex].nMath = gCi->m_CharInfo[cType].nMath * (nMulti - 1);
+			}
 			strcpy(rep.info[nInRoomIndex].szID,ask.szID);
 			break;
 
 		case TARGET_OTHER:
-			for(int i = 0 ; i < ROOMMAXPLAYER ; i++) {
-				if(m_isGamePlayer[nRoomIndex][i]) {
-					rep.info[i].nArt = gICt->m_ItemList[ask.nItemID].nArt;
-					rep.info[i].nLang = gICt->m_ItemList[ask.nItemID].nLang;
-					rep.info[i].nMath = gICt->m_ItemList[ask.nItemID].nMath;
-					strcpy(rep.info[i].szID,m_GamePlayer[nRoomIndex][i].szID);
-				}
-			}
+			rep.info[nTarget].nArt = gICt->m_ItemList[ask.nItemID].nArt;
+			rep.info[nTarget].nLang = gICt->m_ItemList[ask.nItemID].nLang;
+			rep.info[nTarget].nMath = gICt->m_ItemList[ask.nItemID].nMath;
+			strcpy(rep.info[nTarget].szID,m_GamePlayer[nRoomIndex][nTarget].szID);
 			break;
-
+			
 		case TARGET_MEOTHER:
 			for(int i = 0 ; i < ROOMMAXPLAYER ; i++) {
 				if(i == nInRoomIndex || 
-					i == gRC->FindPlayerIndexInTheRoom(ask.szTarget,nRoomIndex)) {
+					i == nTarget) {
 					rep.info[i].nArt = gICt->m_ItemList[ask.nItemID].nArt;
 					rep.info[i].nLang = gICt->m_ItemList[ask.nItemID].nLang;
 					rep.info[i].nMath = gICt->m_ItemList[ask.nItemID].nMath;
@@ -1284,10 +1309,46 @@ void gGamePlayerContainer::pk_infochangeFirst_rep(PK_ITEMUSE_ASK ask)
 
 		}
 	}
+	else if(gICt->m_ItemList[ask.nItemID].type == ITEM_STAMINA) {
+		switch (gICt->m_ItemList[ask.nItemID].target) {
+		case TARGET_ME:
+			rep.info[nInRoomIndex].nStamina = gICt->m_ItemList[ask.nItemID].nStamina;
+			strcpy(rep.info[nInRoomIndex].szID,ask.szID);
+			break;
+
+		case TARGET_OTHER:
+			
+			rep.info[nTarget].nStamina = gICt->m_ItemList[ask.nItemID].nStamina;
+			strcpy(rep.info[nTarget].szID,m_GamePlayer[nRoomIndex][nTarget].szID);
+			break;
+
+		case TARGET_MEOTHER:
+			for(int i = 0 ; i < ROOMMAXPLAYER ; i++) {
+				if(i == nInRoomIndex || 
+					i == gRC->FindPlayerIndexInTheRoom(ask.szTarget,nRoomIndex)) {
+						rep.info[i].nStamina = gICt->m_ItemList[ask.nItemID].nStamina;
+						strcpy(rep.info[i].szID,m_GamePlayer[nRoomIndex][i].szID);
+				}
+			}
+			break;
+
+		case TARGET_ALLEXCEPTME:
+			for(int i = 0 ; i < ROOMMAXPLAYER ; i++)
+			{
+				if(m_isGamePlayer[nRoomIndex][i] && i != nInRoomIndex) {
+					rep.info[i].nStamina = gICt->m_ItemList[ask.nItemID].nStamina;
+					strcpy(rep.info[i].szID,m_GamePlayer[nRoomIndex][i].szID);
+				}
+			}
+			break;
+		}
+	}
 
 	PushbSynAllPlayer(nRoomIndex,false);
 	
 	gPC->SendSelect(PL_INFOCHANGE_REP,sizeof(rep),&rep,ECM_GAME,nRoomIndex);
+
+	pk_gameplayerinfo_rep(nRoomIndex);
 
 }
 
@@ -1460,3 +1521,4 @@ void gGamePlayerContainer::pk_gologin_ask(PK_DEFAULT *pk,SOCKET sock)
 
 
 }
+

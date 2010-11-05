@@ -309,6 +309,9 @@ void gMainWin::Recv(PK_DEFAULT *pk, SOCKET sock)
 		case PL_WARPLISTEND_ASK:
 			gGamePlayerContainer::GetIF()->pk_warplistend_ask(pk,sock);
 			break;
+		//¼öÁ¤
+		case PL_GOLOGIN_ASK :
+			gGamePlayerContainer::GetIF()->pk_gologin_ask(pk,sock);
 	}
 }
 

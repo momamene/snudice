@@ -413,3 +413,89 @@ server : 5 14 , client : 13 16 player : test2 etc : 0 0
 
 
 		p"stat에 multi가 적용되지 않음
+
+------ 배교파 (11월 2일) ----
+
+상우 : 아이템 관련 버그
+
+	 1. 아이템 사용 -> 바로 사라지지 않는다.
+//	 => 아이템 사용하면, 서버는 PK_ITEMUSE_REP 를 쏜다.
+//	 쟤 쏘면서 PK_GAMEPLAYERINFO_REP 쏴 줄 것.
+
+	 2. debug 관련
+//	 => /card n,    명령어의 경우 index n의 카드가 오지 않고, 랜덤으로 이상하게 온다.
+
+//	 => 디버그 명령어 보낼 때, 해당 turn이 아닌 넘이 보내면 무시할 것.
+// 해결
+/*
+	 network.h
+ struct GAMEPLAYER
+
+	 에서 BYTE로 되어있는 정보 있던것들 int로 바꿨음.
+	 왜냐하면 BYTE가 unsinged int 처럼 쓰여서 음수 쓸수가없어서......
+	 => 니꺼 소스도 걍 바꿔놨음. 알고만 있으면 될듯. 고칠 거 없이.
+*/
+
+	 =========== 플레이어 2명일 때 테스트 ===========
+	 card 00 - 커닝페이퍼
+//	 PK_INFOCHANGE_REP 에서 id값만 오고, nLang이런것들이 0으로 온다.
+   -  임시방편 문제 : 모든 케이스를 생각하고 만든게 아니다!
+   -  nMulti 가 사용되는 경우 TARGET_ME 에서만 유효하다!
+   
+   -  근본적 문제 : 아이템을 중복 사용하는 경우를 생각하지 않았다.
+   - 예컨대, 커닝페이퍼를 두 번 사용할 수 없는데, 능력치는 뭔가 증가되는 것으로 나온다.
+
+	pk_gameplayerinfo_rep 문제 학습. 수리. 예체능 능력이 아이템에 의해 갱신되지 않는다.
+
+
+	 card 03 - 대중예술의 이해 책
+	 card 04 - 중앙도서관
+	 /*
+	 PK_INFOCHANGE_REP는 잘 옴.
+	 그런데, PK_INFOCHANGE_REP만 오고, PK_GAMEPLAYERINFO_REP가 오지 않음.
+	해결. pk_gameplayerinfo_rep가 안 온게 아니라. 정보를 안보내고 있던 것. 오류 수정.
+	 */
+ 
+
+	 card 07 - 잘자라 우리 아가
+	 ex) test1 이  test2에게 사용.
+	 그런데, PK_INFOCHANGE_REP 에는 test2만 와야되는데, test1, test2 다옴.
+
+	 card 08 - 아이폰
+	 ex) test1 이  test2에게 사용.
+	 그런데, PK_INFOCHANGE_REP 에는 test2만 와야되는데, test1, test2 다옴.
+
+	 card 12 - 옳지 않은 소개팅
+	 card 14 - 박카스
+/*
+	 PK_INFOCHANGE_REP가 전부 0으로 옴.
+*/
+/*
+	 @ PK_INFOCHANGE_REP는 화면에  + 3 이렇게 띄워주는 데 쓰이는 거.
+	 @ 실제 정보 변동은 PK_GAMEPLAYERINFO_REP 로 이루어짐..
+
+	 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+	 아직 이정도밖에 못했음.....
+	 해결하고 보고바람. 클라이언트 문제일수도있으니, 서버가 잘못되지 않았으면
+	 말해줘(아마 아닐듯.. 디버그로 계속 체크하면서 했으니).
+	 하고 말해줘.
+
+	 클라이언트 update받고 작업할것.
+*/
+	 card 17 -
+	 뻑남. pk_itemuse_ask 에서 rep가 corrupted 되었다고 한다.
+	 strcpy(rep.szTarget,ask.szTarget) 을 주석처리하면, server에서는 어떻게 넘어가는데,
+	 client에서 여전히 뻑난다.
+
+	 card 18 - 
+	 잘 됨
+	 card 19 -
+	 뻑남.
+
+//	 [문제1] TARGET_OTHER 문제
+//	 => itemUse 부분
+//	 => pk_infochangeFirst_rep
+//	 [문제2] ITEM_STAMINA case
+	 [문제3] 비범용성
+	 [문제4] 중복 사용의 문제
+	 (둘 다 현실의 문제는 아님)

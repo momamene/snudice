@@ -12,13 +12,14 @@
 #define WM_SOCKET				WM_USER + 1
 
 #define	WINSOCK_VERSION_2_2		MAKEWORD(2, 2)
-#define SERVER_IP				"211.169.219.88"
+#define SERVER_IP				"211.169.219.88"		// 현탁
+//#define SERVER_IP				"211.169.219.71"		// 상우
 #define SERVER_PORT				9000
 #define BUFFERSIZE				2048
 
 #define PK_HEADER_SIZE			4
 
-#define SNUDICE_VERSION			"0.5002"
+#define SNUDICE_VERSION			"0.5084"
 
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 //	통신 프로토콜
@@ -43,9 +44,6 @@ enum ePROTOCOL
 
 	PL_ROOMJOIN_ASK,
 	PL_ROOMJOIN_REP,
-
-	PL_ROOMBACK_ASK,	//수정사항
-	PL_ROOMBACK_REP,
 
 	PL_ROOMREFRESH_REP,
 
@@ -82,17 +80,24 @@ enum ePROTOCOL
 	PL_ITEMUSE_ASK,
 	PL_ITEMUSE_REP,
 
-	PL_WARPSTART_ASK,		// 한명 워프.
-	PL_WARPSTART_REP,
+	PL_ITEMUSESTART_ASK,
+
+	PL_WARPSTART_REP,		// 유저 하나.
 	PL_WARPEND_ASK,
 
 	PL_WARPLISTSTART_REP,	// 유저 여러명 워프시킬떄
 	PL_WARPLISTEND_ASK,
 
-	PL_EXIT_REP,//게임중강제종료시처리수정
+	PL_INFOCHANGE_REP,		// 아이템 사용 -> 캐릭터 스탯같은 수치 변화 표시
+
+	PL_INFOCHANGEEND_ASK,
+
+	PL_ROOMBACK_ASK,		// 게임끝 -> 방으로
+	PL_ROOMBACK_REP,		//
+
+	PL_EXIT_REP,			// 게임중 강제종료 처리
 
 	PL_GOLOGIN_ASK,
-
 };
 
 enum eCOREMODE
@@ -250,7 +255,6 @@ struct PK_CHANNELCHANGE_REP
 {
 	CH_CHANGE_ERROR	error;
 	CHANNEL			channel;
-
 };
 
 #define MAXROOMFORPAGE		8								// 한 페이지에 표시될 수 있는 방 개수
@@ -327,16 +331,18 @@ struct PK_ROOMJOIN_REP
 	PLAYER				playerlist[ROOMMAXPLAYER];
 };
 
-//수정사항
+
+//방나가고돌아오기수정
+
 struct PK_ROOMBACK_ASK
 {
-	char		szID[IDLENGTH];
+	char		szID[IDLENGTH];	
 };
 
 struct PK_ROOMBACK_REP
 {
-	ROOM	room;
-	PLAYER	playerlist[ROOMMAXPLAYER];
+	ROOM		room;
+	PLAYER				playerlist[ROOMMAXPLAYER];
 };
 
 
@@ -416,11 +422,11 @@ struct GAMEPLAYER
 	// 게임정보
 	CLASSTYPE	ctype;
 
-	BYTE		nLang;
-	BYTE		nMath;
-	BYTE		nArt;
-	BYTE		nStamina, nMaxStamina;
-	BYTE		nDice4, nDice6;
+	int			nLang;
+	int			nMath;
+	int			nArt;
+	int			nStamina, nMaxStamina;
+	int			nDice4, nDice6;
 
 	float		fGrade[MAXSUBJECT];
 	float		fAvGrade;
@@ -494,7 +500,7 @@ struct PK_GAMEPLAYERINFO_REP
 	GAMEPLAYER	list[ROOMMAXPLAYER];
 };
 
-struct PK_POPINFO_REP
+typedef struct
 {
 	char		szID[IDLENGTH];
 	int			nLang;
@@ -502,7 +508,9 @@ struct PK_POPINFO_REP
 	int			nArt;
 	int			nStamina;
 	int			nGrade;				// 성취도. 학점이 아님
-};
+}
+
+PK_POPINFO_REP, CHANGEINFO;
 
 struct PK_GAMEEND_REP
 {
@@ -539,41 +547,38 @@ struct ITEMCARD
 	int			nArt;			//
 	int			nMove;			// 얜 지금 안쓸거야
 	int			nStamina;		// ITEM_STAMINA
-	int			nMulti;			// ITEM_STAT
+	int			nMulti;			// ITEM_STAT		*
 	int			nExistTurn;		// 지속 턴
 	int			nPos;			// ITEM_MOVEPLACE
 };
 
 struct PK_ITEMUSE_ASK
 {
-	char  szID[IDLENGTH];   // 사용자
-	char  szTarget[IDLENGTH];  // 대상
-	int   nItemID;
-	int   nPos;     // move일 때 추가
-};
-
-enum ITEMREPRESULT
-{
-	ITEMUSE_SUCCESS,
-	ITEMUSE_MOVESELECT,
-	ITEMUSE_ERROR,
+	char		szID[IDLENGTH];			// 사용자
+	char		szTarget[IDLENGTH];		// 대상
+	int			nItemID;
+	int			nStartPos;				// move일 때
+	int			nDestPos;				// move일 때
 };
 
 struct PK_ITEMUSE_REP
 {
-	ITEMREPRESULT	result;
+	char		szUser[IDLENGTH];		// 사용자
+	char		szTarget[IDLENGTH];		// 대상
+	int			nItemID;
 };
 
-
-struct PK_WARPSTART_ASK
+struct PK_ITEMUSESTART_ASK
 {
 	char		szID[IDLENGTH];
-	int			nCurPos;			// 출발 좌표
 };
+
+
 
 struct PK_WARPSTART_REP
 {
-	int			nDist;
+	char  szID[IDLENGTH];  // 움직이는 넘.
+	int   nDest;    // 도착 좌표
 };
 
 struct PK_WARPEND_ASK
@@ -589,17 +594,28 @@ struct PK_WARPLISTSTART_REP
 
 struct PK_WARPLISTEND_ASK
 {
+	char		szID[IDLENGTH];
 	int			nDestPos[ROOMMAXPLAYER];		// 해당사항 없는 놈은 -1로 채워서 보냄
 };
 
+struct PK_INFOCHANGE_REP
+{
+	CHANGEINFO	info[ROOMMAXPLAYER];			// 해당 없는 놈 memset(info , 0)
+};
 
-struct PK_EXIT_REP
+struct PK_INFOCHANGEEND_ASK
 {
 	char		szID[IDLENGTH];
-	int			flag;	//남은 사람 수 //아직까지는 그닥 있어야 할 이유는 없다.
 };
+
 
 struct PK_GOLOGIN_ASK
 {
 	char		szID[IDLENGTH];
+};
+
+struct PK_EXIT_REP
+{
+	char		szID[IDLENGTH];
+	int			flag;							//남은 사람 수 //아직까지는 그닥 있어야 할 이유는 없다.
 };
