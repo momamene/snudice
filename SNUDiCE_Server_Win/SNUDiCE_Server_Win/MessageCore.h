@@ -12,5 +12,7 @@ public:
 	void			Release();
 
 	void			pk_message_ask(PK_DEFAULT *pk, SOCKET sock);
+	void			pk_whisper_ask(PK_DEFAULT *pk, SOCKET sock);
+
 	void			debuger(char* str,char* szID);
 };

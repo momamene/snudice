@@ -312,6 +312,10 @@ void gMainWin::Recv(PK_DEFAULT *pk, SOCKET sock)
 		//¼öÁ¤
 		case PL_GOLOGIN_ASK :
 			gGamePlayerContainer::GetIF()->pk_gologin_ask(pk,sock);
+		case PL_WHISPER_ASK:
+			gMessageCore::GetIF()->pk_whisper_ask(pk, sock);
+			break;
+			
 	}
 }
 
