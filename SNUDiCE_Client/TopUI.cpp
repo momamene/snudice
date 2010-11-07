@@ -85,7 +85,6 @@ bool gTopUI::Restore()
 
 void gTopUI::OnLButtonDown(int x, int y)
 {
-
 	if(m_Btn[TOP_BACK].PointInButton(x, y))
 	{
 		OnLButtonDown_Back();

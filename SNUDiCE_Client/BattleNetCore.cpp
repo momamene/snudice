@@ -8,6 +8,38 @@
 #include "stringconst.h"
 #include "TopUI.h"
 
+
+#define	BNET_FILE_ROOMMAKE			".\\Data\\BattleNet\\btn_roommake.img"
+#define BNET_BTN_SIZE_ROOMMAKEW		124
+#define BNET_BTN_SIZE_ROOMMAKEH		97
+#define BNET_BTN_POS_ROOMMAKEX		38
+#define BNET_BTN_POS_ROOMMAKEY		133
+
+#define	BNET_FILE_ROOMJOIN			".\\Data\\BattleNet\\btn_roomjoin.img"
+#define BNET_BTN_SIZE_ROOMJOINW		140
+#define BNET_BTN_SIZE_ROOMJOINH		112
+#define BNET_BTN_POS_ROOMJOINX		288
+#define BNET_BTN_POS_ROOMJOINY		127
+
+#define BNET_FILE_DEVEL				".\\Data\\BattleNet\\btn_developer.img"
+#define BNET_BTN_SIZE_DEVEL_W		68
+#define BNET_BTN_SIZE_DEVEL_H		74
+#define BNET_BTN_POS_DEVEL_X		208
+#define BNET_BTN_POS_DEVEL_Y		68
+
+#define BNET_FILE_OUT				".\\Data\\BattleNet\\btn_out.img"
+#define BNET_BTN_SIZE_OUT_W			104
+#define BNET_BTN_SIZE_OUT_H			91
+#define BNET_BTN_POS_OUT_X			193
+#define BNET_BTN_POS_OUT_Y			265
+
+#define BNET_FILE_OUTLINE			".\\Data\\BattleNet\\outline.img"
+#define BNET_POS_OUTLINE_X			0
+#define BNET_POS_OUTLINE_Y			60
+#define BNET_POS_OUTLINE_W			480
+#define BNET_POS_OUTLINE_H			300
+
+
 static gBattleNetCore	s_BattleNetCore;
 
 gBattleNetCore *gBattleNetCore::GetIF()
@@ -57,6 +89,14 @@ bool gBattleNetCore::SetUp()
 		BNET_BTN_POS_DEVEL_X + BNET_BTN_SIZE_DEVEL_W,
 		BNET_BTN_POS_DEVEL_Y + BNET_BTN_SIZE_DEVEL_H );
 	if(!m_ImgBtn[BBTN_DEVELOPER].SetUp(BNET_FILE_DEVEL, false, rcDest))
+		return false;
+
+	SetRect(&rcDest,
+		BNET_BTN_POS_OUT_X,
+		BNET_BTN_POS_OUT_Y,
+		BNET_BTN_POS_OUT_X + BNET_BTN_SIZE_OUT_W,
+		BNET_BTN_POS_OUT_Y + BNET_BTN_SIZE_OUT_H );
+	if(!m_ImgBtn[BBTN_OUT].SetUp(BNET_FILE_OUT, false, rcDest))
 		return false;
 
 	if(!m_ImgOutline.Load(BNET_FILE_OUTLINE))
@@ -180,6 +220,18 @@ void gBattleNetCore::OnLButtonDown()
 		m_ImgBtn[BBTN_ROOMJOIN].m_eBtnMode	= EBM_NONE;
 		gMainWin::GetIF()->m_eCoreMode	= ECM_ROOMJOIN;
 		gRoomCore::GetIF()->m_eRoom		= ERM_JOIN;
+		return;
+	}
+	else if(m_ImgBtn[BBTN_OUT].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+	{
+		PK_GOLOGIN_ASK		ask;
+
+		strcpy(ask.szID, gPlayerContainer::GetIF()->m_MyPlayer.szID);
+		gServer::GetIF()->Send(PL_GOLOGIN_ASK, sizeof(ask), &ask);
+
+		chat->MsgStackClear();
+		gMainWin::GetIF()->m_eCoreMode = ECM_LOGIN;		
+
 		return;
 	}
 }

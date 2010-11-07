@@ -204,8 +204,11 @@ void gChat::SendMsg()
 
 	myplayer = &gPlayerContainer::GetIF()->m_MyPlayer;
 
+
+#ifdef DEF_WHISPER
 	if(m_Edit.m_szEdit[0] == '/')
 	{
+		// debug ¸í·É¾î
 		int		code;
 		char	opID[IDLENGTH], opMsg[MSGLENGTH];
 
@@ -232,7 +235,11 @@ void gChat::SendMsg()
 		strcpy(ask.szMsg, m_Edit.m_szEdit);
 		gServer::GetIF()->Send(PL_MESSAGE_ASK, sizeof(ask), &ask);
 	}
-
+#else
+	strcpy(ask.szID, myplayer->szID);
+	strcpy(ask.szMsg, m_Edit.m_szEdit);
+	gServer::GetIF()->Send(PL_MESSAGE_ASK, sizeof(ask), &ask);
+#endif
 	MsgClear();
 }
 

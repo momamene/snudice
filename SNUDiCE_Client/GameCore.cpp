@@ -29,7 +29,7 @@
 #define BUSBOARDTICK			500 * 3
 #define BUSMOVELENGTH			160
 
-#define MAPSCROLLSPEED			7 // 마우스로 화면 스크롤 속도
+#define MAPSCROLLSPEED			10 // 마우스로 화면 스크롤 속도
 #define MAPSCROLLTICK			50
 
 #define WARPTICK				500 * 3
