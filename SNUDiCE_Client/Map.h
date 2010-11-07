@@ -138,12 +138,19 @@ public:
 	// subjectIndex 는 선택된 과목 만약, 없다면 -1을 넣어주자.
 	// frameOn은 subjectIndex > 0 일 때, 1이면 깜빡이기.
 
+	void	DrawMinimap(int x0, int y0, int n);
+
 	int		viewabsToCon(POINT ij);
 	// 마우스 좌표 받아서, nPos return
 	POINT	ConToViewabs(int nPos);
 
 	int		Destination(int mapA, int spacor);
 
+	float	GetPosRateX();		// m_nabsX / mapsizew;
+	float	GetPosRateY();
+
+	void	SetPosByRateX(float ratex);			// rate기반으로 맵 위치 세팅
+	void	SetPosByRateY(float ratey);			// rate기반으로 맵 위치 세팅
 
 private:
 	// Setup의 떨거지 (subfunction)
@@ -155,5 +162,5 @@ private:
 	
 	void	DrawHexagonOne(int x0,int y0,int i,int j,int n,bool boolo,int type=0);	// 0은 기본 1은 선택된 표시
 	void	DrawHexagonSubmitOne(int x0, int y0, int i, int j, int n, int classtype, int statetype);
-
+	void	DrawHexagonMinimapOne(int x0, int y0, int i, int j, int n, int classtype, int statetype);
 };

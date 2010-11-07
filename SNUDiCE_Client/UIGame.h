@@ -21,9 +21,8 @@ enum UIIMAGE
 	UIIMG_SUBINFO,		// 아이템, 수강현황 버튼
 	UIIMG_SUBWND,		// 수강편람
 
-	UIIMG_PINFO,		// 우하단
-
-	UIIMG_NUMBER,		// 숫자 1 ~ 8 랭킹표시에쓸거
+	UIIMG_MINIMAP,		// 우하단
+	UIIMG_MINIMAPCURSOR,
 
 	UIIMG_POPINFO1,		// 말풍선 info 정보
 	UIIMG_POPINFO2,
@@ -53,6 +52,8 @@ enum UITYPE
 	UIT_MAININFO,
 	UIT_SUBINFO,		// 아이템, 수강현황 버튼
 	UIT_SUBWND,			// 수강편람
+	UIT_MINIMAPBACK,
+	UIT_MINIMAP,		// 미니맵.. back말고
 	UIT_ITEM,
 	UIT_MENU,
 	UIT_DICE,
@@ -92,15 +93,10 @@ public:
 	gImage		m_ImgUI[UIIMG_END];
 	gImgButton	m_BtnUI[UIBTN_END];
 	RECT		m_rcPos[UIT_END];
-	gScrollbar	m_Scroll;
 
 	UIMODE		m_uimode;
 	// 수강편람
 	int			m_nSubSel;					// 수강편람 누구 보고있나
-
-	// 우하단 랭킹
-	int			m_nCurPInfo;				// 우하단 pinfo, cursor
-	int			m_nMaxPInfo;
 
 	// 아이템 - target, place select 시, 선택된 아이템 정보 남겨두기
 	bool		m_bItemUsed;
@@ -137,8 +133,6 @@ public:
 	void		SetPopInfo(PK_POPINFO_REP *rep, int ms = 2000);
 
 	void		SetRankList();
-	void		FirstInit();
-
 
 	bool		SetUp();
 	void		MainLoop();

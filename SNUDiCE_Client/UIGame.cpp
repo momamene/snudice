@@ -34,7 +34,7 @@
 #define MAININFO_NAME_POS_X					15
 #define MAININFO_NAME_POS_Y					74
 #define MAININFO_PIC_POS_X					15
-#define MAININFO_PIC_POS_Y					9
+#define MAININFO_PIC_POS_Y					5
 
 #define MAININFO_FILE_BARLINE				".\\Data\\Interface\\game_bar_outline.img"
 #define MAININFO_BARLINE_SIZE_W				150
@@ -87,21 +87,6 @@
 #define SUBINFO_BTN_NEXT_POS_X				438
 #define SUBINFO_BTN_NEXT_POS_Y				220
 
-#define PINFO_FILE_BACK						".\\Data\\Interface\\game_pinfo_back.img"
-#define PINFO_SIZE_W						160
-#define PINFO_SIZE_H						120
-#define PINFO_POS_X							480
-#define PINFO_POS_Y							360
-#define PINFO_INFO_POS_X					495
-#define PINFO_INFO_POS_Y					378
-#define PINFO_INFO_TERM_Y					42
-#define PINFO_SCROLL_FILE					".\\Data\\Interface\\game_pinfo_scroll.img"
-#define PINFO_SCROLL_POS_X					620
-#define PINFO_SCROLL_POS_Y					370
-#define PINFO_SCROLL_SIZE_H					100
-#define PINFO_ID_TERM_X						20
-#define PINFO_ID_TERM_Y						3
-
 #define DICEBTN_FILE						".\\Data\\Interface\\game_btn_dice.img"
 #define DICEBTN_SIZE_W						100
 #define DICEBTN_SIZE_H						101
@@ -113,6 +98,20 @@
 #define MENUBTN_SIZE_H						30
 #define MENUBTN_POS_X						(WNDSIZEW - MENUBTN_SIZE_W)
 #define MENUBTN_POS_Y						0
+
+#define MINIMAP_BACK_FILE					".\\Data\\Interface\\game_minimap.img"
+#define MINIMAP_BACK_POS_X					480
+#define MINIMAP_BACK_POS_Y					360
+#define MINIMAP_BACK_SIZE_W					200
+#define MINIMAP_BACK_SIZE_H					120
+#define MINIMAP_START_X						(MINIMAP_BACK_POS_X + 9)
+#define MINIMAP_START_Y						(MINIMAP_BACK_POS_Y + 8)
+#define MINIMAP_SOLUTION					16
+#define MINIMAP_CURSOR_FILE					".\\Data\\Interface\\game_minimapcursor.img"
+#define MINIMAP_CURSOR_SIZE_W				41
+#define MINIMAP_CURSOR_SIZE_H				31
+#define MINIMAP_SIZE_W						144
+#define MINIMAP_SIZE_H						107
 
 #define UI_NUMBER_FILE						".\\Data\\Interface\\game_number.img"
 #define UI_NUMBER_SIZE_W					16
@@ -269,20 +268,21 @@ bool gUIGame::SetUp()
 	if(!m_BtnUI[UIBTN_MENU].SetUp(MENUBTN_FILE, false, m_rcPos[UIT_MENU]))
 		return false;
 
-	// players info
-	if(!m_ImgUI[UIIMG_PINFO].Load(PINFO_FILE_BACK))
+	// minimap
+	if(!m_ImgUI[UIIMG_MINIMAP].Load(MINIMAP_BACK_FILE))
 		return false;
-	SetRect(&m_rcPos[UIT_SUBINFO],
-			PINFO_POS_X,
-			PINFO_POS_Y,
-			PINFO_POS_X + PINFO_SIZE_W,
-			PINFO_POS_Y + PINFO_SIZE_H);
-
-	if(!m_ImgUI[UIIMG_NUMBER].Load(UI_NUMBER_FILE))
+	SetRect(&m_rcPos[UIT_MINIMAPBACK],
+			MINIMAP_BACK_POS_X,
+			MINIMAP_BACK_POS_Y,
+			MINIMAP_BACK_POS_X + MINIMAP_BACK_SIZE_W,
+			MINIMAP_BACK_POS_Y + MINIMAP_BACK_SIZE_H);
+	if(!m_ImgUI[UIIMG_MINIMAPCURSOR].Load(MINIMAP_CURSOR_FILE))
 		return false;
-
-	if(!m_Scroll.SetUp(PINFO_SCROLL_POS_X, PINFO_SCROLL_POS_Y, PINFO_SCROLL_SIZE_H, PINFO_SCROLL_FILE))
-		return false;
+	SetRect(&m_rcPos[UIT_MINIMAP],
+			MINIMAP_START_X,
+			MINIMAP_START_Y,
+			MINIMAP_START_X + MINIMAP_SIZE_W,
+			MINIMAP_START_Y + MINIMAP_SIZE_H );
 
 	// dice btn
 	SetRect(&m_rcPos[UIT_DICE],
@@ -303,7 +303,6 @@ bool gUIGame::SetUp()
 	if(!m_ImgUI[UIIMG_FACEOUTLINE].Load(TARGET_OUTLINE_FILE))
 		return false;
 
-	m_nCurPInfo = 0;
 	m_uimode = UIM_NONE;
 	m_bTargetByMove = false;
 	m_timer.SetUp();
@@ -319,50 +318,6 @@ void gUIGame::MainLoop()
 		if((int)GetTickCount() - m_nTimer > m_nShowTime)
 			m_bPopInfo = false;
 	}
-	static int tick=GetTickCount();
-	const int MouseTick=300;
-//	gMouse *mouse=gMouse::GetIF();
-//	RECT rcTemp;
-
-//	if(gUtil::PointInRect(mouse->m_nPosX, mouse->m_nPosY, rcTemp)) {
-		switch(m_Scroll.whatIsClicked())
-		{
-			case SCR_DOWN:
-				if(GetTickCount() - tick > MouseTick) 
-				{
-					if(m_nCurPInfo < m_nMaxPInfo - 2) {
-						m_nCurPInfo++;
-						m_Scroll.ChangeCursor(m_nCurPInfo, m_nMaxPInfo-2);
-					}
-					tick=GetTickCount();
-				}
-				break;
-			case SCR_UP:
-				if(GetTickCount() - tick > MouseTick) 
-				{
-					if(m_nCurPInfo > 0) {
-						m_nCurPInfo--;
-						m_Scroll.ChangeCursor(m_nCurPInfo, m_nMaxPInfo-2);
-					}
-					tick=GetTickCount();
-				}
-				break;
-				//m_nMaxPInfo가 2인 경우에는 아예 SCR_DOWN으로 들어가질 않으므로 m_nSize가 0으로 보내지는 일 없고 안심.
-			case SCR_BAR:
-				int		nScrollSize = m_Scroll.m_rcPosScroll.bottom - m_Scroll.m_rcPosScroll.top;
-				int		nCur = m_Scroll.m_ImgBtn[SCR_BAR].m_rcPos.top + SCROLL_SIZE_BAR_H - m_Scroll.m_rcPosScroll.top;
-		
-				if(nCur == nScrollSize) {
-					m_nCurPInfo = m_nMaxPInfo - 2;
-					break;
-				}
-				float	fTemp = (float)nCur / nScrollSize;	
-				m_nCurPInfo = (int)((m_nMaxPInfo-2) * fTemp);
-				break;
-		}
-//	}
-
-					
 }
 
 void gUIGame::Draw()
@@ -446,8 +401,6 @@ void gUIGame::Draw()
 	gChat::GetIF()->Draw();
 
 
-	RECT	rcDest, rcSour;
-
 	// image
 	// show always
 		// MainInfo
@@ -458,32 +411,14 @@ void gUIGame::Draw()
 		m_ImgUI[UIIMG_BARGUAGE].Draw(m_rcBarDest, m_rcBarSour);
 		m_ImgUI[UIIMG_BAROUTLINE].Draw(MAININFO_BARLINE_POS_X, MAININFO_BARLINE_POS_Y);
 
-		// playersInfo
-		m_ImgUI[UIIMG_PINFO].Draw(PINFO_POS_X, PINFO_POS_Y);
-		SetRect(&rcDest,
-			PINFO_INFO_POS_X,
-			PINFO_INFO_POS_Y,
-			PINFO_INFO_POS_X + UI_NUMBER_SIZE_W,
-			PINFO_INFO_POS_Y + UI_NUMBER_SIZE_H );
-		OffsetRect(&rcDest, UI_NUMBER_TERM_X, UI_NUMBER_TERM_Y);
-		SetRect(&rcSour,
-			0, 0, UI_NUMBER_SIZE_W, UI_NUMBER_SIZE_H);
-		OffsetRect(&rcSour, (gPC->m_GPlayerList[ m_rankIdx[m_nCurPInfo] ].nRank - 1) * UI_NUMBER_SIZE_W, 0);
-		m_ImgUI[UIIMG_NUMBER].Draw(rcDest, rcSour);
-		
-		if(m_rankIdx[m_nCurPInfo + 1] != -1)
-		SetRect(&rcDest,
-			PINFO_INFO_POS_X,
-			PINFO_INFO_POS_Y,
-			PINFO_INFO_POS_X + UI_NUMBER_SIZE_W,
-			PINFO_INFO_POS_Y + UI_NUMBER_SIZE_H );
-		OffsetRect(&rcDest, UI_NUMBER_TERM_X, UI_NUMBER_TERM_Y + PINFO_INFO_TERM_Y);
-		SetRect(&rcSour,
-			0, 0, UI_NUMBER_SIZE_W, UI_NUMBER_SIZE_H);
-		OffsetRect(&rcSour, (gPC->m_GPlayerList[ m_rankIdx[m_nCurPInfo + 1] ].nRank - 1) * UI_NUMBER_SIZE_W, 0);
-		m_ImgUI[UIIMG_NUMBER].Draw(rcDest, rcSour);
-		m_Scroll.Draw();
-		
+		// minimap
+		m_ImgUI[UIIMG_MINIMAP].Draw(MINIMAP_BACK_POS_X, MINIMAP_BACK_POS_Y);
+		map->DrawMinimap(MINIMAP_START_X, MINIMAP_START_Y, MINIMAP_SOLUTION);
+		int		nMiniPosX, nMiniPosY;
+		nMiniPosX = MINIMAP_START_X + int(MINIMAP_SIZE_W * map->GetPosRateX());
+		nMiniPosY = MINIMAP_START_Y + int(MINIMAP_SIZE_H * map->GetPosRateY());
+		m_ImgUI[UIIMG_MINIMAPCURSOR].Draw(nMiniPosX, nMiniPosY);
+	
 		// menu
 		m_BtnUI[UIBTN_MENU].Draw();
 
@@ -592,12 +527,14 @@ void gUIGame::Draw()
 		else
 			gUtil::Text(MAININFO_NAME_POS_X, MAININFO_NAME_POS_Y, gPC->m_CharInfo[gPC->m_MyGamePlayer.ctype].szName);
 
+/*
 	// pinfo
 		gUtil::Text(PINFO_INFO_POS_X + PINFO_ID_TERM_X, PINFO_INFO_POS_Y + PINFO_ID_TERM_Y,
 					gPC->m_GPlayerList[ m_rankIdx[m_nCurPInfo] ].szID);
 		if(m_rankIdx[ m_nCurPInfo + 1 ] != -1)
 			gUtil::Text(PINFO_INFO_POS_X + PINFO_ID_TERM_X, PINFO_INFO_POS_Y + PINFO_ID_TERM_Y + PINFO_INFO_TERM_Y,
 				gPC->m_GPlayerList[ m_rankIdx[m_nCurPInfo + 1] ].szID);
+*/
 
 
 	// sub - subwnd
@@ -635,17 +572,6 @@ void gUIGame::Draw()
 }
 
 
-/*
-#define SUBINFO_ID_POS_X					200
-#define SUBINFO_ID_POS_Y					200
-#define SUBINFO_SUBNAME_POS_X				200
-#define SUBINFO_GRADE_POS_X					300
-#define SUBINFO_SUBNAME_POS_Y				220
-#define SUBINFO_SUBNAME_TERM_Y				20
-#define SUBINFO_AVGRADE_POS_X				300
-#define SUBINFO_AVGRADE_POS_Y				360
-*/
-
 void gUIGame::Release()
 {
 	int			i;
@@ -656,7 +582,6 @@ void gUIGame::Release()
 	for(i = 0; i < UIBTN_END; i++)
 		m_BtnUI[i].Release();
 
-	m_Scroll.Release();
 }
 
 bool gUIGame::OnLButtonDown()
@@ -667,12 +592,23 @@ bool gUIGame::OnLButtonDown()
 	gItemContainer		*ic		= gItemContainer::GetIF();
 	gMap				*map	= gMap::GetIF();
 
-	m_Scroll.OnLbuttonDown(mouse->m_nPosX, mouse->m_nPosY);
 
 	if(m_uimode == UIM_INFOCHANGE
 		|| m_uimode == UIM_ITEMUSEINFO)
 		return false;
 	
+	if(gUtil::PointInRect(mouse->m_nPosX, mouse->m_nPosY, m_rcPos[UIT_MINIMAPBACK]))
+	{
+		int		sx, sy;
+		float	ratex, ratey;
+		sx = mouse->m_nPosX - MINIMAP_START_X;
+		sy = mouse->m_nPosY - MINIMAP_START_Y;
+		ratex = float(sx) / MINIMAP_SIZE_W;
+		ratey = float(sy) / MINIMAP_SIZE_H;
+		map->SetPosByRateX(ratex);
+		map->SetPosByRateY(ratey);
+		return true;
+	}
 	if(m_BtnUI[UIBTN_DICE].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 	{
 		if(gc->m_bMoving || gc->m_bBusing)
@@ -1096,7 +1032,7 @@ void gUIGame::OnLButtonUp()
 {
 	gMouse				*mouse	= gMouse::GetIF();
 
-	m_Scroll.OnLbuttonUp(mouse->m_nPosX, mouse->m_nPosY);
+//	m_Scroll.OnLbuttonUp(mouse->m_nPosX, mouse->m_nPosY);
 }
 
 void gUIGame::OnMouseMove()
@@ -1105,7 +1041,7 @@ void gUIGame::OnMouseMove()
 
 	int			i;
 
-	m_Scroll.OnMouseMove(mouse->m_nPosX, mouse->m_nPosY);
+//	m_Scroll.OnMouseMove(mouse->m_nPosX, mouse->m_nPosY);
 
 	for(i = 0; i < UIBTN_END; i++)
 	{
@@ -1115,6 +1051,21 @@ void gUIGame::OnMouseMove()
 			m_BtnUI[i].m_eBtnMode = EBM_HOVER;
 	}
 
+	if(GetKeyState(VK_LBUTTON) < 0)
+	{
+		if(gUtil::PointInRect(mouse->m_nPosX, mouse->m_nPosY, m_rcPos[UIT_MINIMAPBACK]))
+		{
+			gMap	*map = gMap::GetIF();
+			int		sx, sy;
+			float	ratex, ratey;
+			sx = mouse->m_nPosX - MINIMAP_START_X;
+			sy = mouse->m_nPosY - MINIMAP_START_Y;
+			ratex = float(sx) / MINIMAP_SIZE_W;
+			ratey = float(sy) / MINIMAP_SIZE_H;
+			map->SetPosByRateX(ratex);
+			map->SetPosByRateY(ratey);
+		}
+	}
 }
 
 void gUIGame::OnRButtonDown()
@@ -1157,6 +1108,7 @@ bool gUIGame::IsUIRange(int x, int y)
 	return false;
 }
 
+
 void gUIGame::SetRankList()
 {
 	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
@@ -1166,6 +1118,7 @@ void gUIGame::SetRankList()
 	int			nRank = 1;
 	int			nCount = 0;
 	int			i;
+	int			nPlayerNum = gPC->GetGPNum();
 
 	while(true)
 	{
@@ -1177,33 +1130,13 @@ void gUIGame::SetRankList()
 			if(gPC->m_GPlayerList[i].nRank == nRank)
 				m_rankIdx[nCount++] = i;
 
-			if(nCount >= m_nMaxPInfo)
-				return;
+ 			if(nCount >= nPlayerNum)
+ 				return;
 		}
 		nRank++;
 	}
 
 }
-
-void gUIGame::FirstInit()
-{
-	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
-
-	m_nCurPInfo = 0;
-	m_nMaxPInfo	= gPlayerContainer::GetIF()->GetGPNum();
-// 
-// 	int		i;
-// 
-// 	for(i = m_nCurPInfo; i < ROOMMAXPLAYER; i++)
-// 	{
-// 		if(strlen(gPC->m_GPlayerList[i].szID) != 0)
-// 		{
-// 			m_nCurPInfo = i;
-// 			return;
-// 		}
-// 	}
-}
-
 
 void gUIGame::SetPopInfo(PK_POPINFO_REP *rep, int ms)
 {
@@ -1227,9 +1160,6 @@ bool gUIGame::Restore()
 	for(i = 0; i < UIBTN_END; i++)
 		if(!m_BtnUI[i].Restore())
 			return false;
-
-	if(!m_Scroll.Restore())
-		return false;
 
 	return true;
 }

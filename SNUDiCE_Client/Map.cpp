@@ -300,6 +300,82 @@ void gMap::DrawHexagonSubmitOne(int x0, int y0, int i, int j, int n, int classty
 	m_ImgSmallTile.Draw(a,b,false);
 }
 
+void gMap::DrawHexagonMinimapOne(int x0, int y0, int i, int j, int n, int classtype, int statetype)
+{
+	int		k;
+	RECT	a;
+	RECT	b;
+
+	k = tileMap[i*LINEY+j].tileType;
+
+	if(k == TY_NONE)
+		return;
+
+	if(i%2 == 0) {
+		a.left	= WIDEX * i/2;
+		a.top	= FULLY * j;
+	}
+	else {
+		a.left	= LEFTX + MIDDLEX + WIDEX * (i - 1) / 2;
+		a.top	= HALFY + FULLY * j;
+	}
+
+	a.left	/= n;
+	a.top	/= n;
+	a.left	+= x0;
+	a.top	+= y0;
+	a.right = a.left + FULLX / n;
+	a.bottom = a.top + FULLY / n;
+
+
+	if(classtype==3) {
+		SetRect(&b,0,0,SMALLFULLX,SMALLFULLY);
+	}
+	else {
+		SetRect(&b,0,(classtype*3+statetype+1)*SMALLFULLY,
+			SMALLFULLX,(classtype*3+statetype+2)*SMALLFULLY);
+	}
+
+	m_ImgSmallTile.Draw(a,b);
+}
+
+void gMap::DrawMinimap(int x0, int y0, int n)
+{
+	gSubmitCore *gSC = gSubmitCore::GetIF();
+
+	gPlayerContainer *gPC = gPlayerContainer::GetIF();
+	int nMyInRoomIndex = gPC->GetMyPIndex();
+	int nSubjectIndexInTempTile;		// 각 타일의 과목의 subjectIndex;
+	bool bTemp;
+	static int tick = GetTickCount(), state=0;
+	static int state2 = 2;
+
+	for(int i = 0 ; i < LINEX ; i++)
+	{ 
+		for(int j = 0 ; j < LINEY ; j++)
+		{
+			if(tileMap[i*LINEY+j].tileType==TY_NONE) 
+				continue;
+			else if(tileMap[i*LINEY+j].tileType!=TY_CLASS) 
+				DrawHexagonMinimapOne(x0, y0, i, j, n, 3, 0);
+			else {
+				nSubjectIndexInTempTile = tileMap[i*LINEY+j].flag2;
+
+				bTemp = false;
+				for(int k = 0 ; k < CLASSSEAT ; k++) {
+					if(gSC->m_subject[nSubjectIndexInTempTile][k] == nMyInRoomIndex) bTemp = true;
+				}
+
+				if(bTemp) {
+					DrawHexagonMinimapOne(x0, y0, i, j, n, tileMap[i*LINEY+j].flag1, 2);
+				}
+				else
+					DrawHexagonMinimapOne(x0, y0, i, j, n, tileMap[i*LINEY+j].flag1, 0);
+			}
+		}
+	}
+}
+
 void gMap::DrawSubmit(int x0, int y0, int n, int subjectIndex, int frameOn) // frameOn = false 가 기본 setting
 {
 	gSubmitCore *gSC = gSubmitCore::GetIF();	// 선택된 list
@@ -609,4 +685,24 @@ int gMap::Destination(int mapA, int spacor)
 		}
 	}
 	return iter;
+}
+
+float gMap::GetPosRateX()
+{
+	return (float)m_nAbsDrawlineX / BACKMAPX;
+}
+
+float gMap::GetPosRateY()
+{
+	return (float)m_nAbsDrawlineY / BACKMAPY;
+}
+
+void gMap::SetPosByRateX(float ratex)
+{
+	m_nAbsDrawlineX = int(BACKMAPX * ratex);
+}
+
+void gMap::SetPosByRateY(float ratey)
+{
+	m_nAbsDrawlineY = int(BACKMAPY * ratey);
 }

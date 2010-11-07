@@ -898,6 +898,8 @@ void gRoomCore::Cancel_Make()
 	for(i = 0; i < BMM_END; i++)
 		m_MakeBtn[i].m_eBtnMode = EBM_NONE;
 
+	m_nPlayer = 2;
+
 }
 
 bool gRoomCore::SetUp_Join()
