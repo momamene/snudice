@@ -111,11 +111,14 @@ void gChannelCore::pk_channelchange_ask (PK_DEFAULT *pk, SOCKET sock)
 					rep.error = ECE_SUCCESS;
 					gRC->ExitTheRoom(ask.szID);
 
+					
 					gChannelContainer::GetIF()->AddPlayer(ask.nChannel-1,ask.szID);
 					rep.channel = gChannelContainer::GetIF()->m_channelArray[ask.nChannel-1];
 					pk_channelrefresh_rep (ask.nChannel-1);
 					gPC->PutCoreFlag(ask.szID,ask.nChannel-1);
 					gPC->PutMode(ask.szID,ECM_BATTLENET);
+					gPC->PutBoolReady(ask.szID,false);
+					gPC->PutClassType(ask.szID,CLASS_NONE);
 					gRC->SendRoomListCauseChange(ask.nChannel-1);
 					break;
 		}
