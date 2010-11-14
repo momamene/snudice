@@ -64,6 +64,8 @@ void gUtil::TextOutLine(int x, int y, char *str, bool newline, int lineterm)
 	int		k = 0;
 	int		line = 0;
 
+	int		a, b;
+
 	if(newline)
 	{
 		for(int i = 0; i < len; i++)
@@ -76,23 +78,30 @@ void gUtil::TextOutLine(int x, int y, char *str, bool newline, int lineterm)
 			{
 				szBuf[k] = NULL;
 				SetTextColor(s_hdc, s_colorOutline);
-				TextOut(s_hdc, x + 1, y + lineterm * line + 1, szBuf, strlen(szBuf));
+				for(a = -1; a <= 1; a++)
+					for(b = -1; b <= 1; b++)
+						TextOut(s_hdc, x + a, y + lineterm * line + b, szBuf, strlen(szBuf));
 				SetTextColor(s_hdc, s_color);
 				TextOut(s_hdc, x, y + lineterm * line, szBuf, strlen(szBuf));
+
 				k = 0;
 				line++;
 			}
 		}
 		szBuf[k] = '\0';
 		SetTextColor(s_hdc, s_colorOutline);
-		TextOut(s_hdc, x + 1, y + lineterm * line, szBuf + 1, strlen(szBuf));
+		for(a = -1; a <= 1; a++)
+			for(b = -1; b <= 1; b++)
+				TextOut(s_hdc, x + a, y + lineterm * line + b, szBuf, strlen(szBuf));
 		SetTextColor(s_hdc, s_color);
 		TextOut(s_hdc, x, y + lineterm * line, szBuf, strlen(szBuf));
 	}
 	else
 	{
 		SetTextColor(s_hdc, s_colorOutline);
-		TextOut(s_hdc, x + 1, y + 1, str, strlen(str));
+		for(a = -1; a <= 1; a++)
+			for(b = -1; b <= 1; b++)
+				TextOut(s_hdc, x + a, y + b, str, strlen(str));
 		SetTextColor(s_hdc, s_color);
 		TextOut(s_hdc, x, y, str, strlen(str));
 	}

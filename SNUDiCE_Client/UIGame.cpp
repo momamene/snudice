@@ -12,6 +12,7 @@
 #include "PopUp.h"
 #include "stringconst.h"
 #include "Map.h"
+#include "Mouse.h"
 
 #define	UI_FILE_MAININFO					".\\Data\\Interface\\game_maininfo.img"
 #define UI_SIZE_MAININFO_W					220
@@ -34,7 +35,7 @@
 #define MAININFO_NAME_POS_X					15
 #define MAININFO_NAME_POS_Y					74
 #define MAININFO_PIC_POS_X					15
-#define MAININFO_PIC_POS_Y					5
+#define MAININFO_PIC_POS_Y					10
 
 #define MAININFO_FILE_BARLINE				".\\Data\\Interface\\game_bar_outline.img"
 #define MAININFO_BARLINE_SIZE_W				150
@@ -119,20 +120,6 @@
 #define UI_NUMBER_TERM_X					0
 #define UI_NUMBER_TERM_Y					0
 
-#define UI_POPINFO1_FILE					".\\Data\\Interface\\game_popinfo1.img"
-#define UI_POPINFO1_SIZE_W					120
-#define UI_POPINFO1_SIZE_H					48
-#define UI_POPINFO1_TERM_X					0
-#define UI_POPINFO1_TERM_Y					-70
-#define UI_POPINFO2_FILE					".\\Data\\Interface\\game_popinfo2.img"
-#define UI_POPINFO2_SIZE_W					120
-#define UI_POPINFO2_SIZE_H					63
-#define UI_POPINFO2_TERM_X					0
-#define UI_POPINFO2_TERM_Y					-60
-#define UI_POPSTR1_TERM_Y					14
-#define UI_POPSTR2_1_TERM_Y					11
-#define UI_POPSTR2_2_TERM_Y					29
-
 #define ITEMCARD_POS_X						22
 #define ITEMCARD_POS_Y						120
 #define ITEMCARD_SIZE_W						140
@@ -168,9 +155,17 @@
 #define INFOCHANGE_INFOTERM_Y				10		// info³¢¸® ÅÒ
 
 // turn, rank °°ÀÌ Ç¥½Ã
-#define TURN_START_X						580
-#define TURN_START_Y						100
+#define TURN_START_X						550
+#define TURN_START_Y						40
 #define TURN_TERM_Y							20
+
+#define MAPTOOLTIP_FILE						".\\Data\\Interface\\game_maptooltip.img"
+#define MAPTOOLTIP_SIZE_W					120
+#define MAPTOOLTIP_SIZE_H					80
+#define MAPTOOLTIP_TERM_MOUSE				15			// ¸¶¿ì½ºÁÂÇ¥¿¡ ´õÇØÁö´Â ÁÂÇ¥. ºÎÅÍÃâ·Â
+#define MAPTOOLTIP_TEXT_X					7
+#define MAPTOOLTIP_TEXT_Y					7
+#define MAPTOOLTIP_TEXT_TERM_Y				20
 
 static gUIGame s_UIGame;
 
@@ -298,14 +293,11 @@ bool gUIGame::SetUp()
 	if(!m_BtnUI[UIBTN_DICE].SetUp(DICEBTN_FILE, false, m_rcPos[UIT_DICE]))
 		return false;
 
-	// popinfo ¸»Ç³¼± ÀÎÆ÷
-	if(!m_ImgUI[UIIMG_POPINFO1].Load(UI_POPINFO1_FILE))
-		return false;
-	if(!m_ImgUI[UIIMG_POPINFO2].Load(UI_POPINFO2_FILE))
-		return false;
-
 	// item »ç¿ë, Å¸°Ù charface img
 	if(!m_ImgUI[UIIMG_FACEOUTLINE].Load(TARGET_OUTLINE_FILE))
+		return false;
+
+	if(!m_ImgUI[UIIMG_MAPTOOLTIP].Load(MAPTOOLTIP_FILE))
 		return false;
 
 	m_uimode = UIM_NONE;
@@ -328,10 +320,51 @@ void gUIGame::Draw()
 	gSubjectContainer	*sc		= gSubjectContainer::GetIF();
 	gMap				*map	= gMap::GetIF();
 
+	char	szBuf[128];
 	int		i;
 
-	gChat::GetIF()->Draw();
+	// maptooltip
+	POINT	ptMouse;
+	ptMouse.x = gMouse::GetIF()->m_nPosX;
+	ptMouse.y = gMouse::GetIF()->m_nPosY;
+	if(!IsUIRange(ptMouse.x, ptMouse.y))
+	{
+		int		nToolTipPos = map->viewabsToCon(ptMouse);
+		gTile	*tile = &map->tileMap[nToolTipPos];
+		if(tile->tileType != TY_NONE)
+		{
+			ptMouse.x += MAPTOOLTIP_TERM_MOUSE;
+			ptMouse.y += MAPTOOLTIP_TERM_MOUSE;
+			if(ptMouse.x + MAPTOOLTIP_SIZE_W > WNDSIZEW)
+				ptMouse.x = WNDSIZEW - MAPTOOLTIP_SIZE_W;
+			if(ptMouse.y + MAPTOOLTIP_SIZE_H > CHAT_POS_Y)
+				ptMouse.y = CHAT_POS_Y - MAPTOOLTIP_SIZE_H;
 
+			m_ImgUI[UIIMG_MAPTOOLTIP].Draw(ptMouse.x, ptMouse.y);
+
+			int		textPosX = ptMouse.x + MAPTOOLTIP_TEXT_X;
+			int		textPosY = ptMouse.y + MAPTOOLTIP_TEXT_Y;
+			gUtil::BeginText();
+				if(tile->subject)
+				{
+					gUtil::Text(textPosX, textPosY, tile->subject);
+					textPosY += MAPTOOLTIP_TEXT_TERM_Y;
+				}
+				if(tile->college)
+				{
+					gUtil::Text(textPosX, textPosY, tile->college);
+					textPosY += MAPTOOLTIP_TEXT_TERM_Y;
+				}
+				if(tile->building)
+				{
+					gUtil::Text(textPosX, textPosY, tile->building);
+				}
+			gUtil::EndText();
+		}
+	}
+
+
+	gChat::GetIF()->Draw();
 
 	// image
 	// show always
@@ -437,7 +470,6 @@ void gUIGame::Draw()
 	
 
 	// text
-	char	szBuf[128];
 	gUtil::BeginText();
 
 	// MainInfo
@@ -469,6 +501,7 @@ void gUIGame::Draw()
 				continue;
 
 			gUtil::TextOutLine(TURN_START_X, TURN_START_Y + (TURN_TERM_Y * nTurnCount), gPC->m_GPlayerList[i].szID);
+			nTurnCount++;
 		}
 /*
 	// pinfo
@@ -983,8 +1016,6 @@ void gUIGame::OnMouseMove()
 	gMouse		*mouse = gMouse::GetIF();
 
 	int			i;
-
-//	m_Scroll.OnMouseMove(mouse->m_nPosX, mouse->m_nPosY);
 
 	for(i = 0; i < UIBTN_END; i++)
 	{

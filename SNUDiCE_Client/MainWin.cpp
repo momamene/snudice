@@ -252,18 +252,15 @@ int gMainWin::Run()
 			}
 	#ifdef DEF_FRAMECOUNT
 			static int nFrameTime = 0;
-			static int FrameTime = GetTickCount();
 
-			if(nFrameTime > DEF_FRAMETICK)
+			if(GetTickCount() - nFrameTime > DEF_FRAMETICK)
 			{
 				MainLoop();
-				deltaTime = GetTickCount() - deltaTime;
-				time += deltaTime;
 				nFrame++;
-				nFrameTime = 0;
+				nFrameTime = GetTickCount();
 			}
-			FrameTime = GetTickCount() - FrameTime;
-			nFrameTime += FrameTime;
+			deltaTime = GetTickCount() - deltaTime;
+			time += deltaTime;
 	#else
 			MainLoop();
 			deltaTime = GetTickCount() - deltaTime;
