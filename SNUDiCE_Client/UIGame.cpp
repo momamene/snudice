@@ -313,11 +313,7 @@ bool gUIGame::SetUp()
 
 void gUIGame::MainLoop()
 {
-	if(m_bPopInfo)
-	{
-		if((int)GetTickCount() - m_nTimer > m_nShowTime)
-			m_bPopInfo = false;
-	}
+
 }
 
 void gUIGame::Draw()
@@ -328,75 +324,6 @@ void gUIGame::Draw()
 	gMap				*map	= gMap::GetIF();
 
 	int		i;
-
-	// popinfo
-	if(m_bPopInfo)
-	{
-		char	szPop[2][32];
-		int		nPopX, nPopY;
-		int		nCount = 0;
-
-		int		playeridx	= gPC->GetGPIndex(m_popinfo.szID);
-		int		nPos		= gPC->m_GPlayerList[playeridx].nPos;
-		if(playeridx != -1)
-		{
-			if(m_popinfo.nStamina != 0)
-			{
-				if(m_popinfo.nStamina > 0)
-					wsprintf(szPop[nCount], "체력 +%d", m_popinfo.nStamina);
-				else
-					wsprintf(szPop[nCount], "체력 %d", m_popinfo.nStamina);
-
-				nCount++;
-			}
-			if(m_popinfo.nGrade != 0)
-			{
-				if(m_popinfo.nGrade > 0)
-					wsprintf(szPop[nCount], "%s +%d", map->tileMap[nPos].subject, m_popinfo.nGrade);
-				else
-					wsprintf(szPop[nCount], "%s %d", map->tileMap[nPos].subject, m_popinfo.nGrade);
-
-				nCount++;
-			}
-
-			POINT	ptTemp;
-			switch(nCount)
-			{
-			case 1:
-				ptTemp = map->ConToViewabs(nPos);
-				nPopX = ptTemp.x + UI_POPINFO1_TERM_X;
-				nPopY = ptTemp.y + UI_POPINFO1_TERM_Y;
-				m_ImgUI[UIIMG_POPINFO1].Draw(nPopX, nPopY);
-				break;
-			case 2:
-				ptTemp = map->ConToViewabs(nPos);
-				nPopX = ptTemp.x + UI_POPINFO2_TERM_X;
-				nPopY = ptTemp.y + UI_POPINFO2_TERM_Y;
-				m_ImgUI[UIIMG_POPINFO2].Draw(nPopX, nPopY);
-				break;
-			}
-		}
-		gUtil::BeginText();
-		int		len;
-		switch(nCount)
-		{
-		case 1:
-			{
-				len = gUtil::TextLength(szPop[0]);
-				gUtil::Text( nPopX + (UI_POPINFO1_SIZE_W - len) / 2, nPopY + UI_POPSTR1_TERM_Y, szPop[0]);
-			}
-			break;
-		case 2:
-			{
-				len = gUtil::TextLength(szPop[0]);
-				gUtil::Text( nPopX + (UI_POPINFO1_SIZE_W - len) / 2, nPopY + UI_POPSTR2_1_TERM_Y, szPop[0]);
-				len = gUtil::TextLength(szPop[1]);
-				gUtil::Text( nPopX + (UI_POPINFO1_SIZE_W - len) / 2, nPopY + UI_POPSTR2_2_TERM_Y, szPop[1]);
-			}
-			break;
-		}
-		gUtil::EndText();
-	}
 
 	gChat::GetIF()->Draw();
 
@@ -1138,18 +1065,6 @@ void gUIGame::SetRankList()
 
 }
 
-void gUIGame::SetPopInfo(PK_POPINFO_REP *rep, int ms)
-{
-	if(m_bPopInfo)
-		return;
-
-	m_bPopInfo	= true;
-	m_nTimer	= GetTickCount();
-	m_nShowTime	= ms;
-
-	memcpy(&m_popinfo, rep, sizeof(PK_POPINFO_REP));
-}
-
 bool gUIGame::Restore()
 {
 	int			i;
@@ -1752,6 +1667,14 @@ void gUIGame::Draw_InfoChange()
 	for(i = 0; i < m_nTargetNum; i++)
 	{
 		nCount = 0;
+		if(m_info[i].nGrade != 0)
+		{
+			if(m_info[i].nGrade > 0)
+				wsprintf(szBuf[nCount], "수업 + %d", m_info[i].nGrade);
+			else
+				wsprintf(szBuf[nCount], "수업 - %d", -m_info[i].nGrade);
+			nCount++;
+		}
 		if(m_info[i].nLang != 0)
 		{
 			if(m_info[i].nLang > 0)
@@ -1784,14 +1707,7 @@ void gUIGame::Draw_InfoChange()
 				wsprintf(szBuf[nCount], "체력 - %d", -m_info[i].nStamina);
 			nCount++;
 		}
-		if(m_info[i].nGrade != 0)
-		{
-			if(m_info[i].nGrade > 0)
-				wsprintf(szBuf[nCount], "수업 + %d", m_info[i].nGrade);
-			else
-				wsprintf(szBuf[nCount], "수업 - %d", -m_info[i].nGrade);
-			nCount++;
-		}
+
 		int		startx, starty;
 
 		startx = m_target[i].rcPos.right + 10;

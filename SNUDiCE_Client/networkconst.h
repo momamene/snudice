@@ -13,7 +13,8 @@
 
 #define	WINSOCK_VERSION_2_2		MAKEWORD(2, 2)
 //#define SERVER_IP				"211.169.219.88"		// 현탁
-#define SERVER_IP				"211.169.219.71"		// 상우
+//#define SERVER_IP				"211.169.219.71"		// 상우
+#define SERVER_IP				"211.169.219.68"		// 창규
 #define SERVER_PORT				9000
 #define BUFFERSIZE				2048
 
@@ -71,8 +72,6 @@ enum ePROTOCOL
 
 	PL_GAMEPLAYERINFO_REP,
 
-	PL_POPINFO_REP,			// 클라이언트에 말풍선처럼 정보 띄워줄 때
-
 	PL_GAMEEND_REP,
 
 	PL_NEXTTURN_REP,
@@ -89,7 +88,6 @@ enum ePROTOCOL
 	PL_WARPLISTEND_ASK,
 
 	PL_INFOCHANGE_REP,		// 아이템 사용 -> 캐릭터 스탯같은 수치 변화 표시
-
 	PL_INFOCHANGEEND_ASK,
 
 	PL_ROOMBACK_ASK,		// 게임끝 -> 방으로
@@ -503,7 +501,7 @@ struct PK_GAMEPLAYERINFO_REP
 	GAMEPLAYER	list[ROOMMAXPLAYER];
 };
 
-typedef struct
+struct CHANGEINFO
 {
 	char		szID[IDLENGTH];
 	int			nLang;
@@ -511,9 +509,7 @@ typedef struct
 	int			nArt;
 	int			nStamina;
 	int			nGrade;				// 성취도. 학점이 아님
-}
-
-PK_POPINFO_REP, CHANGEINFO;
+};
 
 struct PK_GAMEEND_REP
 {

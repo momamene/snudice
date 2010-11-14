@@ -103,7 +103,6 @@ public:
 	void		pk_busmovechoose_rep(PK_BUSMOVECHOOSE_REP *rep);
 	void		pk_busmovestart_rep(PK_BUSMOVESTART_REP *rep);
 	void		pk_gameplayerinfo_rep(PK_GAMEPLAYERINFO_REP *rep);
-	void		pk_popinfo_rep(PK_POPINFO_REP *rep);
 	void		pk_gameend_rep(PK_GAMEEND_REP *rep);
 	void		pk_warpstart_rep(PK_WARPSTART_REP *rep);
 	void		pk_warpliststart_rep(PK_WARPLISTSTART_REP* rep);

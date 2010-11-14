@@ -1082,11 +1082,6 @@ void gGameCore::pk_gameplayerinfo_rep(PK_GAMEPLAYERINFO_REP *rep)
 	gPlayerContainer::GetIF()->SetGPList(rep->list);
 }
 
-void gGameCore::pk_popinfo_rep(PK_POPINFO_REP *rep)
-{
-	m_bNextTurnKeep = true;
-	gUIGame::GetIF()->SetPopInfo(rep);
-}
 
 void gGameCore::pk_gameend_rep(PK_GAMEEND_REP *rep)
 {

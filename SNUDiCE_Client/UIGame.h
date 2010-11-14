@@ -118,19 +118,11 @@ private:
 	RECT		m_rcBarDest, m_rcBarSour;
 	int			m_rankIdx[ROOMMAXPLAYER];	// ∑©≈∑¿Œµ¶Ω∫
 
-	// ∏ª«≥º± info ¡§∫∏
-	int			m_nTimer;
-	int			m_nShowTime;
-	PK_POPINFO_REP		m_popinfo;
-	int			m_szID[IDLENGTH];
-
 public:
 	void		pk_itemuse_rep(PK_ITEMUSE_REP* rep);
 	void		pk_infochange_rep(PK_INFOCHANGE_REP *rep);
 
 	bool		IsUIRange(int x, int y);
-
-	void		SetPopInfo(PK_POPINFO_REP *rep, int ms = 2000);
 
 	void		SetRankList();
 

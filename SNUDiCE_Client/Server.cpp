@@ -246,10 +246,6 @@ void gServer::Recv()
 			gGameCore::GetIF()->pk_gameplayerinfo_rep((PK_GAMEPLAYERINFO_REP*)m_pkDefault.strPacket);
 			break;
 
-		case PL_POPINFO_REP:
-			gGameCore::GetIF()->pk_popinfo_rep((PK_POPINFO_REP*)m_pkDefault.strPacket);
-			break;
-
 		case PL_NEXTTURN_REP:
 			gGameCore::GetIF()->pk_nextturn_rep((PK_NEXTTURN_REP*)m_pkDefault.strPacket);
 			break;
