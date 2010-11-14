@@ -92,6 +92,9 @@
 2010 11 08 - CoderK
 	게임에서, 우하단 UI - 랭킹표시하던거 없애고 미니맵 추가.
 	
+2010 11 14 - CoderK		/ server : 현탁
+	PK_POPINFO_REP 뺴고 PK_INFOCHANGE_REP, 관련으로 바꿈
+	
 --
 
 timer 개선해야 할 듯!!!!

@@ -81,24 +81,35 @@ enum ePROTOCOL
 
 	PL_ITEMUSESTART_ASK,
 
-	PL_WARPSTART_REP,		// 유저 하나.
+	PL_WARPSTART_REP,			// 유저 하나.
 	PL_WARPEND_ASK,
 
-	PL_WARPLISTSTART_REP,	// 유저 여러명 워프시킬떄
+	PL_WARPLISTSTART_REP,		// 유저 여러명 워프시킬떄
 	PL_WARPLISTEND_ASK,
 
-	PL_INFOCHANGE_REP,		// 아이템 사용 -> 캐릭터 스탯같은 수치 변화 표시
+	PL_INFOCHANGE_REP,			// 아이템 사용 -> 캐릭터 스탯같은 수치 변화 표시
 	PL_INFOCHANGEEND_ASK,
 
-	PL_ROOMBACK_ASK,		// 게임끝 -> 방으로
-	PL_ROOMBACK_REP,		//
+	PL_ROOMBACK_ASK,			// 게임끝 -> 방으로
+	PL_ROOMBACK_REP,			//
 
-	PL_EXIT_REP,			// 게임중 강제종료 처리
+	PL_EXIT_REP,				// 게임중 강제종료 처리
 
 	PL_GOLOGIN_ASK,
 
-	//Whisper
-	PL_WHISPER_ASK,
+	PL_WHISPER_ASK,				// Whisper
+
+	PL_ASKCOUPLE_REP,			// 커플될건지 묻는다.
+	PL_ANSCOUPLE_ASK,			// 답변
+
+	PL_BECOUPLE_REP,			// 커플 되었다는 정보 출력
+	PL_BECOUPLEEND_ASK,			// 정보 끗
+
+	PL_MOVESTARTCOUPLE_REP,		// 주사위 굴려 이동. 커플모드
+	PL_MOVEENDCOUPLE_ASK,
+
+	PL_BUSMOVESTARTCOUPLE_REP,	// 버스타고 이동. 커플모드
+	PL_BUSMOVEENDCOUPLE_ASK,
 };
 
 enum eCOREMODE
@@ -436,6 +447,9 @@ struct GAMEPLAYER
 
 	int			nItem[MAXITEMNUM];		// 없으면 -1
 
+	int			nLove;					// 애정도.			커플 아니면 - 1
+	char		szCouple[IDLENGTH];		// 커플 아이디		커플 아니면 memset 0
+
 	WORD		nPos;
 };
 
@@ -453,20 +467,22 @@ struct PK_MOVESTART_ASK
 	int			nCurPos;			// 출발 좌표
 };
 
-struct PK_MOVESTART_REP
+typedef struct
 {
 	int			nDist;
 	BYTE		Dice4_1;
 	BYTE		Dice4_2;
 	BYTE		Dice6_1;
 	BYTE		Dice6_2;
-};
+}
+PK_MOVESTART_REP, PK_MOVESTARTCOUPLE_REP;
 
-struct PK_MOVEEND_ASK
+typedef struct
 {
 	char		szID[IDLENGTH];
 	int			nDestPos;			// 도착 좌표
-};
+}
+PK_MOVEEND_ASK,  PK_MOVEENDCOUPLE_ASK;
 
 struct PK_NEXTTURN_REP
 {
@@ -485,16 +501,18 @@ struct PK_BUSMOVESELECT_ASK
 	int			nPos;
 };
 
-struct PK_BUSMOVESTART_REP			// 모든 애들한테 이동시켜라 라고 뿌려줌
+typedef struct			// 모든 애들한테 이동시켜라 라고 뿌려줌
 {
 	int			nDist;
-};
+}
+PK_BUSMOVESTART_REP, PK_BUSMOVESTARTCOUPLE_REP;
 
-struct PK_BUSMOVEEND_ASK			// 모든 애들한테 받아서 다 받으면, nextturn
+typedef struct			// 모든 애들한테 받아서 다 받으면, nextturn
 {
 	char		szID[IDLENGTH];
 	int			nDestPos;
-};
+}
+PK_BUSMOVEEND_ASK, PK_BUSMOVEENDCOUPLE_ASK;
 
 struct PK_GAMEPLAYERINFO_REP
 {
@@ -606,7 +624,6 @@ struct PK_INFOCHANGEEND_ASK
 	char		szID[IDLENGTH];
 };
 
-
 struct PK_GOLOGIN_ASK
 {
 	char		szID[IDLENGTH];
@@ -615,7 +632,7 @@ struct PK_GOLOGIN_ASK
 struct PK_EXIT_REP
 {
 	char		szID[IDLENGTH];
-	int			flag;							//남은 사람 수 //아직까지는 그닥 있어야 할 이유는 없다.
+	int			flag;							// 남은 사람 수 //아직까지는 그닥 있어야 할 이유는 없다.
 };
 
 //WHISPER 구현
@@ -624,4 +641,26 @@ struct PK_WHISPER_ASK
 	char		szToID[IDLENGTH];
 	char		szFromID[IDLENGTH];
 	char		szComment[MSGLENGTH];
+};
+
+// couple
+struct PK_ASKCOUPLE_REP
+{
+	char		szCouple[IDLENGTH];				// 나랑 커플될 넘의 id
+};
+
+struct PK_ANSCOUPLE_ASK
+{
+	bool		bYes;
+};
+
+struct PK_BECOUPLE_REP
+{
+	char		szMale[IDLENGTH];
+	char		szFeMale[IDLENGTH];
+};
+
+struct PK_BECOUPLEEND_ASK
+{
+	char		szID[IDLENGTH];
 };

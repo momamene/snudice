@@ -403,10 +403,6 @@
 					RelativePath=".\Util.h"
 					>
 				</File>
-				<File
-					RelativePath=".\utilconst.h"
-					>
-				</File>
 			</Filter>
 			<Filter
 				Name="Core"

@@ -2,6 +2,8 @@
 #include "Util.h"
 #include "MainWin.h"
 
+#define EDIT_STYLE				(WS_CHILD | WS_VISIBLE | WS_BORDER | ES_LEFT)
+
 gEdit::gEdit()
 {
 	m_hEdit = NULL;

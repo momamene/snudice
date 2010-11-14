@@ -237,7 +237,42 @@ int gMainWin::Run()
 		}
 		else	// 메시지 큐에 메시지 없을 때
 		{
+#ifdef DEF_FRAMEPRINT
+			static DWORD time = 0;
+			static int nFrame = 0;
+			DWORD deltaTime = GetTickCount();
+
+			if(time > 1000)
+			{
+				char	szBuf[32];
+				wsprintf(szBuf, "%d fps", nFrame);
+				SetWindowText(m_hWnd, szBuf);
+				time = 0;
+				nFrame = 0;
+			}
+	#ifdef DEF_FRAMECOUNT
+			static int nFrameTime = 0;
+			static int FrameTime = GetTickCount();
+
+			if(nFrameTime > DEF_FRAMETICK)
+			{
+				MainLoop();
+				deltaTime = GetTickCount() - deltaTime;
+				time += deltaTime;
+				nFrame++;
+				nFrameTime = 0;
+			}
+			FrameTime = GetTickCount() - FrameTime;
+			nFrameTime += FrameTime;
+	#else
 			MainLoop();
+			deltaTime = GetTickCount() - deltaTime;
+			time += deltaTime;
+			nFrame++;
+	#endif
+#else
+			MainLoop();
+#endif
 		}
 	}
 	return Msg.wParam;

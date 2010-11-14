@@ -9,6 +9,9 @@
 #pragma once
 #include <windows.h>
 
+#define UTIL_COLOR_BLACK		RGB(0, 0, 0)
+#define UTIL_COLOR_WHITE		RGB(255, 255, 255)
+
 class gUtil  
 {
 public:
@@ -16,9 +19,11 @@ public:
 	static void SetFont(char *font);
 	static void SetSize(int size);
 	static void SetDefaultFont();
-	static void SetColor();
+	static void SetColor(COLORREF ref);
+	static void SetOutLineColor(COLORREF ref);
 	static void BeginText();
-	static void Text(int x, int y, char *str, bool newline = false, int lineterm = 20);	//lineterm -> 엔터칠때 얼마나 내려가나
+	static void Text(int x, int y, char *str, bool newline = false, int lineterm = 20);			// lineterm -> 엔터칠때 얼마나 내려가나
+	static void TextOutLine(int x, int y, char *str, bool newline = false, int lineterm = 20);	// 외곽선.
 	static void EndText();
 
 	static void DebugMsg(char *msg);
@@ -26,4 +31,5 @@ public:
 	static bool PointInRect(int x, int y, RECT rc);
 	static int	TextLength(char *sz);
 };
+
 

@@ -7,7 +7,6 @@
 //------------------------------------------------------------------------------------
 #pragma once
 #include <windows.h>
-#include "utilconst.h"
 #include "Image.h"
 #include <ime.h>					// ime32.lib
 

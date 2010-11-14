@@ -156,8 +156,8 @@
 #define USEINFO_TARGET_TERM_X				10
 #define USEINFO_TARGET_TERM_Y				10
 
-#define USEINFO_TICK						3000	// 3ÃÊ º¸¿©ÁÜ
-#define INFOCHANGE_TICK						3000
+#define USEINFO_TICK						2000	// 3ÃÊ º¸¿©ÁÜ
+#define INFOCHANGE_TICK						2000
 
 #define INFOCHANGE_POS_X					320
 #define	INFOCHANGE_POS_Y					150
@@ -166,6 +166,11 @@
 #define INFOCHANGE_INFOSIZE_W				50
 #define INFOCHANGE_INFOSIZE_H				12		// info ÇÏ³ª´ç ³ôÀÌ
 #define INFOCHANGE_INFOTERM_Y				10		// info³¢¸® ÅÒ
+
+// turn, rank °°ÀÌ Ç¥½Ã
+#define TURN_START_X						580
+#define TURN_START_Y						100
+#define TURN_TERM_Y							20
 
 static gUIGame s_UIGame;
 
@@ -454,6 +459,17 @@ void gUIGame::Draw()
 		else
 			gUtil::Text(MAININFO_NAME_POS_X, MAININFO_NAME_POS_Y, gPC->m_CharInfo[gPC->m_MyGamePlayer.ctype].szName);
 
+
+	// rank, turn
+
+		int		nTurnCount = 0;
+		for(i = 0; i < ROOMMAXPLAYER; i++)
+		{
+			if(strlen(gPC->m_GPlayerList[i].szID) == 0)
+				continue;
+
+			gUtil::TextOutLine(TURN_START_X, TURN_START_Y + (TURN_TERM_Y * nTurnCount), gPC->m_GPlayerList[i].szID);
+		}
 /*
 	// pinfo
 		gUtil::Text(PINFO_INFO_POS_X + PINFO_ID_TERM_X, PINFO_INFO_POS_Y + PINFO_ID_TERM_Y,
