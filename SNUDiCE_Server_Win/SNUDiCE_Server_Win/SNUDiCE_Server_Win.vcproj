@@ -171,18 +171,6 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\ChannelContainer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ChannelCore.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\LoginCore.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\main.cpp"
 				>
 			</File>
@@ -191,28 +179,16 @@
 				>
 			</File>
 			<File
-				RelativePath=".\MessageCore.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\MysqlDB.cpp"
 				>
 			</File>
-			<File
-				RelativePath=".\PlayerContainer.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\RoomCore.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\SubmitCore.cpp"
-				>
-			</File>
 			<Filter
-				Name="NewFilter1"
+				Name="Container"
 				>
+				<File
+					RelativePath=".\ChannelContainer.cpp"
+					>
+				</File>
 				<File
 					RelativePath=".\Charinfo.cpp"
 					>
@@ -223,6 +199,10 @@
 				</File>
 				<File
 					RelativePath=".\ItemContainer.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\PlayerContainer.cpp"
 					>
 				</File>
 				<File
@@ -238,6 +218,30 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Core"
+				>
+				<File
+					RelativePath=".\ChannelCore.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\LoginCore.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\MessageCore.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\RoomCore.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\SubmitCore.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="헤더 파일"
@@ -245,23 +249,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\ChannelContainer.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ChannelCore.h"
-				>
-			</File>
-			<File
-				RelativePath=".\LoginCore.h"
-				>
-			</File>
-			<File
 				RelativePath=".\MainWin.h"
-				>
-			</File>
-			<File
-				RelativePath=".\MessageCore.h"
 				>
 			</File>
 			<File
@@ -272,21 +260,17 @@
 				RelativePath=".\network.h"
 				>
 			</File>
-			<File
-				RelativePath=".\PlayerContainer.h"
-				>
-			</File>
-			<File
-				RelativePath=".\RoomCore.h"
-				>
-			</File>
-			<File
-				RelativePath=".\SubmitCore.h"
-				>
-			</File>
 			<Filter
-				Name="NewFilter1"
+				Name="Container"
 				>
+				<File
+					RelativePath=".\ChannelContainer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ChannelCore.h"
+					>
+				</File>
 				<File
 					RelativePath=".\Charinfo.h"
 					>
@@ -300,6 +284,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\PlayerContainer.h"
+					>
+				</File>
+				<File
 					RelativePath=".\SubjectContainer.h"
 					>
 				</File>
@@ -309,6 +297,26 @@
 				</File>
 				<File
 					RelativePath=".\TileContainer.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Core"
+				>
+				<File
+					RelativePath=".\LoginCore.h"
+					>
+				</File>
+				<File
+					RelativePath=".\MessageCore.h"
+					>
+				</File>
+				<File
+					RelativePath=".\RoomCore.h"
+					>
+				</File>
+				<File
+					RelativePath=".\SubmitCore.h"
 					>
 				</File>
 			</Filter>

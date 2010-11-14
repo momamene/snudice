@@ -94,9 +94,11 @@ bool gGamePlayerContainer::init(int nRoomIndex)
 
 			for(int j = 0 ; j < ITEMNUM ; j++)
 				m_ItemCoolTime[nRoomIndex][i][j] = 0;
+
 		}
 		m_bSyncronize[nRoomIndex][i] = true;
 	}
+	
 
 	FirstTurn(nRoomIndex);		// m_nTurn reset.
 	m_nRound[nRoomIndex] = 0;
@@ -155,7 +157,7 @@ void gGamePlayerContainer::pk_movestart_ask(PK_DEFAULT *pk,SOCKET sock)
 
 	if(m_GamePlayer[nRoomIndex][nInRoomIndex].nStamina<=0) {
 		staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],1);
-		pk_popinfo_rep(nRoomIndex,1,0);	
+		pk_infochangeSecond_rep(nRoomIndex,1,0);	
 		pk_gameplayerinfo_rep(nRoomIndex);
 		pk_nextturn_rep(nRoomIndex);
 		return;
@@ -188,10 +190,17 @@ void gGamePlayerContainer::pk_movestart_ask(PK_DEFAULT *pk,SOCKET sock)
 		rep.Dice6_2 = rand()%6 + 1;
 		break;
 	}
-	nSum = rep.Dice4_1 + rep.Dice4_2 + rep.Dice6_1 + rep.Dice6_2;
-	if(m_isNokdu[nRoomIndex][nInRoomIndex]) nSum *= -1;
 	
+	nSum = rep.Dice4_1 + rep.Dice4_2 + rep.Dice6_1 + rep.Dice6_2;
+
 	rep.nDist = nSum;
+
+
+	if(m_isNokdu[nRoomIndex][nInRoomIndex]) nSum *= -1;
+
+	putFavorsameclass(nRoomIndex , nInRoomIndex , m_GamePlayer[nRoomIndex][nInRoomIndex].nPos , rep.nDist);
+	//수정, 여기서 호감도 관련 체킹을 합니다.
+	
 
 	int des = gTC->destination(m_GamePlayer[nRoomIndex][nInRoomIndex].nPos,rep.nDist);
 	movePlayer(nRoomIndex,nInRoomIndex,des,MPS_MOVE);
@@ -200,6 +209,35 @@ void gGamePlayerContainer::pk_movestart_ask(PK_DEFAULT *pk,SOCKET sock)
 
 	gPC->SendSelect(PL_MOVESTART_REP,sizeof(PK_MOVESTART_REP),&rep,ECM_GAME,nRoomIndex);
 	//gMainWin::GetIF()->Send(PL_MOVESTART_REP,sizeof(PK_MOVESTART_REP),&rep,ask.szID);
+
+}
+
+void gGamePlayerContainer::putFavorsameclass(int nRoomIndex, int nInRoomIndex, int newDist , int nextDist)
+{
+	char				buf [1024];
+
+	wsprintf(buf,"[FavorUp] ");
+
+	gCharinfo* gCI = gCharinfo::GetIF();
+	GAMEPLAYER metPlayer , myPlayer = m_GamePlayer[nRoomIndex][nInRoomIndex];
+	for (int i = newDist+1 ; i <= nextDist ; i++)	{
+		for (int j = 0 ; j < ROOMMAXPLAYER ; j++)	{
+			if (nInRoomIndex == j)		continue;
+			metPlayer = m_GamePlayer[nRoomIndex][j];
+			if (gCI->getMale(metPlayer.ctype)^gCI->getMale(myPlayer.ctype))	{
+				if (newDist <= metPlayer.nPos && metPlayer.nPos < nextDist)	{
+					m_favor[nRoomIndex][nInRoomIndex].point[j] += CROSS_FAVORPOINT;
+					m_favor[nRoomIndex][j].point[nInRoomIndex] += CROSS_FAVORPOINT;
+//					wsprintf(buf,"[%s and %s : %d point] ", nInRoomIndex , );
+
+				} else if (metPlayer.nPos == nextDist)	{
+					m_favor[nRoomIndex][nInRoomIndex].point[j] += SAMETILE_FAVORPOINT;
+					m_favor[nRoomIndex][j].point[nInRoomIndex] += SAMETILE_FAVORPOINT;
+				}
+			}
+		}
+	}
+	OutputDebugString(buf);
 }
 
 void gGamePlayerContainer::debuger_move(int nDis,char* szID) {
@@ -336,25 +374,27 @@ void gGamePlayerContainer::pk_moveend_ask(PK_DEFAULT *pk,SOCKET sock)
 				if(getAccomplishment!=-1) {
 					OutputDebugString("TY_MySubject\n");
 					staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],-1);
-					pk_popinfo_rep(nRoomIndex,-1,getAccomplishment);
-
+					pk_infochangeSecond_rep(nRoomIndex,-1,getAccomplishment);
+					pk_gameplayerinfo_rep(nRoomIndex);
+				}//수정
+				else	{//통과
+					pk_nextturn_rep(nRoomIndex);
+					pk_gameplayerinfo_rep(nRoomIndex);
 				}
-				pk_gameplayerinfo_rep(nRoomIndex);
-				pk_nextturn_rep(nRoomIndex);
 			}
 			else if(gTC->m_tileMap[ask.nDestPos].tileType==TY_DRINK) {
 				OutputDebugString("TY_DRINK\n");
 				staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],-1);
-				pk_popinfo_rep(nRoomIndex,-1,0);
+				pk_infochangeSecond_rep(nRoomIndex,-1,0);
 				pk_gameplayerinfo_rep(nRoomIndex);
-				pk_nextturn_rep(nRoomIndex);
+//				pk_nextturn_rep(nRoomIndex);
 			}
 			else if(gTC->m_tileMap[ask.nDestPos].tileType==TY_STAMINA) {
 				OutputDebugString("TY_STAMINA\n");
 				staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],1);
-				pk_popinfo_rep(nRoomIndex,1,0);
+				pk_infochangeSecond_rep(nRoomIndex,1,0);
 				pk_gameplayerinfo_rep(nRoomIndex);
-				pk_nextturn_rep(nRoomIndex);
+//				pk_nextturn_rep(nRoomIndex);
 			}
 			else if(gTC->m_tileMap[ask.nDestPos].tileType==TY_ITEM) {
 				OutputDebugString("TY_ITEM\n");
@@ -362,7 +402,7 @@ void gGamePlayerContainer::pk_moveend_ask(PK_DEFAULT *pk,SOCKET sock)
 				pk_gameplayerinfo_rep(nRoomIndex);
 				pk_nextturn_rep(nRoomIndex);
 			}
-			else {
+			else {//통과
 				OutputDebugString("TY_NOTHING\n");
 				pk_gameplayerinfo_rep(nRoomIndex);
 				pk_nextturn_rep(nRoomIndex);
@@ -547,24 +587,6 @@ void gGamePlayerContainer::pk_subGameplayerinfo_rep(int nRoomIndex,PK_GAMEPLAYER
 			}
 		}
 	}
-}
-
-
-void gGamePlayerContainer::pk_popinfo_rep(int nRoomIndex,int stamina,int accomplishment) {
-
-	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
-
-	PK_POPINFO_REP				rep;
-
-	int nInRoomIndex= m_nTurn[nRoomIndex];
-	strcpy(rep.szID,m_GamePlayer[nRoomIndex][nInRoomIndex].szID);
-	rep.nLang = 0;
-	rep.nMath = 0;
-	rep.nArt = 0;
-	rep.nStamina = stamina;
-	rep.nGrade = accomplishment;
-
-	gPC->SendSelect(PL_POPINFO_REP,sizeof(rep),&rep,ECM_GAME,nRoomIndex);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1155,7 +1177,7 @@ void gGamePlayerContainer::pk_warpend_ask (PK_DEFAULT *pk, SOCKET sock)
 				if(getAccomplishment!=-1) {
 					OutputDebugString("TY_MySubject\n");
 					staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],-1);
-					pk_popinfo_rep(nRoomIndex,-1,getAccomplishment);
+					pk_infochangeSecond_rep(nRoomIndex,-1,getAccomplishment);
 
 				}
 				pk_gameplayerinfo_rep(nRoomIndex);
@@ -1165,14 +1187,14 @@ void gGamePlayerContainer::pk_warpend_ask (PK_DEFAULT *pk, SOCKET sock)
 			else if(gTC->m_tileMap[ask.nDestPos].tileType==TY_DRINK) {
 				OutputDebugString("TY_DRINK\n");
 				staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],-1);
-				pk_popinfo_rep(nRoomIndex,-1,0);
+				pk_infochangeSecond_rep(nRoomIndex,-1,0);
 				pk_gameplayerinfo_rep(nRoomIndex);
 				pk_infochangeSecond_rep(nRoomIndex,-1,0);
 			}
 			else if(gTC->m_tileMap[ask.nDestPos].tileType==TY_STAMINA) {
 				OutputDebugString("TY_STAMINA\n");
 				staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],1);
-				pk_popinfo_rep(nRoomIndex,1,0);
+				pk_infochangeSecond_rep(nRoomIndex,1,0);
 				pk_gameplayerinfo_rep(nRoomIndex);
 				pk_infochangeSecond_rep(nRoomIndex,1,0);
 			}

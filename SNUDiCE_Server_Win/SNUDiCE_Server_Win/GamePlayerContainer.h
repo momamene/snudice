@@ -2,6 +2,11 @@
 #include "network.h"
 #include "Charinfo.h"
 
+#define MINIMUM_COUPLE_CONDITION 100
+#define SAMECLASS_FAVORPOINT 30
+#define SAMETILE_FAVORPOINT 20
+#define CROSS_FAVORPOINT 10
+
 enum ItemUseState {
 	IUS_NONE,
 	IUS_NEXTTURN,
@@ -14,6 +19,14 @@ enum MovePlayerState {
 	MPS_BUS,
 	MPS_WARP,
 };
+
+//수정, 호감도구조체
+struct sFavor 
+{
+//	char *playerid[ROOMMAXPLAYER];	// 대략 필요 없을듯; RoomCore의 FindPlayerIndexInTheRoom를 이용한다.
+	int point[ROOMMAXPLAYER];
+};
+
 
 class gGamePlayerContainer
 {
@@ -55,6 +68,10 @@ public:
 	PK_ITEMUSE_ASK m_struct_itemuse_ask[MAXROOM];
 	// pk_itemuse_ask -> pk_itemuse_rep -> pk_itemusestart_ask 로 가는 과정에서 임시 저장되는 패킷.
 
+
+	sFavor m_favor[MAXROOM][ROOMMAXPLAYER];
+	//호감도
+
 	void		pk_maingamestart_rep(int nRoomIndex);
 	void		pk_movestart_ask(PK_DEFAULT *pk,SOCKET sock);
 	void		pk_moveend_ask(PK_DEFAULT *pk,SOCKET sock);
@@ -64,14 +81,13 @@ public:
 	void		pk_busmoveend_ask(PK_DEFAULT *pk,SOCKET sock);
 	void		pk_gameplayerinfo_rep (int nRoomIndex);
 	void		pk_subGameplayerinfo_rep(int nRoomIndex,PK_GAMEPLAYERINFO_REP* rep);
-	void		pk_popinfo_rep(int nRoomIndex,int stamina,int accomplishment);
 
 	void		pk_gameend_rep(int nRoomIndex);
 
 	void		pk_itemuse_ask(PK_DEFAULT *pk,SOCKET sock);
 
 	void		pk_exit_ask(char*, SOCKET sock);//수정사항, 부뤸ㅋㅋ
-	void		pk_gologin_ask(PK_DEFAULT *pk,SOCKET sock);	//수정사항
+	void		pk_gologin_ask(PK_DEFAULT *pk,SOCKET sock);	
 
 	//	void		pk_warpstart_ask (PK_DEFAULT *pk, SOCKET sock);
 	void		pk_warpstart_rep (int nRoomIndex, int nInRoomIndex, int des);
@@ -124,4 +140,6 @@ private:
 	void		putTargetIntForOther(int nRoomIndex,int nInRoomIndex, int* getNarrDes,ITEMTARGET target,int nVal);
 	// 두 함수는 other일 때만 작동하는 가짜 함수이다.
 
+	void				putFavorsameclass(int nRoomIndex, int nInRoomIndex, int newDist , int nextDist);	//옷깃만 스쳐도 인연
+	
 };

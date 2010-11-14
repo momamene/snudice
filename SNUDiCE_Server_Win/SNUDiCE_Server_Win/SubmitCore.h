@@ -40,4 +40,7 @@ private:
 	bool			isSubjectFull(int nRoomIndex,int nInRoomIndex);
 	bool			isSubjectExisted(int nRoomIndex,int nInRoomIndex,int nSubjectIndex);
 	bool			isFinishAllSubmit(int nRoomIndex);
+
+	void			putFavorsameclass(int nRoomIndex);	//같은Class 들으면 호감도 상승
 };
+

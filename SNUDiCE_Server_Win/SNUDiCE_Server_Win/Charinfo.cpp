@@ -86,3 +86,9 @@ CHARINFO gCharinfo::getCharinfo(int index)
 {
 	return m_CharInfo[index];
 }
+
+bool gCharinfo::getMale(int index)
+{
+	return m_CharInfo[index].bMale;
+}
+

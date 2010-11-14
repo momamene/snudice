@@ -114,9 +114,40 @@ bool gSubmitCore::isFinishAllSubmit(int nRoomIndex)
 			return false;
 		}
 	}
+	putFavorsameclass(nRoomIndex);
 	return true;
 }
 
+void gSubmitCore::putFavorsameclass(int nRoomIndex)
+{
+	int		playeridx_A , playeridx_B;
+	bool	sameChk;
+	gGamePlayerContainer* gGPC = gGamePlayerContainer::GetIF();
+
+	int j,k;
+	for(int i = 0 ; i < CLASSNUM ; i++)	{
+		sameChk = false;
+		for (j = 0; j < CLASSSEAT ; j++)	{
+			if (m_submitSubject[nRoomIndex][i][j] == AVAILSEAT)	{
+				sameChk = true;
+				break;
+			}
+		}
+		if (!sameChk)	{
+			for (j = 0 ; j < CLASSSEAT ; j++)	{
+				for (k = 0 ; k < CLASSSEAT ; k++)	{
+					if (j==k)
+						continue;					
+					playeridx_A = m_submitSubject[nRoomIndex][i][j];
+					playeridx_B = m_submitSubject[nRoomIndex][i][k];
+
+					gGPC->m_favor[nRoomIndex][playeridx_A].point[playeridx_B] = SAMECLASS_FAVORPOINT;
+					gGPC->m_favor[nRoomIndex][playeridx_B].point[playeridx_A] = SAMECLASS_FAVORPOINT;
+				}
+			}
+		}
+	}
+}
 
 bool gSubmitCore::putSubject(int nRoomIndex,int nInRoomIndex,int nSubjectIndex)
 {

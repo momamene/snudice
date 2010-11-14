@@ -49,5 +49,5 @@ private:
 	
 	bool			isRoomInPage(int nPage);
 	bool			ChangeMakerToFirstUser(int roomIndex);
-	void			FindPlayersFromIDs_RMP(int roomIndex,PLAYER* getPlayerlist);
+	void			FindPlayersFromIDs_RMP(int roomIndex,PLAYER* getPlayerlist);	//수정, 이거주석 달것!
 };

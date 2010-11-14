@@ -15,4 +15,5 @@ public:
 	void			Release();
 
 	CHARINFO		getCharinfo(int index);
+	bool			getMale(int index);
 };

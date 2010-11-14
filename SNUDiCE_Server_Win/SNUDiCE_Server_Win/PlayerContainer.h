@@ -8,6 +8,7 @@
 #include "network.h"
 #include <list>
 
+
 using namespace std;
 
 typedef list<PLAYER*> PLAYER_LIST;
