@@ -269,6 +269,19 @@ void gServer::Recv()
 		case PL_INFOCHANGE_REP:
 			gUIGame::GetIF()->pk_infochange_rep((PK_INFOCHANGE_REP*)m_pkDefault.strPacket);
 			break;
+
+		case PL_ASKCOUPLE_REP:
+			gGameCore::GetIF()->pk_askcouple_rep((PK_ASKCOUPLE_REP*)m_pkDefault.strPacket);
+			break;
+		case PL_BECOUPLE_REP:
+			gUIGame::GetIF()->pk_becouple_rep((PK_BECOUPLE_REP*)m_pkDefault.strPacket);
+			break;
+		case PL_MOVESTARTCOUPLE_REP:
+			gGameCore::GetIF()->pk_movestartcouple_rep((PK_MOVESTART_REP*)m_pkDefault.strPacket);
+			break;
+		case PL_BUSMOVESTARTCOUPLE_REP:
+			gGameCore::GetIF()->pk_busmovestartcouple_rep((PK_BUSMOVESTART_REP*)m_pkDefault.strPacket);
+			break;
 		
 	}
 }

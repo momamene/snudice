@@ -95,6 +95,13 @@
 2010 11 14 - CoderK		/ server : 현탁
 	PK_POPINFO_REP 뺴고 PK_INFOCHANGE_REP, 관련으로 바꿈
 	
+2010 11 15 - CoderK
+    gUtil Text모듈쪽 TextOutLine 추가. 외곽선 출력하는 텍스트
+    맵칩툴팁 모듈 완성 - 개선해야 함
+    
+2010 11 20 - CoderK
+    이미지 페이스 외곽 수정
+	
 --
 
 timer 개선해야 할 듯!!!!

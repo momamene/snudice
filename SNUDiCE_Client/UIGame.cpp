@@ -105,8 +105,8 @@
 #define MINIMAP_BACK_POS_Y					360
 #define MINIMAP_BACK_SIZE_W					200
 #define MINIMAP_BACK_SIZE_H					120
-#define MINIMAP_START_X						(MINIMAP_BACK_POS_X + 9)
-#define MINIMAP_START_Y						(MINIMAP_BACK_POS_Y + 8)
+#define MINIMAP_START_X						(MINIMAP_BACK_POS_X + 10)
+#define MINIMAP_START_Y						(MINIMAP_BACK_POS_Y + 10)
 #define MINIMAP_SOLUTION					16
 #define MINIMAP_CURSOR_FILE					".\\Data\\Interface\\game_minimapcursor.img"
 #define MINIMAP_CURSOR_SIZE_W				41
@@ -166,6 +166,12 @@
 #define MAPTOOLTIP_TEXT_X					7
 #define MAPTOOLTIP_TEXT_Y					7
 #define MAPTOOLTIP_TEXT_TERM_Y				20
+
+#define BECOUPLE_MALE_X						(320 - TARGET_OUTLINE_SIZE_W - 30)
+#define BECOUPLE_MALE_Y						(240 - TARGET_OUTLINE_SIZE_H/2)
+#define BECOUPLE_FEMALE_X					(320 + 30)
+#define BECOUPLE_FEMALE_Y					BECOUPLE_MALE_Y
+#define BECOUPLE_TICK						2000
 
 static gUIGame s_UIGame;
 
@@ -464,6 +470,22 @@ void gUIGame::Draw()
 					m_uimode = UIM_NONE;
 				}
 				Draw_InfoChange();
+			}
+			break;
+		case UIM_BECOUPLE:
+			{
+				int	nFrame = m_timer.frame();
+
+				if(nFrame >= 1)
+				{
+					m_timer.frameEnd();
+					PK_BECOUPLEEND_ASK		ask;
+
+					strcpy(ask.szID, gPC->m_MyGamePlayer.szID);
+					gServer::GetIF()->Send(PL_BECOUPLEEND_ASK, sizeof(ask), &ask);
+					m_uimode = UIM_NONE;
+				}
+				DrawTargetButton();
 			}
 			break;
 	}
@@ -1762,7 +1784,33 @@ void gUIGame::Draw_InfoChange()
 					- INFOCHANGE_INFOSIZE_H * nCount/2 - INFOCHANGE_INFOTERM_Y * (nCount - 1)/2;
 
 		for(j = 0; j < nCount; j++)
-			gUtil::Text(startx, starty + j * (INFOCHANGE_INFOSIZE_H + INFOCHANGE_INFOTERM_Y), szBuf[j]);
+			gUtil::TextOutLine(startx, starty + j * (INFOCHANGE_INFOSIZE_H + INFOCHANGE_INFOTERM_Y), szBuf[j]);
 	}
 	gUtil::EndText();
+}
+
+void gUIGame::pk_becouple_rep(PK_BECOUPLE_REP *rep)
+{
+	gPlayerContainer	*pc = gPlayerContainer::GetIF();
+
+	m_nTargetNum = 2;
+
+	m_target[0].idx = pc->GetGPIndex(rep->szFeMale);
+	m_target[0].img = &pc->m_ImgInfo[ pc->m_GPlayerList[m_target[0].idx].ctype ].ImgPic;
+	SetRect(&m_target[0].rcPos,
+			BECOUPLE_FEMALE_X,
+			BECOUPLE_FEMALE_Y,
+			BECOUPLE_FEMALE_X + INFOCHANGE_INFOSIZE_W + TARGET_OUTLINE_SIZE_W,
+			BECOUPLE_FEMALE_Y + INFOCHANGE_INFOSIZE_H + TARGET_OUTLINE_SIZE_H );
+
+	m_target[1].idx = pc->GetGPIndex(rep->szMale);
+	m_target[1].img = &pc->m_ImgInfo[ pc->m_GPlayerList[m_target[1].idx].ctype ].ImgPic;
+	SetRect(&m_target[1].rcPos,
+		BECOUPLE_MALE_X,
+		BECOUPLE_MALE_Y,
+		BECOUPLE_MALE_X + INFOCHANGE_INFOSIZE_W + TARGET_OUTLINE_SIZE_W,
+		BECOUPLE_MALE_Y + INFOCHANGE_INFOSIZE_H + TARGET_OUTLINE_SIZE_H );
+
+	m_timer.frameStart(BECOUPLE_TICK, 2);
+	m_uimode = UIM_BECOUPLE;
 }

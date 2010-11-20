@@ -124,6 +124,25 @@ void gGameCore::MainLoop()
 						break;
 				}
 				break;
+			// couple
+			case EPOP_COUPLEASK:
+				switch(gPopUp::GetIF()->m_eBtnClk)
+				{
+					case ECLK_OK:
+						{
+							PK_ANSCOUPLE_ASK	ask;
+							ask.bYes = true;
+							gServer::GetIF()->Send(PL_ANSCOUPLE_ASK, sizeof(ask), &ask);
+						}
+						break;
+					case ECLK_CANCEL:
+						{
+							PK_ANSCOUPLE_ASK	ask;
+							ask.bYes = false;
+							gServer::GetIF()->Send(PL_ANSCOUPLE_ASK, sizeof(ask), &ask);
+						}
+						break;
+				}
 		}
 		gPopUp::GetIF()->m_bReturn = false;
 	}
@@ -955,6 +974,7 @@ void gGameCore::End()		// 이동 끝남
 
 	gTimer::GetIF()->frameEnd();
 	gPC->FootClear();
+	gPC->SyncronizeToMap(m_nTurn);
 
 	gPC->m_GPlayerList[ m_nTurn ].nPos = map->m_xSpacePos * LINEY + map->m_ySpacePos;
 
@@ -1134,4 +1154,24 @@ void gGameCore::pk_warpliststart_rep(PK_WARPLISTSTART_REP* rep)
 	m_bWarpingList = true;
 	m_warplist = WARPLIST_DISAPPEAR;
 	gTimer::GetIF()->frameStart(WARPTICK, WARPFRAME + 1);
+}
+
+void gGameCore::pk_askcouple_rep(PK_ASKCOUPLE_REP* rep)
+{
+	gPlayerContainer	*pc = gPlayerContainer::GetIF();
+	gImage				*img;
+
+	int		idx = pc->GetGPIndex(rep->szCouple);
+	img = &pc->m_ImgInfo[ pc->m_GPlayerList[idx].ctype ].ImgPic;
+	gPopUp::GetIF()->SetImgPopUp(ECLK_CANCEL, EPOP_COUPLEASK, img, STR_21);
+}
+
+void gGameCore::pk_movestartcouple_rep(PK_MOVESTART_REP *rep)
+{
+
+}
+
+void gGameCore::pk_busmovestartcouple_rep(PK_BUSMOVESTART_REP *rep)
+{
+
 }

@@ -106,6 +106,9 @@ public:
 	void		pk_gameend_rep(PK_GAMEEND_REP *rep);
 	void		pk_warpstart_rep(PK_WARPSTART_REP *rep);
 	void		pk_warpliststart_rep(PK_WARPLISTSTART_REP* rep);
+	void		pk_askcouple_rep(PK_ASKCOUPLE_REP* rep);
+	void		pk_movestartcouple_rep(PK_MOVESTART_REP *rep);
+	void		pk_busmovestartcouple_rep(PK_BUSMOVESTART_REP *rep);
 
 	void		Start(int spacor);
 	void		Start(int spacor,int conPosX,int conPosY);
