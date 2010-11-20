@@ -850,10 +850,12 @@ bool gGameCore::PreTransMsg(MSG &msg)
 void gGameCore::SendMoveAsk()
 {
 	gPlayerContainer *gPC = gPlayerContainer::GetIF();
+	int				couple = gPC->GetCoupleIndex();
 
 	// 내 차례가 아님
-	if(strcmp(gPC->m_MyGamePlayer.szID, gPC->m_GPlayerList[m_nTurn].szID) != 0)
+	if(strcmp(gPC->m_MyGamePlayer.szID, gPC->m_GPlayerList[m_nTurn].szID) != 0) {
 		return;
+	}
 	// 이미 움직였음, 스크롤링 중임
 	if(m_bMoved) //|| m_bScrolling)
 		return;
@@ -903,7 +905,7 @@ void gGameCore::pk_movestart_rep(PK_MOVESTART_REP *rep)
 	int ntPos = gPC->m_GPlayerList[ gGameCore::GetIF()->m_nTurn ].nPos;
 	gMap::GetIF()->posSetter(ntPos / LINEY, ntPos % LINEY);
 	gDice::GetIF()->DiceStart(d1, d2, c1 - 1, c2 - 1, rep->nDist);
-	m_bMoving = true;
+	m_bMoving = true; m_remain = -1;
 }
 
 void gGameCore::Start(int spacor)
@@ -920,10 +922,11 @@ void gGameCore::Start(int spacor,int conPosX, int conPosY)
 	Start(spacor);
 }
 
+
 void gGameCore::StepStart()
 {
 	if(m_spacor>=0)
-		gMap::GetIF()->posSpacor();
+		gMap::GetIF()->posSpacor(false);
 	else 
 		gMap::GetIF()->posSpacor(true);
 }
@@ -942,16 +945,26 @@ void gGameCore::StepOn()
 	}
 	else
 	{
+		int couple = gPC->GetCoupleIndex();
+		if(couple == m_nTurn) couple = gPC->GetMyGPIndex();
 		gMap::GetIF()->posMover(l_frame, gt->m_frame);
-		gPC->SyncronizeToMap(m_nTurn);
-		gPC->PutFootPosition(m_nTurn,l_frame,60/4);
-	}	
+
+		if(m_remain > 0) { //fucking couple
+			gPC->SyncronizeToMap(-2, couple);
+			gPC->PutFootPosition(-2, l_frame, 60/4, couple);
+			m_remain--;
+		}
+		else if(m_remain<0) {
+			gPC->SyncronizeToMap(m_nTurn, couple);
+			gPC->PutFootPosition(m_nTurn,l_frame, 60/4, couple);
+		}
+	}
 }
 
 void gGameCore::StepEnd()
 {
+	if(!m_bMoving) return;
 	gTimer *gt = gTimer::GetIF();
-
 	gMap::GetIF()->posStoper();
 
 	if(m_spacor > 0)
@@ -961,8 +974,8 @@ void gGameCore::StepEnd()
 
 	gt->m_turn--;
 
-	if(m_spacor!=0)
-		StepStart();
+	if(m_spacor > 0)
+		Start(m_spacor);
 	else
 		End();
 }
@@ -971,26 +984,47 @@ void gGameCore::End()		// 이동 끝남
 {
 	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
 	gMap				*map = gMap::GetIF();
+	int					couple = gPC->GetCoupleIndex();
+	PK_MOVEEND_ASK		ask;
+	static int			newPos;
+
+	if(couple == m_nTurn) couple = gPC->GetMyGPIndex();
+	if(couple >= 0) {
+		if(m_remain == -1) {
+			newPos = map->m_xSpacePos * LINEY + map->m_ySpacePos;
+			m_remain = 4;
+		}
+		if(m_remain>0) {
+			m_spacor = 1;
+			return;
+		}
+	}
+	else newPos = map->m_xSpacePos * LINEY + map->m_ySpacePos;
 
 	gTimer::GetIF()->frameEnd();
 	gPC->FootClear();
-	gPC->SyncronizeToMap(m_nTurn);
+	m_bMoving = false;
 
-	gPC->m_GPlayerList[ m_nTurn ].nPos = map->m_xSpacePos * LINEY + map->m_ySpacePos;
+	gPC->SyncronizeToMap(m_nTurn, couple);
+	gPC->m_GPlayerList[ m_nTurn ].nPos = newPos;
+
+	if(couple>=0) {
+		gPC->m_GPlayerList[ couple ].nPos = newPos;
+	}
 
 	if(strcmp(gPC->m_MyGamePlayer.szID, gPC->m_GPlayerList[m_nTurn].szID) == 0)
 		gPC->m_MyGamePlayer.nPos = gPC->m_GPlayerList[ m_nTurn ].nPos;
 
-	PK_MOVEEND_ASK			ask;
-
 	ask.nDestPos = gPC->m_GPlayerList[ m_nTurn ].nPos;
 	strcpy(ask.szID, gPC->m_MyGamePlayer.szID);
 
-	gServer::GetIF()->Send(PL_MOVEEND_ASK, sizeof ask, &ask);
-
-	m_bMoving = false;
+	/*if(couple>=0) {
+		gServer::GetIF()->Send(PL_MOVEENDCOUPLE_ASK, sizeof ask, &ask);
+	}*/
+//	else {
+		gServer::GetIF()->Send(PL_MOVEEND_ASK, sizeof ask, &ask);
+//	}
 	
-
 	//pk_stepFinish_ask(gtc->m_xSpacePos,gtc->m_ySpacePos);
 }
 
@@ -1168,10 +1202,10 @@ void gGameCore::pk_askcouple_rep(PK_ASKCOUPLE_REP* rep)
 
 void gGameCore::pk_movestartcouple_rep(PK_MOVESTART_REP *rep)
 {
-
+	pk_movestart_rep(rep);
 }
 
 void gGameCore::pk_busmovestartcouple_rep(PK_BUSMOVESTART_REP *rep)
 {
-
+	
 }

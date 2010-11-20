@@ -51,6 +51,7 @@ public:
 
 	int				GetGPNum();			// 게임 플레이어 수
 	int				GetMyGPIndex();		// 게임 플레이어 인덱스
+	int				GetCoupleIndex(); //커플 가져오기
 	int				GetMyPIndex();		// 걍 플레이어 인덱스
 	int				GetGPIndex(char* id); // id 로 게임 플레이어 찾기
 	bool			isTurn(int turn);				
@@ -83,9 +84,9 @@ public:
 
 	void			PacketalDrawFix();		
 	// Packet을 통해서 싱크로나이즈 되면, m_nAbsDrawline 값들을 싱크로나이즈 해주는 함수
-	void			SyncronizeToMap(int nInRoomIndex);
+	void			SyncronizeToMap(int nInRoomIndex, int pairIndex=-1);
 	// gMap class의 m_nAbsDrawline과 본 class의 m_nAbsDrawline 값을 싱크로나이즈 해주는 함수
-	void			PutFootPosition(int nInRoomIndex,int nframe,int nCutline);
+	void			PutFootPosition(int nInRoomIndex,int nframe,int nCutline, int couple=-1);
 	// frame값과 nCutline (아마 nCutline은 15겠지?) 을 넣어서 gGameCore에서 캐릭터의 발을 결맞게 해주는 함수
 
 	int				GetCharNumPos(int nPos);		// nPos에 있는 캐릭터 갯수 return

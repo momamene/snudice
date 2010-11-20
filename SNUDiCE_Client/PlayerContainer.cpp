@@ -3,6 +3,9 @@
 #include "MainWin.h"
 #include "UIGame.h"
 #include <stdio.h>
+#include <algorithm>
+
+using namespace std;
 
 #define CHARDATAFILE		".\\Data\\chardata.dat"
 #define CHARIMGDATAFILE		".\\Data\\charimgdata.dat"
@@ -470,29 +473,61 @@ void gPlayerContainer::PacketalDrawFix() {
 }
 
 
-void gPlayerContainer::SyncronizeToMap(int nInRoomIndex)
+void gPlayerContainer::SyncronizeToMap(int nInRoomIndex, int pairIndex)
 {
 	gMap* gmap = gMap::GetIF();
+	const int INTERVAL = 4;
+	static int bef=-1, countdown, num, i;
+	static pair<int,int> plow[INTERVAL];
 
-	m_nAbsDrawlineX[nInRoomIndex] = gmap->m_nAbsDrawlineX + WNDSIZEW/2 - HALFX;
-	m_nAbsDrawlineY[nInRoomIndex] = gmap->m_nAbsDrawlineY + WNDSIZEH/2 - HALFY;
+	if(nInRoomIndex!=-2 && bef != nInRoomIndex) countdown=num=i=0;
+	if(pairIndex != -1) {
+		if(num>=INTERVAL) {
+			m_nAbsDrawlineX[pairIndex] = plow[i].first + WNDSIZEW/2 - HALFX;
+			m_nAbsDrawlineY[pairIndex] = plow[i].second + WNDSIZEH/2 - HALFY;
+			i=(i+1)%INTERVAL;
+		}
+	}
+	bef=nInRoomIndex;
+	plow[countdown]=make_pair(gmap->m_nAbsDrawlineX, gmap->m_nAbsDrawlineY);
+	countdown = (countdown+1)%INTERVAL; num++;
+
+	if(nInRoomIndex != -2) {
+		m_nAbsDrawlineX[nInRoomIndex] = gmap->m_nAbsDrawlineX + WNDSIZEW/2 - HALFX;
+		m_nAbsDrawlineY[nInRoomIndex] = gmap->m_nAbsDrawlineY + WNDSIZEH/2 - HALFY;
+	}
 }
 
-void gPlayerContainer::PutFootPosition(int nInRoomIndex,int nframe,int nCutline)
+void gPlayerContainer::PutFootPosition(int nInRoomIndex,int nframe,int nCutline, int couple)
 {
 	// tileContainer의 m_xSpacePos 와 m_ySpacePos를 읽어서, nMovePosition을 결정.
 	// frame을 읽어서 m_moveFoot을 결정
-	m_movePosition[nInRoomIndex] = gMap::GetIF()->PositionFor_gPC();
-	int nframeLocal = (nframe/nCutline);
+	const int INTERVAL = 4;
+	int nframeLocal = (nframe/nCutline), r;
 
-	if(nframeLocal % 4 == 0)
-		m_moveFoot[nInRoomIndex] = 1;
-	else if(nframeLocal % 4 == 1)
-		m_moveFoot[nInRoomIndex] = 0;
-	else if(nframeLocal % 4 == 2)
-		m_moveFoot[nInRoomIndex] = 1;
-	else if(nframeLocal % 4 == 3)
-		m_moveFoot[nInRoomIndex] = 2;
+	if(nframeLocal % 4 == 0) r = 1;
+	else if(nframeLocal % 4 == 1) r = 0;
+	else if(nframeLocal % 4 == 2) r = 1;
+	else if(nframeLocal % 4 == 3) r = 2;
+
+	static int bef = -1, count, num, i;
+	static pair<int,int> plow[INTERVAL];
+
+	if(nInRoomIndex!=-2 && bef != nInRoomIndex) count = num = i = 0;
+	if(couple!=-1) { 
+		if(num>=INTERVAL) {
+			m_movePosition[couple] = plow[i].first;
+			m_moveFoot[couple] = plow[i].second;
+			i=(i+1)%INTERVAL;
+		}
+	}
+	bef = nInRoomIndex; num++;
+	plow[count] = make_pair(gMap::GetIF()->PositionFor_gPC(), r); count=(count+1)%INTERVAL;
+
+	if(nInRoomIndex!=-2) {
+		m_movePosition[nInRoomIndex] = gMap::GetIF()->PositionFor_gPC();
+		m_moveFoot[nInRoomIndex] = r;
+	}
 }
 
 bool gPlayerContainer::isTurn(int turn)
@@ -501,6 +536,16 @@ bool gPlayerContainer::isTurn(int turn)
 		return true;
 	else
 		return false;
+}
+
+int gPlayerContainer::GetCoupleIndex()
+{
+	if(strlen(m_MyGamePlayer.szCouple) == 0) return -1;
+
+	for(int i=0; i<ROOMMAXPLAYER; i++)
+		if(!strcmp(m_MyGamePlayer.szCouple, m_GPlayerList[i].szID))
+			return i;
+	return -1;
 }
 
 int gPlayerContainer::GetMyGPIndex()
