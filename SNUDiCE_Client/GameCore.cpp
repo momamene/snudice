@@ -582,6 +582,13 @@ void gGameCore::DrawBus()
 					pc->m_GPlayerList[m_nTurn].nPos = m_buspos;
 					map->posSetter(m_buspos / LINEY, m_buspos % LINEY);
 					pc->SyncronizeToMap(m_nTurn);
+					// couple
+					if(strlen(pc->m_GPlayerList[m_nTurn].szCouple) != 0)
+					{
+						int		coupleIdx = pc->GetGPIndex(pc->m_GPlayerList[m_nTurn].szCouple);
+						pc->m_GPlayerList[coupleIdx].nPos = m_buspos;
+						pc->SyncronizeToMap(coupleIdx);
+					}
 				}
 				pc->MainLoop_Busing(NULL, NULL, NULL, m_nTurn);
 			}
@@ -897,8 +904,8 @@ void gGameCore::pk_movestart_rep(PK_MOVESTART_REP *rep)
 		return;
 
 	
-	if(rep->Dice4_1 == -1 || rep->Dice4_2 == -1
-		|| rep->Dice6_1 == -1 || rep->Dice6_2 == -1)
+	if(rep->Dice4_1 == 0 && rep->Dice4_2 == 0
+		&& rep->Dice6_1 == 0 && rep->Dice6_2 == 0)
 	{
 		int ntPos = gPC->m_GPlayerList[ gGameCore::GetIF()->m_nTurn ].nPos;
 		gMap::GetIF()->posSetter(ntPos / LINEY, ntPos % LINEY);

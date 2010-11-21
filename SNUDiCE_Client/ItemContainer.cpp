@@ -66,6 +66,14 @@ bool gItemContainer::SetUp()
 							type = ITEM_NOCLASS;
 						else if( strcmp(szTemp, "ITEM_TOGETHERCLASS") == 0)
 							type = ITEM_TOGETHERCLASS;
+						else if( strcmp(szTemp, "ITEM_DASH") == 0)
+							type = ITEM_DASH;
+						else if( strcmp(szTemp, "ITEM_POWERDASH") == 0)
+							type = ITEM_POWERDASH;
+						else if( strcmp(szTemp, "ITEM_LOVE") == 0)
+							type = ITEM_LOVE;
+						else
+							return false;
 
 						m_ItemList[nIndex].type = type;
 					}
@@ -83,6 +91,18 @@ bool gItemContainer::SetUp()
 							target = TARGET_OTHER;
 						else if(strcmp(szTemp, "TARGET_MEOTHER") == 0)
 							target = TARGET_MEOTHER;
+						else if(strcmp(szTemp, "TARGET_OTHERSEX") == 0)
+							target = TARGET_OTHERSEX;
+						else if(strcmp(szTemp, "TARGET_MYCOUPLE") == 0)
+							target = TARGET_MYCOUPLE;
+						else if(strcmp(szTemp, "TARGET_OTHERCOUPLE") == 0)
+							target = TARGET_OTHERCOUPLE;
+						else if(strcmp(szTemp, "TARGET_ALLCOUPLE") == 0)
+							target = TARGET_ALLCOUPLE;
+						else if(strcmp(szTemp, "TARGET_ALLSINGLE") == 0)
+							target = TARGET_ALLSINGLE;
+						else
+							return false;
 
 						m_ItemList[nIndex].target = target;
 					}
@@ -111,7 +131,10 @@ bool gItemContainer::SetUp()
 				case 9: // pos
 					m_ItemList[nIndex].nPos = atoi(szTemp);
 					break;
-				case 10: // img
+				case 10: // love
+					m_ItemList[nIndex].nLove = atoi(szTemp);
+					break;
+				case 11: // img
 					if(!m_ItemImg[nIndex].Load(szTemp))
 						return false;
 					break;

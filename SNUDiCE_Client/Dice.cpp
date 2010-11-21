@@ -99,7 +99,7 @@ void gDice::DiceThrow()
 		
 		gPC->PacketalDrawFix();
 		int ntPos = gPC->m_GPlayerList[gGameCore::GetIF()->m_nTurn].nPos;
-			gGameCore::GetIF()->Start(m_spacor,ntPos/LINEY,ntPos%LINEY);
+		gGameCore::GetIF()->Start(m_spacor,ntPos/LINEY,ntPos%LINEY);
 
 		return;
 	}

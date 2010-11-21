@@ -23,8 +23,8 @@
 #define POPUP_2NDTEXTY			(POPUP_Y + 52)
 #define POPUP_IMG_W				48			// popup창에 띄우는 이미지
 #define POPUP_IMG_H				48
-#define POPUP_IMG_X				(POPUP_X + 10)
-#define POPUP_IMG_Y				(POPUP_Y + 10)
+#define POPUP_IMG_X				(POPUP_X + 17)
+#define POPUP_IMG_Y				(POPUP_Y + 17)
 #define POPUP_PIXEL_PER_LETTER	6
 
 gPopUp::gPopUp()
