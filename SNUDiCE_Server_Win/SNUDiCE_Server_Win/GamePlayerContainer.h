@@ -25,6 +25,8 @@ enum CoupleState {
 	CPS_NONE = -1,
 	CPS_REJECT,
 	CPS_ACCEPT,
+
+	CPS_PROPOSE,
 };
 
 //수정, 호감도구조체
@@ -74,7 +76,7 @@ public:
 	// m_bSyncornize 값들을 false로 바꾼 뒤, 클라이언트가 완료하는 경우 true로 바꾼다.
 	// 보통 user가 없는 값의 경우 항상 true, 아니면 false.
 
-	bool				m_bCoupleSync[MAXROOM];	//수정, 커플용 동기화작업할때 쓴다.
+//	bool				m_bCoupleSync[MAXROOM];	//수정, 커플용 동기화작업할때 쓴다.
 	
 	PK_ITEMUSE_ASK m_struct_itemuse_ask[MAXROOM];
 	// pk_itemuse_ask -> pk_itemuse_rep -> pk_itemusestart_ask 로 가는 과정에서 임시 저장되는 패킷.
@@ -129,7 +131,7 @@ public:
 
 private:
 
-	int					m_rmWalk;	//remain walk
+	int					m_rmWalk[MAXROOM];	//remain walk
 	
 	void				FirstTurn(int nRoomIndex);
 	void				NextTurn(int nRoomIndex);

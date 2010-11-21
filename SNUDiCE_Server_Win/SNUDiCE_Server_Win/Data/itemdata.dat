@@ -1,43 +1,63 @@
 // item script
-// itemtype,		target,			lang,	math,	art,	move,	stam,	multi,	turn,	pos,	imgfile
+// itemtype,		target,			lang,	math,	art,	move,	stam,	multi,	turn,	pos,	love,	imgfile
 //
 // 00 	커닝페이퍼
-ITEM_STAT,		TARGET_ME,		0,	0,	0,	0,	0,	2,	3,	0,	.\\Data\\Item\\item00.img,
+ITEM_STAT,		TARGET_ME,		0,	0,	0,	0,	0,	2,	3,	0,	0,	.\\Data\\Item\\item00.img,
 // 01	대학국어 책
-ITEM_STAT,		TARGET_ME,		1,	0,	0,	0,	0,	0,	99,	0,	.\\Data\\Item\\item01.img,
+ITEM_STAT,		TARGET_ME,		1,	0,	0,	0,	0,	0,	99,	0,	0,	.\\Data\\Item\\item01.img,
 // 02	미적분학 책
-ITEM_STAT,		TARGET_ME,		0,	1,	0,	0,	0,	0,	99,	0,	.\\Data\\Item\\item02.img,
+ITEM_STAT,		TARGET_ME,		0,	1,	0,	0,	0,	0,	99,	0,	0,	.\\Data\\Item\\item02.img,
 // 03	대중예술의 이해 책
-ITEM_STAT,		TARGET_ME,		0,	0,	1,	0,	0,	0,	99,	0,	.\\Data\\Item\\item03.img,
+ITEM_STAT,		TARGET_ME,		0,	0,	1,	0,	0,	0,	99,	0,	0,	.\\Data\\Item\\item03.img,
 // 04	중앙도서관
-ITEM_STAT,		TARGET_ME,		2,	2,	2,	0,	0,	0,	3,	0,	.\\Data\\Item\\item04.img,
+ITEM_STAT,		TARGET_ME,		2,	2,	2,	0,	0,	0,	3,	0,	0,	.\\Data\\Item\\item04.img,
 // 05	중앙전산실
-ITEM_STAT,		TARGET_ME,		2,	2,	2,	0,	0,	0,	5,	0,	.\\Data\\Item\\item05.img,
+ITEM_STAT,		TARGET_ME,		2,	2,	2,	0,	0,	0,	5,	0,	0,	.\\Data\\Item\\item05.img,
 // 06	친구야 책좀 빌려줘
-ITEM_STAT,		TARGET_OTHER,		-2,	-2,	-2,	0,	0,	0,	3,	0,	.\\Data\\Item\\item06.img,
+ITEM_STAT,		TARGET_OTHER,		-2,	-2,	-2,	0,	0,	0,	3,	0,	0,	.\\Data\\Item\\item06.img,
 // 07	잘자라 우리 아가
-ITEM_STAT,		TARGET_OTHER,		-2,	-2,	-2,	0,	0,	0,	2,	0,	.\\Data\\Item\\item07.img,
+ITEM_STAT,		TARGET_OTHER,		-2,	-2,	-2,	0,	0,	0,	2,	0,	0,	.\\Data\\Item\\item07.img,
 // 08	아이폰
-ITEM_STAT,		TARGET_OTHER,		-2,	-2,	-2,	0,	0,	0,	5,	0,	.\\Data\\Item\\item08.img,
+ITEM_STAT,		TARGET_OTHER,		-2,	-2,	-2,	0,	0,	0,	5,	0,	0,	.\\Data\\Item\\item08.img,
 // 09	문자친구
-ITEM_STAT,		TARGET_MEOTHER,		-2,	-2,	-2,	0,	0,	0,	2,	0,	.\\Data\\Item\\item09.img,
+ITEM_STAT,		TARGET_MEOTHER,		-2,	-2,	-2,	0,	0,	0,	2,	0,	0,	.\\Data\\Item\\item09.img,
 // 10	야식
-ITEM_STAT,		TARGET_MEOTHER,		-3,	-3,	-3,	0,	0,	0,	3,	0,	.\\Data\\Item\\item10.img,
+ITEM_STAT,		TARGET_MEOTHER,		-3,	-3,	-3,	0,	0,	0,	3,	0,	0,	.\\Data\\Item\\item10.img,
 // 11	잘못된 미팅
-ITEM_STAMINA,		TARGET_OTHER,		0,	0,	0,	0,	-2,	0,	0,	0,	.\\Data\\Item\\item11.img,
+ITEM_STAMINA,		TARGET_OTHER,		0,	0,	0,	0,	-2,	0,	0,	0,	0,	.\\Data\\Item\\item11.img,
 // 12	옳지 않은 소개팅
-ITEM_STAMINA,		TARGET_OTHER,		0,	0,	0,	0,	-4,	0,	0,	0,	.\\Data\\Item\\item12.img,
+ITEM_STAMINA,		TARGET_OTHER,		0,	0,	0,	0,	-4,	0,	0,	0,	0,	.\\Data\\Item\\item12.img,
 // 13	음주가무
-ITEM_STAMINA,		TARGET_ALLEXCEPTME,	0,	0,	0,	0,	-2,	0,	0,	0,	.\\Data\\Item\\item13.img,
+ITEM_STAMINA,		TARGET_ALLEXCEPTME,	0,	0,	0,	0,	-2,	0,	0,	0,	0,	.\\Data\\Item\\item13.img,
 // 14	박카스D
-ITEM_STAMINA,		TARGET_ME,		0,	0,	0,	0,	3,	0,	0,	0,	.\\Data\\Item\\item14.img,
-// 15	대출
-ITEM_TOGETHERCLASS,	TARGET_OTHER,		0,	0,	0,	0,	0,	0,	3,	0,	.\\Data\\Item\\item15.img,
-// 16	오늘 휴강
-ITEM_NOCLASS,		TARGET_OTHER,		0,	0,	0,	0,	0,	0,	0,	0,	.\\Data\\Item\\item16.img,
-// 17	스쿠터
-ITEM_MOVESELECT,	TARGET_ME,		0,	0,	0,	0,	0,	0,	0,	0,	.\\Data\\Item\\item17.img,
-// 18	통금시간
-ITEM_MOVEPLACE,	TARGET_ME,			0,	0,	0,	0,	0,	0,	0,	109,	.\\Data\\Item\\item18.img,
-// 19	선배의 호출
-ITEM_MOVEPLACE,	TARGET_OTHER,			0,	0,	0,	0,	0,	0,	0,	55,	.\\Data\\Item\\item19.img,
+ITEM_STAMINA,		TARGET_ME,		0,	0,	0,	0,	3,	0,	0,	0,	0,	.\\Data\\Item\\item14.img,
+// 15	녹두로 오라
+ITEM_MOVEPLACE,		TARGET_ALLEXCEPTME,	0,	0,	0,	0,	0,	0,	0,	55,	0,	.\\Data\\Item\\item15.img,
+// 16	대출
+ITEM_TOGETHERCLASS,	TARGET_OTHER,		0,	0,	0,	0,	0,	0,	3,	0,	0,	.\\Data\\Item\\item16.img,
+// 17	오늘 휴강
+ITEM_NOCLASS,		TARGET_OTHER,		0,	0,	0,	0,	0,	0,	0,	0,	0,	.\\Data\\Item\\item17.img,
+// 18	스쿠터
+ITEM_MOVESELECT,	TARGET_ME,		0,	0,	0,	0,	0,	0,	0,	0,	0,	.\\Data\\Item\\item18.img,
+// 19	통금시간
+ITEM_MOVEPLACE,		TARGET_ME,		0,	0,	0,	0,	0,	0,	0,	109,	0,	.\\Data\\Item\\item19.img,
+// 20	선배의 호출
+ITEM_MOVEPLACE,		TARGET_OTHER,		0,	0,	0,	0,	0,	0,	0,	55,	0,	.\\Data\\Item\\item20.img,
+// 21	수줍은 고백
+ITEM_DASH,		TARGET_OTHERSEX,	0,	0,	0,	0,	0,	0,	0,	0,	0,	.\\Data\\Item\\item21.img,
+// 22	강렬한 유혹
+ITEM_POWERDASH,		TARGET_OTHERSEX,	0,	0,	0,	0,	0,	0,	0,	0,	0,	.\\Data\\Item\\item22.img,
+// 23	그만 헤어져
+ITEM_LOVE,		TARGET_MYCOUPLE,	0,	0,	0,	0,	0,	0,	0,	0,	-99,	.\\Data\\Item\\item23.img,
+// 24	이간질
+ITEM_LOVE,		TARGET_OTHERCOUPLE,	0,	0,	0,	0,	0,	0,	0,	0,	-1,	.\\Data\\Item\\item24.img,
+// 25	크리스마스 이브
+ITEM_STAT,		TARGET_ALLCOUPLE,	5,	5,	5,	0,	0,	0,	5,	0,	0,	.\\Data\\Item\\item25.img,
+// 26	빼빼로데이
+ITEM_STAMINA,		TARGET_ALLSINGLE,	0,	0,	0,	0,	-2,	0,	0,	0,	0,	.\\Data\\Item\\item26.img,
+// 27	입영통지서
+ITEM_STAT,		TARGET_ALLSINGLE,	5,	5,	5,	0,	0,	0,	5,	0,	0,	.\\Data\\Item\\item27.img,
+// 28	통금시간
+ITEM_STAMINA,		TARGET_ALLCOUPLE,	0,	0,	0,	0,	-2,	0,	0,	0,	0,	.\\Data\\Item\\item28.img,
+
+
