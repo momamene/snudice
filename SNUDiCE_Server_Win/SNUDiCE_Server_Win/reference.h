@@ -395,7 +395,7 @@ channel에 있던 애가 방만들면, 채널에 그 애가 남아있음
 	 a.b
 	 [PK_ITEMUSESTART_ASK] 211.169.219.68	 test1 
 	 itemUse(f) - nItemID : 0 type : ITEM_STAT
-	 IUS_INFOCHANGEpk_infochangeFirst_rep(f) 
+	 IUS_INFOCHANGEpk_infochangeItem_rep(f) 
 	 a.b
 	 [PK_INFOCHANGEEND_ASK] 211.169.219.68	 message : test1
 	 [PK_WARPEND_ASK] 211.169.219.68	 test1 
@@ -494,7 +494,7 @@ server : 5 14 , client : 13 16 player : test2 etc : 0 0
 
 //	 [문제1] TARGET_OTHER 문제
 //	 => itemUse 부분
-//	 => pk_infochangeFirst_rep
+//	 => pk_infochangeItem_rep
 //	 [문제2] ITEM_STAMINA case
 	 [문제3] 비범용성
 	 [문제4] 중복 사용의 문제

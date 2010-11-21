@@ -57,6 +57,9 @@ bool gGamePlayerContainer::init(int nRoomIndex)
 			m_isGamePlayer[nRoomIndex][i] = false;
 		}
 		else {
+			m_favor[nRoomIndex][i].bYes = CPS_NONE;		//수정
+			m_GamePlayer[nRoomIndex][i].nLove = -1;	//수정
+			
 			m_isGamePlayer[nRoomIndex][i] = true;
 			m_isNokdu[nRoomIndex][i] = false;			
 			//m_isNokdu[nRoomIndex][i] = true;			
@@ -108,7 +111,8 @@ bool gGamePlayerContainer::init(int nRoomIndex)
 
 void gGamePlayerContainer::Release()
 {
-
+	m_rmWalk = 0;
+	
 }
 
 
@@ -157,7 +161,7 @@ void gGamePlayerContainer::pk_movestart_ask(PK_DEFAULT *pk,SOCKET sock)
 
 	if(m_GamePlayer[nRoomIndex][nInRoomIndex].nStamina<=0) {
 		staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],1);
-		pk_infochangeSecond_rep(nRoomIndex,1,0);	
+		pk_infochangeTile_rep(nRoomIndex,nInRoomIndex,1,0);	
 		pk_gameplayerinfo_rep(nRoomIndex);
 		pk_nextturn_rep(nRoomIndex);
 		return;
@@ -191,55 +195,120 @@ void gGamePlayerContainer::pk_movestart_ask(PK_DEFAULT *pk,SOCKET sock)
 		break;
 	}
 	
+	rep.Dice4_1 = 3;
+	rep.Dice4_2 = 0;
+	rep.Dice6_1 = 0;
+	rep.Dice6_2 = 0;
+	
 	nSum = rep.Dice4_1 + rep.Dice4_2 + rep.Dice6_1 + rep.Dice6_2;
 
+	
 	rep.nDist = nSum;
-
 
 	if(m_isNokdu[nRoomIndex][nInRoomIndex]) nSum *= -1;
 
-	putFavorsameclass(nRoomIndex , nInRoomIndex , m_GamePlayer[nRoomIndex][nInRoomIndex].nPos , rep.nDist);
+
 	//수정, 여기서 호감도 관련 체킹을 합니다.
-	
-
-	int des = gTC->destination(m_GamePlayer[nRoomIndex][nInRoomIndex].nPos,rep.nDist);
-	movePlayer(nRoomIndex,nInRoomIndex,des,MPS_MOVE);
-
+	//////////////////////////////////////////////////////////////////////////
+	int stopPoint , des;
 	PushbSynAllPlayer(nRoomIndex,false);
+	
+	if (m_GamePlayer[nRoomIndex][nInRoomIndex].nLove == -1)	{	//너, 솔로냐?
+		stopPoint = putFavorCross(nRoomIndex , nInRoomIndex , m_GamePlayer[nRoomIndex][nInRoomIndex].nPos , rep.nDist);
+		des = stopPoint;
+		
+		movePlayer(nRoomIndex,nInRoomIndex,des,MPS_MOVE);
+		rep.nDist = nSum - m_rmWalk;
+		gPC->SendSelect(PL_MOVESTART_REP,sizeof(PK_MOVESTART_REP),&rep,ECM_GAME,nRoomIndex);
+	}
+	else	{	//너 커플이냐?
+		PK_MOVESTARTCOUPLE_REP repCouple;
+		repCouple = rep;
+		des = gTC->destination(m_GamePlayer[nRoomIndex][nInRoomIndex].nPos , rep.nDist);
+		movePlayer(nRoomIndex,nInRoomIndex,des,MPS_MOVE);
 
-	gPC->SendSelect(PL_MOVESTART_REP,sizeof(PK_MOVESTART_REP),&rep,ECM_GAME,nRoomIndex);
+		int partnerIndex = m_favor[nRoomIndex][nInRoomIndex].lvTargetIndex;
+		movePlayer(nRoomIndex,partnerIndex,des,MPS_MOVE);
+		
+		gPC->SendSelect(PL_MOVESTARTCOUPLE_REP,sizeof(PK_MOVESTARTCOUPLE_REP),&rep,ECM_GAME,nRoomIndex);
+		
+	}
+	//////////////////////////////////////////////////////////////////////////
+		
 	//gMainWin::GetIF()->Send(PL_MOVESTART_REP,sizeof(PK_MOVESTART_REP),&rep,ask.szID);
 
 }
 
-void gGamePlayerContainer::putFavorsameclass(int nRoomIndex, int nInRoomIndex, int newDist , int nextDist)
+int gGamePlayerContainer::putFavorCross(int nRoomIndex, int nInRoomIndex, int nPos , int nDist)
 {
-	char				buf [1024];
-
-	wsprintf(buf,"[FavorUp] ");
-
+	gTileContainer *gTC = gTileContainer::GetIF();
 	gCharinfo* gCI = gCharinfo::GetIF();
 	GAMEPLAYER metPlayer , myPlayer = m_GamePlayer[nRoomIndex][nInRoomIndex];
-	for (int i = newDist+1 ; i <= nextDist ; i++)	{
+	int iPos;
+	
+	for (int i = 1 ; i <= nDist ; i++)	{
+		iPos =  gTC->destination(nPos,i);
+		
 		for (int j = 0 ; j < ROOMMAXPLAYER ; j++)	{
-			if (nInRoomIndex == j)		continue;
+			if (nInRoomIndex == j)		continue;	//	j : 지나간 사람 index
 			metPlayer = m_GamePlayer[nRoomIndex][j];
-			if (gCI->getMale(metPlayer.ctype)^gCI->getMale(myPlayer.ctype))	{
-				if (newDist <= metPlayer.nPos && metPlayer.nPos < nextDist)	{
-					m_favor[nRoomIndex][nInRoomIndex].point[j] += CROSS_FAVORPOINT;
-					m_favor[nRoomIndex][j].point[nInRoomIndex] += CROSS_FAVORPOINT;
-//					wsprintf(buf,"[%s and %s : %d point] ", nInRoomIndex , );
-
-				} else if (metPlayer.nPos == nextDist)	{
-					m_favor[nRoomIndex][nInRoomIndex].point[j] += SAMETILE_FAVORPOINT;
-					m_favor[nRoomIndex][j].point[nInRoomIndex] += SAMETILE_FAVORPOINT;
+			if (iPos == metPlayer.nPos)	{
+				if (gCI->getMale(metPlayer.ctype)^gCI->getMale(myPlayer.ctype))	{
+					if (i == nDist)	{	//도착지점에서 만나 
+						if (favorUpFunc(nRoomIndex , nInRoomIndex , j , SAMETILE_FAVORPOINT))	{
+							m_rmWalk = 0;
+							return iPos;
+						}
+					}
+					else	{			//지나가다 만나
+						if (favorUpFunc(nRoomIndex , nInRoomIndex , j , CROSS_FAVORPOINT))	{
+							m_rmWalk = nDist - i;	//남은거리 저장
+							return iPos;
+						}
+					}
 				}
 			}
 		}
 	}
-	OutputDebugString(buf);
+	return iPos;
 }
+//수정, 
 
+void gGamePlayerContainer::pk_askcouple_rep(int nRoomIndex , int playerIndex_a, int playerIndex_b)
+{
+	PK_ASKCOUPLE_REP rep1, rep2;
+	char *playerID_a , *playerID_b;
+	gRoomCore			*gRC  = gRoomCore::GetIF();
+
+	playerID_a = gRC->FindPlayerszIDInTheRoom(playerIndex_a,nRoomIndex);
+	playerID_b = gRC->FindPlayerszIDInTheRoom(playerIndex_b,nRoomIndex);
+
+	strcpy(rep1.szCouple , playerID_a);
+	strcpy(rep2.szCouple , playerID_b);
+	
+	gMainWin::GetIF()->Send(PL_ASKCOUPLE_REP,sizeof(PK_ASKCOUPLE_REP),&rep1,playerID_b);
+	gMainWin::GetIF()->Send(PL_ASKCOUPLE_REP,sizeof(PK_ASKCOUPLE_REP),&rep2,playerID_a);
+	
+}
+bool gGamePlayerContainer::favorUpFunc(int nRoomIndex , int playerIndex_a, int playerIndex_b , int upPoint /* = CROSS_FAVORPOINT */)	{
+	char				buf [1024];
+	
+	m_favor[nRoomIndex][playerIndex_a].point[playerIndex_b] += upPoint;
+	m_favor[nRoomIndex][playerIndex_b].point[playerIndex_a] += upPoint;
+
+
+	if (m_favor[nRoomIndex][playerIndex_a].point[playerIndex_b]  >= MINIMUM_COUPLE_CONDITION)	{	//커플 성립조건 충족
+		m_favor[nRoomIndex][playerIndex_a].lvTargetIndex = playerIndex_b;				m_favor[nRoomIndex][playerIndex_a].bYes = CPS_REJECT;	
+		m_favor[nRoomIndex][playerIndex_b].lvTargetIndex = playerIndex_a;				m_favor[nRoomIndex][playerIndex_b].bYes = CPS_REJECT;	
+		return true;
+	}
+	else	
+		wsprintf(buf,"[FavorUp][Room : %d ; index : %d and %d : %d point] ", nRoomIndex , playerIndex_a , playerIndex_b , upPoint);
+	OutputDebugString(buf);
+
+	
+	return false;
+}
 void gGamePlayerContainer::debuger_move(int nDis,char* szID) {
 	gPlayerContainer	*gPCt = gPlayerContainer::GetIF();
 	gRoomCore			*gRC = gRoomCore::GetIF();
@@ -350,34 +419,57 @@ void gGamePlayerContainer::pk_moveend_ask(PK_DEFAULT *pk,SOCKET sock)
 	
 	int nRoomIndex = gPC->GetCoreFlag(ask.szID);
 	int nInRoomIndex = gRC->FindPlayerIndexInTheRoom(ask.szID,nRoomIndex);
+
 	char szTurnID[IDLENGTH];
 	strcpy(szTurnID,m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].szID);
 
-
+	if (m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nLove > -1)
+		nRoomIndex = nRoomIndex;
 
 	if(m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nPos == ask.nDestPos) {
 		m_bSyncronize[nRoomIndex][nInRoomIndex] = true;
 			
 		if(isbSynAllTrue(nRoomIndex)) {	// 모든 무브가 끝나면...
 			PushbSynAllPlayer(nRoomIndex,false);
+			if (m_favor[nRoomIndex][m_nTurn[nRoomIndex]].bYes != CPS_NONE)	{	//가는도중 커플수락여부
+				pk_askcouple_rep(nRoomIndex,m_nTurn[nRoomIndex],m_favor[nRoomIndex][m_nTurn[nRoomIndex]].lvTargetIndex);
+				return;
+			}
+			TILE *aaa= gTC->m_tileMap;
+
 			if(gTC->m_tileMap[ask.nDestPos].tileType==TY_BUS) {
 				OutputDebugString("TY_BUS\n");
 				pk_busmovechoose_rep(nRoomIndex,szTurnID);
 			}
 			else if(gTC->m_tileMap[ask.nDestPos].tileType==TY_CLASS) {
 				OutputDebugString("TY_CLASS\n");
-				int getAccomplishment = meetGrade(nRoomIndex,gTC->m_tileMap[ask.nDestPos].flag1);
-				
+				int getAccomplishment = meetGrade ( nRoomIndex , gTC->m_tileMap[ask.nDestPos].flag2 , m_nTurn[nRoomIndex]);
+				int getCoupleAccomplishment = -1;
 				GradeRankSyncronizer(nRoomIndex);
 
-					
-				if(getAccomplishment!=-1) {
+				if(getAccomplishment!=-1) {	//우히힝 여기서 뻘코딩~!
 					OutputDebugString("TY_MySubject\n");
 					staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],-1);
-					pk_infochangeSecond_rep(nRoomIndex,-1,getAccomplishment);
-					pk_gameplayerinfo_rep(nRoomIndex);
-				}//수정
-				else	{//통과
+					if (m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nLove == -1)
+						pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex],-1,getAccomplishment);
+				}
+				if (m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nLove != -1)	{	//커플모드
+					int partnerIndex = m_favor[nRoomIndex][m_nTurn[nRoomIndex]].lvTargetIndex;
+					getCoupleAccomplishment = meetGrade(nRoomIndex,gTC->m_tileMap[ask.nDestPos].flag2 , partnerIndex);
+					
+					if (getCoupleAccomplishment != -1)	{
+						OutputDebugString("TY_PartnerSubject\n");
+						staminaConvert(nRoomIndex,partnerIndex,-1);
+						if (getAccomplishment != -1)	//수업 같이 듣긔
+							pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex],-1,
+							getCoupleAccomplishment > getAccomplishment ? getCoupleAccomplishment : getAccomplishment, partnerIndex);
+							//둘중 높은사람점수로 (공부시켜주니까 -ㅅ-;;사랑의 힘;;)
+						else
+							pk_infochangeTile_rep(nRoomIndex,partnerIndex,-1, getCoupleAccomplishment);
+					}
+				}
+				pk_gameplayerinfo_rep(nRoomIndex);
+				if (getAccomplishment == -1 && getCoupleAccomplishment == -1)	{	//통과
 					pk_nextturn_rep(nRoomIndex);
 					pk_gameplayerinfo_rep(nRoomIndex);
 				}
@@ -385,20 +477,35 @@ void gGamePlayerContainer::pk_moveend_ask(PK_DEFAULT *pk,SOCKET sock)
 			else if(gTC->m_tileMap[ask.nDestPos].tileType==TY_DRINK) {
 				OutputDebugString("TY_DRINK\n");
 				staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],-1);
-				pk_infochangeSecond_rep(nRoomIndex,-1,0);
+				if (m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nLove == -1)	{	//싱글
+					pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex],-1,0);
+				} else	{	//커플
+					int partnerIndex = m_favor[nRoomIndex][m_nTurn[nRoomIndex]].lvTargetIndex;
+					staminaConvert(nRoomIndex,partnerIndex,-1);
+					pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex],-1,0 , partnerIndex);
+				}
+
 				pk_gameplayerinfo_rep(nRoomIndex);
 //				pk_nextturn_rep(nRoomIndex);
 			}
 			else if(gTC->m_tileMap[ask.nDestPos].tileType==TY_STAMINA) {
 				OutputDebugString("TY_STAMINA\n");
 				staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],1);
-				pk_infochangeSecond_rep(nRoomIndex,1,0);
+				if (m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nLove == -1)	{	//싱글
+					pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex] , 1,0);
+				}	else	{	//커플
+					int partnerIndex = m_favor[nRoomIndex][m_nTurn[nRoomIndex]].lvTargetIndex;
+					staminaConvert(nRoomIndex,partnerIndex,1);
+					pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex] , 1,0 , partnerIndex);
+				}
 				pk_gameplayerinfo_rep(nRoomIndex);
 //				pk_nextturn_rep(nRoomIndex);
 			}
 			else if(gTC->m_tileMap[ask.nDestPos].tileType==TY_ITEM) {
 				OutputDebugString("TY_ITEM\n");
 				getItem(nRoomIndex,m_nTurn[nRoomIndex]);
+				if (m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nLove != -1)		//커플
+					getItem(nRoomIndex,m_favor[nRoomIndex][m_nTurn[nRoomIndex]].lvTargetIndex);
 				pk_gameplayerinfo_rep(nRoomIndex);
 				pk_nextturn_rep(nRoomIndex);
 			}
@@ -485,10 +592,14 @@ void gGamePlayerContainer::pk_busmoveselect_ask(PK_DEFAULT *pk,SOCKET sock)
 	int dis = gTC->distance(m_GamePlayer[nRoomIndex][nInRoomIndex].nPos,ask.nPos);
 	
 	movePlayer(nRoomIndex,nInRoomIndex,ask.nPos,MPS_MOVE);
-
 	rep.nDist = dis;
-
-	gPC->SendSelect(PL_BUSMOVESTART_REP,sizeof(rep),&rep,ECM_GAME,nRoomIndex);
+	if (m_GamePlayer[nRoomIndex][nInRoomIndex].nLove == -1)	{	//솔로
+		gPC->SendSelect(PL_BUSMOVESTART_REP,sizeof(rep),&rep,ECM_GAME,nRoomIndex);
+	}	else	{	//커플
+		int partnerIndex = m_favor[nRoomIndex][nInRoomIndex].lvTargetIndex;
+		movePlayer(nRoomIndex,partnerIndex,ask.nPos,MPS_MOVE);
+		gPC->SendSelect(PL_BUSMOVESTARTCOUPLE_REP,sizeof(rep),&rep,ECM_GAME,nRoomIndex);
+	}
 }
 
 
@@ -593,16 +704,14 @@ void gGamePlayerContainer::pk_subGameplayerinfo_rep(int nRoomIndex,PK_GAMEPLAYER
 /// 학점 관련 함수
 //////////////////////////////////////////////////////////////////////////
 
-int gGamePlayerContainer::meetGrade(int nRoomIndex,int subjectIndex) // subjectIndex = flag1
+int gGamePlayerContainer::meetGrade(int nRoomIndex,int subjectIndex ,int nInRoomIndex) // subjectIndex = flag1
 {	// int 값으로 resultMIC 값을 return 하면 되겠네..
 	gSubjectContainer *gSCt = gSubjectContainer::GetIF();
 	gItemContainer *gICt = gItemContainer::GetIF();
 
-	int nInRoomIndex = m_nTurn[nRoomIndex];
-
 	int resultMIC = -1;	// error
 	for(int i = 0 ; i < MAXSUBJECT ; i++ ){
-		if(m_GamePlayer[nRoomIndex][nInRoomIndex].bySubIdx[i]==subjectIndex){
+		if(m_GamePlayer[nRoomIndex][nInRoomIndex].bySubIdx[i] == subjectIndex){
 			if(gSCt->m_subject[subjectIndex].flag1==0) {		// 언어
 				resultMIC = meetItemCalculator(nRoomIndex,nInRoomIndex,0,m_GamePlayer[nRoomIndex][nInRoomIndex].nLang);
 			}
@@ -944,7 +1053,7 @@ void gGamePlayerContainer::pk_itemusestart_ask(PK_DEFAULT *pk,SOCKET sock)
 		}
 		else if(iuState == IUS_INFOCHANGE) {
 			OutputDebugString("IUS_INFOCHANGE");
-			pk_infochangeFirst_rep(ask);
+			pk_infochangeItem_rep(ask);
 		}
 		else if(iuState == IUS_INVALIDSTATE) {
 			// error 처리
@@ -1059,7 +1168,21 @@ ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, 
 			OutputDebugString("type : ITEM_MOVESELECT\n");
 			switch(gIC->m_ItemList[ask.nItemID].target) {
 				case TARGET_ME:
-					pk_warpstart_rep(nRoomIndex,nInRoomIndex,ask.nDestPos);
+					if (m_GamePlayer[nRoomIndex][nInRoomIndex].nLove == -1)
+						pk_warpstart_rep(nRoomIndex,nInRoomIndex,ask.nDestPos);
+					else	{
+						bool *bInRoomIndex = new bool[ROOMMAXPLAYER];
+						int *desList  = new int[ROOMMAXPLAYER];
+						memset(bInRoomIndex , 0 , sizeof(bInRoomIndex));
+						memset(desList , 0 , sizeof(desList));
+						int partnerIndex  = m_favor[nRoomIndex][nInRoomIndex].lvTargetIndex;
+						bInRoomIndex[nInRoomIndex] = true;	bInRoomIndex[partnerIndex] = true;
+						desList[nInRoomIndex] = ask.nDestPos;	desList[partnerIndex] = ask.nDestPos;
+						
+						pk_warpliststart_rep(nRoomIndex , bInRoomIndex ,desList);
+
+						delete desList;						delete bInRoomIndex;
+					}
 					break;
 			}
 
@@ -1071,7 +1194,21 @@ ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, 
 
 			switch(gIC->m_ItemList[ask.nItemID].target) {
 				case TARGET_ME:
-					pk_warpstart_rep(nRoomIndex,nInRoomIndex,gIC->m_ItemList[ask.nItemID].nPos);
+					if (m_GamePlayer[nRoomIndex][nInRoomIndex].nLove == -1)
+						pk_warpstart_rep(nRoomIndex,nInRoomIndex,ask.nDestPos);
+					else	{
+						bool *bInRoomIndex = new bool[ROOMMAXPLAYER];
+						int *desList  = new int[ROOMMAXPLAYER];
+						memset(bInRoomIndex , 0 , sizeof(bInRoomIndex));
+						memset(desList , 0 , sizeof(desList));
+						int partnerIndex  = m_favor[nRoomIndex][nInRoomIndex].lvTargetIndex;
+						bInRoomIndex[nInRoomIndex] = true;	bInRoomIndex[partnerIndex] = true;
+						desList[nInRoomIndex] = ask.nDestPos;	desList[partnerIndex] = ask.nDestPos;
+
+						pk_warpliststart_rep(nRoomIndex , bInRoomIndex ,desList);
+
+						delete desList;						delete bInRoomIndex;
+					}
 					break;
 				case TARGET_OTHER:
 //					bool barrInRoomIndex[ROOMMAXPLAYER];
@@ -1079,7 +1216,22 @@ ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, 
 //					int narrDes[ROOMMAXPLAYER];
 //					putTargetIntForOther(nRoomIndex,nInRoomIndex,narrDes,TARGET_OTHER,gIC->m_ItemList[ask.nItemID].nPos);
 //					pk_warpliststart_rep(nRoomIndex,m_isGamePlayer[nRoomIndex],narrDes);
-					pk_warpstart_rep(nRoomIndex,gRC->FindPlayerIndexInTheRoom(ask.szTarget,nRoomIndex),gIC->m_ItemList[ask.nItemID].nPos);
+					
+					if (m_GamePlayer[nRoomIndex][nInRoomIndex].nLove == -1)
+						pk_warpstart_rep(nRoomIndex,nInRoomIndex,ask.nDestPos);
+					else	{
+						bool *bInRoomIndex = new bool[ROOMMAXPLAYER];
+						int *desList  = new int[ROOMMAXPLAYER];
+						memset(bInRoomIndex , 0 , sizeof(bInRoomIndex));
+						memset(desList , 0 , sizeof(desList));
+						int partnerIndex  = m_favor[nRoomIndex][nInRoomIndex].lvTargetIndex;
+						bInRoomIndex[nInRoomIndex] = true;	bInRoomIndex[partnerIndex] = true;
+						desList[nInRoomIndex] = ask.nDestPos;	desList[partnerIndex] = ask.nDestPos;
+
+						pk_warpliststart_rep(nRoomIndex , bInRoomIndex ,desList);
+
+						delete desList;						delete bInRoomIndex;
+					}
 					break;
 			}
 			return IUS_NONE;
@@ -1097,13 +1249,15 @@ void gGamePlayerContainer::pk_warpstart_rep (int nRoomIndex, int nInRoomIndex, i
 
 	gPlayerContainer	*gPC =	gPlayerContainer::GetIF();
 	gTileContainer		*gTC =	gTileContainer::GetIF();
-
+	gRoomCore			*gRC =	gRoomCore::GetIF();
+	
+	
 	rep.nDest = des;
+	strcpy(rep.szID , gRC->FindPlayerszIDInTheRoom(nInRoomIndex,nRoomIndex));
 	//rep.nDist = gTC->distance(m_GamePlayer[nRoomIndex][nInRoomIndex].nPos,des);
-
-	movePlayer(nRoomIndex,nInRoomIndex,des,MPS_WARP);
+	
 	PushbSynAllPlayer(nRoomIndex,false);
-
+	movePlayer(nRoomIndex,nInRoomIndex,des,MPS_WARP);
 	gPC->SendSelect(PL_WARPSTART_REP,sizeof(rep),&rep,ECM_GAME,nRoomIndex);
 }
 
@@ -1169,7 +1323,7 @@ void gGamePlayerContainer::pk_warpend_ask (PK_DEFAULT *pk, SOCKET sock)
 			PushbSynAllPlayer(nRoomIndex,false); 
 			if(gTC->m_tileMap[ask.nDestPos].tileType==TY_CLASS) {
 				OutputDebugString("TY_CLASS\n");
-				int getAccomplishment = meetGrade(nRoomIndex,gTC->m_tileMap[ask.nDestPos].flag1);
+				int getAccomplishment = meetGrade(nRoomIndex,gTC->m_tileMap[ask.nDestPos].flag1 ,nInRoomIndex);
 
 				GradeRankSyncronizer(nRoomIndex);
 
@@ -1177,26 +1331,26 @@ void gGamePlayerContainer::pk_warpend_ask (PK_DEFAULT *pk, SOCKET sock)
 				if(getAccomplishment!=-1) {
 					OutputDebugString("TY_MySubject\n");
 					staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],-1);
-					pk_infochangeSecond_rep(nRoomIndex,-1,getAccomplishment);
+					pk_infochangeTile_rep(nRoomIndex,nInRoomIndex,-1,getAccomplishment);
 
 				}
 				pk_gameplayerinfo_rep(nRoomIndex);
 				//pk_nextturn_rep(nRoomIndex);
-				pk_infochangeSecond_rep(nRoomIndex,0,getAccomplishment);
+				pk_infochangeTile_rep(nRoomIndex,nInRoomIndex , 0,getAccomplishment);
 			}
 			else if(gTC->m_tileMap[ask.nDestPos].tileType==TY_DRINK) {
 				OutputDebugString("TY_DRINK\n");
 				staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],-1);
-				pk_infochangeSecond_rep(nRoomIndex,-1,0);
+				pk_infochangeTile_rep(nRoomIndex,nInRoomIndex,-1,0);
 				pk_gameplayerinfo_rep(nRoomIndex);
-				pk_infochangeSecond_rep(nRoomIndex,-1,0);
+				pk_infochangeTile_rep(nRoomIndex,nInRoomIndex,-1,0);
 			}
 			else if(gTC->m_tileMap[ask.nDestPos].tileType==TY_STAMINA) {
 				OutputDebugString("TY_STAMINA\n");
 				staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],1);
-				pk_infochangeSecond_rep(nRoomIndex,1,0);
+				pk_infochangeTile_rep(nRoomIndex,nInRoomIndex , 1,0);
 				pk_gameplayerinfo_rep(nRoomIndex);
-				pk_infochangeSecond_rep(nRoomIndex,1,0);
+				pk_infochangeTile_rep(nRoomIndex,nInRoomIndex , 1,0);
 			}
 			else if(gTC->m_tileMap[ask.nDestPos].tileType==TY_ITEM) {
 				OutputDebugString("TY_ITEM\n");
@@ -1265,9 +1419,9 @@ void gGamePlayerContainer::pk_warplistend_ask (PK_DEFAULT *pk, SOCKET sock)
 }
 
 
-void gGamePlayerContainer::pk_infochangeFirst_rep(PK_ITEMUSE_ASK ask)
+void gGamePlayerContainer::pk_infochangeItem_rep(PK_ITEMUSE_ASK ask)
 {
-	OutputDebugString("pk_infochangeFirst_rep(f) \n");
+	OutputDebugString("pk_infochangeItem_rep(f) \n");
 	gPlayerContainer	*gPC	=	gPlayerContainer::GetIF();
 	gRoomCore			*gRC	=	gRoomCore::GetIF();
 	gItemContainer		*gICt	= gItemContainer::GetIF();
@@ -1401,15 +1555,14 @@ void gGamePlayerContainer::putTargetIntForOther(int nRoomIndex,int nInRoomIndex,
 	}
 }
 
-void gGamePlayerContainer::pk_infochangeSecond_rep(int nRoomIndex,int stamina,int accomplishment) 
+void gGamePlayerContainer::pk_infochangeTile_rep(int nRoomIndex,int nInRoomIndex, int stamina,int accomplishment , int coupleIndex)
 {
-	OutputDebugString("pk_infochangeSecond_rep(f) \n");
+	OutputDebugString("pk_infochangeTile_rep(f) \n");
 	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
 
 	PK_INFOCHANGE_REP	rep;
 	memset(&rep,0,sizeof(PK_INFOCHANGE_REP));
 
-	int nInRoomIndex = m_nTurn[nRoomIndex];
 	strcpy(rep.info[nInRoomIndex].szID,m_GamePlayer[nRoomIndex][nInRoomIndex].szID);
 	rep.info[nInRoomIndex].nLang = 0;
 	rep.info[nInRoomIndex].nMath = 0;
@@ -1417,6 +1570,16 @@ void gGamePlayerContainer::pk_infochangeSecond_rep(int nRoomIndex,int stamina,in
 	rep.info[nInRoomIndex].nStamina = stamina;
 	rep.info[nInRoomIndex].nGrade = accomplishment;
 
+	if (coupleIndex != -1)	{
+		int partnerIndex = m_favor[nRoomIndex][nInRoomIndex].lvTargetIndex;
+		strcpy(rep.info[partnerIndex].szID,m_GamePlayer[nRoomIndex][partnerIndex].szID);
+		rep.info[partnerIndex].nLang = 0;
+		rep.info[partnerIndex].nMath = 0;
+		rep.info[partnerIndex].nArt = 0;
+		rep.info[partnerIndex].nStamina = stamina;
+		rep.info[partnerIndex].nGrade = accomplishment;
+	}
+	
 	PushbSynAllPlayer(nRoomIndex,false);
 
 	gPC->SendSelect(PL_INFOCHANGE_REP,sizeof(rep),&rep,ECM_GAME,nRoomIndex);
@@ -1454,7 +1617,7 @@ void gGamePlayerContainer::pk_infochangeend_ask(PK_DEFAULT *pk, SOCKET sock)
 
 
 
-//수정사항 , 땜빵코딩, 클라이언트에서의 ask가 아니라 서버 내의 스레드 종료시에 호출됨
+//땜빵코딩, 클라이언트에서의 ask가 아니라 서버 내의 스레드 종료시에 호출됨
 void gGamePlayerContainer::pk_exit_ask(char *clientID, SOCKET sock)
 {
 	gPlayerContainer	*gPC =	gPlayerContainer::GetIF();
@@ -1544,3 +1707,111 @@ void gGamePlayerContainer::pk_gologin_ask(PK_DEFAULT *pk,SOCKET sock)
 
 }
 
+
+void gGamePlayerContainer::pk_anscouple_ask(PK_DEFAULT *pk,SOCKET sock)	//수정 , 커플이 되어 주세요!
+{
+	
+	PK_ANSCOUPLE_ASK ask;
+
+	gPlayerContainer	*gPC =	gPlayerContainer::GetIF();
+	gChannelContainer	*gCC =	gChannelContainer::GetIF();
+	gRoomCore	*gRC =	gRoomCore::GetIF();
+
+
+	SOCKADDR_IN			clientAddr;
+	int					addrLen;
+	char				buf [1024];
+
+	addrLen = sizeof(clientAddr);
+	getpeername(sock, (SOCKADDR*)&clientAddr, &addrLen);
+
+	ask = *((PK_ANSCOUPLE_ASK*)pk->strPacket);
+	
+	
+	PLAYER gotPlayer	=	gPC->GetPlayerFromSocket(sock);
+	int nRoomIndex		=	gotPlayer.nCoreFlag;
+
+	int gotPlayerIndex	=	gRC->FindPlayerIndexInTheRoom(gotPlayer.szID , nRoomIndex);
+	
+	int tgPlayerIndex	=	m_favor[nRoomIndex][gotPlayerIndex].lvTargetIndex;
+	PLAYER tgPlayer		=	gPC->GetPlayerFromID(gRC->FindPlayerszIDInTheRoom(tgPlayerIndex , nRoomIndex));
+	
+
+	m_favor[nRoomIndex][gotPlayerIndex].bYes = (CoupleState)ask.bYes;
+	if (m_favor[nRoomIndex][gotPlayerIndex].bYes == CPS_ACCEPT && m_favor[nRoomIndex][tgPlayerIndex].bYes == CPS_ACCEPT)	{	//커플탄생
+		PK_BECOUPLE_REP rep;
+		gCharinfo *gCI = gCharinfo::GetIF();
+		m_rmWalk = 0;	//남은거리 0화
+
+		
+		bool gotMale, tgMale;
+		gotMale =	gCI->getMale(gotPlayer.classtype);
+		tgMale	=	gCI->getMale(tgPlayer.classtype);
+		
+		if (gotMale && !tgMale)	{
+			strcpy(rep.szMale , gotPlayer.szID);
+			strcpy(rep.szFeMale , tgPlayer.szID);
+
+		}
+		else if (tgMale && !gotMale)	{
+			strcpy(rep.szMale , tgPlayer.szID);
+			strcpy(rep.szFeMale , gotPlayer.szID);
+		}
+		else	{	
+			//Exception : 게이 / 레즈커플 =ㅅ=;;
+			OutputDebugString("게이탄생 뭐야이거 -ㅅ-;;\n");
+		}
+		
+		wsprintf(buf,"[Match][Room : %d ; %d and %d : %d point] ", nRoomIndex , gotPlayerIndex , tgPlayerIndex , LOVEINITPOINT);
+		m_favor[nRoomIndex][gotPlayerIndex].point[tgPlayerIndex] = -1;				m_favor[nRoomIndex][gotPlayerIndex].bYes = CPS_NONE;
+		m_favor[nRoomIndex][tgPlayerIndex].point[gotPlayerIndex] = -1;				m_favor[nRoomIndex][tgPlayerIndex].bYes = CPS_NONE;
+		m_GamePlayer[nRoomIndex][gotPlayerIndex].nLove = LOVEINITPOINT ;
+		m_GamePlayer[nRoomIndex][tgPlayerIndex].nLove = LOVEINITPOINT ;
+		
+		strcpy(m_GamePlayer[nRoomIndex][gotPlayerIndex].szCouple , tgPlayer.szID);
+		strcpy(m_GamePlayer[nRoomIndex][tgPlayerIndex].szCouple , gotPlayer.szID);
+		
+		gPC->SendSelect(PL_BECOUPLE_REP,sizeof(rep),&rep,ECM_GAME,nRoomIndex);
+		pk_gameplayerinfo_rep(nRoomIndex);
+
+	}
+	if (!ask.bYes)	{	//차였긔
+		m_favor[nRoomIndex][gotPlayerIndex].lvTargetIndex = -1;				m_favor[nRoomIndex][tgPlayerIndex].lvTargetIndex = -1;
+		m_favor[nRoomIndex][gotPlayerIndex].bYes = CPS_NONE;					m_favor[nRoomIndex][tgPlayerIndex].bYes = CPS_NONE;
+		m_favor[nRoomIndex][gotPlayerIndex].point[tgPlayerIndex] /= 2;		m_favor[nRoomIndex][tgPlayerIndex].point[gotPlayerIndex] /= 2;
+
+		//pk_movestart_rep
+		PK_MOVESTART_REP rep;
+		rep.nDist = m_rmWalk;
+		rep.Dice4_1 = -1;		rep.Dice4_2 = -1;
+		rep.Dice6_1 = -1;		rep.Dice6_2 = -1;
+		gPC->SendSelect(PL_MOVESTART_REP,sizeof(PK_MOVESTART_REP),&rep,ECM_GAME,nRoomIndex);
+	}
+}
+
+//여기서는 뭐하는 거지?????
+void	gGamePlayerContainer::pk_becoupleend_ask(PK_DEFAULT *pk , SOCKET sock)
+{
+
+	PK_BECOUPLEEND_ASK ask;
+
+	gPlayerContainer *gPC = gPlayerContainer::GetIF();
+	gRoomCore	*gRC =	gRoomCore::GetIF();
+
+	SOCKADDR_IN			clientAddr;
+	int					addrLen;
+	char				buf [1024];
+
+	addrLen = sizeof(clientAddr);
+	getpeername(sock, (SOCKADDR*)&clientAddr, &addrLen);
+
+	ask = *((PK_BECOUPLEEND_ASK*)pk->strPacket);
+	int nRoomIndex = gPC->GetPlayerFromID(ask.szID).nCoreFlag;
+	int nInRoomIndex = gRC->FindPlayerIndexInTheRoom(ask.szID , nRoomIndex);
+	
+	m_bSyncronize[nRoomIndex][nInRoomIndex] = true;
+	if (isbSynAllTrue(nRoomIndex))	{	//동기화 끗
+		PushbSynAllPlayer(nRoomIndex, false);
+		pk_nextturn_rep(nRoomIndex);
+	}
+}

@@ -12,7 +12,7 @@
 #define WM_SOCKET				WM_USER + 1
 
 #define	WINSOCK_VERSION_2_2		MAKEWORD(2, 2)
-#define SERVER_IP				"211.169.219.88"		// 현탁
+#define SERVER_IP				"211.169.219.86"		// 현탁
 //#define SERVER_IP				"211.169.219.71"		// 상우
 //#define SERVER_IP				"211.169.219.68"		// 창규
 #define SERVER_PORT				9000
@@ -184,7 +184,7 @@ struct CHARINFO
 {
 	char		szName[CHARNAMELENGTH];
 	char		szCollege[CHARCOLLEGENAME];
-	bool		bMale;
+	bool		bMale;		//남자 : true
 	// 학습력
 	int			nLang;
 	int			nMath;

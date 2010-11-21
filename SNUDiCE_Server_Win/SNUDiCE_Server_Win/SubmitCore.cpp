@@ -123,7 +123,14 @@ void gSubmitCore::putFavorsameclass(int nRoomIndex)
 	int		playeridx_A , playeridx_B;
 	bool	sameChk;
 	gGamePlayerContainer* gGPC = gGamePlayerContainer::GetIF();
+	gCharinfo *gCI = gCharinfo::GetIF();
+	gRoomCore *gRC = gRoomCore::GetIF();
 
+	char buf[1024];
+
+	CLASSTYPE classtype[ROOMMAXPLAYER];
+	gRC->FindClasstypeFromIDs_RMP(nRoomIndex,classtype);
+	
 	int j,k;
 	for(int i = 0 ; i < CLASSNUM ; i++)	{
 		sameChk = false;
@@ -135,14 +142,16 @@ void gSubmitCore::putFavorsameclass(int nRoomIndex)
 		}
 		if (!sameChk)	{
 			for (j = 0 ; j < CLASSSEAT ; j++)	{
-				for (k = 0 ; k < CLASSSEAT ; k++)	{
-					if (j==k)
-						continue;					
+				for (k = j+1 ; k < CLASSSEAT ; k++)	{
 					playeridx_A = m_submitSubject[nRoomIndex][i][j];
 					playeridx_B = m_submitSubject[nRoomIndex][i][k];
 
-					gGPC->m_favor[nRoomIndex][playeridx_A].point[playeridx_B] = SAMECLASS_FAVORPOINT;
-					gGPC->m_favor[nRoomIndex][playeridx_B].point[playeridx_A] = SAMECLASS_FAVORPOINT;
+					if (gCI->getMale(classtype[playeridx_A])^gCI->getMale(classtype[playeridx_B]))	{
+						wsprintf(buf,"[SameclassFavorup] : %s and %s\n",gGPC->m_GamePlayer[nRoomIndex][playeridx_A].szID , gGPC->m_GamePlayer[nRoomIndex][playeridx_B].szID );
+						OutputDebugString(buf);
+						gGPC->m_favor[nRoomIndex][playeridx_A].point[playeridx_B] += SAMECLASS_FAVORPOINT;
+						gGPC->m_favor[nRoomIndex][playeridx_B].point[playeridx_A] += SAMECLASS_FAVORPOINT;
+					}
 				}
 			}
 		}

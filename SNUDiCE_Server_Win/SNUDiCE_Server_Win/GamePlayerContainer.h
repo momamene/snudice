@@ -2,10 +2,11 @@
 #include "network.h"
 #include "Charinfo.h"
 
-#define MINIMUM_COUPLE_CONDITION 100
-#define SAMECLASS_FAVORPOINT 30
+#define MINIMUM_COUPLE_CONDITION 50
+#define SAMECLASS_FAVORPOINT 10
 #define SAMETILE_FAVORPOINT 20
 #define CROSS_FAVORPOINT 10
+#define LOVEINITPOINT 40
 
 enum ItemUseState {
 	IUS_NONE,
@@ -20,11 +21,19 @@ enum MovePlayerState {
 	MPS_WARP,
 };
 
+enum CoupleState {
+	CPS_NONE = -1,
+	CPS_REJECT,
+	CPS_ACCEPT,
+};
+
 //수정, 호감도구조체
 struct sFavor 
 {
 //	char *playerid[ROOMMAXPLAYER];	// 대략 필요 없을듯; RoomCore의 FindPlayerIndexInTheRoom를 이용한다.
-	int point[ROOMMAXPLAYER];
+	int		point[ROOMMAXPLAYER];	// -1 : 커플상태 , 즉 호감도가 오를리가 업ㅇ다
+	int		lvTargetIndex;	//사랑을 받는 상대
+	CoupleState		bYes;			//사귐수락여부	//	0,1 : 커플수락동의/거절상태 , -1 : 그런거없ㅇ다.
 };
 
 
@@ -65,6 +74,8 @@ public:
 	// m_bSyncornize 값들을 false로 바꾼 뒤, 클라이언트가 완료하는 경우 true로 바꾼다.
 	// 보통 user가 없는 값의 경우 항상 true, 아니면 false.
 
+	bool				m_bCoupleSync[MAXROOM];	//수정, 커플용 동기화작업할때 쓴다.
+	
 	PK_ITEMUSE_ASK m_struct_itemuse_ask[MAXROOM];
 	// pk_itemuse_ask -> pk_itemuse_rep -> pk_itemusestart_ask 로 가는 과정에서 임시 저장되는 패킷.
 
@@ -96,11 +107,16 @@ public:
 	void		pk_warplistend_ask (PK_DEFAULT *pk, SOCKET sock);
 
 	void		pk_itemusestart_ask(PK_DEFAULT *pk,SOCKET sock);
-	void		pk_infochangeFirst_rep(PK_ITEMUSE_ASK ask);
-	void		pk_infochangeSecond_rep(int nRoomIndex,int stamina,int accomplishment);
+	void		pk_infochangeItem_rep(PK_ITEMUSE_ASK ask);								//item사용시 수치변경
+	void		pk_infochangeTile_rep(int nRoomIndex, int nInRoomIndex , int stamina,int accomplishment , int coupleIndex = -1);	// coupleIndex가 -1이면 한사람, -1이 아니면 커플인덱스값
 
 	void		pk_infochangeend_ask(PK_DEFAULT *pk, SOCKET sock);
 
+
+	void		pk_anscouple_ask(PK_DEFAULT *pk , SOCKET sock);
+	void		pk_becoupleend_ask(PK_DEFAULT *pk , SOCKET sock);
+
+	void		pk_askcouple_rep( int nRoomIndex , int playerIndex_a, int playerIndex_b);	//	 a, b : 플레이어의 인덱스값	
 
 	bool		SetUp();
 	bool		init(int nRoomIndex);
@@ -112,13 +128,16 @@ public:
 	void				debuger_card(int nIndex,char* szID);
 
 private:
+
+	int					m_rmWalk;	//remain walk
+	
 	void				FirstTurn(int nRoomIndex);
 	void				NextTurn(int nRoomIndex);
 
 	void				PushbSynAllPlayer(int nRoomIndex,bool bSyn);
 	bool				isbSynAllTrue(int nRoomIndex);
 
-	int					meetGrade(int nRoomIndex,int subjectIndex);  // subjectIndex = flag1
+	int					meetGrade(int nRoomIndex,int subjectIndex ,int nInRoomIndex);  // subjectIndex = flag1
 	int					meetItemCalculator(int nRoomIndex,int nInRoomIndex,int classType,int originalVal);
 	void				GradeRankSyncronizer(int nRoomIndex);
 	int					Rank(int nRoomIndex,int nInRoomIndex);
@@ -140,6 +159,11 @@ private:
 	void		putTargetIntForOther(int nRoomIndex,int nInRoomIndex, int* getNarrDes,ITEMTARGET target,int nVal);
 	// 두 함수는 other일 때만 작동하는 가짜 함수이다.
 
-	void				putFavorsameclass(int nRoomIndex, int nInRoomIndex, int newDist , int nextDist);	//옷깃만 스쳐도 인연
+	int				putFavorCross(int nRoomIndex, int nInRoomIndex, int newDist , int nextDist);	//옷깃만 스쳐도 인연
+			// 리턴값 : 지나갈때 사귐신청이면 그 위치 리턴
+	bool				favorUpFunc ( int nRoomIndex , int playerIndex_a, int playerIndex_b , int upPoint = CROSS_FAVORPOINT);	//	 a, b : 플레이어의 인덱스값	
+			// 리턴값 : 지나가다 만날 때 커플신청이면 true
+
 	
 };
+

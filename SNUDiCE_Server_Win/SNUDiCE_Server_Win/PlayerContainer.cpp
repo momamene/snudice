@@ -299,6 +299,27 @@ PLAYER gPlayerContainer::GetPlayerFromID(char* szID) {
 	return player;
 } 
 
+PLAYER gPlayerContainer::GetPlayerFromSocket(SOCKET sock)
+{
+
+	PLAYER*		temp;
+	PLAYER		player;
+	memset(&player,0,sizeof(PLAYER));
+
+	for(PLAYER_LIST::iterator it = m_PlayerList.begin() ; 
+		it != m_PlayerList.end() ; it++)
+	{
+		temp = *it;
+		if(temp->sock == sock)
+		{
+			//player = *temp; 
+			memcpy(&player,temp,sizeof(PLAYER));
+			break;
+		}
+	}	
+	return player;
+} 
+
 void gPlayerContainer::SendSelect (ePROTOCOL prot,int pkSize,void *pk,eCOREMODE mode,int nPage)
 {
 	PLAYER*		temp;
@@ -360,3 +381,4 @@ void gPlayerContainer::Draw (HDC hdc)
 	}
 	TextOut(hdc,0,0,"Player Infomation",strlen("Player Infomation"));
 }
+

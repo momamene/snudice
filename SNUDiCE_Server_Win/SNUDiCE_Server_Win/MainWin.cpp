@@ -280,13 +280,13 @@ void gMainWin::Recv(PK_DEFAULT *pk, SOCKET sock)
 		case PL_MOVESTART_ASK:
 			gGamePlayerContainer::GetIF()->pk_movestart_ask(pk,sock);
 			break;
-		case PL_MOVEEND_ASK:
+		case PL_MOVEEND_ASK: case PL_MOVEENDCOUPLE_ASK:
 			gGamePlayerContainer::GetIF()->pk_moveend_ask(pk,sock);
 			break;
 		case PL_BUSMOVESELECT_ASK:
 			gGamePlayerContainer::GetIF()->pk_busmoveselect_ask(pk,sock);
 			break;
-		case PL_BUSMOVEEND_ASK:
+		case PL_BUSMOVEEND_ASK: case PL_BUSMOVEENDCOUPLE_ASK :
 			gGamePlayerContainer::GetIF()->pk_busmoveend_ask(pk,sock);
 			break;
 		case PL_ITEMUSE_ASK:
@@ -309,13 +309,18 @@ void gMainWin::Recv(PK_DEFAULT *pk, SOCKET sock)
 		case PL_WARPLISTEND_ASK:
 			gGamePlayerContainer::GetIF()->pk_warplistend_ask(pk,sock);
 			break;
-		//¼öÁ¤
+
 		case PL_GOLOGIN_ASK :
 			gGamePlayerContainer::GetIF()->pk_gologin_ask(pk,sock);
 		case PL_WHISPER_ASK:
 			gMessageCore::GetIF()->pk_whisper_ask(pk, sock);
 			break;
-			
+		case PL_ANSCOUPLE_ASK :
+			gGamePlayerContainer::GetIF()->pk_anscouple_ask(pk,sock);
+			break;
+		case PL_BECOUPLEEND_ASK :
+			gGamePlayerContainer::GetIF()->pk_becoupleend_ask(pk,sock);
+			break;
 	}
 }
 

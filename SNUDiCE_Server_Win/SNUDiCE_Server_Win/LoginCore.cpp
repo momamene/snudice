@@ -43,6 +43,16 @@ bool gLoginCore::SetUp()
 	USER*	user;
 	char	buf[1024];
 
+	Put("1","1");
+	Put("11","1");
+	Put("2","2");
+	Put("3","3");
+	Put("4","4");
+	Put("5","5");
+	Put("6","6");
+	Put("7","7");
+	Put("8","8");
+	Put("9","9");
 	Put("test1","1111");
 	Put("test2","1111");
 	Put("test3","1111");

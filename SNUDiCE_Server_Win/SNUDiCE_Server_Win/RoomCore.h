@@ -34,7 +34,7 @@ public:
 	void			SendRoomListCauseChange(int nPage);		// nPage에 있는 애들에게 RoomList를 갱신
 
 	int				FindPlayerIndexInTheRoom(char* szID,int nRoomIndex);
-
+	char*			FindPlayerszIDInTheRoom(int nInRoomIndex , int nRoomIndex);
 	void			FindClasstypeFromIDs_RMP(int roomIndex,CLASSTYPE* classtype);
 
 private:
@@ -49,5 +49,7 @@ private:
 	
 	bool			isRoomInPage(int nPage);
 	bool			ChangeMakerToFirstUser(int roomIndex);
-	void			FindPlayersFromIDs_RMP(int roomIndex,PLAYER* getPlayerlist);	//수정, 이거주석 달것!
+	void			FindPlayersFromIDs_RMP(int roomIndex,PLAYER* getPlayerlist);
 };
+
+

@@ -64,6 +64,10 @@ int gRoomCore::FindPlayerIndexInTheRoom(char* szID,int nRoomIndex)
 	return -1;
 }
 
+char* gRoomCore::FindPlayerszIDInTheRoom(int nInRoomIndex , int nRoomIndex)
+{
+	return m_rooms[nRoomIndex].szRoomMaxPlayer[nInRoomIndex];
+}
 
 bool gRoomCore::isFullRoom (int index)
 {

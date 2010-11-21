@@ -57,7 +57,7 @@ float gSubjectContainer::gradeExpectOne (int weightCount, int nRound)
 {
 	float grade;
 	grade = (double)weightCount / (nRound+29);
-	return gradification(grade);	
+	return gradification(grade);
 }
 
 
