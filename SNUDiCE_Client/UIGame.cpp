@@ -335,22 +335,24 @@ void gUIGame::Draw()
 	ptMouse.y = gMouse::GetIF()->m_nPosY;
 	if(!IsUIRange(ptMouse.x, ptMouse.y))
 	{
-		int		nToolTipPos = map->viewabsToCon(ptMouse);
-		gTile	*tile = &map->tileMap[nToolTipPos];
-		if(tile->tileType != TY_NONE)
+		if(!gChat::GetIF()->PointInUI(ptMouse.x, ptMouse.y))
 		{
-			ptMouse.x += MAPTOOLTIP_TERM_MOUSE;
-			ptMouse.y += MAPTOOLTIP_TERM_MOUSE;
-			if(ptMouse.x + MAPTOOLTIP_SIZE_W > WNDSIZEW)
-				ptMouse.x = WNDSIZEW - MAPTOOLTIP_SIZE_W;
-			if(ptMouse.y + MAPTOOLTIP_SIZE_H > CHAT_POS_Y)
-				ptMouse.y = CHAT_POS_Y - MAPTOOLTIP_SIZE_H;
+			int		nToolTipPos = map->viewabsToCon(ptMouse);
+			gTile	*tile = &map->tileMap[nToolTipPos];
+			if(tile->tileType != TY_NONE)
+			{
+				ptMouse.x += MAPTOOLTIP_TERM_MOUSE;
+				ptMouse.y += MAPTOOLTIP_TERM_MOUSE;
+				if(ptMouse.x + MAPTOOLTIP_SIZE_W > WNDSIZEW)
+					ptMouse.x = WNDSIZEW - MAPTOOLTIP_SIZE_W;
+				if(ptMouse.y + MAPTOOLTIP_SIZE_H > CHAT_POS_Y)
+					ptMouse.y = CHAT_POS_Y - MAPTOOLTIP_SIZE_H;
 
-			m_ImgUI[UIIMG_MAPTOOLTIP].Draw(ptMouse.x, ptMouse.y);
+				m_ImgUI[UIIMG_MAPTOOLTIP].Draw(ptMouse.x, ptMouse.y);
 
-			int		textPosX = ptMouse.x + MAPTOOLTIP_TEXT_X;
-			int		textPosY = ptMouse.y + MAPTOOLTIP_TEXT_Y;
-			gUtil::BeginText();
+				int		textPosX = ptMouse.x + MAPTOOLTIP_TEXT_X;
+				int		textPosY = ptMouse.y + MAPTOOLTIP_TEXT_Y;
+				gUtil::BeginText();
 				if(tile->subject)
 				{
 					gUtil::Text(textPosX, textPosY, tile->subject);
@@ -365,7 +367,8 @@ void gUIGame::Draw()
 				{
 					gUtil::Text(textPosX, textPosY, tile->building);
 				}
-			gUtil::EndText();
+				gUtil::EndText();
+			}
 		}
 	}
 

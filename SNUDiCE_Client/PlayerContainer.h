@@ -44,7 +44,8 @@ public:
 	int				m_moveFoot[ROOMMAXPLAYER];
 	int				m_movePosition[ROOMMAXPLAYER];
 
-	int				m_nNoDraw;			// 해당 index인 캐릭터 안 그림. default == -1			
+	int				m_nNoDraw;			// 해당 index인 캐릭터 안 그림. default == -1
+	int				m_nNoDraw2;
 
 public:
 	int				GetMyItemNum();		// 내 아이템 갯수

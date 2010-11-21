@@ -480,10 +480,20 @@ void gGameCore::DrawBus()
 				}
 				if(nFrame >= 2)
 				{
+					if(strlen(pc->m_GPlayerList[m_nTurn].szCouple) != 0)
+					{
+						int		coupleidx = pc->GetGPIndex(pc->m_GPlayerList[m_nTurn].szCouple);
+						pc->m_nNoDraw2 = coupleidx;
+					}
 					pc->m_nNoDraw = m_nTurn;
 				}
 				if(nFrame >= 1)
 				{
+					if(strlen(pc->m_GPlayerList[m_nTurn].szCouple) != 0)
+					{
+						int		coupleidx = pc->GetGPIndex(pc->m_GPlayerList[m_nTurn].szCouple);
+						pc->m_movePosition[coupleidx] = 2;
+					}
 					pc->m_movePosition[m_nTurn] = 2; 
 				}
 
@@ -648,6 +658,12 @@ void gGameCore::DrawBus()
 				}
 				if(nFrame >= 1)
 				{
+					if(strlen(pc->m_GPlayerList[m_nTurn].szCouple) != 0)
+					{
+						int		coupleidx = pc->GetGPIndex(pc->m_GPlayerList[m_nTurn].szCouple);
+						pc->m_nNoDraw2 = -1;
+						pc->m_movePosition[coupleidx] = 0;
+					}
 					pc->m_nNoDraw = -1;
 					pc->m_movePosition[m_nTurn] = 0; 
 				}
@@ -696,7 +712,10 @@ void gGameCore::DrawBus()
 					ask.nDestPos = pc->m_GPlayerList[ m_nTurn ].nPos;
 					strcpy(ask.szID, pc->m_MyGamePlayer.szID);
 
-					gServer::GetIF()->Send(PL_BUSMOVEEND_ASK, sizeof ask, &ask);
+					if(strlen(pc->m_GPlayerList[m_nTurn].szCouple) != 0)
+						gServer::GetIF()->Send(PL_BUSMOVEENDCOUPLE_ASK, sizeof ask, &ask);
+					else
+						gServer::GetIF()->Send(PL_BUSMOVEEND_ASK, sizeof ask, &ask);
 
 					pc->MainLoop_Busing(NULL, NULL, NULL, m_nTurn);
 				}
@@ -876,6 +895,19 @@ void gGameCore::pk_movestart_rep(PK_MOVESTART_REP *rep)
 	
 	if(m_bMoving)
 		return;
+
+	
+	if(rep->Dice4_1 == -1 || rep->Dice4_2 == -1
+		|| rep->Dice6_1 == -1 || rep->Dice6_2 == -1)
+	{
+		int ntPos = gPC->m_GPlayerList[ gGameCore::GetIF()->m_nTurn ].nPos;
+		gMap::GetIF()->posSetter(ntPos / LINEY, ntPos % LINEY);
+		m_bMoving = true; m_remain = -1;
+		gPC->PacketalDrawFix();
+		gGameCore::GetIF()->Start(m_spacor,ntPos/LINEY,ntPos%LINEY);
+		return;
+	}
+
 
 	int d1 = 0, d2 = 0;		// 4 ,6 ¸éÃ¼ °¹¼ö
 	int	c1, c2;				// ÁÖ»çÀ§ 1,2ÀÇ ´«
@@ -1207,5 +1239,5 @@ void gGameCore::pk_movestartcouple_rep(PK_MOVESTART_REP *rep)
 
 void gGameCore::pk_busmovestartcouple_rep(PK_BUSMOVESTART_REP *rep)
 {
-	
+	pk_busmovestart_rep(rep);
 }

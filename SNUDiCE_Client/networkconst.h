@@ -12,15 +12,15 @@
 #define WM_SOCKET				WM_USER + 1
 
 #define	WINSOCK_VERSION_2_2		MAKEWORD(2, 2)
-#define SERVER_IP				"211.169.219.86"		// 현탁
+//#define SERVER_IP				"211.169.219.86"		// 현탁
 //#define SERVER_IP				"211.169.219.71"		// 상우
-//#define SERVER_IP				"211.169.219.87"		// 창규
+#define SERVER_IP				"211.169.219.87"		// 창규
 #define SERVER_PORT				9000
 #define BUFFERSIZE				2048
 
 #define PK_HEADER_SIZE			4
 
-#define SNUDICE_VERSION			"0.5084"
+#define SNUDICE_VERSION			"0.6000"
 
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 //	통신 프로토콜
@@ -543,6 +543,12 @@ enum ITEMTARGET
 	TARGET_ALLEXCEPTME,		// 나 빼고 모든 유저
 	TARGET_OTHER,			// 다른 유저 하나
 	TARGET_MEOTHER,			// 나랑 상대
+// 	TARGET_OTHERSEX,		// 이성
+// 	TARGET_MYCOUPLE,		// 내 애인
+// 	TARGET_OTHERCOUPLE,		// 다른 커플
+// 	TARGET_ALLCOUPLE,		// 모든 커플
+// 	TARGET_ALLSINGLE,		// 모든 싱글
+
 };
 
 enum ITEMTYPE
@@ -553,6 +559,9 @@ enum ITEMTYPE
 	ITEM_MOVEPLACE,			// 스크립트에 지정된 장소로 이동
 	ITEM_NOCLASS,			// 휴강. 상대의 다음 수업을 무효화
 	ITEM_TOGETHERCLASS,		// 상대가 내 수업과 겹칠 때, 나도 성취도 +
+// 	ITEM_LOVE,				// 애정도
+// 	ITEM_DASH,				// 거절가능 대쉬
+// 	ITEM_POWERDASH,			// 거절불가 대쉬
 };
 
 struct ITEMCARD
