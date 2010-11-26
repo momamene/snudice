@@ -42,4 +42,6 @@
 #define STR_20			"아이템이 없습니다."
 
 #define STR_21			"커플이 되시겠습니까?"
-
+#define STR_22			"이성을 선택하십시오"
+#define STR_23			"그 사람은 이미 커플입니다"
+#define STR_24			"당신은 이미 커플입니다"

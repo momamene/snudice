@@ -195,11 +195,13 @@ void gGameCore::MainLoopMouse()
 void gGameCore::Draw()
 {
 	gMap::GetIF()->Draw();
+
+	if(!m_bBusing && !m_bWarping && !m_bWarpingList)
+		gPlayerContainer::GetIF()->MainLoop();
+
 	DrawBus();
 	DrawWarp();
 	DrawWarpList();
-	if(!m_bBusing && !m_bWarping && !m_bWarpingList)
-		gPlayerContainer::GetIF()->MainLoop();
 
 //	gChat::GetIF()->Draw();
 	gUIGame::GetIF()->Draw();
@@ -309,7 +311,7 @@ void gGameCore::DrawWarpList()
 					ScrollStart(m_warpDest);
 					bDrawAll = false;
 				}
-				pc->MainLoop_WarpList(m_warplistDest, true, -WARPDIST*nFrame);
+				pc->MainLoop_WarpList(m_warplistDest, bDrawAll, -WARPDIST*nFrame);
 			}
 			break;
 		case WARPLIST_SCROLLSTART:
@@ -382,7 +384,7 @@ void gGameCore::DrawWarpList()
 				{
 					bDrawAll = true;
 				}
-				pc->MainLoop_WarpList(m_warplistDest, true, -(WARPFRAME - nFrame)*WARPDIST);
+				pc->MainLoop_WarpList(m_warplistDest, bDrawAll, -(WARPFRAME - nFrame)*WARPDIST);
 			}
 			break;
 	}

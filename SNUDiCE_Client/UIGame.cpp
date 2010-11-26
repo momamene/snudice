@@ -729,6 +729,20 @@ bool gUIGame::OnLButtonDown()
 									}
 								}
 								break;
+							// 연애요소 추가
+							case ITEM_DASH: case ITEM_POWERDASH:
+								{
+									// 난 이미 커플
+									if(strlen(gPC->m_MyGamePlayer.szCouple) != 0)
+									{
+										gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_24);
+										return true;
+									}
+									m_nItemID	= ItemIdx;
+									m_uimode	= UIM_TARGETSELECT;
+								}
+								break;
+
 						}
 						return true;
 					}
@@ -760,6 +774,30 @@ bool gUIGame::OnLButtonDown()
 				}
 				else
 				{
+					ITEMCARD	*item = &gItemContainer::GetIF()->m_ItemList[ m_nItemID ];
+					switch(item->target)
+					{
+						case TARGET_OTHERSEX:
+							{
+								// 동성
+								if(gPC->m_CharInfo[target->ctype].bMale == gPC->m_CharInfo[gPC->m_MyGamePlayer.ctype].bMale)
+								{
+									gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_22);
+									return true;
+								}
+								if(item->type == ITEM_DASH || item->type == ITEM_POWERDASH)
+								{
+									// 이미 대상은 커플임
+									if(strlen(target->szCouple) != 0)
+									{
+										gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_23);
+										return true;
+									}
+								}
+							}
+							break;
+					}
+
 					PK_ITEMUSE_ASK		ask;
 					ask.nItemID	= m_nItemID;
 					strcpy(ask.szID, gPC->m_MyPlayer.szID);
@@ -794,6 +832,31 @@ bool gUIGame::OnLButtonDown()
 					}
 					else
 					{
+						ITEMCARD	*item = &gItemContainer::GetIF()->m_ItemList[ m_nItemID ];
+						switch(item->target)
+						{
+						case TARGET_OTHERSEX:
+							{
+								// 동성
+								if(gPC->m_CharInfo[ gPC->m_GPlayerList[ m_target[i].idx ].ctype ].bMale
+										== gPC->m_CharInfo[ gPC->m_MyGamePlayer.ctype ].bMale)
+								{
+									gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_22);
+									return true;
+								}
+								if(item->type == ITEM_DASH || item->type == ITEM_POWERDASH)
+								{
+									// 이미 대상은 커플임
+									if(strlen(gPC->m_GPlayerList[m_target[i].idx].szCouple) != 0)
+									{
+										gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_23);
+										return true;
+									}
+								}
+							}
+							break;
+						}
+
 						PK_ITEMUSE_ASK		ask;
 
 						strcpy(ask.szID, gPC->m_MyGamePlayer.szID);
