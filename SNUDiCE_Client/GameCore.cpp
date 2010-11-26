@@ -59,7 +59,6 @@ bool gGameCore::SetUp()
 	m_bScrolling = false;
 	m_bBusSel	= false;
 	m_bBusing   = false;
-	m_bNextTurnKeep = false;
 	m_bWarping	= false;
 	m_bWarpingList = false;
 
@@ -78,16 +77,6 @@ void gGameCore::MainLoop()
 //			BusStepOn();
 	if(m_bScrolling)
 		ScrollOn();
-
-	if(m_bNextTurnKeep)
-	{
-		if(GetTickCount() - m_nKeepStart > 1000)
-		{
-			m_bNextTurnKeep = false;
-			pk_nextturn_rep(&m_pkNext);
-		}
-	}
-
 
 	gUIGame::GetIF()->MainLoop();
 
@@ -1096,13 +1085,6 @@ void gGameCore::End()		// 이동 끝남
 
 void gGameCore::pk_nextturn_rep(PK_NEXTTURN_REP *rep)
 {
-	if(m_bNextTurnKeep)
-	{
-		m_pkNext = *rep;
-		m_nKeepStart = GetTickCount();
-		return;
-	}
-
 	if(m_nTurn == rep->nNowTurn)
 	{
 		m_nTurn		= rep->nNextTurn;

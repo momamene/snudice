@@ -64,13 +64,8 @@ public:
 	bool		m_bWarping;
 	bool		m_bWarpingList;
 
-
-
-	PK_NEXTTURN_REP		m_pkNext;
-	int			m_nKeepStart;
 	int			m_remain;
-	bool		m_bNextTurnKeep;	// 턴 넘기는거 Keep. true면 keep 해뒀다 나중에 처리
-
+//
 private:
 	BUSMOVE		m_busmode;
 	int			m_buspos;			// 버스 도착 장소
