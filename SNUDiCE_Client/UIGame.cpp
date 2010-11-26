@@ -751,7 +751,7 @@ bool gUIGame::OnLButtonDown()
 									}
 									else
 									{
-										if(strlen(gPC->m_MyGamePlayer.szCouple) != 0)
+										if(strlen(gPC->m_MyGamePlayer.szCouple) == 0)
 										{
 											gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_25);
 											return true;
