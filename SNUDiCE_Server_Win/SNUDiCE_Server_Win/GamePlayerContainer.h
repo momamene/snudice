@@ -2,7 +2,7 @@
 #include "network.h"
 #include "Charinfo.h"
 
-#define MINIMUM_COUPLE_CONDITION 50
+#define MINIMUM_COUPLE_CONDITION 20
 #define SAMECLASS_FAVORPOINT 10
 #define SAMETILE_FAVORPOINT 20
 #define CROSS_FAVORPOINT 10
@@ -87,6 +87,9 @@ public:
 
 	void		pk_maingamestart_rep(int nRoomIndex);
 	void		pk_movestart_ask(PK_DEFAULT *pk,SOCKET sock);
+	
+	void		pk_movestart_rep(int nRoomIndex , int nInRoomIndex , PK_MOVESTART_REP rep );	// debuger_move¸¦ À§ÇÔ;;;;
+	
 	void		pk_moveend_ask(PK_DEFAULT *pk,SOCKET sock);
 	void		pk_nextturn_rep(int nRoomIndex);
 	void		pk_busmovechoose_rep(int nRoomIndex,char* szID);
@@ -128,6 +131,7 @@ public:
 
 	void				debuger_move(int nDis,char* szID);
 	void				debuger_card(int nIndex,char* szID);
+	void				debuger_turn(char* szID);
 
 private:
 

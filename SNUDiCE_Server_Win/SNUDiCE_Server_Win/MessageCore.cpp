@@ -97,6 +97,8 @@ void gMessageCore::debuger(char* str,char* szID) {
 		gGPCt->debuger_move(nStr2,szID);
 	else if(strcmp(szStr1,"card")==0) 
 		gGPCt->debuger_card(nStr2,szID);
+	else if (strcmp(szStr1,"turn")==0)
+		gGPCt->debuger_turn(szID);
 }
 
 
