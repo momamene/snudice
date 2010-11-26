@@ -52,7 +52,7 @@ public:
 
 	int				GetGPNum();			// 게임 플레이어 수
 	int				GetMyGPIndex();		// 게임 플레이어 인덱스
-	int				GetCoupleIndex(); //커플 가져오기
+	int				GetCoupleIndex(int nTurn); //커플 가져오기
 	int				GetMyPIndex();		// 걍 플레이어 인덱스
 	int				GetGPIndex(char* id); // id 로 게임 플레이어 찾기
 	bool			isTurn(int turn);				
@@ -68,6 +68,8 @@ public:
 
 	bool			SetUp();
 	void			Release();
+
+	void			Clear();
 
 	bool			Restore();
 

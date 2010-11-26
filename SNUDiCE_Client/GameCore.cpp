@@ -309,7 +309,7 @@ void gGameCore::DrawWarpList()
 					ScrollStart(m_warpDest);
 					bDrawAll = false;
 				}
-				pc->MainLoop_Warp(m_warpCharIdx, -WARPDIST*nFrame);
+				pc->MainLoop_WarpList(m_warplistDest, true, -WARPDIST*nFrame);
 			}
 			break;
 		case WARPLIST_SCROLLSTART:
@@ -332,20 +332,21 @@ void gGameCore::DrawWarpList()
 					gt->frameStart(WARPTICK, WARPFRAME + 1);
 					m_warplist = WARPLIST_APPEAR;
 
+					map->posSetter(m_warpDest / LINEY, m_warpDest % LINEY);
 					int		i;
-					int		charidx;		// for syncmap
 					for(i = 0; i < ROOMMAXPLAYER; i++)
 					{
 						if(strlen(pc->m_GPlayerList[i].szID) != 0)
 						{
-							pc->m_GPlayerList[i].nPos = m_warplistDest[i];
-							charidx = i;
-							if(strcmp(pc->m_MyGamePlayer.szID, pc->m_GPlayerList[i].szID) == 0)
-								pc->m_MyGamePlayer.nPos = pc->m_GPlayerList[i].nPos;
+							if(m_warplistDest[i] != -1)
+							{
+								pc->m_GPlayerList[i].nPos = m_warplistDest[i];
+								pc->SyncronizeToMap(i);
+								if(strcmp(pc->m_MyGamePlayer.szID, pc->m_GPlayerList[i].szID) == 0)
+									pc->m_MyGamePlayer.nPos = pc->m_GPlayerList[i].nPos;
+							}
 						}
 					}
-					map->posSetter(m_warpDest / LINEY, m_warpDest % LINEY);
-					pc->SyncronizeToMap(charidx);
 				}
 				pc->MainLoop_WarpList(m_warplistDest, false);
 			}
@@ -381,7 +382,7 @@ void gGameCore::DrawWarpList()
 				{
 					bDrawAll = true;
 				}
-				pc->MainLoop_Warp(m_warpCharIdx, (WARPFRAME - nFrame)*WARPDIST);
+				pc->MainLoop_WarpList(m_warplistDest, true, -(WARPFRAME - nFrame)*WARPDIST);
 			}
 			break;
 	}
@@ -865,7 +866,7 @@ bool gGameCore::PreTransMsg(MSG &msg)
 void gGameCore::SendMoveAsk()
 {
 	gPlayerContainer *gPC = gPlayerContainer::GetIF();
-	int				couple = gPC->GetCoupleIndex();
+//	int				couple = gPC->GetCoupleIndex(m_nTurn);
 
 	// ³» Â÷·Ê°¡ ¾Æ´Ô
 	if(strcmp(gPC->m_MyGamePlayer.szID, gPC->m_GPlayerList[m_nTurn].szID) != 0) {
@@ -997,8 +998,8 @@ void gGameCore::StepOn()
 	}
 	else
 	{
-		int couple = gPC->GetCoupleIndex();
-		if(couple == m_nTurn) couple = gPC->GetMyGPIndex();
+		int couple = gPC->GetCoupleIndex(m_nTurn);
+//		if(couple == m_nTurn) couple = gPC->GetMyGPIndex();
 		gMap::GetIF()->posMover(l_frame, gt->m_frame);
 
 		if(m_remain > 0) { //fucking couple
@@ -1026,7 +1027,7 @@ void gGameCore::StepEnd()
 
 	gt->m_turn--;
 
-	if(m_spacor > 0)
+	if(m_spacor != 0)
 		Start(m_spacor);
 	else
 		End();
@@ -1036,11 +1037,11 @@ void gGameCore::End()		// ÀÌµ¿ ³¡³²
 {
 	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
 	gMap				*map = gMap::GetIF();
-	int					couple = gPC->GetCoupleIndex();
+	int					couple = gPC->GetCoupleIndex(m_nTurn);
 	PK_MOVEEND_ASK		ask;
 	static int			newPos;
 
-	if(couple == m_nTurn) couple = gPC->GetMyGPIndex();
+//	if(couple == m_nTurn) couple = gPC->GetMyGPIndex();
 	if(couple >= 0) {
 		if(m_remain == -1) {
 			newPos = map->m_xSpacePos * LINEY + map->m_ySpacePos;
@@ -1256,4 +1257,9 @@ void gGameCore::pk_movestartcouple_rep(PK_MOVESTART_REP *rep)
 void gGameCore::pk_busmovestartcouple_rep(PK_BUSMOVESTART_REP *rep)
 {
 	pk_busmovestart_rep(rep);
+}
+
+void gGameCore::Clear()
+{
+	
 }

@@ -87,6 +87,8 @@ public:
 	void		Draw();
 	void		Release();
 
+	void		Clear();
+
 	bool		Restore();
 
 	void		OnLButtonDown();

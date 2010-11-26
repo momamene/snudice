@@ -112,6 +112,12 @@ bool gMap::Setup()
 	return true;
 }
 
+void gMap::Clear()
+{
+	posSetter(m_xInitSpacePos, m_yInitSpacePos);
+}
+
+
 void gMap::LoadFileToBKS()
 {
 	int		i;

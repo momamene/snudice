@@ -115,7 +115,14 @@ void gTopUI::OnLButtonDown_Back()
 			gRoomCore::GetIF()->Cancel_Make();
 		}
 		break;
-	case ECM_ROOMJOIN: case ECM_ROOM:
+	case ECM_ROOMJOIN:
+		{
+			gRoomCore::GetIF()->m_bEnteringPass = false;
+			gRoomCore::GetIF()->m_nSelected = -1;
+			gRoomCore::GetIF()->m_EditPassEnter.Clear();
+			SetFocus(gMainWin::GetIF()->m_hWnd);
+		}
+	case ECM_ROOM:
 		{
 			PK_CHANNELCHANGE_ASK	ask;
 

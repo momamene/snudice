@@ -103,6 +103,8 @@ public:
 
 	bool	Restore();
 
+	void	Clear();
+
 
 	void	MainLoop();
 	void	Draw();				// 그리는 함수

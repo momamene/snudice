@@ -171,6 +171,20 @@ bool gPlayerContainer::SetUp()
 	return true;
 }
 
+void gPlayerContainer::Clear()
+{
+	memset(m_moveFoot,0,sizeof(int)*ROOMMAXPLAYER);
+	memset(m_movePosition,0,sizeof(int)*ROOMMAXPLAYER);
+
+	int		i;
+
+	for(i = 0; i < ROOMMAXPLAYER; i++)
+		m_moveFoot[i] = 1;
+
+	m_nNoDraw = -1;
+	m_nNoDraw2 = -1;
+}
+
 bool gPlayerContainer::SetupCharDesc()
 {
 	int c,j,i;
@@ -539,12 +553,12 @@ bool gPlayerContainer::isTurn(int turn)
 		return false;
 }
 
-int gPlayerContainer::GetCoupleIndex()
+int gPlayerContainer::GetCoupleIndex(int nTurn)
 {
-	if(strlen(m_MyGamePlayer.szCouple) == 0) return -1;
+	if(strlen(m_GPlayerList[nTurn].szCouple) == 0) return -1;
 
 	for(int i=0; i<ROOMMAXPLAYER; i++)
-		if(!strcmp(m_MyGamePlayer.szCouple, m_GPlayerList[i].szID))
+		if(!strcmp(m_GPlayerList[nTurn].szCouple, m_GPlayerList[i].szID))
 			return i;
 	return -1;
 }

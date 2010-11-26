@@ -220,6 +220,7 @@ void gBattleNetCore::OnLButtonDown()
 		m_ImgBtn[BBTN_ROOMJOIN].m_eBtnMode	= EBM_NONE;
 		gMainWin::GetIF()->m_eCoreMode	= ECM_ROOMJOIN;
 		gRoomCore::GetIF()->m_eRoom		= ERM_JOIN;
+		gRoomCore::GetIF()->m_bEnteringPass = false;
 		return;
 	}
 	else if(m_ImgBtn[BBTN_OUT].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
