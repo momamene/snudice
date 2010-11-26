@@ -53,7 +53,8 @@ public:
 	//PLAYER[ROOMMAXPLAYER] GetPlayersFromIDs_RMP(char* szID[ROOMMAXPLAYER]);
 	PLAYER			GetPlayerFromID(char* szID);	// return 값도 [8(RMP)]의 배열
 	PLAYER			GetPlayerFromSocket(SOCKET sock);
-
+	
+	
 	void			Draw(HDC hdc);
 
 	//	void			PrintUserList();

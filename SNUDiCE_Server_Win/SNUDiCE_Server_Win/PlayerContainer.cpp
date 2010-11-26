@@ -320,6 +320,7 @@ PLAYER gPlayerContainer::GetPlayerFromSocket(SOCKET sock)
 	return player;
 } 
 
+
 void gPlayerContainer::SendSelect (ePROTOCOL prot,int pkSize,void *pk,eCOREMODE mode,int nPage)
 {
 	PLAYER*		temp;

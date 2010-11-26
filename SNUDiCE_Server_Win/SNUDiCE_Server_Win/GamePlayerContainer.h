@@ -123,6 +123,8 @@ public:
 
 	void		pk_askcouple_rep( int nRoomIndex , int playerIndex_a, int playerIndex_b);	//	 a, b : 플레이어의 인덱스값	
 
+	void		pk_becouple_rep (int nRoomIndex , PLAYER player_a , PLAYER player_b);
+
 	bool		SetUp();
 	bool		init(int nRoomIndex);
 	void		Release();

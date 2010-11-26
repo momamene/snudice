@@ -315,6 +315,7 @@ void gGamePlayerContainer::pk_askcouple_rep(int nRoomIndex , int playerIndex_a, 
 	gMainWin::GetIF()->Send(PL_ASKCOUPLE_REP,sizeof(PK_ASKCOUPLE_REP),&rep2,playerID_a);
 	
 }
+
 bool gGamePlayerContainer::favorUpFunc(int nRoomIndex , int playerIndex_a, int playerIndex_b , int upPoint /* = CROSS_FAVORPOINT */)	{
 	char				buf [1024];
 	
@@ -1104,7 +1105,7 @@ void gGamePlayerContainer::pk_itemusestart_ask(PK_DEFAULT *pk,SOCKET sock)
 ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, int nInRoomIndex, int itemIndex)
 {	// nInRoomIndex는 아이템을 사용한 유저, itemIndex는 0-19 까지의 말그대로의...
 	gItemContainer		*gIC =	gItemContainer::GetIF();
-//	gPlayerContainer	*gPC =	gPlayerContainer::GetIF();
+	gPlayerContainer	*gPC =	gPlayerContainer::GetIF();
 	gRoomCore			*gRC =	gRoomCore::GetIF();
 
 	char buf [1024];
@@ -1299,7 +1300,32 @@ ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, 
 			}
 			return IUS_NONE;
 		}
+
+		else if (gIC->m_ItemList[ask.nItemID].type == ITEM_DASH)	{
+			switch(gIC->m_ItemList[ask.nItemID].target) {
+				case TARGET_OTHERSEX :
+
+					int partnerIndex = gRC->FindPlayerIndexInTheRoom(ask.szTarget,nRoomIndex);
+
+					m_favor[nRoomIndex][partnerIndex].lvTargetIndex = nInRoomIndex;				m_favor[nRoomIndex][partnerIndex].bYes = CPS_PROPOSE;	
+					m_favor[nRoomIndex][nInRoomIndex].lvTargetIndex = partnerIndex;				m_favor[nRoomIndex][nInRoomIndex].bYes = CPS_PROPOSE;	
+
+					pk_askcouple_rep(	nRoomIndex,	nInRoomIndex , partnerIndex	);
+
+					
+					break;
+			}
+		}	else if (gIC->m_ItemList[ask.nItemID].type == ITEM_POWERDASH)	{
+			
+			
+			int partnerIndex = gRC->FindPlayerIndexInTheRoom(ask.szTarget,nRoomIndex);
+			char *szID_me = gRC->FindPlayerszIDInTheRoom(nInRoomIndex , nRoomIndex) , *szID_partner = gRC->FindPlayerszIDInTheRoom(partnerIndex , nRoomIndex);
+			
+			pk_becouple_rep(nRoomIndex, gPC->GetPlayerFromID(szID_me) ,  gPC->GetPlayerFromID(szID_partner));
+		}
+		return IUS_NONE;
 	}
+	
 	OutputDebugString("itemUse 분류되지 않은 case 오류\n");
 	return IUS_INVALIDSTATE;
 }
@@ -1814,41 +1840,8 @@ void gGamePlayerContainer::pk_anscouple_ask(PK_DEFAULT *pk,SOCKET sock)	//수정 ,
 
 	m_favor[nRoomIndex][gotPlayerIndex].bYes = (CoupleState)ask.bYes;
 	if (m_favor[nRoomIndex][gotPlayerIndex].bYes == CPS_ACCEPT && m_favor[nRoomIndex][tgPlayerIndex].bYes == CPS_ACCEPT)	{	//커플탄생
-		PK_BECOUPLE_REP rep;
-		gCharinfo *gCI = gCharinfo::GetIF();
-		m_rmWalk[nRoomIndex] = 0;	//남은거리 0화
-
+		pk_becouple_rep(nRoomIndex , gotPlayer , tgPlayer);
 		
-		bool gotMale, tgMale;
-		gotMale =	gCI->getMale(gotPlayer.classtype);
-		tgMale	=	gCI->getMale(tgPlayer.classtype);
-		
-		if (gotMale && !tgMale)	{
-			strcpy(rep.szMale , gotPlayer.szID);
-			strcpy(rep.szFeMale , tgPlayer.szID);
-
-		}
-		else if (tgMale && !gotMale)	{
-			strcpy(rep.szMale , tgPlayer.szID);
-			strcpy(rep.szFeMale , gotPlayer.szID);
-		}
-		else	{	
-			//Exception : 게이 / 레즈커플 =ㅅ=;;
-			OutputDebugString("게이탄생 뭐야이거 -ㅅ-;;\n");
-		}
-		
-		wsprintf(buf,"[Match][Room : %d ; %d and %d : %d point] ", nRoomIndex , gotPlayerIndex , tgPlayerIndex , LOVEINITPOINT);
-		m_favor[nRoomIndex][gotPlayerIndex].point[tgPlayerIndex] = -1;				m_favor[nRoomIndex][gotPlayerIndex].bYes = CPS_NONE;
-		m_favor[nRoomIndex][tgPlayerIndex].point[gotPlayerIndex] = -1;				m_favor[nRoomIndex][tgPlayerIndex].bYes = CPS_NONE;
-		m_GamePlayer[nRoomIndex][gotPlayerIndex].nLove = LOVEINITPOINT ;
-		m_GamePlayer[nRoomIndex][tgPlayerIndex].nLove = LOVEINITPOINT ;
-		
-		strcpy(m_GamePlayer[nRoomIndex][gotPlayerIndex].szCouple , tgPlayer.szID);
-		strcpy(m_GamePlayer[nRoomIndex][tgPlayerIndex].szCouple , gotPlayer.szID);
-		
-		gPC->SendSelect(PL_BECOUPLE_REP,sizeof(rep),&rep,ECM_GAME,nRoomIndex);
-		pk_gameplayerinfo_rep(nRoomIndex);
-
 	}
 	
 	else if (m_favor[nRoomIndex][gotPlayerIndex].bYes != CPS_PROPOSE && m_favor[nRoomIndex][tgPlayerIndex].bYes != CPS_PROPOSE)	{	//차였긔
@@ -1877,6 +1870,59 @@ void gGamePlayerContainer::pk_anscouple_ask(PK_DEFAULT *pk,SOCKET sock)	//수정 ,
 			pk_nextturn_rep(nRoomIndex);	//땜빵;;;;걍 턴넘겨 구찮;;
 		}
 	}
+}
+
+void gGamePlayerContainer::pk_becouple_rep(int nRoomIndex , PLAYER player_a , PLAYER player_b)
+{
+	
+	PK_BECOUPLE_REP rep;
+	gCharinfo *gCI = gCharinfo::GetIF();
+	gRoomCore *gRC = gRoomCore::GetIF();
+	gPlayerContainer *gPC = gPlayerContainer::GetIF();
+	m_rmWalk[nRoomIndex] = 0;	//남은거리 0화
+
+
+	bool gotMale, tgMale;
+	gotMale =	gCI->getMale(player_a.classtype);
+	tgMale	=	gCI->getMale(player_b.classtype);
+
+	if (gotMale && !tgMale)	{
+		strcpy(rep.szMale , player_a.szID);
+		strcpy(rep.szFeMale , player_b.szID);
+
+	}
+	else if (tgMale && !gotMale)	{
+		strcpy(rep.szMale , player_b.szID);
+		strcpy(rep.szFeMale , player_a.szID);
+	}
+	else	{	
+		//Exception : 게이 / 레즈커플 =ㅅ=;;
+		OutputDebugString("게이탄생 뭐야이거 -ㅅ-;;\n");
+	}
+
+	int		playerIndex_a , playerIndex_b	;
+	
+	playerIndex_a	=	gRC->FindPlayerIndexInTheRoom(player_a.szID , nRoomIndex);
+	playerIndex_b	=	gRC->FindPlayerIndexInTheRoom(player_b.szID , nRoomIndex);
+
+	char buf[256];
+	
+	wsprintf(buf,"[Match][Room : %d ; %d and %d : %d point] ", nRoomIndex , playerIndex_a , playerIndex_b , LOVEINITPOINT);
+	m_favor[nRoomIndex][playerIndex_a].point[playerIndex_b] = -1;				m_favor[nRoomIndex][playerIndex_a].bYes = CPS_NONE;
+	m_favor[nRoomIndex][playerIndex_b].point[playerIndex_a] = -1;				m_favor[nRoomIndex][playerIndex_b].bYes = CPS_NONE;
+	m_GamePlayer[nRoomIndex][playerIndex_a].nLove = LOVEINITPOINT ;
+	m_GamePlayer[nRoomIndex][playerIndex_b].nLove = LOVEINITPOINT ;
+
+	strcpy(m_GamePlayer[nRoomIndex][playerIndex_a].szCouple , player_b.szID);
+	strcpy(m_GamePlayer[nRoomIndex][playerIndex_b].szCouple , player_a.szID);
+
+	if (m_GamePlayer[nRoomIndex][playerIndex_a].nPos != m_GamePlayer[nRoomIndex][playerIndex_b].nPos )	{	//달려가주기
+		pk_warpstart_rep(nRoomIndex , playerIndex_b , m_GamePlayer[nRoomIndex][playerIndex_a].nPos );
+	}
+		
+	gPC->SendSelect(PL_BECOUPLE_REP,sizeof(rep),&rep,ECM_GAME,nRoomIndex);
+	pk_gameplayerinfo_rep(nRoomIndex);
+
 }
 
 //여기서는 뭐하는 거지?????
