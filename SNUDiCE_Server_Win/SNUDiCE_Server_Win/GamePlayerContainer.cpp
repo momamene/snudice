@@ -58,6 +58,7 @@ bool gGamePlayerContainer::init(int nRoomIndex)
 		}
 		else {
 			m_favor[nRoomIndex][i].bYes = CPS_NONE;		//수정
+			m_favor[nRoomIndex][i].lvTargetIndex = -1;
 			m_GamePlayer[nRoomIndex][i].nLove = -1;	//수정
 			
 			m_isGamePlayer[nRoomIndex][i] = true;
@@ -255,17 +256,30 @@ int gGamePlayerContainer::putFavorCross(int nRoomIndex, int nInRoomIndex, int nP
 	gTileContainer *gTC = gTileContainer::GetIF();
 	gCharinfo* gCI = gCharinfo::GetIF();
 	GAMEPLAYER metPlayer , myPlayer = m_GamePlayer[nRoomIndex][nInRoomIndex];
-	int iPos;
+	int iPos = nPos;
+	
+	bool nok = false;
+	if (nDist < 0 )	{
+		nok = true;
+		nDist = -nDist;
+	}
+
+	int dest;	//방향
 	
 	for (int i = 1 ; i <= nDist ; i++)	{
-		iPos =  gTC->destination(nPos,i);
+		
+		dest = nok ? -i : i;
+		
+		iPos =  gTC->destination(nPos,dest);
 		
 		for (int j = 0 ; j < ROOMMAXPLAYER ; j++)	{
 			if (nInRoomIndex == j)		continue;	//	j : 지나간 사람 index
 			metPlayer = m_GamePlayer[nRoomIndex][j];
 			if (iPos == metPlayer.nPos)	{
 				if (gCI->getMale(metPlayer.ctype)^gCI->getMale(myPlayer.ctype))	{
-					if (i == nDist)	{	//도착지점에서 만나 
+					if (metPlayer.nLove != -1)	//애인있는사람에게 작업금지;
+						continue;
+					if (dest == nDist)	{	//도착지점에서 만나 
 						if (favorUpFunc(nRoomIndex , nInRoomIndex , j , SAMETILE_FAVORPOINT))	{
 							m_rmWalk[nRoomIndex] = 0;
 							return iPos;
@@ -273,7 +287,7 @@ int gGamePlayerContainer::putFavorCross(int nRoomIndex, int nInRoomIndex, int nP
 					}
 					else	{			//지나가다 만나
 						if (favorUpFunc(nRoomIndex , nInRoomIndex , j , CROSS_FAVORPOINT))	{
-							m_rmWalk[nRoomIndex] = nDist - i;	//남은거리 저장
+							m_rmWalk[nRoomIndex] = nDist - dest;	//남은거리 저장
 							return iPos;
 						}
 					}
@@ -1219,7 +1233,7 @@ ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, 
 			switch(gIC->m_ItemList[ask.nItemID].target) {
 				case TARGET_ME:
 					if (m_GamePlayer[nRoomIndex][nInRoomIndex].nLove == -1)
-						pk_warpstart_rep(nRoomIndex,nInRoomIndex,ask.nDestPos);
+						pk_warpstart_rep(nRoomIndex,nInRoomIndex,	gIC->m_ItemList[ask.nItemID].nPos	);
 					else	{
 						bool *bInRoomIndex = new bool[ROOMMAXPLAYER];
 						int *desList  = new int[ROOMMAXPLAYER];
@@ -1242,7 +1256,7 @@ ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, 
 //					pk_warpliststart_rep(nRoomIndex,m_isGamePlayer[nRoomIndex],narrDes);
 					
 					if (m_GamePlayer[nRoomIndex][nInRoomIndex].nLove == -1)
-						pk_warpstart_rep(nRoomIndex,nInRoomIndex,ask.nDestPos);
+						pk_warpstart_rep(nRoomIndex,nInRoomIndex,	gIC->m_ItemList[ask.nItemID].nPos	);
 					else	{
 						bool *bInRoomIndex = new bool[ROOMMAXPLAYER];
 						int *desList  = new int[ROOMMAXPLAYER];
@@ -1256,6 +1270,31 @@ ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, 
 
 						delete desList;						delete bInRoomIndex;
 					}
+					break;
+				case TARGET_ALLEXCEPTME :
+					bool *bInRoomIndex = new bool[ROOMMAXPLAYER];
+					int *desList  = new int[ROOMMAXPLAYER];
+
+					bool isCouple = false;
+					for (int i = 0 ; i < ROOMMAXPLAYER ; i++)	{
+						if (m_isGamePlayer[nRoomIndex][i])	{
+							if (m_favor[nRoomIndex][i].lvTargetIndex == nInRoomIndex)
+								isCouple = true;
+							desList[i] = gIC->m_ItemList[ask.nItemID].nPos;
+							bInRoomIndex[i] = 1;
+						}	else	{
+							desList[i] = 0;
+							bInRoomIndex[i] = 0;
+						}
+					}
+					
+					if (!isCouple)	{
+						desList[nInRoomIndex] = 0;	bInRoomIndex[nInRoomIndex] = 0;
+					}
+
+					pk_warpliststart_rep(nRoomIndex , bInRoomIndex ,desList);
+
+					delete desList;						delete bInRoomIndex;
 					break;
 			}
 			return IUS_NONE;
@@ -1298,7 +1337,6 @@ void gGamePlayerContainer::pk_warpliststart_rep (int nRoomIndex, bool* bInRoomIn
 	{
 		if(bInRoomIndex[i]) {
 			movePlayer(nRoomIndex,i,des[i],MPS_WARP);
-
 			rep.nDestPos[i] = des[i];
 		}
 		else{
