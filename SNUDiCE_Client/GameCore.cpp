@@ -894,12 +894,15 @@ void gGameCore::SendMoveAsk()
 	gServer::GetIF()->Send(PL_MOVESTART_ASK, sizeof ask, &ask);
 
 	m_bMoved = true;
+
+
 }
 
 void gGameCore::pk_movestart_rep(PK_MOVESTART_REP *rep)
 {
 	gPlayerContainer *gPC = gPlayerContainer::GetIF();
 	
+
 	if(m_bMoving)
 		return;
 
@@ -911,7 +914,7 @@ void gGameCore::pk_movestart_rep(PK_MOVESTART_REP *rep)
 		gMap::GetIF()->posSetter(ntPos / LINEY, ntPos % LINEY);
 		m_bMoving = true; m_remain = -1;
 		gPC->PacketalDrawFix();
-		gGameCore::GetIF()->Start(m_spacor,ntPos/LINEY,ntPos%LINEY);
+		gGameCore::GetIF()->Start(rep->nDist,ntPos/LINEY,ntPos%LINEY);
 		return;
 	}
 
@@ -927,11 +930,11 @@ void gGameCore::pk_movestart_rep(PK_MOVESTART_REP *rep)
 		}
 		else
 		{
-			PK_MOVEENDCOUPLE_ASK	ask;
+			PK_MOVEEND_ASK	ask;
 			ask.nDestPos = gPC->m_GPlayerList[ m_nTurn ].nPos;
 			strcpy(ask.szID, gPC->m_MyGamePlayer.szID);
 
-			gServer::GetIF()->Send(PL_MOVEENDCOUPLE_ASK, sizeof ask, &ask);
+			gServer::GetIF()->Send(PL_MOVEEND_ASK, sizeof ask, &ask);
 		}
 		m_bMoving = false;
 	}
