@@ -907,12 +907,33 @@ void gGameCore::pk_movestart_rep(PK_MOVESTART_REP *rep)
 	if(rep->Dice4_1 == 0 && rep->Dice4_2 == 0
 		&& rep->Dice6_1 == 0 && rep->Dice6_2 == 0)
 	{
-		int ntPos = gPC->m_GPlayerList[ gGameCore::GetIF()->m_nTurn ].nPos;
+		int ntPos = gPC->m_GPlayerList[ m_nTurn ].nPos;
 		gMap::GetIF()->posSetter(ntPos / LINEY, ntPos % LINEY);
 		m_bMoving = true; m_remain = -1;
 		gPC->PacketalDrawFix();
 		gGameCore::GetIF()->Start(m_spacor,ntPos/LINEY,ntPos%LINEY);
 		return;
+	}
+
+	if(rep->nDist == 0)
+	{
+		if(strlen(gPC->m_GPlayerList[ m_nTurn ].szCouple) != 0)
+		{
+			PK_MOVEENDCOUPLE_ASK	ask;
+			ask.nDestPos = gPC->m_GPlayerList[ m_nTurn ].nPos;
+			strcpy(ask.szID, gPC->m_MyGamePlayer.szID);
+
+			gServer::GetIF()->Send(PL_MOVEENDCOUPLE_ASK, sizeof ask, &ask);
+		}
+		else
+		{
+			PK_MOVEENDCOUPLE_ASK	ask;
+			ask.nDestPos = gPC->m_GPlayerList[ m_nTurn ].nPos;
+			strcpy(ask.szID, gPC->m_MyGamePlayer.szID);
+
+			gServer::GetIF()->Send(PL_MOVEENDCOUPLE_ASK, sizeof ask, &ask);
+		}
+		m_bMoving = false;
 	}
 
 
@@ -1061,6 +1082,9 @@ void gGameCore::End()		// 이동 끝남
 		gServer::GetIF()->Send(PL_MOVEENDCOUPLE_ASK, sizeof ask, &ask);
 	}*/
 //	else {
+	if(strlen(gPC->m_GPlayerList[m_nTurn].szCouple) != 0)
+		gServer::GetIF()->Send(PL_MOVEENDCOUPLE_ASK, sizeof ask, &ask);
+	else
 		gServer::GetIF()->Send(PL_MOVEEND_ASK, sizeof ask, &ask);
 //	}
 	
