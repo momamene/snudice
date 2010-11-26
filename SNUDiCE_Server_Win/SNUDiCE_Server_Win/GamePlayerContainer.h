@@ -2,11 +2,11 @@
 #include "network.h"
 #include "Charinfo.h"
 
-#define MINIMUM_COUPLE_CONDITION 20
+#define MINIMUM_COUPLE_CONDITION 10
 #define SAMECLASS_FAVORPOINT 10
 #define SAMETILE_FAVORPOINT 20
 #define CROSS_FAVORPOINT 10
-#define LOVEINITPOINT 40
+#define LOVEINITPOINT 1
 
 enum ItemUseState {
 	IUS_NONE,
@@ -123,7 +123,7 @@ public:
 
 	void		pk_askcouple_rep( int nRoomIndex , int playerIndex_a, int playerIndex_b);	//	 a, b : 플레이어의 인덱스값	
 
-	void		pk_becouple_rep (int nRoomIndex , PLAYER player_a , PLAYER player_b);
+	void		pk_becouple_rep (int nRoomIndex , PLAYER player_a , PLAYER player_b , bool bCouple);
 
 	bool		SetUp();
 	bool		init(int nRoomIndex);

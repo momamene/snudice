@@ -1145,6 +1145,26 @@ ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, 
 						}
 					}
 					break;
+				case TARGET_ALLCOUPLE :
+					for(int i = 0 ; i < ROOMMAXPLAYER ; i++)
+					{
+						if(m_isGamePlayer[nRoomIndex][i] && m_GamePlayer[nRoomIndex][i].nLove != -1)
+						{
+							m_ItemCoolTime[nRoomIndex][i][ask.nItemID]
+							= gIC->m_ItemList[ask.nItemID].nExistTurn;
+						}
+					}
+					break;
+				case TARGET_ALLSINGLE :
+					for(int i = 0 ; i < ROOMMAXPLAYER ; i++)
+					{
+						if(m_isGamePlayer[nRoomIndex][i] && m_GamePlayer[nRoomIndex][i].nLove == -1)
+						{
+							m_ItemCoolTime[nRoomIndex][i][ask.nItemID]
+							= gIC->m_ItemList[ask.nItemID].nExistTurn;
+						}
+					}
+					break;
 			}
 			return IUS_INFOCHANGE;
 		}
@@ -1184,6 +1204,24 @@ ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, 
 					for(int i = 0 ; i < ROOMMAXPLAYER ; i++)
 					{
 						if(m_isGamePlayer[nRoomIndex][i]&&i!=nInRoomIndex)
+						{
+							staminaConvert(nRoomIndex,i,gIC->m_ItemList[ask.nItemID].nStamina);
+						}
+					}
+					break;
+				case TARGET_ALLSINGLE :
+					for(int i = 0 ; i < ROOMMAXPLAYER ; i++)
+					{
+						if(m_isGamePlayer[nRoomIndex][i] && m_GamePlayer[nRoomIndex][i].nLove == -1)
+						{
+							staminaConvert(nRoomIndex,i,gIC->m_ItemList[ask.nItemID].nStamina);
+						}
+					}
+					break;
+				case TARGET_ALLCOUPLE :
+					for(int i = 0 ; i < ROOMMAXPLAYER ; i++)
+					{
+						if(m_isGamePlayer[nRoomIndex][i] && m_GamePlayer[nRoomIndex][i].nLove != -1)
 						{
 							staminaConvert(nRoomIndex,i,gIC->m_ItemList[ask.nItemID].nStamina);
 						}
@@ -1321,7 +1359,34 @@ ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, 
 			int partnerIndex = gRC->FindPlayerIndexInTheRoom(ask.szTarget,nRoomIndex);
 			char *szID_me = gRC->FindPlayerszIDInTheRoom(nInRoomIndex , nRoomIndex) , *szID_partner = gRC->FindPlayerszIDInTheRoom(partnerIndex , nRoomIndex);
 			
-			pk_becouple_rep(nRoomIndex, gPC->GetPlayerFromID(szID_me) ,  gPC->GetPlayerFromID(szID_partner));
+			pk_becouple_rep(nRoomIndex, gPC->GetPlayerFromID(szID_me) ,  gPC->GetPlayerFromID(szID_partner) , true);
+		}	else if (gIC->m_ItemList[ask.nItemID].type == ITEM_LOVE	)	{
+			switch(gIC->m_ItemList[ask.nItemID].target) {
+				case TARGET_MYCOUPLE :
+					{
+						int partnerIndex = gRC->FindPlayerIndexInTheRoom(m_GamePlayer[nRoomIndex][nInRoomIndex].szCouple,nRoomIndex);
+						char *szID_me		= gRC->FindPlayerszIDInTheRoom(nInRoomIndex , nRoomIndex);
+						char *szID_partner = gRC->FindPlayerszIDInTheRoom(partnerIndex , nRoomIndex);
+						pk_becouple_rep(nRoomIndex, gPC->GetPlayerFromID(szID_me) ,  gPC->GetPlayerFromID(szID_partner) , false);
+					}
+					break;
+				case TARGET_OTHERCOUPLE :
+					{
+						int playerIndex_a , playerIndex_b;
+						playerIndex_a = gRC->FindPlayerIndexInTheRoom(ask.szTarget,nRoomIndex);
+						playerIndex_b = gRC->FindPlayerIndexInTheRoom(m_GamePlayer[nRoomIndex][playerIndex_a].szCouple,nRoomIndex);
+						m_GamePlayer[nRoomIndex][playerIndex_a].nLove--;
+						m_GamePlayer[nRoomIndex][playerIndex_b].nLove--;
+						if (m_GamePlayer[nRoomIndex][playerIndex_a].nLove == 0 || m_GamePlayer[nRoomIndex][playerIndex_b].nLove == 0)	{
+							char *szID_me = gRC->FindPlayerszIDInTheRoom(playerIndex_a , nRoomIndex) , *szID_partner = gRC->FindPlayerszIDInTheRoom(playerIndex_b , nRoomIndex);
+							pk_becouple_rep(nRoomIndex, gPC->GetPlayerFromID(szID_me) ,  gPC->GetPlayerFromID(szID_partner) , false);
+						}	else	{
+							pk_nextturn_rep(nRoomIndex);
+						}
+					}
+
+					break;
+			}
 		}
 		return IUS_NONE;
 	}
@@ -1840,7 +1905,7 @@ void gGamePlayerContainer::pk_anscouple_ask(PK_DEFAULT *pk,SOCKET sock)	//수정 ,
 
 	m_favor[nRoomIndex][gotPlayerIndex].bYes = (CoupleState)ask.bYes;
 	if (m_favor[nRoomIndex][gotPlayerIndex].bYes == CPS_ACCEPT && m_favor[nRoomIndex][tgPlayerIndex].bYes == CPS_ACCEPT)	{	//커플탄생
-		pk_becouple_rep(nRoomIndex , gotPlayer , tgPlayer);
+		pk_becouple_rep(nRoomIndex , gotPlayer , tgPlayer , true);
 		
 	}
 	
@@ -1872,7 +1937,7 @@ void gGamePlayerContainer::pk_anscouple_ask(PK_DEFAULT *pk,SOCKET sock)	//수정 ,
 	}
 }
 
-void gGamePlayerContainer::pk_becouple_rep(int nRoomIndex , PLAYER player_a , PLAYER player_b)
+void gGamePlayerContainer::pk_becouple_rep(int nRoomIndex , PLAYER player_a , PLAYER player_b , bool bCouple)
 {
 	
 	PK_BECOUPLE_REP rep;
@@ -1885,7 +1950,9 @@ void gGamePlayerContainer::pk_becouple_rep(int nRoomIndex , PLAYER player_a , PL
 	bool gotMale, tgMale;
 	gotMale =	gCI->getMale(player_a.classtype);
 	tgMale	=	gCI->getMale(player_b.classtype);
-
+	
+	rep.bCouple = bCouple;
+	
 	if (gotMale && !tgMale)	{
 		strcpy(rep.szMale , player_a.szID);
 		strcpy(rep.szFeMale , player_b.szID);
@@ -1898,6 +1965,7 @@ void gGamePlayerContainer::pk_becouple_rep(int nRoomIndex , PLAYER player_a , PL
 	else	{	
 		//Exception : 게이 / 레즈커플 =ㅅ=;;
 		OutputDebugString("게이탄생 뭐야이거 -ㅅ-;;\n");
+		return;
 	}
 
 	int		playerIndex_a , playerIndex_b	;
@@ -1907,18 +1975,32 @@ void gGamePlayerContainer::pk_becouple_rep(int nRoomIndex , PLAYER player_a , PL
 
 	char buf[256];
 	
-	wsprintf(buf,"[Match][Room : %d ; %d and %d : %d point] ", nRoomIndex , playerIndex_a , playerIndex_b , LOVEINITPOINT);
-	m_favor[nRoomIndex][playerIndex_a].point[playerIndex_b] = -1;				m_favor[nRoomIndex][playerIndex_a].bYes = CPS_NONE;
-	m_favor[nRoomIndex][playerIndex_b].point[playerIndex_a] = -1;				m_favor[nRoomIndex][playerIndex_b].bYes = CPS_NONE;
-	m_GamePlayer[nRoomIndex][playerIndex_a].nLove = LOVEINITPOINT ;
-	m_GamePlayer[nRoomIndex][playerIndex_b].nLove = LOVEINITPOINT ;
+	if (bCouple)	{
 
-	strcpy(m_GamePlayer[nRoomIndex][playerIndex_a].szCouple , player_b.szID);
-	strcpy(m_GamePlayer[nRoomIndex][playerIndex_b].szCouple , player_a.szID);
+		wsprintf(buf,"[Match][Room : %d ; %d and %d : %d point] ", nRoomIndex , playerIndex_a , playerIndex_b , LOVEINITPOINT);
+		m_favor[nRoomIndex][playerIndex_a].point[playerIndex_b] = -1;				m_favor[nRoomIndex][playerIndex_a].bYes = CPS_NONE;
+		m_favor[nRoomIndex][playerIndex_b].point[playerIndex_a] = -1;				m_favor[nRoomIndex][playerIndex_b].bYes = CPS_NONE;
+		m_GamePlayer[nRoomIndex][playerIndex_a].nLove = LOVEINITPOINT ;
+		m_GamePlayer[nRoomIndex][playerIndex_b].nLove = LOVEINITPOINT ;
 
-	if (m_GamePlayer[nRoomIndex][playerIndex_a].nPos != m_GamePlayer[nRoomIndex][playerIndex_b].nPos )	{	//달려가주기
-		pk_warpstart_rep(nRoomIndex , playerIndex_b , m_GamePlayer[nRoomIndex][playerIndex_a].nPos );
+		strcpy(m_GamePlayer[nRoomIndex][playerIndex_a].szCouple , player_b.szID);
+		strcpy(m_GamePlayer[nRoomIndex][playerIndex_b].szCouple , player_a.szID);
+
+		if (m_GamePlayer[nRoomIndex][playerIndex_a].nPos != m_GamePlayer[nRoomIndex][playerIndex_b].nPos )	{	//달려가주기
+			pk_warpstart_rep(nRoomIndex , playerIndex_b , m_GamePlayer[nRoomIndex][playerIndex_a].nPos );
+		}
+	}	else	{
+		
+		m_favor[nRoomIndex][playerIndex_a].point[playerIndex_b] = 0;	
+		m_favor[nRoomIndex][playerIndex_b].point[playerIndex_a] = 0;	
+		m_GamePlayer[nRoomIndex][playerIndex_a].nLove = -1 ;
+		m_GamePlayer[nRoomIndex][playerIndex_b].nLove = -1 ;
+		
+		strcpy(m_GamePlayer[nRoomIndex][playerIndex_a].szCouple , "");
+		strcpy(m_GamePlayer[nRoomIndex][playerIndex_b].szCouple , "");
+		
 	}
+
 		
 	gPC->SendSelect(PL_BECOUPLE_REP,sizeof(rep),&rep,ECM_GAME,nRoomIndex);
 	pk_gameplayerinfo_rep(nRoomIndex);
