@@ -742,7 +742,28 @@ bool gUIGame::OnLButtonDown()
 									m_uimode	= UIM_TARGETSELECT;
 								}
 								break;
+							case ITEM_LOVE:
+								{
+									if(item->target == TARGET_OTHERCOUPLE)
+									{
+										m_nItemID	= ItemIdx;
+										m_uimode	= UIM_TARGETSELECT;
+									}
+									else
+									{
+										if(strlen(gPC->m_MyGamePlayer.szCouple) != 0)
+										{
+											gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_25);
+											return true;
+										}
+										strcpy(ask.szID, gPC->m_MyGamePlayer.szID);
+										ask.nItemID = ItemIdx;
 
+										gServer::GetIF()->Send(PL_ITEMUSE_ASK, sizeof ask, &ask);
+										m_bItemUsed = true;
+									}
+								}
+								break;
 						}
 						return true;
 					}
@@ -796,6 +817,22 @@ bool gUIGame::OnLButtonDown()
 								}
 							}
 							break;
+						case TARGET_OTHERCOUPLE:
+							{
+								// 내 커플 선택
+								if(strcmp(target->szID, gPC->m_MyGamePlayer.szCouple) == 0)
+								{
+									gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_26);
+									return true;
+								}
+								// 상대가 커플이 아님
+								if(strlen(target->szCouple) == 0)
+								{
+									gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_27);
+									return true;
+								}
+							}
+							break;
 					}
 
 					PK_ITEMUSE_ASK		ask;
@@ -835,26 +872,42 @@ bool gUIGame::OnLButtonDown()
 						ITEMCARD	*item = &gItemContainer::GetIF()->m_ItemList[ m_nItemID ];
 						switch(item->target)
 						{
-						case TARGET_OTHERSEX:
-							{
-								// 동성
-								if(gPC->m_CharInfo[ gPC->m_GPlayerList[ m_target[i].idx ].ctype ].bMale
-										== gPC->m_CharInfo[ gPC->m_MyGamePlayer.ctype ].bMale)
+							case TARGET_OTHERSEX:
 								{
-									gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_22);
-									return true;
-								}
-								if(item->type == ITEM_DASH || item->type == ITEM_POWERDASH)
-								{
-									// 이미 대상은 커플임
-									if(strlen(gPC->m_GPlayerList[m_target[i].idx].szCouple) != 0)
+									// 동성
+									if(gPC->m_CharInfo[ gPC->m_GPlayerList[ m_target[i].idx ].ctype ].bMale
+											== gPC->m_CharInfo[ gPC->m_MyGamePlayer.ctype ].bMale)
 									{
-										gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_23);
+										gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_22);
+										return true;
+									}
+									if(item->type == ITEM_DASH || item->type == ITEM_POWERDASH)
+									{
+										// 이미 대상은 커플임
+										if(strlen(gPC->m_GPlayerList[m_target[i].idx].szCouple) != 0)
+										{
+											gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_23);
+											return true;
+										}
+									}
+								}
+								break;
+							case TARGET_OTHERCOUPLE:
+								{
+									// 내 커플 선택
+									if(strcmp(gPC->m_GPlayerList [m_target[i].idx ].szID, gPC->m_MyGamePlayer.szCouple) == 0)
+									{
+										gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_26);
+										return true;
+									}
+									// 상대가 커플이 아님
+									if(strlen(gPC->m_GPlayerList[m_target[i].idx].szCouple) == 0)
+									{
+										gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_27);
 										return true;
 									}
 								}
-							}
-							break;
+								break;
 						}
 
 						PK_ITEMUSE_ASK		ask;
@@ -1255,7 +1308,7 @@ void gUIGame::pk_itemuse_rep(PK_ITEMUSE_REP* rep)
 				m_target[0].rcPos.right = m_target[0].rcPos.left + TARGET_OUTLINE_SIZE_W;
 			}
 			break;
-		case TARGET_OTHER:
+		case TARGET_OTHER: case TARGET_OTHERSEX:
 			{
 				m_nTargetNum = 1;
 				int	targetIdx = pc->GetGPIndex(rep->szTarget);

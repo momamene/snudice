@@ -667,6 +667,7 @@ struct PK_BECOUPLE_REP
 {
 	char		szMale[IDLENGTH];
 	char		szFeMale[IDLENGTH];
+	bool		bCouple;						// true¸é Ä¿ÇÃ, false¸é ±úÁü
 };
 
 struct PK_BECOUPLEEND_ASK

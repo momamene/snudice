@@ -45,3 +45,6 @@
 #define STR_22			"이성을 선택하십시오"
 #define STR_23			"그 사람은 이미 커플입니다"
 #define STR_24			"당신은 이미 커플입니다"
+#define STR_25			"당신은 솔로입니다"
+#define STR_26			"다른 커플을 선택하세요"
+#define STR_27			"그 사람은 솔로입니다"

@@ -445,7 +445,7 @@ void gPlayerContainer::Draw_WarpList(int *dest, bool drawAll, int dY)
 		for(int i = 0 ; i < ROOMMAXPLAYER ; i++)
 		{
 			if(!drawAll)
-				if(dest[i] == -1)
+				if(dest[i] != -1)
 					continue;
 
 			if(m_MyRoom.szRoomMaxPlayer[i][0] != '\0' && m_GPlayerList[i].nPos%LINEY == h)

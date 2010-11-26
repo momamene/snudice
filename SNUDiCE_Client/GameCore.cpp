@@ -196,12 +196,14 @@ void gGameCore::Draw()
 {
 	gMap::GetIF()->Draw();
 
-	if(!m_bBusing && !m_bWarping && !m_bWarpingList)
+	if(m_bBusing)
+		DrawBus();
+	else if(m_bWarping)
+		DrawWarp();
+	else if(m_bWarpingList)
+		DrawWarpList();
+	else
 		gPlayerContainer::GetIF()->MainLoop();
-
-	DrawBus();
-	DrawWarp();
-	DrawWarpList();
 
 //	gChat::GetIF()->Draw();
 	gUIGame::GetIF()->Draw();
