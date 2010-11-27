@@ -155,7 +155,7 @@
 #define INFOCHANGE_INFOTERM_Y				10		// info³¢¸® ÅÒ
 
 // turn, rank °°ÀÌ Ç¥½Ã
-#define TURN_START_X						540
+#define TURN_START_X						530
 #define TURN_START_Y						80
 #define TURN_TERM_Y							20
 
@@ -642,7 +642,7 @@ void gUIGame::Draw()
 			if(strlen(gPC->m_GPlayerList[i].szID) == 0)
 				continue;
 
-			gUtil::TextOutLine(TURN_START_X, TURN_START_Y + (TURN_TERM_Y * nTurnCount), gPC->m_GPlayerList[i].szID);
+			gUtil::TextOutLine(TURN_START_X + 2, TURN_START_Y + (TURN_TERM_Y * nTurnCount), gPC->m_GPlayerList[i].szID);
 			nTurnCount++;
 		}
 /*
