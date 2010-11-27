@@ -53,6 +53,8 @@ public:
 
 	bool		m_bReturn;				// popup창 후에 버튼 클릭(키보드로도 가능)했냐
 
+	RECT		m_rcDest;
+
 public:
 
 	bool		SetPopUp(BTNCLK btn, ePOPTYPE pop, char *szLine1 = NULL, char *szLine2 = NULL);		// popup창 띄우기 전에 정보 셋팅

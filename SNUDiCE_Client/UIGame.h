@@ -18,15 +18,21 @@ enum UIIMAGE
 	UIIMG_BAROUTLINE,
 	UIIMG_BARGUAGE,
 
-	UIIMG_SUBINFO,		// 아이템, 수강현황 버튼
-	UIIMG_SUBWND,		// 수강편람
+	UIIMG_SUBINFO,			// 아이템, 수강현황 버튼
+	UIIMG_SUBWND,			// 수강편람
 
-	UIIMG_MINIMAP,		// 우하단
+	UIIMG_MINIMAP,			// 우하단
 	UIIMG_MINIMAPCURSOR,
 
 	UIIMG_MAPTOOLTIP,
 
-	UIIMG_FACEOUTLINE,	// 아이템 사용, 타겟 선택할 시
+	UIIMG_FACEOUTLINE,		// 아이템 사용, 타겟 선택할 시
+
+	UIIMG_COUPLEOUTLINE,	// 커플 액자
+	UIIMG_LOVE,				// 하트 게이지
+
+	UIIMG_TURNOUTLINE,
+	UIIMG_CROWN,
 
 	UIIMG_END,
 };
@@ -112,6 +118,8 @@ public:
 	bool		m_bPopInfo;					// 말풍선 인포
 
 	gTimer		m_timer;					// 카드 사용 정보, info
+
+	bool		m_bCouple;					// true면 커플되는거, false면 깨는 거
 
 
 private:

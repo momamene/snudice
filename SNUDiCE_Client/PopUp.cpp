@@ -21,10 +21,10 @@
 #define POPUP_2NDBTNY			POPUP_ONEBTNY
 #define POPUP_1STTEXTY			(POPUP_Y + 32)
 #define POPUP_2NDTEXTY			(POPUP_Y + 52)
-#define POPUP_IMG_W				48			// popup창에 띄우는 이미지
-#define POPUP_IMG_H				48
-#define POPUP_IMG_X				(POPUP_X + 17)
-#define POPUP_IMG_Y				(POPUP_Y + 19)
+#define POPUP_IMG_W				35			// popup창에 띄우는 이미지
+#define POPUP_IMG_H				42
+#define POPUP_IMG_X				(POPUP_X + 29)
+#define POPUP_IMG_Y				(POPUP_Y + 29)
 #define POPUP_PIXEL_PER_LETTER	6
 
 gPopUp::gPopUp()
@@ -60,6 +60,10 @@ bool gPopUp::SetUp()
 		return false;
 	if(!m_ImgBtn[ECLK_CANCEL].SetUp(POPUP_IMG_CANCEL, false, rc))
 		return false;
+
+	SetRect(&m_rcDest,
+		POPUP_IMG_X, POPUP_IMG_Y,
+		POPUP_IMG_X + POPUP_IMG_W, POPUP_IMG_Y + POPUP_IMG_H);
 
 	return true;
 }
@@ -219,7 +223,12 @@ void gPopUp::Draw()
 	}
 
 	if(m_Img != NULL)
-		m_Img->Draw(POPUP_IMG_X, POPUP_IMG_Y);
+	{
+		RECT	rcSour;
+		SetRect(&rcSour,
+			0, 0, m_Img->m_nWidth, m_Img->m_nHeight);
+		m_Img->Draw(m_rcDest, rcSour);
+	}
 
 	gUtil::BeginText();
 		if(m_szLine1)

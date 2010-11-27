@@ -155,9 +155,19 @@
 #define INFOCHANGE_INFOTERM_Y				10		// info끼리 텀
 
 // turn, rank 같이 표시
-#define TURN_START_X						550
-#define TURN_START_Y						40
+#define TURN_START_X						540
+#define TURN_START_Y						80
 #define TURN_TERM_Y							20
+
+#define TURN_CROWN_FILE						".\\Data\\Interface\\game_crown.img"
+#define TURN_CROWN_SIZE_W					14
+#define TURN_CROWN_SIZE_H					12
+#define TURN_CROWN_TERM_X					-22
+#define TURN_CROWN_TERM_Y					-1
+#define TURN_OUTLINE_FILE					".\\Data\\Interface\\game_turn.img"
+#define TURN_OUTLINE_TERM_X					-25
+#define TURN_OUTLINE_TERM_Y					-5
+
 
 #define MAPTOOLTIP_FILE						".\\Data\\Interface\\game_maptooltip.img"
 #define MAPTOOLTIP_SIZE_W					120
@@ -167,11 +177,28 @@
 #define MAPTOOLTIP_TEXT_Y					7
 #define MAPTOOLTIP_TEXT_TERM_Y				20
 
+#define COUPLE_OUTLINE_FILE					".\\Data\\Interface\\game_coupleoutline.img"
+#define COUPLE_OUTLINE_POS_X				12
+#define COUPLE_OUTLINE_POS_Y				117
+#define COUPLE_FACE_SIZE_W					35
+#define COUPLE_FACE_SIZE_H					42
+#define COUPLE_FACE_POS_X					(COUPLE_OUTLINE_POS_X + 2)			
+#define COUPLE_FACE_POS_Y					(COUPLE_OUTLINE_POS_Y + 13)
+#define COUPLE_LOVE_FILE					".\\Data\\Interface\\game_love.img"
+#define COUPLE_LOVE_SIZE_W					24
+#define COUPLE_LOVE_SIZE_H					20
+#define COUPLE_LOVE_POS_X					(COUPLE_FACE_POS_X + 45)
+#define COUPLE_LOVE_POS_Y					(COUPLE_FACE_POS_Y + 13)
+#define COUPLE_LOVE_TERM_X					3
+
 #define BECOUPLE_MALE_X						(320 - TARGET_OUTLINE_SIZE_W - 30)
 #define BECOUPLE_MALE_Y						(220 - TARGET_OUTLINE_SIZE_H/2)
 #define BECOUPLE_FEMALE_X					(320 + 30)
 #define BECOUPLE_FEMALE_Y					BECOUPLE_MALE_Y
+#define BECOUPLE_HEART_X					(320 - COUPLE_LOVE_SIZE_W/2)
+#define BECOUPLE_HEART_Y					(220 - COUPLE_LOVE_SIZE_H/2)
 #define BECOUPLE_TICK						2000
+
 
 static gUIGame s_UIGame;
 
@@ -306,6 +333,18 @@ bool gUIGame::SetUp()
 	if(!m_ImgUI[UIIMG_MAPTOOLTIP].Load(MAPTOOLTIP_FILE))
 		return false;
 
+	// couple 액자
+	if(!m_ImgUI[UIIMG_COUPLEOUTLINE].Load(COUPLE_OUTLINE_FILE))
+		return false;
+	if(!m_ImgUI[UIIMG_LOVE].Load(COUPLE_LOVE_FILE))
+		return false;
+
+	// turn, ranking
+	if(!m_ImgUI[UIIMG_TURNOUTLINE].Load(TURN_OUTLINE_FILE))
+		return false;
+	if(!m_ImgUI[UIIMG_CROWN].Load(TURN_CROWN_FILE))
+		return false;
+
 	m_uimode = UIM_NONE;
 	m_bTargetByMove = false;
 	m_timer.SetUp();
@@ -406,6 +445,72 @@ void gUIGame::Draw()
 		m_BtnUI[UIBTN_ITEMCARD].Draw();
 		m_BtnUI[UIBTN_SUBJECT].Draw();
 
+		// 연애
+		if(strlen(gPC->m_MyGamePlayer.szCouple) != 0)
+		{
+			int			coupleIdx = gPC->GetGPIndex(gPC->m_MyGamePlayer.szCouple);
+			gImage*		img = &gPC->m_ImgInfo[gPC->m_GPlayerList[coupleIdx].ctype].ImgPic;
+
+			RECT		rcDest, rcSour;
+
+			// 사진
+			SetRect(&rcDest,
+				COUPLE_FACE_POS_X,	COUPLE_FACE_POS_Y,
+				COUPLE_FACE_POS_X + COUPLE_FACE_SIZE_W, COUPLE_FACE_POS_Y + COUPLE_FACE_SIZE_H);
+			SetRect(&rcSour,
+				0, 0, img->m_nWidth, img->m_nHeight);
+
+			img->Draw(rcDest, rcSour);
+
+			// 액자
+			m_ImgUI[UIIMG_COUPLEOUTLINE].Draw(COUPLE_OUTLINE_POS_X, COUPLE_OUTLINE_POS_Y);
+
+			// 하트 게이지
+			for(i = 0; i < gPC->m_MyGamePlayer.nLove; i++)
+			{
+				SetRect(&rcDest,
+					COUPLE_LOVE_POS_X, COUPLE_LOVE_POS_Y,
+					COUPLE_LOVE_POS_X + COUPLE_LOVE_SIZE_W, COUPLE_LOVE_POS_Y + COUPLE_LOVE_SIZE_H);
+				OffsetRect(&rcDest,
+					(COUPLE_LOVE_SIZE_W + COUPLE_LOVE_TERM_X) * i, 0);
+				SetRect(&rcSour,
+					0, 0, COUPLE_LOVE_SIZE_W, COUPLE_LOVE_SIZE_H);
+				m_ImgUI[UIIMG_LOVE].Draw(rcDest, rcSour, false);
+			}
+			for(; i < 3; i++)
+			{
+				SetRect(&rcDest,
+					COUPLE_LOVE_POS_X, COUPLE_LOVE_POS_Y,
+					COUPLE_LOVE_POS_X + COUPLE_LOVE_SIZE_W, COUPLE_LOVE_POS_Y + COUPLE_LOVE_SIZE_H);
+				OffsetRect(&rcDest,
+					(COUPLE_LOVE_SIZE_W + COUPLE_LOVE_TERM_X) * i, 0);
+				SetRect(&rcSour,
+					0, 0, COUPLE_LOVE_SIZE_W, COUPLE_LOVE_SIZE_H);
+				OffsetRect(&rcSour, COUPLE_LOVE_SIZE_W, 0);
+				m_ImgUI[UIIMG_LOVE].Draw(rcDest, rcSour, false);
+			}
+		}
+
+		// turn, rank
+		int		nTurnCount = 0;
+		for(i = 0; i < ROOMMAXPLAYER; i++)
+		{
+			if(strlen(gPC->m_GPlayerList[i].szID) == 0)
+				continue;
+
+			if(gGameCore::GetIF()->m_nTurn == i)
+			{
+				m_ImgUI[UIIMG_TURNOUTLINE].Draw(TURN_START_X + TURN_OUTLINE_TERM_X,
+												TURN_START_Y + (TURN_TERM_Y * nTurnCount) + TURN_OUTLINE_TERM_Y);
+			}
+			if(gPC->m_GPlayerList[i].nRank == 1)
+			{
+				m_ImgUI[UIIMG_CROWN].Draw(TURN_START_X + TURN_CROWN_TERM_X,
+										TURN_START_Y + (TURN_TERM_Y * nTurnCount) + TURN_CROWN_TERM_Y);
+			}
+			nTurnCount++;
+		}
+
 	// show always end
 
 	switch(m_uimode)
@@ -489,6 +594,18 @@ void gUIGame::Draw()
 					m_uimode = UIM_NONE;
 				}
 				DrawTargetButton();
+
+				RECT	rcDest, rcSour;
+				SetRect(&rcDest, 
+					BECOUPLE_HEART_X, BECOUPLE_HEART_Y,
+					BECOUPLE_HEART_X + COUPLE_LOVE_SIZE_W, BECOUPLE_HEART_Y + COUPLE_LOVE_SIZE_H);
+				SetRect(&rcSour,
+					0, 0, COUPLE_LOVE_SIZE_W, COUPLE_LOVE_SIZE_H);
+
+				if(!m_bCouple)
+					OffsetRect(&rcSour, COUPLE_LOVE_SIZE_W * 2, 0);
+
+				m_ImgUI[UIIMG_LOVE].Draw(rcDest, rcSour);
 			}
 			break;
 	}
@@ -519,7 +636,7 @@ void gUIGame::Draw()
 
 	// rank, turn
 
-		int		nTurnCount = 0;
+		nTurnCount = 0;
 		for(i = 0; i < ROOMMAXPLAYER; i++)
 		{
 			if(strlen(gPC->m_GPlayerList[i].szID) == 0)
@@ -2038,6 +2155,7 @@ void gUIGame::pk_becouple_rep(PK_BECOUPLE_REP *rep)
 		BECOUPLE_MALE_X + INFOCHANGE_INFOSIZE_W + TARGET_OUTLINE_SIZE_W,
 		BECOUPLE_MALE_Y + INFOCHANGE_INFOSIZE_H + TARGET_OUTLINE_SIZE_H );
 
+	m_bCouple = rep->bCouple;
 	m_timer.frameStart(BECOUPLE_TICK, 2);
 	m_uimode = UIM_BECOUPLE;
 }
