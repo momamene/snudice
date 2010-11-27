@@ -428,6 +428,8 @@ struct PK_SUBMITREADY_REP
 #define MAXSUBJECT				6	// 한사람당 들을수잇는 과목수
 #define MAXITEMNUM				4	// 한사람당 갖고있을 수 있는 아이템 수
 
+
+
 struct GAMEPLAYER
 {
 	char		szID[IDLENGTH];
@@ -442,6 +444,8 @@ struct GAMEPLAYER
 
 	float		fGrade[MAXSUBJECT];
 	float		fAvGrade;
+	
+
 	BYTE		bySubIdx[MAXSUBJECT];
 	int			nRank;
 
@@ -527,6 +531,7 @@ struct CHANGEINFO
 	int			nArt;
 	int			nStamina;
 	int			nGrade;				// 성취도. 학점이 아님
+	int			nLove;
 };
 
 struct PK_GAMEEND_REP

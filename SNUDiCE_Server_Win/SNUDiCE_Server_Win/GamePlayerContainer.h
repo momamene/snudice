@@ -2,11 +2,12 @@
 #include "network.h"
 #include "Charinfo.h"
 
-#define MINIMUM_COUPLE_CONDITION 10
-#define SAMECLASS_FAVORPOINT 10
-#define SAMETILE_FAVORPOINT 20
-#define CROSS_FAVORPOINT 10
-#define LOVEINITPOINT 1
+#define MINIMUM_COUPLE_CONDITION 50
+#define SAMECLASS_FAVORPOINT 5
+#define SAMETILE_FAVORPOINT 5
+#define CROSS_FAVORPOINT 2
+
+#define LOVEINITPOINT 3
 
 enum ItemUseState {
 	IUS_NONE,
@@ -136,7 +137,7 @@ public:
 	void				debuger_turn(char* szID);
 
 private:
-
+	int					delLovePoint[MAXROOM];
 	int					m_rmWalk[MAXROOM];	//remain walk
 	
 	void				FirstTurn(int nRoomIndex);
