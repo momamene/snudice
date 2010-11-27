@@ -436,6 +436,18 @@ void gMap::DrawSubmit(int x0, int y0, int n, int subjectIndex, int frameOn) // f
 	}
 }
 
+void gMap::Edge()
+{
+	if(m_nAbsDrawlineX < 0)
+		m_nAbsDrawlineX = 0;
+	if(m_nAbsDrawlineY < 0)
+		m_nAbsDrawlineY = 0;
+	if(m_nAbsDrawlineX > BACKMAPX - WNDSIZEW) 
+		m_nAbsDrawlineX = BACKMAPX - WNDSIZEW;
+	if(m_nAbsDrawlineY > BACKMAPY - WNDSIZEH) 
+		m_nAbsDrawlineY = BACKMAPY - WNDSIZEH;
+}
+
 void gMap::Draw()
 {
 	int n = 1; // √‡º“¿≤
@@ -453,14 +465,7 @@ void gMap::Draw()
 		0, 0, WNDSIZEW, WNDSIZEH);
 	rcSour = rcDest;
 
-	if(m_nAbsDrawlineX < 0)
-		m_nAbsDrawlineX = 0;
-	if(m_nAbsDrawlineY < 0)
-		m_nAbsDrawlineY = 0;
-	if(m_nAbsDrawlineX > BACKMAPX - WNDSIZEW) 
-		m_nAbsDrawlineX = BACKMAPX - WNDSIZEW;
-	if(m_nAbsDrawlineY > BACKMAPY - WNDSIZEH) 
-		m_nAbsDrawlineY = BACKMAPY - WNDSIZEH;
+	Edge();
 
 	OffsetRect(&rcSour,
 		m_nAbsDrawlineX, m_nAbsDrawlineY);

@@ -1323,7 +1323,7 @@ void gUIGame::pk_itemuse_rep(PK_ITEMUSE_REP* rep)
 		case TARGET_MEOTHER:
 			{
 				m_nTargetNum = 2;
-				// 나
+				// 사용자
 				m_target[0] = m_itemuser;
 
 				// 상대
@@ -1350,7 +1350,7 @@ void gUIGame::pk_itemuse_rep(PK_ITEMUSE_REP* rep)
 			{
 				m_nTargetNum = pc->GetGPNum();
 
-				// 나
+				// 사용자
 				m_target[0] = m_itemuser;
 				// 다른 애들
 				int		i;
@@ -1388,6 +1388,105 @@ void gUIGame::pk_itemuse_rep(PK_ITEMUSE_REP* rep)
 						j++;
 					}
 				}
+				SetTargetButton_UseInfo();
+			}
+			break;
+		case TARGET_MYCOUPLE:
+			{
+				if(strlen(pc->m_GPlayerList[m_itemuser.idx].szCouple) == 0)
+					break;
+
+				m_nTargetNum = 2;
+				// 사용자
+				m_target[0] = m_itemuser;
+
+				// 사용자 커플
+				int	targetIdx = pc->GetGPIndex( pc->m_GPlayerList[m_itemuser.idx].szCouple );
+
+				m_target[1].idx = targetIdx;
+				m_target[1].img = &pc->m_ImgInfo[ pc->m_GPlayerList[targetIdx].ctype ].ImgPic;
+
+				int		i;
+				int		startx = USEINFO_TARGET_POS_X - TARGET_OUTLINE_SIZE_W/2;
+				int		starty = USEINFO_TARGET_POS_Y - TARGET_OUTLINE_SIZE_H - USEINFO_TARGET_TERM_Y/2;
+
+				for(i = 0; i < m_nTargetNum; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx,
+						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y),
+						startx + TARGET_OUTLINE_SIZE_W,
+						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y) + TARGET_OUTLINE_SIZE_H );
+				}
+			}
+			break;
+		case TARGET_OTHERCOUPLE:
+			{
+				int targetIdx = pc->GetGPIndex(rep->szTarget);
+
+				if(strlen(pc->m_GPlayerList[targetIdx].szCouple) == 0)
+					break;
+
+				m_nTargetNum = 2;
+
+				m_target[0].idx = targetIdx;
+				m_target[0].img = &pc->m_ImgInfo[ pc->m_GPlayerList[targetIdx].ctype ].ImgPic;
+
+				m_target[1].idx = pc->GetGPIndex( pc->m_GPlayerList[targetIdx].szCouple );
+				m_target[1].img = &pc->m_ImgInfo[ pc->m_GPlayerList[ m_target[1].idx ].ctype ].ImgPic;
+
+				int		i;
+				int		startx = USEINFO_TARGET_POS_X - TARGET_OUTLINE_SIZE_W/2;
+				int		starty = USEINFO_TARGET_POS_Y - TARGET_OUTLINE_SIZE_H - USEINFO_TARGET_TERM_Y/2;
+
+				for(i = 0; i < m_nTargetNum; i++)
+				{
+					SetRect(&m_target[i].rcPos,
+						startx,
+						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y),
+						startx + TARGET_OUTLINE_SIZE_W,
+						starty + i * (TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y) + TARGET_OUTLINE_SIZE_H );
+				}
+			}
+			break;
+		case TARGET_ALLSINGLE:
+			{
+				int		i, j;
+				j = 0;
+				for(i = 0; i < ROOMMAXPLAYER; i++)
+				{
+					if(strlen(pc->m_GPlayerList[i].szID) != 0)
+					{
+						if(strlen(pc->m_GPlayerList[i].szCouple) != 0)
+							continue;
+						m_target[j].idx = i;
+						m_target[j].img = &pc->m_ImgInfo[ pc->m_GPlayerList[i].ctype ].ImgPic;
+						j++;
+					}
+				}
+
+				m_nTargetNum = j;
+
+				SetTargetButton_UseInfo();
+			}
+			break;
+		case TARGET_ALLCOUPLE:
+			{
+				int		i, j;
+				j = 0;
+				for(i = 0; i < ROOMMAXPLAYER; i++)
+				{
+					if(strlen(pc->m_GPlayerList[i].szID) != 0)
+					{
+						if(strlen(pc->m_GPlayerList[i].szCouple) == 0)
+							continue;
+						m_target[j].idx = i;
+						m_target[j].img = &pc->m_ImgInfo[ pc->m_GPlayerList[i].ctype ].ImgPic;
+						j++;
+					}
+				}
+
+				m_nTargetNum = j;
 				SetTargetButton_UseInfo();
 			}
 			break;

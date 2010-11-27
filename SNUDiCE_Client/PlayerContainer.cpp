@@ -308,6 +308,7 @@ void gPlayerContainer::SetGPList(GAMEPLAYER *list)
 
 void gPlayerContainer::MainLoop()
 {
+	gMap::GetIF()->Edge();
 	Draw();
 }
 
@@ -345,6 +346,7 @@ void gPlayerContainer::Draw()
 
 void gPlayerContainer::MainLoop_Busing(gImage *bus, RECT *rcDest, RECT *rcSour, int turn)
 {
+	gMap::GetIF()->Edge();
 	Draw_Busing(bus, rcDest, rcSour, turn);
 }
 
@@ -389,11 +391,13 @@ void gPlayerContainer::Draw_Busing(gImage *bus, RECT *rcDest, RECT *rcSour, int 
 
 void gPlayerContainer::MainLoop_Warp(int charidx, int dY)
 {
+	gMap::GetIF()->Edge();
 	Draw_Warp(charidx, dY);
 }
 
 void gPlayerContainer::MainLoop_WarpList(int *dest, bool drawAll, int dY)
 {
+	gMap::GetIF()->Edge();
 	Draw_WarpList(dest, drawAll, dY);
 }
 
@@ -491,6 +495,7 @@ void gPlayerContainer::PacketalDrawFix() {
 void gPlayerContainer::SyncronizeToMap(int nInRoomIndex, int pairIndex)
 {
 	gMap* gmap = gMap::GetIF();
+
 	const int INTERVAL = 4;
 	static int bef=-1, countdown, num, i;
 	static pair<int,int> plow[INTERVAL];

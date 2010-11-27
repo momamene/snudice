@@ -98,6 +98,8 @@ public:
 
 
 public:
+	void	Edge();
+
 	bool	Setup();			// setup
 	void	Release();	
 
