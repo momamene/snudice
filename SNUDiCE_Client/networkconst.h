@@ -12,8 +12,8 @@
 #define WM_SOCKET				WM_USER + 1
 
 #define	WINSOCK_VERSION_2_2		MAKEWORD(2, 2)
-//#define SERVER_IP				"211.169.219.86"		// 현탁
-#define SERVER_IP				"211.169.219.87"		// 창규
+#define SERVER_IP				"211.169.219.86"		// 현탁
+//#define SERVER_IP				"211.169.219.87"		// 창규
 #define SERVER_PORT				9000
 #define BUFFERSIZE				2048
 
@@ -526,6 +526,7 @@ struct CHANGEINFO
 	int			nArt;
 	int			nStamina;
 	int			nGrade;				// 성취도. 학점이 아님
+	int			nLove;
 };
 
 struct PK_GAMEEND_REP

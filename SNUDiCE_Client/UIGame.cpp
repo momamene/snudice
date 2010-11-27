@@ -168,7 +168,7 @@
 #define MAPTOOLTIP_TEXT_TERM_Y				20
 
 #define BECOUPLE_MALE_X						(320 - TARGET_OUTLINE_SIZE_W - 30)
-#define BECOUPLE_MALE_Y						(240 - TARGET_OUTLINE_SIZE_H/2)
+#define BECOUPLE_MALE_Y						(220 - TARGET_OUTLINE_SIZE_H/2)
 #define BECOUPLE_FEMALE_X					(320 + 30)
 #define BECOUPLE_FEMALE_Y					BECOUPLE_MALE_Y
 #define BECOUPLE_TICK						2000
@@ -1994,6 +1994,15 @@ void gUIGame::Draw_InfoChange()
 				wsprintf(szBuf[nCount], "체력 - %d", -m_info[i].nStamina);
 			nCount++;
 		}
+		if(m_info[i].nLove != 0)
+		{
+			if(m_info[i].nLove > 0)
+				wsprintf(szBuf[nCount], "애정도 + %d", m_info[i].nLove);
+			else
+				wsprintf(szBuf[nCount], "애정도 - %d", -m_info[i].nLove);
+			nCount++;
+		}
+
 
 		int		startx, starty;
 
