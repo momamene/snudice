@@ -187,7 +187,7 @@ void gSubmitCore::Draw()
 
 			if(m_subject[i][j] == NOSEAT)
 			{
-				OffsetRect(&rcSour, 0, ROOMMAXPLAYER * SUB_SIZE_ICONPLAYER_H);
+				OffsetRect(&rcSour, 0, /*ROOMMAXPLAYER*/8 * SUB_SIZE_ICONPLAYER_H);
 			}
 			else
 			{

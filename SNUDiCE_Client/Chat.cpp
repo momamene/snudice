@@ -136,29 +136,49 @@ void gChat::DrawMsg()
 	gUtil::EndText();
 }
 
-int ParseStr(const char *szMsg, char *opID, char *opMsg) 
+enum PARSE_CODE {
+	PLAYER_WHISPER,
+	FRIEND_WHISPER,
+	FRIEND_ADD,
+	CHEAT_CARD,
+	CHEAT_MOVE,
+
+	ARGUMENT_ERROR,
+	COMMAND_ERROR
+};
+
+PARSE_CODE ParseStr(const char *szMsg, char *opID, char *opMsg, int *itemnum) 
 {
 	int i=1, c=0, len=strlen(szMsg);
 	string cmd, ID;
+	int j;
 	
 	cmd.clear(); ID.clear();
 	while(szMsg[i]!=' ' && i<len) cmd=cmd + szMsg[i++];
-	if(szMsg[i]!=' ') return 1;
+	if(szMsg[i]!=' ') return ARGUMENT_ERROR;
 
+	//cmd Case
 	if(cmd=="w") {
 		i++;
 		while(szMsg[i]!=' ' && i<len) ID=ID + szMsg[i++];
-		if(szMsg[i]!=' ') return 2;
+		if(szMsg[i]!=' ') return ARGUMENT_ERROR;
 			
 		strcpy(opMsg, szMsg+i+1);
 		strcpy(opID, ID.c_str());
 
-		return 0;
+		return PLAYER_WHISPER;
 	}
-	else {
-		return 1;
+	else if(cmd=="card") {
+		i++;
+		for(j=i;j<strlen(szMsg);j++) 
+			if(!(szMsg[j]>=48 && szMsg[j]<=57)) 
+				return ARGUMENT_ERROR;
+
+		*itemnum = atoi(szMsg+i);
+		return CHEAT_CARD;
 	}
-	return 0;
+	return COMMAND_ERROR;
+	
 }
 
 void gChat::AddStr(char* szID, char* szMsg)
@@ -209,17 +229,13 @@ void gChat::SendMsg()
 	if(m_Edit.m_szEdit[0] == '/')
 	{
 		// debug 명령어
-		int		code;
+		PARSE_CODE code;
+		int		itemnum;
 		char	opID[IDLENGTH], opMsg[MSGLENGTH];
 
-		code = ParseStr(m_Edit.m_szEdit, opID, opMsg);
-		if(code != 0)
-		{
-			//잘못된 명령어 처리
-			//code1: command 잘못
-			//code2: 인자 부족(Message를 입력하시오)
-		}
-		else 
+		code = ParseStr(m_Edit.m_szEdit, opID, opMsg, &itemnum);
+		
+		if(code == PLAYER_WHISPER) 
 		{
 			PK_WHISPER_ASK	ask_w;
 
@@ -227,6 +243,12 @@ void gChat::SendMsg()
 			strcpy(ask_w.szFromID, myplayer->szID);
 			strcpy(ask_w.szComment, opMsg);
 			gServer::GetIF()->Send(PL_WHISPER_ASK, sizeof(ask_w), &ask_w);
+		}
+		else if(code == FRIEND_ADD) {
+			
+		}
+		else {
+			//TODO: Exception
 		}
 	}
 	else

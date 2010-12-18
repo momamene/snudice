@@ -52,8 +52,8 @@
 #define ROOM_FILE_BTN_4				".\\Data\\Room\\make_btn_4.img"
 #define ROOM_FILE_BTN_5				".\\Data\\Room\\make_btn_5.img"
 #define ROOM_FILE_BTN_6				".\\Data\\Room\\make_btn_6.img"
-#define ROOM_FILE_BTN_7				".\\Data\\Room\\make_btn_7.img"
-#define ROOM_FILE_BTN_8				".\\Data\\Room\\make_btn_8.img"
+//#define ROOM_FILE_BTN_7				".\\Data\\Room\\make_btn_7.img"
+//#define ROOM_FILE_BTN_8				".\\Data\\Room\\make_btn_8.img"
 #define ROOM_BTN_SIZE_NUM_W			98
 #define ROOM_BTN_SIZE_NUM_H			22
 #define ROOM_BTN_POS_NUM_X			105
@@ -659,7 +659,7 @@ bool gRoomCore::SetUp_Make()
 		ROOM_BTN_POS_NUM_X + ROOM_BTN_SIZE_NUM_W,
 		ROOM_BTN_POS_NUM_Y + ROOM_BTN_SIZE_NUM_H );
 
-	for(int i = BMM_NUM2; i <= BMM_NUM8; i++)
+	for(int i = BMM_NUM2; i <= BMM_NUM6; i++)
 	{
 		RECT	rcTemp = rcDest;
 		OffsetRect(&rcTemp, 0, ROOM_BTN_SIZE_NUM_H * (i - BMM_NUM2) );
@@ -686,14 +686,14 @@ bool gRoomCore::SetUp_Make()
 				if(!m_MakeBtn[i].SetUp(ROOM_FILE_BTN_6, false, rcTemp))
 					return false;
 				break;
-			case BMM_NUM7:
+/*			case BMM_NUM7:
 				if(!m_MakeBtn[i].SetUp(ROOM_FILE_BTN_7, false, rcTemp))
 					return false;
 				break;
 			case BMM_NUM8:
 				if(!m_MakeBtn[i].SetUp(ROOM_FILE_BTN_8, false, rcTemp))
 					return false;
-				break;
+				break;*/
 		}
 	}
 
@@ -808,7 +808,7 @@ void gRoomCore::OnLButtonDown_Make()
 			return;
 		}
 
-		for(i = BMM_NUM2; i <= BMM_NUM8; i++)
+		for(i = BMM_NUM2; i <= BMM_NUM6; i++)
 		{
 			if(m_MakeBtn[i].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 			{
