@@ -220,6 +220,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Map.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\PopUp.cpp"
 					>
 				</File>
@@ -273,10 +277,6 @@
 				>
 				<File
 					RelativePath=".\ItemContainer.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Map.cpp"
 					>
 				</File>
 				<File

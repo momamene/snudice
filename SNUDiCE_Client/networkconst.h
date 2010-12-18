@@ -272,7 +272,7 @@ struct PK_CHANNELCHANGE_REP
 #define MAXROOM				40								// 만들 수 있는 방 개수
 #define MAXROOMNAME			32
 #define MAXROOMPASS			16
-#define ROOMMAXPLAYER		8
+#define ROOMMAXPLAYER		6
 #define MAXPAGE				(MAXROOM / MAXROOMFORPAGE)
 
 struct ROOM

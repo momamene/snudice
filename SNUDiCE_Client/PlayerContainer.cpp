@@ -4,6 +4,7 @@
 #include "UIGame.h"
 #include <stdio.h>
 #include <algorithm>
+#include <vector>
 
 using namespace std;
 
@@ -311,12 +312,27 @@ void gPlayerContainer::MainLoop()
 	gMap::GetIF()->Edge();
 	Draw();
 }
+///////////2010. 12. 17
+using namespace std;
+struct Draw_Position {
+	RECT rcScr, rcImg;
+	int index;
+	Draw_Position(RECT rcScr_, RECT rcImg_, int index_) {
+		rcScr = rcScr_;
+		rcImg=rcImg_;
+		index = index_;
+	}
+	bool operator <(const Draw_Position &b) const {
+		return (rcScr.top<b.rcScr.top);
+	}
+};
 
 void gPlayerContainer::Draw()
 {
 	RECT	rcScr;
 	RECT	rcImg;
 	gMap* gmap = gMap::GetIF();
+	vector <Draw_Position> PlayerRect;
 
 	for(int h = 0 ; h < LINEY ; h++)		// yÁÂÇ¥ ¼øÀ¸·Î sorting
 	{	
@@ -337,9 +353,18 @@ void gPlayerContainer::Draw()
 					m_movePosition[i]*130,
 					(m_moveFoot[i]+1)*70, 
 					(m_movePosition[i]+1)*130);
-				m_ImgInfo[ m_GPlayerList[i].ctype ].ImgDot.Draw(rcScr, rcImg, false);
+				
+				Draw_Position A(rcScr, rcImg, i);
+				PlayerRect.push_back(A);
+				//m_ImgInfo[ m_GPlayerList[i].ctype ].ImgDot.Draw(rcScr, rcImg, false);
 			}
 		}
+	}
+
+	sort(PlayerRect.begin(), PlayerRect.end());
+	for(int i = 0 ; i < PlayerRect.size() ; i++) {
+		int k = PlayerRect[i].index;
+		m_ImgInfo[ m_GPlayerList[k].ctype ].ImgDot.Draw(PlayerRect[i].rcScr, PlayerRect[i].rcImg, false);
 	}
 }
 
@@ -354,18 +379,13 @@ void gPlayerContainer::Draw_Busing(gImage *bus, RECT *rcDest, RECT *rcSour, int 
 {
 	RECT	rcScr;
 	RECT	rcImg;
-
+	vector <Draw_Position> PlayerRect;
 	gMap* gmap = gMap::GetIF();
 
 	int		busY = m_GPlayerList[turn].nPos % LINEY;
 
 	for(int h = 0 ; h < LINEY ; h++)		// yÁÂÇ¥ ¼øÀ¸·Î sorting
 	{	
-		if(h == busY)
-		{
-			if(bus)
-				bus->Draw(*rcDest, *rcSour, false);
-		}
 		for(int i = 0 ; i < ROOMMAXPLAYER ; i++)
 		{
 			if(m_nNoDraw == i || m_nNoDraw2 == i)
@@ -383,9 +403,24 @@ void gPlayerContainer::Draw_Busing(gImage *bus, RECT *rcDest, RECT *rcSour, int 
 					m_movePosition[i]*130,
 					(m_moveFoot[i]+1)*70, 
 					(m_movePosition[i]+1)*130);
-				m_ImgInfo[ m_GPlayerList[i].ctype ].ImgDot.Draw(rcScr, rcImg, false);
+
+				Draw_Position A(rcScr, rcImg, i);
+				PlayerRect.push_back(A);
+				//m_ImgInfo[ m_GPlayerList[i].ctype ].ImgDot.Draw(rcScr, rcImg, false);
 			}
 		}
+	}
+
+	bool printed = false;
+	sort(PlayerRect.begin(), PlayerRect.end());
+	for(int i = 0 ; i < PlayerRect.size() ; i++) {
+		if(bus!=NULL && !printed && PlayerRect[i].rcScr.top >= rcDest->top) {
+				bus->Draw(*rcDest, *rcSour, false);
+			printed=true;
+		}
+
+		int k = PlayerRect[i].index;
+		m_ImgInfo[ m_GPlayerList[k].ctype ].ImgDot.Draw(PlayerRect[i].rcScr, PlayerRect[i].rcImg, false);
 	}
 }
 
@@ -405,7 +440,7 @@ void gPlayerContainer::Draw_Warp(int charidx, int dY)
 {
 	RECT	rcScr;
 	RECT	rcImg;
-
+	vector <Draw_Position> PlayerRect;
 	gMap* gmap = gMap::GetIF();
 
 	for(int h = 0 ; h < LINEY ; h++)		// yÁÂÇ¥ ¼øÀ¸·Î sorting
@@ -431,9 +466,17 @@ void gPlayerContainer::Draw_Warp(int charidx, int dY)
 					m_movePosition[i]*130,
 					(m_moveFoot[i]+1)*70, 
 					(m_movePosition[i]+1)*130);
-				m_ImgInfo[ m_GPlayerList[i].ctype ].ImgDot.Draw(rcScr, rcImg, false);
+
+				Draw_Position A(rcScr, rcImg, i);
+				PlayerRect.push_back(A);
+				//m_ImgInfo[ m_GPlayerList[i].ctype ].ImgDot.Draw(rcScr, rcImg, false);
 			}
 		}
+	}
+	sort(PlayerRect.begin(), PlayerRect.end());
+	for(int i = 0 ; i < PlayerRect.size() ; i++) {
+		int k = PlayerRect[i].index;
+		m_ImgInfo[ m_GPlayerList[k].ctype ].ImgDot.Draw(PlayerRect[i].rcScr, PlayerRect[i].rcImg, false);
 	}
 }
 
@@ -441,7 +484,7 @@ void gPlayerContainer::Draw_WarpList(int *dest, bool drawAll, int dY)
 {
 	RECT	rcScr;
 	RECT	rcImg;
-
+	vector <Draw_Position> PlayerRect;
 	gMap* gmap = gMap::GetIF();
 
 	for(int h = 0 ; h < LINEY ; h++)		// yÁÂÇ¥ ¼øÀ¸·Î sorting
@@ -468,9 +511,17 @@ void gPlayerContainer::Draw_WarpList(int *dest, bool drawAll, int dY)
 					m_movePosition[i]*130,
 					(m_moveFoot[i]+1)*70, 
 					(m_movePosition[i]+1)*130);
-				m_ImgInfo[ m_GPlayerList[i].ctype ].ImgDot.Draw(rcScr, rcImg, false);
+				
+				Draw_Position A(rcScr, rcImg, i);
+				PlayerRect.push_back(A);
+				//m_ImgInfo[ m_GPlayerList[i].ctype ].ImgDot.Draw(rcScr, rcImg, false);
 			}
 		}
+	}
+	sort(PlayerRect.begin(), PlayerRect.end());
+	for(int i = 0 ; i < PlayerRect.size() ; i++) {
+		int k = PlayerRect[i].index;
+		m_ImgInfo[ m_GPlayerList[k].ctype ].ImgDot.Draw(PlayerRect[i].rcScr, PlayerRect[i].rcImg, false);
 	}
 }
 
@@ -490,7 +541,6 @@ void gPlayerContainer::PacketalDrawFix() {
 		}
 	}
 }
-
 
 void gPlayerContainer::SyncronizeToMap(int nInRoomIndex, int pairIndex)
 {
