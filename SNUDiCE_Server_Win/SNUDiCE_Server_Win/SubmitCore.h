@@ -22,6 +22,7 @@ public:
 	void			pk_submit_ask(PK_DEFAULT *pk, SOCKET sock);
 	void			pk_submitready_ask(PK_DEFAULT *pk,SOCKET sock);
 	
+	bool			isFinishAllSubmit(int nRoomIndex);
 
 	// packet
 
@@ -39,7 +40,6 @@ private:
 	void			pushSubjectToPlayer(int nRoomIndex,int nInRoomIndex,int nSubjectIndex);
 	bool			isSubjectFull(int nRoomIndex,int nInRoomIndex);
 	bool			isSubjectExisted(int nRoomIndex,int nInRoomIndex,int nSubjectIndex);
-	bool			isFinishAllSubmit(int nRoomIndex);
 
 	void			putFavorsameclass(int nRoomIndex);	//같은Class 들으면 호감도 상승
 };

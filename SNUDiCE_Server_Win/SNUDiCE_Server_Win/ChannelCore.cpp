@@ -77,53 +77,53 @@ void gChannelCore::pk_channelchange_ask (PK_DEFAULT *pk, SOCKET sock)
 	gPlayerContainer *gPC = gPlayerContainer::GetIF();
 	gRoomCore *gRC = gRoomCore::GetIF();
 
-	if(gChannelContainer::GetIF()->RoomClientNum(ask.nChannel-1)>=CHANNELUSERMAX) {
-		rep.error = ECE_CHANNELISOVER;
-	}
-	else {
-		int channelBefore = gChannelContainer::GetIF()->FindPlayer(ask.szID);
-		int jjj= gPC->GetMode(ask.szID);
-		switch(gPC->GetMode(ask.szID))	{
-				case ECM_BATTLENET : 				case ECM_ROOMJOIN :
-					if(channelBefore == -1) {
-						// 에러 처리
-						OutputDebugString("(f)[pk_channelchange_ask] Cannot Find Player Error\n");
-					}
-					else {
-						rep.error = ECE_SUCCESS;
-
-						gChannelContainer::GetIF()->DeletePlayer(ask.szID);
-						gChannelContainer::GetIF()->AddPlayer(ask.nChannel-1,ask.szID);
-						rep.channel = gChannelContainer::GetIF()->m_channelArray[ask.nChannel-1];
-						pk_channelrefresh_rep (channelBefore);
-						pk_channelrefresh_rep (ask.nChannel-1);
-						gPC->PutCoreFlag(ask.szID,ask.nChannel-1);
-						gPC->PutMode(ask.szID,ECM_BATTLENET);
-						gRC->SendRoomListCauseChange(ask.nChannel-1);
-
-					}
-					break;
-				case ECM_ROOMMAKE :	
-					addrLen = addrLen;
-
-					break;
-				case ECM_ROOM : 
+	int channelBefore = gChannelContainer::GetIF()->FindPlayer(ask.szID);
+	switch(gPC->GetMode(ask.szID))	{
+		case ECM_BATTLENET : 				case ECM_ROOMJOIN :
+			if(channelBefore == -1) {
+				// 에러 처리
+				OutputDebugString("(f)[pk_channelchange_ask] Cannot Find Player Error\n");
+			}
+			else {
+				if(gChannelContainer::GetIF()->RoomClientNum(ask.nChannel-1)>=CHANNELUSERMAX) {
+					rep.error = ECE_CHANNELISOVER;
+				}	else	{
 					rep.error = ECE_SUCCESS;
-					gRC->ExitTheRoom(ask.szID);
-
-					
+					gChannelContainer::GetIF()->DeletePlayer(ask.szID);
 					gChannelContainer::GetIF()->AddPlayer(ask.nChannel-1,ask.szID);
 					rep.channel = gChannelContainer::GetIF()->m_channelArray[ask.nChannel-1];
+					pk_channelrefresh_rep (channelBefore);
 					pk_channelrefresh_rep (ask.nChannel-1);
 					gPC->PutCoreFlag(ask.szID,ask.nChannel-1);
 					gPC->PutMode(ask.szID,ECM_BATTLENET);
-					gPC->PutBoolReady(ask.szID,false);
-					gPC->PutClassType(ask.szID,CLASS_NONE);
 					gRC->SendRoomListCauseChange(ask.nChannel-1);
-					break;
-		}
-
+				}
+			}
+			break;
+		case ECM_ROOMMAKE :	
+			break;
+		case ECM_ROOM : 
+			gRC->ExitTheRoom(ask.szID);
+			gPC->PutMode(ask.szID,ECM_BATTLENET);
+			gPC->PutBoolReady(ask.szID,false);
+			gPC->PutClassType(ask.szID,CLASS_NONE);
+			
+			int		repChannel = ask.nChannel - 1;
+			
+			while(gChannelContainer::GetIF()->RoomClientNum(repChannel)>=CHANNELUSERMAX)	{
+				repChannel ++ ;
+				if (repChannel > CHANNELMAX)	//수정, 만약 사람꽉차면 뻑나겠지,, 하지만 그럴일이....ㅜ.ㅡ;;
+					repChannel = 0 ;
+			}
+			
+			gChannelContainer::GetIF()->AddPlayer(repChannel,ask.szID);
+			rep.channel = gChannelContainer::GetIF()->m_channelArray[repChannel];
+			gPC->PutCoreFlag(ask.szID,repChannel);
+			gRC->SendRoomListCauseChange(repChannel);
+			pk_channelrefresh_rep (repChannel);
+			break;
 	}
+
 	gMainWin::GetIF()->Send(PL_CHANNELCHANGE_REP, sizeof(rep), &rep, sock);
 	gChannelContainer::GetIF()->fullDebuger();
 

@@ -57,9 +57,9 @@ bool gGamePlayerContainer::init(int nRoomIndex)
 			m_isGamePlayer[nRoomIndex][i] = false;
 		}
 		else {
-			m_favor[nRoomIndex][i].bYes = CPS_NONE;		//수정
+			m_favor[nRoomIndex][i].bYes = CPS_NONE;	
 			m_favor[nRoomIndex][i].lvTargetIndex = -1;
-			m_GamePlayer[nRoomIndex][i].nLove = -1;	//수정
+			m_GamePlayer[nRoomIndex][i].nLove = -1;	
 			
 			m_isGamePlayer[nRoomIndex][i] = true;
 			m_isNokdu[nRoomIndex][i] = false;			
@@ -1940,7 +1940,7 @@ void gGamePlayerContainer::pk_infochangeend_ask(PK_DEFAULT *pk, SOCKET sock)
 
 
 
-//땜빵코딩, 클라이언트에서의 ask가 아니라 서버 내의 스레드 종료시에 호출됨
+// 클라이언트에서의 ask가 아니라 서버 내의 스레드 종료시에 호출됨
 void gGamePlayerContainer::pk_exit_ask(char *clientID, SOCKET sock)
 {
 	gPlayerContainer	*gPC =	gPlayerContainer::GetIF();
@@ -1966,7 +1966,14 @@ void gGamePlayerContainer::pk_exit_ask(char *clientID, SOCKET sock)
 	rep.flag = 0;
 	strcpy(rep.szID , clientID);
 
-	m_isGamePlayer[nRoomIndex][nInRoomIndex] = false;	//나간놈 Out 시키기
+	//나간놈 Out 시키고 정보 초기화
+	m_isGamePlayer[nRoomIndex][nInRoomIndex] = false;
+	if (m_GamePlayer[nRoomIndex][nInRoomIndex].nLove != -1)	{	//커플이면 깨기
+		pk_becouple_rep(nRoomIndex, gPC->GetPlayerFromID(clientID) ,  gPC->GetPlayerFromID(m_GamePlayer[nRoomIndex][nInRoomIndex].szCouple) , false);
+	}
+	
+	strcpy(m_GamePlayer[nRoomIndex][nInRoomIndex].szID , "");
+	
 	//남은사람 체크 , 변수만들기 귀찮아서 걍 for문
 
 	for (int i = 0 ; i < ROOMMAXPLAYER ; i++)	{
@@ -1978,18 +1985,26 @@ void gGamePlayerContainer::pk_exit_ask(char *clientID, SOCKET sock)
 				pk_gameend_rep(nRoomIndex);
 				return;
 			}
+			
+//			pk_gameplayerinfo_rep(nRoomIndex);
 			gPC->SendSelect(PL_EXIT_REP,sizeof(PK_EXIT_REP),&rep, ECM_GAME , nRoomIndex);
-
+			
 			if (m_nTurn[nRoomIndex] == nInRoomIndex)	//하필 나갈때가 내 턴이었을 때
 				pk_nextturn_rep(nRoomIndex);	//걍 담턴 ㄱㄱ;
 			break;
 		case ECM_SUBMIT :
 			gSC->m_isFinishSubmitSubject[nRoomIndex][nInRoomIndex] = true;	//수강했다고 쳐
+			
+			if(gSC->isFinishAllSubmit(nRoomIndex)) {
+				gGamePlayerContainer::GetIF()->pk_maingamestart_rep(nRoomIndex);
+				break;
+			}
+			
 			if (rep.flag == 1)		{
 				pk_maingamestart_rep(nRoomIndex);	//강제로 게임모드 ㄱㄱ
 				return;
 			}
-
+			
 			break;
 	}
 }
@@ -2075,7 +2090,6 @@ void gGamePlayerContainer::pk_anscouple_ask(PK_DEFAULT *pk,SOCKET sock)	//수정 ,
 		//pk_movestart_rep
 		if (m_rmWalk[nRoomIndex])	{
 			
-
 			PK_MOVESTART_REP rep;
 			rep.nDist = m_rmWalk[nRoomIndex];
 			rep.Dice4_1 = 0;		rep.Dice4_2 = 0;

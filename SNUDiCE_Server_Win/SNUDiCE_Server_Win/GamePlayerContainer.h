@@ -2,7 +2,7 @@
 #include "network.h"
 #include "Charinfo.h"
 
-#define MINIMUM_COUPLE_CONDITION 50
+#define MINIMUM_COUPLE_CONDITION 10
 #define SAMECLASS_FAVORPOINT 5
 #define SAMETILE_FAVORPOINT 5
 #define CROSS_FAVORPOINT 2

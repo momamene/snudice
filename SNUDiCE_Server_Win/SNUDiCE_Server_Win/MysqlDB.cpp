@@ -23,6 +23,10 @@ void gMysql::init() {
 	int query_stat;
 
 	mysql_init(&m_conn);
+	
+	unsigned int maxtime = 4294967293;
+	mysql_options(&m_conn , MYSQL_OPT_CONNECT_TIMEOUT , &maxtime);
+
 	m_connection = mysql_real_connect(&m_conn,DB_HOST,
 		DB_USER,DB_PASS,DB_NAME,3306,(char*)NULL,0);
 	if(m_connection==NULL) {
@@ -35,6 +39,7 @@ void gMysql::init() {
 		fprintf(stderr,"Mysql query error : %s",mysql_error(&m_conn));
 		return;
 	}
+	
 
 }
 

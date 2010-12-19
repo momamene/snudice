@@ -55,9 +55,9 @@ void gMessageCore::pk_message_ask(PK_DEFAULT *pk, SOCKET sock)
 	if( mode==-1 || flag==-1 ) {
 		// error
 	}
-//	else if(ask.szMsg[0]=='/') {	//수정 임시디버그용
-//		debuger(ask.szMsg,ask.szID);
-//	}
+	else if(ask.szMsg[0]=='/') {	//수정 임시디버그용
+		debuger(ask.szMsg,ask.szID);
+	}
 	else if(mode==ECM_BATTLENET || mode==ECM_ROOM || mode==ECM_GAME) {
 		//int nChannelIndex = gCC->FindPlayer(ask.szID);
 		strcpy(rep.szID,ask.szID);
@@ -141,3 +141,4 @@ void gMessageCore::pk_whisper_ask(PK_DEFAULT *pk, SOCKET sock)
 	gMainWin::GetIF()->Send(PL_MESSAGE_REP, sizeof(rep2), &rep2, sendsock);
 
 }
+
