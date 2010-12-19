@@ -12,7 +12,7 @@ gTimer *gTimer::GetIF()
 
 void gTimer::SetUp()
 {
-	//m_start=GetTickCount();
+	m_start=GetTickCount();
 	m_turn =0;
 	m_on   =false;
 }

@@ -610,6 +610,7 @@ bool gPlayerContainer::isTurn(int turn)
 
 int gPlayerContainer::GetCoupleIndex(int nTurn)
 {
+	//if(strlen(m_GPlayerList[nTurn].szID) == 0) return -1;
 	if(strlen(m_GPlayerList[nTurn].szCouple) == 0) return -1;
 
 	for(int i=0; i<ROOMMAXPLAYER; i++)
@@ -628,6 +629,12 @@ int gPlayerContainer::GetMyGPIndex()
 			return i;
 	}
 	return -1;
+}
+
+void gPlayerContainer::DeleteGamePlayer(int index)
+{
+	memset(m_MyRoom.szRoomMaxPlayer[index], 0, sizeof(m_MyRoom.szRoomMaxPlayer[0]));
+	memset(m_GPlayerList[index].szID, 0, sizeof(m_GPlayerList[0].szID));
 }
 
 int gPlayerContainer::GetMyPIndex()

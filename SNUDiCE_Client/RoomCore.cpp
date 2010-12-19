@@ -982,7 +982,7 @@ bool gRoomCore::SetUp_Join()
 	if(!m_EditPassEnter.SetUp(rcDest, NULL, ROOM_EDIT_LEN_PW, EDIT_PASSWORD))
 		return false;
 
-
+	m_RoomJoinAsk=false;///////////////////////
 	return true;
 }
 
@@ -1476,7 +1476,7 @@ void gRoomCore::Draw_Room()
 					gPlayerContainer::GetIF()->m_CharInfo[i].szName);	
 			}
 
-			if(m_nSelChar != -1)
+			if(m_nSelChar>=0 && m_nSelChar<BSM_SELECT)
 			{
 				gUtil::Text(SEL_POS_COLLEGE_X, SEL_POS_COLLEGE_Y, gPlayerContainer::GetIF()->m_CharInfo[m_nSelChar].szCollege);
 
@@ -1623,6 +1623,9 @@ void gRoomCore::OnMouseMove_Join()
 
 void gRoomCore::SendRoomJoin()
 {
+	if(m_RoomJoinAsk) return;
+	m_RoomJoinAsk=true;
+	
 	PK_ROOMJOIN_ASK			ask;
 
 	ask.nIdx	= m_nSelected;
@@ -1685,6 +1688,7 @@ void gRoomCore::pk_roomjoin_rep(PK_ROOMJOIN_REP *rep)
 			}
 			break;
 	}
+	m_RoomJoinAsk=false;
 }
 
 void gRoomCore::OnLButtonDown_Room()

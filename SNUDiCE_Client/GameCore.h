@@ -107,13 +107,14 @@ public:
 	void		pk_askcouple_rep(PK_ASKCOUPLE_REP* rep);
 	void		pk_movestartcouple_rep(PK_MOVESTART_REP *rep);
 	void		pk_busmovestartcouple_rep(PK_BUSMOVESTART_REP *rep);
+	void		pk_exit_rep(PK_EXIT_REP *rep);
 
 	void		Start(int spacor);
 	void		Start(int spacor,int conPosX,int conPosY);
 	void		StepStart();
 	void		StepOn();
 	void		StepEnd();
-	void		End();
+	void		End(bool Abnormal_End = 0);
 
 	void		SendMoveAsk();
 private:

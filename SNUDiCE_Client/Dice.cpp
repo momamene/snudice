@@ -92,6 +92,7 @@ void gDice::DiceThrow()
 
 	if(m_nPos >= DICE_FRAME-1)
 	{
+		//주사위는 왜 돌고있는데 씹새끼가 먼저 가버릴까요?
 		m_frametime.frameEnd();
 		m_start = false;
 
