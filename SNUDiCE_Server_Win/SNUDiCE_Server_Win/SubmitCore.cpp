@@ -27,7 +27,7 @@ void gSubmitCore::init(int nRoomIndex)
 		for(int i = 0 ; i < CLASSNUM ; i++) {
 			m_submitSubject[nRoomIndex][i][0] = AVAILSEAT;
 			m_submitSubject[nRoomIndex][i][1] = AVAILSEAT;
-			m_submitSubject[nRoomIndex][i][2] = NOSEAT;
+			m_submitSubject[nRoomIndex][i][2] = AVAILSEAT;
 		}
 		for(int i = 0 ; i < ROOMMAXPLAYER ; i++) {
 			if(gRC->m_rooms[nRoomIndex].szRoomMaxPlayer[i][0] != '\0') { // 만약, 방에 있다면

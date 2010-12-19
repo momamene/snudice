@@ -75,7 +75,7 @@ bool gPlayerContainer::DeletePlayer(SOCKET sock,char clientID[IDLENGTH])
 		if(temp->sock == sock)
 		{
 			strcpy(clientID,temp->szID);
-			gGamePlayerContainer::GetIF()->pk_exit_ask(clientID , sock);	//수정사항 , 여기서 끗날때 보냄 ㅇㅇ;
+			gGamePlayerContainer::GetIF()->pk_exit_ask(clientID , sock);
 			delete temp;
 			temp = NULL;
 			m_PlayerList.erase(it);
