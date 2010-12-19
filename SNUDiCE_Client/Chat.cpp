@@ -247,6 +247,9 @@ void gChat::SendMsg()
 		else if(code == FRIEND_ADD) {
 			
 		}
+		else if(code == CHEAT_CARD) {
+
+		}
 		else {
 			//TODO: Exception
 		}

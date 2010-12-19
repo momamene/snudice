@@ -889,18 +889,15 @@ void gGameCore::SendMoveAsk()
 
 	m_bMoved = true;
 
-
 }
 
 void gGameCore::pk_movestart_rep(PK_MOVESTART_REP *rep)
 {
 	gPlayerContainer *gPC = gPlayerContainer::GetIF();
 	
-
 	if(m_bMoving)
 		return;
 
-	
 	if(rep->Dice4_1 == 0 && rep->Dice4_2 == 0
 		&& rep->Dice6_1 == 0 && rep->Dice6_2 == 0)
 	{
@@ -1037,7 +1034,7 @@ void gGameCore::StepEnd()
 		End();
 }
 
-void gGameCore::End()		// 이동 끝남
+void gGameCore::End(bool Abnormal_End)		// 이동 끝남
 {
 	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
 	gMap				*map = gMap::GetIF();
@@ -1079,10 +1076,12 @@ void gGameCore::End()		// 이동 끝남
 		gServer::GetIF()->Send(PL_MOVEENDCOUPLE_ASK, sizeof ask, &ask);
 	}*/
 //	else {
-	if(strlen(gPC->m_GPlayerList[m_nTurn].szCouple) != 0)
-		gServer::GetIF()->Send(PL_MOVEENDCOUPLE_ASK, sizeof ask, &ask);
-	else
-		gServer::GetIF()->Send(PL_MOVEEND_ASK, sizeof ask, &ask);
+	if(!Abnormal_End) {
+		if(strlen(gPC->m_GPlayerList[m_nTurn].szCouple) != 0)
+			gServer::GetIF()->Send(PL_MOVEENDCOUPLE_ASK, sizeof ask, &ask);
+		else
+			gServer::GetIF()->Send(PL_MOVEEND_ASK, sizeof ask, &ask);
+	}
 //	}
 	
 	//pk_stepFinish_ask(gtc->m_xSpacePos,gtc->m_ySpacePos);
@@ -1090,13 +1089,14 @@ void gGameCore::End()		// 이동 끝남
 
 void gGameCore::pk_nextturn_rep(PK_NEXTTURN_REP *rep)
 {
-	if(m_nTurn == rep->nNowTurn)
-	{
+	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
+
+//	if(m_nTurn == rep->nNowTurn) {		//why this?
 		m_nTurn		= rep->nNextTurn;
 		m_bMoved	= false;
+
 		gUIGame::GetIF()->m_bItemUsed = false;
-	}
-	
+//	}
 	int nTempPos = gPlayerContainer::GetIF()->m_GPlayerList[m_nTurn].nPos;
 	ScrollStart(nTempPos);
 }
@@ -1194,6 +1194,37 @@ void gGameCore::pk_gameend_rep(PK_GAMEEND_REP *rep)
 {
 	gRoomCore::GetIF()->SendRoomBack();	//방나가고돌아오기수정
 	gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_ROOMBACK, rep->szID, STR_17);	//방나가고돌아오기수정
+}
+
+void gGameCore::pk_exit_rep(PK_EXIT_REP *rep)
+{
+	gPlayerContainer	*pc = gPlayerContainer::GetIF();
+	gChat				*ct = gChat::GetIF();
+
+	int		id = pc->GetGPIndex(rep->szID);
+	bool	make_next_turn = true;
+
+	for(int i=0;i<ROOMMAXPLAYER; i++)
+		if(pc->GetCoupleIndex(i) == id) {
+			make_next_turn = false;
+			if(id==m_nTurn) m_nTurn = i;
+			break;
+		}
+
+	if(make_next_turn && id==m_nTurn) {
+		if(m_spacor > 0) {
+			End(true);
+			gDice::GetIF()->m_start = false;
+			m_spacor = 0;
+		}
+		gTimer::GetIF()->frameEnd();
+		m_bBusing	= false;
+		m_bScrolling = false;
+		m_bMoving = false;
+		m_bWarping	= false;
+	}
+	ct->AddStr(rep->szID, "님이 나가셨습니다.");
+	pc->DeleteGamePlayer(id);
 }
 
 bool gGameCore::Restore()

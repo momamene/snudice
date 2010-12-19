@@ -208,7 +208,7 @@ void gServer::Recv()
 		case PL_ROOMJOIN_REP:
 			gRoomCore::GetIF()->pk_roomjoin_rep((PK_ROOMJOIN_REP*)m_pkDefault.strPacket);
 			break;
-			//방나가고돌아오기수정
+			
 		case PL_ROOMBACK_REP:
 			gRoomCore::GetIF()->pk_roomback_rep((PK_ROOMBACK_REP*)m_pkDefault.strPacket);
 			break;
@@ -264,6 +264,10 @@ void gServer::Recv()
 
 		case PL_WARPLISTSTART_REP:
 			gGameCore::GetIF()->pk_warpliststart_rep((PK_WARPLISTSTART_REP*)m_pkDefault.strPacket);
+			break;
+		
+		case PL_EXIT_REP:
+			gGameCore::GetIF()->pk_exit_rep((PK_EXIT_REP*)m_pkDefault.strPacket);
 			break;
 
 		case PL_INFOCHANGE_REP:

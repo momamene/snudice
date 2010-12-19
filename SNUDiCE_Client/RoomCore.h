@@ -131,6 +131,7 @@ public:
 	gImage		m_ImgPassBack;
 	POINT		m_ptPass;				// ImgPass 출력 좌표		
 	gEdit		m_EditPassEnter;		// 들어갈때 비번 입력창
+	bool		m_RoomJoinAsk;			// 방 허락 기다리고 있다 조금만 기다려라.
 
 	// room == wait
 	gImage		m_ImgCharBack;

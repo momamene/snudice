@@ -49,6 +49,7 @@ public:
 
 public:
 	int				GetMyItemNum();		// 내 아이템 갯수
+	void			DeleteGamePlayer(int index);
 
 	int				GetGPNum();			// 게임 플레이어 수
 	int				GetMyGPIndex();		// 게임 플레이어 인덱스
