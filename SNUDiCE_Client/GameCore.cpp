@@ -148,7 +148,19 @@ void gGameCore::MainLoop()
 		SendMoveAsk();
 		gMainWin::GetIF()->m_Keys[VK_SPACE] = false;
 	}
+/*
+	if(GetTickCount() - m_turnTime>=SLEEPTIMEMAX && m_bBusSel) {
+		PK_BUSMOVESELECT_ASK		ask;
+		gPlayerContainer *gPC = gPlayerContainer::GetIF();
+		int nPos = gPC->m_GPlayerList[ m_nTurn ].nPos;
 
+		ask.nPos = nPos;
+		strcpy(ask.szID, gPC->m_MyGamePlayer.szID);
+			
+		gServer::GetIF()->Send(PL_BUSMOVESELECT_ASK, sizeof ask, &ask);
+		m_bBusSel = false;
+	}
+//////////////////////////////////////////////////////////////////////////////버스 잠수*/
 	gChat::GetIF()->MainLoop();
 	gDice::GetIF()->DiceThrow();
 }
@@ -873,7 +885,7 @@ void gGameCore::SendMoveAsk()
 	gPlayerContainer *gPC = gPlayerContainer::GetIF();
 //	int				couple = gPC->GetCoupleIndex(m_nTurn);
 
-	//m_turnTime = 0x7fffffff;
+	m_turnTime = 0x7fffffff;
 	// 내 차례가 아님
 	if(strcmp(gPC->m_MyGamePlayer.szID, gPC->m_GPlayerList[m_nTurn].szID) != 0) {
 		return;
@@ -890,7 +902,6 @@ void gGameCore::SendMoveAsk()
 	gServer::GetIF()->Send(PL_MOVESTART_ASK, sizeof ask, &ask);
 
 	m_bMoved = true;
-
 }
 
 void gGameCore::pk_movestart_rep(PK_MOVESTART_REP *rep)
@@ -1140,8 +1151,10 @@ void gGameCore::pk_busmovechoose_rep(PK_BUSMOVECHOOSE_REP *rep)
 	if(m_bBusSel)
 		return;
 
-	if(m_nTurn == rep->nNowTurn)
+	if(m_nTurn == rep->nNowTurn) {
 		m_bBusSel = true;
+		//m_turnTime = GetTickCount();
+	}
 }
 
 // 상우의  주요 작업 부분 시작
@@ -1182,7 +1195,7 @@ void gGameCore::BusComeStart(int nPos)
 	map->posSetter(nPos / LINEY, nPos % LINEY);
 	gTimer::GetIF()->frameStart(BUSMOVETICK, BUSMOVEFRAME + 1);
 
-	m_curframe = 0;	
+	m_curframe = 0;
 
 	m_busmode = BUS_COME;
 }
