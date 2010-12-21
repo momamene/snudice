@@ -1979,6 +1979,8 @@ void gGamePlayerContainer::pk_exit_ask(char *clientID, SOCKET sock)
 	rep.flag = 0;
 	strcpy(rep.szID , clientID);
 
+			//남은사람 체크 , 변수만들기 귀찮아서 걍 for문
+
 	switch(gPC->GetMode(clientID))	{
 		case ECM_GAME :	//겜중일때
 			//나간놈 Out 시키고 정보 초기화
@@ -1986,12 +1988,10 @@ void gGamePlayerContainer::pk_exit_ask(char *clientID, SOCKET sock)
 
 			strcpy(m_GamePlayer[nRoomIndex][nInRoomIndex].szID , "");
 
-			//남은사람 체크 , 변수만들기 귀찮아서 걍 for문
 
 			for (int i = 0 ; i < ROOMMAXPLAYER ; i++)	{
 				rep.flag += m_isGamePlayer[nRoomIndex][i];
 			}
-
 			//			pk_gameplayerinfo_rep(nRoomIndex);
 			gPC->SendSelect(PL_EXIT_REP,sizeof(PK_EXIT_REP),&rep, ECM_GAME , nRoomIndex);
 
@@ -2009,22 +2009,19 @@ void gGamePlayerContainer::pk_exit_ask(char *clientID, SOCKET sock)
 				}
 			}
 			
+
 			break;
 		case ECM_SUBMIT :
 			gSC->m_isFinishSubmitSubject[nRoomIndex][nInRoomIndex] = true;	//수강했다고 쳐
 			
-			if(gSC->isFinishAllSubmit(nRoomIndex)) {
-				gGamePlayerContainer::GetIF()->pk_maingamestart_rep(nRoomIndex);
-				break;
+			if (gRC->m_rooms[nRoomIndex].nNowPlayer == 2 || gSC->isFinishAllSubmit(nRoomIndex))	{
+				pk_maingamestart_rep(nRoomIndex);
+				m_isGamePlayer[nRoomIndex][nInRoomIndex] = false;
+				strcpy(m_GamePlayer[nRoomIndex][nInRoomIndex].szID , "");
+				if (gRC->m_rooms[nRoomIndex].nNowPlayer == 2)	{
+					pk_gameend_rep(nRoomIndex);
+				}
 			}
-			
-			if (rep.flag == 1)		{
-				pk_maingamestart_rep(nRoomIndex);	//
-				pk_gameend_rep(nRoomIndex);			// 겜 시작과 동시에 끝내기.
-				return;
-			}
-			
-			break;
 	}
 }
 

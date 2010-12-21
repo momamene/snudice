@@ -262,6 +262,7 @@ void gMainWin::Recv(PK_DEFAULT *pk, SOCKET sock)
 			//수정사항
 		case PL_ROOMBACK_ASK:
 			gRoomCore::GetIF()->pk_roomback_ask(pk,sock);
+			break;
 		case PL_CHARSELECT_ASK:
 			gRoomCore::GetIF()->pk_charselect_ask(pk,sock);
 			break;
@@ -492,12 +493,13 @@ void gMainWin::UserRelease(SOCKET client_sock,SOCKADDR_IN clientAddr) {
 	bTemp = gPlayerContainer::GetIF()->DeletePlayer(client_sock, clientID);
 	int channel = gChannelContainer::GetIF()->FindPlayer(clientID);
 
+	
 	if(bTemp) {
 		gChannelContainer::GetIF()->DeletePlayer(clientID);
 		gChannelCore::GetIF()->pk_channelrefresh_rep(channel);
 		// sangwoo temp
 		OutputDebugString("refresh for delete\n");
-		gChannelContainer::GetIF()->fullDebuger();
+//		gChannelContainer::GetIF()->fullDebuger();
 		// end
 	}
 	else {
@@ -506,7 +508,6 @@ void gMainWin::UserRelease(SOCKET client_sock,SOCKADDR_IN clientAddr) {
 	}
 
 	gRoomCore::GetIF()->ExitTheRoom(clientID);
-
 	closesocket(client_sock);
 
 	sprintf(buf,"[TCP Server] Client Exit : IP = %s\t Port = %d\n",
