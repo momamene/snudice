@@ -301,6 +301,11 @@ int gGamePlayerContainer::putFavorCross(int nRoomIndex, int nInRoomIndex, int nP
 
 void gGamePlayerContainer::pk_askcouple_rep(int nRoomIndex , int playerIndex_a, int playerIndex_b)
 {
+
+	if (!(m_isGamePlayer[nRoomIndex][playerIndex_a] & m_isGamePlayer[nRoomIndex][playerIndex_b]))
+		return;
+
+
 	PK_ASKCOUPLE_REP rep1, rep2;
 	char *playerID_a , *playerID_b;
 	gRoomCore			*gRC  = gRoomCore::GetIF();
@@ -308,6 +313,7 @@ void gGamePlayerContainer::pk_askcouple_rep(int nRoomIndex , int playerIndex_a, 
 	playerID_a = gRC->FindPlayerszIDInTheRoom(playerIndex_a,nRoomIndex);
 	playerID_b = gRC->FindPlayerszIDInTheRoom(playerIndex_b,nRoomIndex);
 
+	
 	strcpy(rep1.szCouple , playerID_a);
 	strcpy(rep2.szCouple , playerID_b);
 	
@@ -795,6 +801,13 @@ void gGamePlayerContainer::pk_gameend_rep(int nRoomIndex)
 
 	int nWinnerIndex = WhoIsRankOne(nRoomIndex);
 	strcpy(rep.szID,m_GamePlayer[nRoomIndex][nWinnerIndex].szID);
+	
+	//다 끝나면 값을 다 0로 바꿈;
+	memset(m_GamePlayer[nRoomIndex], 0, sizeof(GAMEPLAYER) * ROOMMAXPLAYER);
+	memset(m_isGamePlayer[nRoomIndex], 0, sizeof(bool) * ROOMMAXPLAYER);
+	memset(m_isNokdu[nRoomIndex], 0, sizeof(bool) * ROOMMAXPLAYER);
+	memset(m_favor[nRoomIndex], 0, sizeof(sFavor) * ROOMMAXPLAYER);
+	memset(m_bSyncronize[nRoomIndex], 0, sizeof(bool) * ROOMMAXPLAYER);
 
 	gPC->SendSelect(PL_GAMEEND_REP,sizeof(rep),&rep,ECM_GAME,nRoomIndex);
 }
@@ -1966,31 +1979,36 @@ void gGamePlayerContainer::pk_exit_ask(char *clientID, SOCKET sock)
 	rep.flag = 0;
 	strcpy(rep.szID , clientID);
 
-	//나간놈 Out 시키고 정보 초기화
-	m_isGamePlayer[nRoomIndex][nInRoomIndex] = false;
-	if (m_GamePlayer[nRoomIndex][nInRoomIndex].nLove != -1)	{	//커플이면 깨기
-		pk_becouple_rep(nRoomIndex, gPC->GetPlayerFromID(clientID) ,  gPC->GetPlayerFromID(m_GamePlayer[nRoomIndex][nInRoomIndex].szCouple) , false);
-	}
-	
-	strcpy(m_GamePlayer[nRoomIndex][nInRoomIndex].szID , "");
-	
-	//남은사람 체크 , 변수만들기 귀찮아서 걍 for문
-
-	for (int i = 0 ; i < ROOMMAXPLAYER ; i++)	{
-		rep.flag += m_isGamePlayer[nRoomIndex][i];
-	}
 	switch(gPC->GetMode(clientID))	{
 		case ECM_GAME :	//겜중일때
+			//나간놈 Out 시키고 정보 초기화
+			m_isGamePlayer[nRoomIndex][nInRoomIndex] = false;
+
+			strcpy(m_GamePlayer[nRoomIndex][nInRoomIndex].szID , "");
+
+			//남은사람 체크 , 변수만들기 귀찮아서 걍 for문
+
+			for (int i = 0 ; i < ROOMMAXPLAYER ; i++)	{
+				rep.flag += m_isGamePlayer[nRoomIndex][i];
+			}
+
+			//			pk_gameplayerinfo_rep(nRoomIndex);
+			gPC->SendSelect(PL_EXIT_REP,sizeof(PK_EXIT_REP),&rep, ECM_GAME , nRoomIndex);
+
 			if (rep.flag == 1)	{
 				pk_gameend_rep(nRoomIndex);
 				return;
 			}
 			
-//			pk_gameplayerinfo_rep(nRoomIndex);
-			gPC->SendSelect(PL_EXIT_REP,sizeof(PK_EXIT_REP),&rep, ECM_GAME , nRoomIndex);
+			if (m_nTurn[nRoomIndex] == nInRoomIndex)	{
+				//하필 나갈때가 내 턴이었을 때
+				if (m_GamePlayer[nRoomIndex][nInRoomIndex].nLove != -1)	{	//커플이면 깨기
+//					pk_becouple_rep(nRoomIndex, gPC->GetPlayerFromID(clientID) ,  gPC->GetPlayerFromID(m_GamePlayer[nRoomIndex][nInRoomIndex].szCouple) , false);
+				}	else	{
+					pk_nextturn_rep(nRoomIndex);	//걍 담턴 ㄱㄱ;
+				}
+			}
 			
-			if (m_nTurn[nRoomIndex] == nInRoomIndex)	//하필 나갈때가 내 턴이었을 때
-				pk_nextturn_rep(nRoomIndex);	//걍 담턴 ㄱㄱ;
 			break;
 		case ECM_SUBMIT :
 			gSC->m_isFinishSubmitSubject[nRoomIndex][nInRoomIndex] = true;	//수강했다고 쳐
@@ -2001,7 +2019,8 @@ void gGamePlayerContainer::pk_exit_ask(char *clientID, SOCKET sock)
 			}
 			
 			if (rep.flag == 1)		{
-				pk_maingamestart_rep(nRoomIndex);	//강제로 게임모드 ㄱㄱ
+				pk_maingamestart_rep(nRoomIndex);	//
+				pk_gameend_rep(nRoomIndex);			// 겜 시작과 동시에 끝내기.
 				return;
 			}
 			
@@ -2207,5 +2226,3 @@ void	gGamePlayerContainer::pk_becoupleend_ask(PK_DEFAULT *pk , SOCKET sock)
 		pk_nextturn_rep(nRoomIndex);
 	}
 }
-
-
