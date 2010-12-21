@@ -102,7 +102,7 @@ void gChannelCore::pk_channelchange_ask (PK_DEFAULT *pk, SOCKET sock)
 			break;
 		case ECM_ROOMMAKE :	
 			break;
-		case ECM_ROOM : 
+		case ECM_ROOM :
 			gRC->ExitTheRoom(ask.szID);
 			gPC->PutMode(ask.szID,ECM_BATTLENET);
 			gPC->PutBoolReady(ask.szID,false);

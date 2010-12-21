@@ -471,6 +471,7 @@ void gRoomCore::pk_roomback_ask(PK_DEFAULT *pk, SOCKET sock)
 	m_rooms[nRoomIndex].isGaming = false;
 	gPC->PutMode(ask.szID ,ECM_ROOM);	//서버에서룸상태변경
 	gPC->PutBoolReady(ask.szID,false);	//레디모드해제
+	gPC->PutClassType(ask.szID , CLASS_NONE);
 
 	//	패킷보낼준비
 	PK_ROOMBACK_REP rep;
