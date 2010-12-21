@@ -379,8 +379,8 @@ void gSubmitCore::pk_maingametart_rep(PK_MAINGAMESTART_REP *rep)
 	gPlayerContainer::GetIF()->PacketalDrawFix();
 	gPlayerContainer::GetIF()->Clear();
 	gMap::GetIF()->Clear();
-	gGameCore::GetIF()->Clear();
-	gGameCore::GetIF()->m_nTurn		= rep->nTurn;
+	gGameCore::GetIF()->Clear(rep->nTurn);
+	//gGameCore::GetIF()->m_nTurn		= rep->nTurn;
 	gMainWin::GetIF()->m_eCoreMode	= ECM_GAME;
 	gChat::GetIF()->MsgStackClear();
 	gUIGame::GetIF()->SetRankList();

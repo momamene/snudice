@@ -35,6 +35,7 @@
 #define WARPTICK				500 * 3
 #define WARPFRAME				8
 #define WARPDIST				10
+#define SLEEPTIMEMAX			10000	//최대 잠수 시간:10초
 
 static gGameCore s_GameCore;
 
@@ -142,7 +143,7 @@ void gGameCore::MainLoop()
 		gMainWin::GetIF()->m_Keys[VK_RETURN] = false;
 	}
 	
-	if(gMainWin::GetIF()->m_Keys[VK_SPACE])
+	if(GetTickCount() - m_turnTime>=SLEEPTIMEMAX || gMainWin::GetIF()->m_Keys[VK_SPACE])
 	{
 		SendMoveAsk();
 		gMainWin::GetIF()->m_Keys[VK_SPACE] = false;
@@ -872,6 +873,7 @@ void gGameCore::SendMoveAsk()
 	gPlayerContainer *gPC = gPlayerContainer::GetIF();
 //	int				couple = gPC->GetCoupleIndex(m_nTurn);
 
+	//m_turnTime = 0x7fffffff;
 	// 내 차례가 아님
 	if(strcmp(gPC->m_MyGamePlayer.szID, gPC->m_GPlayerList[m_nTurn].szID) != 0) {
 		return;
@@ -1091,6 +1093,7 @@ void gGameCore::pk_nextturn_rep(PK_NEXTTURN_REP *rep)
 {
 	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
 
+	m_turnTime = GetTickCount();		//잠수타는 시간 재기 시작
 //	if(m_nTurn == rep->nNowTurn) {		//why this?
 		m_nTurn		= rep->nNextTurn;
 		m_bMoved	= false;
@@ -1201,16 +1204,17 @@ void gGameCore::pk_exit_rep(PK_EXIT_REP *rep)
 	gPlayerContainer	*pc = gPlayerContainer::GetIF();
 	gChat				*ct = gChat::GetIF();
 
-	int		id = pc->GetGPIndex(rep->szID);
+	int		id = pc->GetGPIndex(rep->szID), i;
 	bool	make_next_turn = true;
 
-	for(int i=0;i<ROOMMAXPLAYER; i++)
+	for(i=0;i<ROOMMAXPLAYER; i++)
 		if(pc->GetCoupleIndex(i) == id) {
 			make_next_turn = false;
 			if(id==m_nTurn) m_nTurn = i;
 			break;
 		}
-
+	//커플상태인 두 사람중 하나가 나갔다면 m_nTurn은 커플에게 강제적으로 넘어간다.
+	//그리고 커플은 강제적으로 깨져야 한다. 여기에는 정상적으로 커플을 깨는 frame이 삽입되지 않는다.
 	if(make_next_turn && id==m_nTurn) {
 		if(m_spacor > 0) {
 			End(true);
@@ -1223,6 +1227,10 @@ void gGameCore::pk_exit_rep(PK_EXIT_REP *rep)
 		m_bMoving = false;
 		m_bWarping	= false;
 	}
+	else if(make_next_turn==false && pc->GetMyGPIndex() == i) {
+		gUIGame::GetIF()->SetbCouple(false);
+	}
+
 	ct->AddStr(rep->szID, "님이 나가셨습니다.");
 	pc->DeleteGamePlayer(id);
 }
@@ -1294,7 +1302,8 @@ void gGameCore::pk_busmovestartcouple_rep(PK_BUSMOVESTART_REP *rep)
 	pk_busmovestart_rep(rep);
 }
 
-void gGameCore::Clear()
+void gGameCore::Clear(int newTurn)
 {
-	
+	m_nTurn		= newTurn;
+	m_turnTime	= GetTickCount();
 }

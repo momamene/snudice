@@ -69,6 +69,7 @@ public:
 private:
 	BUSMOVE		m_busmode;
 	int			m_buspos;			// 버스 도착 장소
+	int			m_turnTime;
 
 	WARP		m_warp;
 	int			m_warpCharIdx;
@@ -87,7 +88,7 @@ public:
 	void		Draw();
 	void		Release();
 
-	void		Clear();
+	void		Clear(int newTurn = 0);
 
 	bool		Restore();
 

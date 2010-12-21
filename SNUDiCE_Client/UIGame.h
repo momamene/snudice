@@ -130,6 +130,7 @@ public:
 	void		pk_itemuse_rep(PK_ITEMUSE_REP* rep);
 	void		pk_infochange_rep(PK_INFOCHANGE_REP *rep);
 	void		pk_becouple_rep(PK_BECOUPLE_REP *rep);
+	void		SetbCouple(bool mode); //added
 
 	bool		IsUIRange(int x, int y);
 
