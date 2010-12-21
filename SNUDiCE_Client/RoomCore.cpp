@@ -1655,6 +1655,7 @@ void gRoomCore::pk_roomback_rep(PK_ROOMBACK_REP *rep)
 	gSubmitCore::GetIF()->m_bChange = false;
 	gSubmitCore::GetIF()->m_bReady = false;
 	m_nSelChar = -1;
+	gChat::GetIF()->MsgStackClear();
 }
 
 

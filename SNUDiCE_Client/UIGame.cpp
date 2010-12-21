@@ -446,7 +446,8 @@ void gUIGame::Draw()
 		m_BtnUI[UIBTN_SUBJECT].Draw();
 
 		// 연애
-		if(strlen(gPC->m_MyGamePlayer.szCouple) != 0)
+		//if(strlen(gPC->m_MyGamePlayer.szCouple) != 0)
+		if(m_bCouple)
 		{
 			int			coupleIdx = gPC->GetGPIndex(gPC->m_MyGamePlayer.szCouple);
 			gImage*		img = &gPC->m_ImgInfo[gPC->m_GPlayerList[coupleIdx].ctype].ImgPic;
@@ -850,7 +851,8 @@ bool gUIGame::OnLButtonDown()
 							case ITEM_DASH: case ITEM_POWERDASH:
 								{
 									// 난 이미 커플
-									if(strlen(gPC->m_MyGamePlayer.szCouple) != 0)
+									//if(strlen(gPC->m_MyGamePlayer.szCouple) != 0)
+									if(m_bCouple)
 									{
 										gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_24);
 										return true;
@@ -868,7 +870,8 @@ bool gUIGame::OnLButtonDown()
 									}
 									else
 									{
-										if(strlen(gPC->m_MyGamePlayer.szCouple) == 0)
+										//if(strlen(gPC->m_MyGamePlayer.szCouple) == 0)
+										if(!m_bCouple)
 										{
 											gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_25);
 											return true;
@@ -937,13 +940,13 @@ bool gUIGame::OnLButtonDown()
 						case TARGET_OTHERCOUPLE:
 							{
 								// 내 커플 선택
-								if(strcmp(target->szID, gPC->m_MyGamePlayer.szCouple) == 0)
+								if(m_bCouple && strcmp(target->szID, gPC->m_MyGamePlayer.szCouple) == 0)
 								{
 									gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_26);
 									return true;
 								}
 								// 상대가 커플이 아님
-								if(strlen(target->szCouple) == 0)
+								if(!m_bCouple || strlen(target->szCouple) == 0)
 								{
 									gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_27);
 									return true;
@@ -1012,7 +1015,7 @@ bool gUIGame::OnLButtonDown()
 							case TARGET_OTHERCOUPLE:
 								{
 									// 내 커플 선택
-									if(strcmp(gPC->m_GPlayerList [m_target[i].idx ].szID, gPC->m_MyGamePlayer.szCouple) == 0)
+									if(m_bCouple && strcmp(gPC->m_GPlayerList [m_target[i].idx ].szID, gPC->m_MyGamePlayer.szCouple) == 0)
 									{
 										gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_26);
 										return true;
@@ -2133,6 +2136,18 @@ void gUIGame::Draw_InfoChange()
 	gUtil::EndText();
 }
 
+void gUIGame::SetbCouple(bool mode)
+{
+	gPlayerContainer	*pc = gPlayerContainer::GetIF();
+
+	m_bCouple = mode;
+	if(m_bCouple == false) {
+		int i = pc->GetMyGPIndex();
+		memset(pc->m_GPlayerList[i].szCouple, 0, sizeof(char)*IDLENGTH);
+		memset(pc->m_MyGamePlayer.szCouple, 0, sizeof(char)*IDLENGTH);
+	}
+}
+
 void gUIGame::pk_becouple_rep(PK_BECOUPLE_REP *rep)
 {
 	gPlayerContainer	*pc = gPlayerContainer::GetIF();
@@ -2155,7 +2170,10 @@ void gUIGame::pk_becouple_rep(PK_BECOUPLE_REP *rep)
 		BECOUPLE_MALE_X + INFOCHANGE_INFOSIZE_W + TARGET_OUTLINE_SIZE_W,
 		BECOUPLE_MALE_Y + INFOCHANGE_INFOSIZE_H + TARGET_OUTLINE_SIZE_H );
 
-	m_bCouple = rep->bCouple;
 	m_timer.frameStart(BECOUPLE_TICK, 2);
 	m_uimode = UIM_BECOUPLE;
+
+	int Me = pc->GetMyGPIndex();
+	if(Me==m_target[0].idx || Me==m_target[1].idx)
+		m_bCouple = rep->bCouple;
 }
