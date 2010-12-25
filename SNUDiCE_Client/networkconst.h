@@ -14,7 +14,7 @@
 #define	WINSOCK_VERSION_2_2		MAKEWORD(2, 2)
 #define SERVER_IP				"211.169.219.86"		// ÇöÅ¹
 //#define SERVER_IP				"211.169.219.87"		// Ã¢±Ô
-#define SERVER_PORT				9001
+#define SERVER_PORT				9000
 #define BUFFERSIZE				2048
 
 #define PK_HEADER_SIZE			4

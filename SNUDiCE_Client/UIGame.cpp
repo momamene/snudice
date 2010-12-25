@@ -199,6 +199,9 @@
 #define BECOUPLE_HEART_Y					(220 - COUPLE_LOVE_SIZE_H/2)
 #define BECOUPLE_TICK						2000
 
+#define TEXT_NUM_FILE						".\\Data\\Interface\\number.img"
+#define TEXT_ICON_FILE						".\\Data\\Interface\\icon.img"
+
 
 static gUIGame s_UIGame;
 
@@ -344,6 +347,12 @@ bool gUIGame::SetUp()
 		return false;
 	if(!m_ImgUI[UIIMG_CROWN].Load(TURN_CROWN_FILE))
 		return false;
+
+	if(!m_ImgUI[UIIMG_NUMBER].Load(TEXT_NUM_FILE))
+		return false;
+	if(!m_ImgUI[UIIMG_ICON].Load(TEXT_ICON_FILE))
+		return false;
+
 
 	m_uimode = UIM_NONE;
 	m_bTargetByMove = false;
@@ -2062,6 +2071,8 @@ void gUIGame::SetTargetButton_InfoChange()
 	}
 }
 
+const char *CharToIcon[8] = {"애정도", "체력", "수업", "언어", "수리", "예술", "+", "-"};
+
 void gUIGame::Draw_InfoChange()
 {
 	DrawTargetButton();
@@ -2070,7 +2081,6 @@ void gUIGame::Draw_InfoChange()
 	int		nCount;		// change info갯수
 
 	char	szBuf[5][64];
-	gUtil::BeginText();
 	for(i = 0; i < m_nTargetNum; i++)
 	{
 		nCount = 0;
@@ -2130,10 +2140,48 @@ void gUIGame::Draw_InfoChange()
 		starty = m_target[i].rcPos.top + TARGET_OUTLINE_SIZE_H/2
 					- INFOCHANGE_INFOSIZE_H * nCount/2 - INFOCHANGE_INFOTERM_Y * (nCount - 1)/2;
 
-		for(j = 0; j < nCount; j++)
+		//2010.12.25 체력 및 애정도 등등 표시 UI 교체 작업 착수
+		int k=0;
+		RECT rcSour, rcDest;
+		while(k<nCount) {
+			for(j=0;j<8;j++)
+				if(strstr(szBuf[k], CharToIcon[j]) != NULL) {
+					SetRect(&rcDest, startx, starty, 
+						startx+m_ImgUI[UIIMG_ICON].m_nWidth/8, starty+m_ImgUI[UIIMG_ICON].m_nHeight);
+					SetRect(&rcSour, j*m_ImgUI[UIIMG_ICON].m_nWidth/8, 0, (j+1)*m_ImgUI[UIIMG_ICON].m_nWidth/8, m_ImgUI[UIIMG_ICON].m_nHeight);
+					m_ImgUI[UIIMG_ICON].Draw(rcDest, rcSour);
+
+					SetRect(&rcDest, startx+m_ImgUI[UIIMG_ICON].m_nWidth/8, starty, 
+						startx+m_ImgUI[UIIMG_ICON].m_nWidth/4, starty+m_ImgUI[UIIMG_ICON].m_nHeight);
+
+					if(strchr(szBuf[k], '+'))
+						SetRect(&rcSour, 6*m_ImgUI[UIIMG_ICON].m_nWidth/8, 0, 7*m_ImgUI[UIIMG_ICON].m_nWidth/8, m_ImgUI[UIIMG_ICON].m_nHeight);
+					else
+						SetRect(&rcSour, 7*m_ImgUI[UIIMG_ICON].m_nWidth/8, 0, 8*m_ImgUI[UIIMG_ICON].m_nWidth/8, m_ImgUI[UIIMG_ICON].m_nHeight);
+					m_ImgUI[UIIMG_ICON].Draw(rcDest, rcSour);
+
+
+					int l = 0, len=strlen(szBuf[k]), c = 0, sx = startx+m_ImgUI[UIIMG_ICON].m_nWidth/4+2;
+					while(szBuf[k][l]<48 || szBuf[k][l]>57) l++;
+					while(l<len) {
+						int n=szBuf[k][l] - 48;
+
+						SetRect(&rcDest, sx+c*m_ImgUI[UIIMG_NUMBER].m_nWidth/10, starty, 
+							sx+(c+1)*m_ImgUI[UIIMG_NUMBER].m_nWidth/10, starty+m_ImgUI[UIIMG_NUMBER].m_nHeight);
+						SetRect(&rcSour, n*m_ImgUI[UIIMG_NUMBER].m_nWidth/10, 0, (n+1)*m_ImgUI[UIIMG_NUMBER].m_nWidth/10, m_ImgUI[UIIMG_NUMBER].m_nHeight);
+						
+						m_ImgUI[UIIMG_NUMBER].Draw(rcDest,rcSour);
+						l++; c++;
+					}
+					break;
+				}
+			k++; starty += m_ImgUI[UIIMG_ICON].m_nHeight+2;
+		}
+		//요기서 완료. 2010.12.25.
+		/*for(j = 0; j < nCount; j++) {
 			gUtil::TextOutLine(startx, starty + j * (INFOCHANGE_INFOSIZE_H + INFOCHANGE_INFOTERM_Y), szBuf[j]);
+		}*/
 	}
-	gUtil::EndText();
 }
 
 void gUIGame::SetbCouple(bool mode)
