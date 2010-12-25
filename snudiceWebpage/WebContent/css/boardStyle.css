@@ -1,0 +1,54 @@
+@CHARSET "UTF-8";
+
+a:link {text-decoration:none;}    /* unvisited link */
+a:visited {text-decoration:none;} /* visited link */
+a:hover {text-decoration:underline;}   /* mouse over link */
+a:active {text-decoration:underline;}  /* selected link */
+
+body
+{
+	font-size : 15px;
+}
+
+table  {
+	text-align : center;
+	width : 600px;
+	border : 1px solid black;
+	padding : 0px;	
+	border-collapse:collapse;
+}
+
+td.articleNumber { border: 1px solid black;
+	width : 10%; text-align : center; }
+td.articleTitle { border: 1px solid black;
+	width : 50%; text-align : center;}
+td.articleWriter { border: 1px solid black;
+	width : 15%; text-align : center;}
+td.articleDateTime { border: 1px solid black;
+	width : 15%; text-align : center;}
+td.articleReadCount { border: 1px solid black;
+	width : 20%; text-align : right;}
+
+td.pageNumber { width : 8%; text-align : left;}
+
+
+div.titleAndUser{
+	width: 500px;
+	text-align : center;}
+
+div{
+	width: 500px;
+	text-align : center;}
+
+
+div.contentBody
+	{
+	text-align : left;
+	border : 1px solid black;
+	}
+	
+div.dateAndCount
+	{
+	text-align : right;
+}
+
