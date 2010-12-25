@@ -89,6 +89,7 @@ void gGameCore::MainLoop()
 	if(gPopUp::GetIF()->isPopUp())
 	{
 		gPopUp::GetIF()->MainLoop();
+//		if(GetTickCount - SLEEPTIMEMAX >= m_turnTime_CoupleAsk) 
 		return;
 	}
 
@@ -103,7 +104,7 @@ void gGameCore::MainLoop()
 					case ECLK_OK:
 						gMainWin::GetIF()->m_eCoreMode = ECM_ROOM;//클라이언트에서룸상태변경
 						break;
-					}
+				}
 				break;
 				//수정 ; 아직 건들지 않고 있음.
 			case EPOP_DISCONNECT:
@@ -894,6 +895,8 @@ void gGameCore::SendMoveAsk()
 	// 이미 움직였음, 스크롤링 중임
 	if(m_bMoved) //|| m_bScrolling)
 		return;
+	if(gUIGame::GetIF()->m_bItemUsed)
+		return;
 
 	PK_MOVESTART_ASK		ask;
 
@@ -901,6 +904,10 @@ void gGameCore::SendMoveAsk()
 	ask.nCurPos		= gPlayerContainer::GetIF()->m_MyGamePlayer.nPos;
 
 	gServer::GetIF()->Send(PL_MOVESTART_ASK, sizeof ask, &ask);
+
+	if(gUIGame::GetIF()->m_uimode == UIM_TARGETSELECT ||
+		gUIGame::GetIF()->m_uimode == UIM_TARGETSELECT_MULTI)
+		gUIGame::GetIF()->m_uimode = UIM_NONE;
 
 	m_bMoved = true;
 }
@@ -1213,6 +1220,9 @@ void gGameCore::pk_gameend_rep(PK_GAMEEND_REP *rep)
 {
 	gRoomCore::GetIF()->SendRoomBack();	//방나가고돌아오기수정
 	gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_ROOMBACK, rep->szID, STR_17);	//방나가고돌아오기수정
+	
+	m_bMoved	= false;
+	gUIGame::GetIF()->m_bItemUsed = false;
 }
 
 void gGameCore::pk_exit_rep(PK_EXIT_REP *rep)

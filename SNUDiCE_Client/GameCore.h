@@ -71,6 +71,7 @@ private:
 	int			m_buspos;			// 버스 도착 장소
 	int			m_turnTime;			// 잠수시간 측정
 	int			m_turnTime_Bus;		// 버스선택 잠수시간 측정
+	int			m_turnTime_CoupleAsk;	//커플 묻기
 
 	WARP		m_warp;
 	int			m_warpCharIdx;

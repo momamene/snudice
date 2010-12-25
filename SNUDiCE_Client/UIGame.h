@@ -12,6 +12,8 @@
 #include "ScrollBar.h"
 #include "Timer.h"
 
+//#define UI_ICON_DRAW
+
 enum UIIMAGE
 {
 	UIIMG_MAININFO,
@@ -36,6 +38,8 @@ enum UIIMAGE
 
 	UIIMG_NUMBER,
 	UIIMG_ICON,
+
+	UIIMG_USERBOX,
 
 	UIIMG_END,
 };
