@@ -96,7 +96,7 @@ enum ePROTOCOL
 
 	PL_GOLOGIN_ASK,
 
-	PL_WHISPER_ASK,				// Whisper
+//	PL_WHISPER_ASK,				// Whisper
 
 	PL_ASKCOUPLE_REP,			// 커플될건지 묻는다.
 	PL_ANSCOUPLE_ASK,			// 답변
@@ -645,13 +645,13 @@ struct PK_EXIT_REP
 	int			flag;							// 남은 사람 수 //아직까지는 그닥 있어야 할 이유는 없다.
 };
 
-//WHISPER 구현
+/*//WHISPER 구현
 struct PK_WHISPER_ASK
 {
 	char		szToID[IDLENGTH];
 	char		szFromID[IDLENGTH];
 	char		szComment[MSGLENGTH];
-};
+};*/
 
 // couple
 struct PK_ASKCOUPLE_REP
