@@ -4,21 +4,25 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" type="text/css" href="/godwar/css/loginPageStyle.css"/>
+<link rel="stylesheet" type="text/css" href="css/loginPageStyle.css"/>
 <title>회원가입 페이지</title>
 </head>
 <body>
-	<form action = "join.do" method = "post">
-		아이디 : <input type = "text" name="userId"> <br/>
-		패스워드 : <input type = "password" name="password"> <br/>
-		신의종류 : 
-		<input type = "radio" name="godKind" value="0"> 전쟁의 신
-		<input type = "radio" name="godKind" value="1"> 포교의 신
-		<input type = "radio" name="godKind" value="2"> 건설의 신
-		<br/>
-		
-		<input type = "submit" value = "가입하기">
-	</form>
+	<div class="header"></div>
+	
+	<div class="container">
+		<div class="left"></div>
+		<div class="center">
+			<form action = "join.do" method = "post">
+				아이디 : <input type = "text" name="userId"> <br/>
+				패스워드 : <input type = "password" name="password"> <br/>	
+				e-mail : <input type = "text" name="email"> <br/>	
+				<input type = "submit" value = "가입하기">
+			</form>
+		</div>
+		<div class="right"></div>
+	</div>
+	
 </body>
 </html>
 

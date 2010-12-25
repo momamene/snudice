@@ -4,11 +4,12 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" type="text/css" href="/godwar/css/loginPageStyle.css"/>
+<link rel="stylesheet" type="text/css" href="css/loginPageStyle.css"/>
 <title>가입 실패</title>
 </head>
 <body>
-이미 존재하는 id 입니다.<br/><br/>
-<a href="/godwar/login.jsp">메인화면으로</a>
+회원가입 실패!!<br/><br/>
+${message}<br/>
+<a href="join.jsp">회원가입 페이지로</a>
 </body>
 </html>

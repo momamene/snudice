@@ -30,7 +30,7 @@ public class DBAccount {
 	
 	//user id, password를 검사한다.
 	public boolean isValidUser(String userId,String password) {
-		UserInfo user = new UserInfo(userId,password);
+		UserInfo user = new UserInfo(userId,password,null);
 		
 		Integer userCount = null;
 		try {			
@@ -61,14 +61,30 @@ public class DBAccount {
 			return false;
 		return true;
 	}
+	
+	//email이 존재하는지를 검사한다.
+	public boolean isExistingEmail(String email) {		
+		Integer emailCount = null;
+		try {			
+			emailCount = (Integer)sqlMap.queryForObject("countEmail",email);	
+		}
+		catch(Exception e)
+		{			
+			e.printStackTrace();
+		}		
+		
+		if(emailCount==0) //count가 0이면
+			return false;
+		return true;
+	}
 
 	//새로운 user를 추가한다.
-	public void insertNewUser(String userId, String password) {	
-		UserInfo newUser = new UserInfo(userId,password);
+	public void insertNewUser(String userId, String password,String email) {	
+		UserInfo newUser = new UserInfo(userId,password,email);
 		try {
 			sqlMap.insert("insertUser",newUser);
 		} catch (Exception e) {			
 			e.printStackTrace();
 		}
-	}	
+	}		
 }
