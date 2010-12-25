@@ -36,10 +36,10 @@ public class Login extends HttpServlet {
 		String userId = request.getParameter("userId");
 		String password = request.getParameter("password");			
 		
-		UserInfo userInformation = new UserInfo(userId,password);
+		UserInfo userInformation = new UserInfo(userId,password,null);
 		request.setAttribute("userInfo", userInformation);
 		
-		String nextPage = "/main.do";
+		String nextPage = "loginSuccess.jsp";
 		
 		DB db = DB.getInstance();
 		boolean isExistingUser = db.dbAccount.isValidUser(userId,password);

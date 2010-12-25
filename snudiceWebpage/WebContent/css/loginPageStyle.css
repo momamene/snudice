@@ -21,13 +21,7 @@ img
 div.header#loginHeader
 {
 	height : 100px;
-}
-
-div.header img.title
-{
-	margin-left : 150px;
-	width : 400px;
-	height : 100px;
+	color : red;
 }
 
 /*----------------container-----------*/

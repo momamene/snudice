@@ -4,12 +4,12 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" type="text/css" href="/godwar/css/loginPageStyle.css"/>
+<link rel="stylesheet" type="text/css" href="css/loginPageStyle.css"/>
 <title>로그인 페이지</title>
 </head>
-<body onload=''>
+<body>
 	<div class="header" id="loginHeader">
-		<img class="title" src="image/title.png"/><br/>
+		TODO : 타이틀 이미지
 	</div>
 	<br/>
 	<div class="container" id="loginContainer">

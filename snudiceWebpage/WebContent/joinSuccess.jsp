@@ -9,6 +9,6 @@
 </head>
 <body>
 축하축하!!!<br/><br/>
-<a href="/godwar/login.jsp">메인화면으로</a>
+<a href="login.jsp">메인화면으로</a>
 </body>
 </html>
