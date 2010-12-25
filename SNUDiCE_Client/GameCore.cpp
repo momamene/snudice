@@ -1218,11 +1218,11 @@ void gGameCore::pk_gameplayerinfo_rep(PK_GAMEPLAYERINFO_REP *rep)
 
 void gGameCore::pk_gameend_rep(PK_GAMEEND_REP *rep)
 {
-	gRoomCore::GetIF()->SendRoomBack();	//방나가고돌아오기수정
 	gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_ROOMBACK, rep->szID, STR_17);	//방나가고돌아오기수정
-	
 	m_bMoved	= false;
 	gUIGame::GetIF()->m_bItemUsed = false;
+
+	gRoomCore::GetIF()->SendRoomBack();	//방나가고돌아오기수정
 }
 
 void gGameCore::pk_exit_rep(PK_EXIT_REP *rep)
