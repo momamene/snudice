@@ -15,7 +15,7 @@
 	<div class="container" id="loginContainer">
 		<div class="left">&nbsp;</div>
 		<div class="center" id="loginCenter">
-			<form method="post" action="login.do" onsubmit="return onLogin();">
+			<form method="post" action="login.do">
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;				
 				<span><img height="20" src="image/id.png"/></span>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
