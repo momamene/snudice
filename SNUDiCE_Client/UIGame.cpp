@@ -201,6 +201,7 @@
 
 #define TEXT_NUM_FILE						".\\Data\\Interface\\number.img"
 #define TEXT_ICON_FILE						".\\Data\\Interface\\icon.img"
+#define ITEM_USER_BOX_FILE					".\\Data\\Interface\\game_carduse.img"
 
 
 static gUIGame s_UIGame;
@@ -351,6 +352,8 @@ bool gUIGame::SetUp()
 	if(!m_ImgUI[UIIMG_NUMBER].Load(TEXT_NUM_FILE))
 		return false;
 	if(!m_ImgUI[UIIMG_ICON].Load(TEXT_ICON_FILE))
+		return false;
+	if(!m_ImgUI[UIIMG_USERBOX].Load(ITEM_USER_BOX_FILE))
 		return false;
 
 
@@ -555,6 +558,10 @@ void gUIGame::Draw()
 			{
 				int nFrame = m_timer.frame();
 
+				//m_ImgUI[UIIMG_USERBOX].Draw(USEINFO_USER_POS_X - USEINFO_TARGET_TERM_X/2, USEINFO_CARD_POS_Y - 1);
+
+
+
 				if(nFrame >= 1)
 				{
 					m_timer.frameEnd();
@@ -565,7 +572,7 @@ void gUIGame::Draw()
 					m_uimode = UIM_NONE;
 				}
 				gItemContainer	*ic = gItemContainer::GetIF();
-				gImage			*cardimg = &ic->m_ItemImg[m_nCardIdx];
+				gImage			*cardimg = &ic->m_ItemImg[m_nCardIdx];	
 				DrawTargetButton();
 
 				m_itemuser.img->Draw(m_itemuser.rcPos.left + 1, m_itemuser.rcPos.top + 1);
@@ -1332,7 +1339,7 @@ void gUIGame::OnRButtonDown()
 			m_uimode = UIM_ITEM;
 		return;
 	}
-	if(m_uimode != UIM_NONE)
+	if(m_uimode != UIM_NONE && !m_bItemUsed)
 		m_uimode = UIM_NONE;
 }
 
@@ -1626,6 +1633,19 @@ void gUIGame::pk_itemuse_rep(PK_ITEMUSE_REP* rep)
 
 void gUIGame::SetTargetButton_UseInfo()
 {
+	int i,j,k=0;
+
+	int		startx = USEINFO_TARGET_POS_X - TARGET_OUTLINE_SIZE_W - USEINFO_TARGET_TERM_X/2;
+	int		starty = USEINFO_TARGET_POS_Y - TARGET_OUTLINE_SIZE_H*3/2 - USEINFO_TARGET_TERM_Y;
+
+	for(i=0;i<3;i++)
+		for(j=0;j<2;j++) {
+			if(k>=m_nTargetNum) break;
+			SetRect(&m_target[k].rcPos, startx+j*(TARGET_OUTLINE_SIZE_W + USEINFO_TARGET_TERM_X), starty + i*(TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y),
+				startx+ j*(TARGET_OUTLINE_SIZE_W + USEINFO_TARGET_TERM_X) + TARGET_OUTLINE_SIZE_W, starty + i*(TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y) + TARGET_OUTLINE_SIZE_H);
+			k++;
+		}
+/*
 	switch(m_nTargetNum)
 	{
 		case 1:
@@ -1850,6 +1870,7 @@ void gUIGame::SetTargetButton_UseInfo()
 			}
 			break;
 	}
+*/
 }
 
 void gUIGame::pk_infochange_rep(PK_INFOCHANGE_REP *rep)
@@ -2071,7 +2092,9 @@ void gUIGame::SetTargetButton_InfoChange()
 	}
 }
 
+#ifdef UI_ICON_DRAW
 const char *CharToIcon[8] = {"애정도", "체력", "수업", "언어", "수리", "예술", "+", "-"};
+#endif
 
 void gUIGame::Draw_InfoChange()
 {
@@ -2081,6 +2104,8 @@ void gUIGame::Draw_InfoChange()
 	int		nCount;		// change info갯수
 
 	char	szBuf[5][64];
+
+	gUtil::BeginText();
 	for(i = 0; i < m_nTargetNum; i++)
 	{
 		nCount = 0;
@@ -2141,6 +2166,7 @@ void gUIGame::Draw_InfoChange()
 					- INFOCHANGE_INFOSIZE_H * nCount/2 - INFOCHANGE_INFOTERM_Y * (nCount - 1)/2;
 
 		//2010.12.25 체력 및 애정도 등등 표시 UI 교체 작업 착수
+#ifdef UI_ICON_DRAW
 		int k=0;
 		RECT rcSour, rcDest;
 		while(k<nCount) {
@@ -2177,11 +2203,15 @@ void gUIGame::Draw_InfoChange()
 				}
 			k++; starty += m_ImgUI[UIIMG_ICON].m_nHeight+2;
 		}
+#else
 		//요기서 완료. 2010.12.25.
-		/*for(j = 0; j < nCount; j++) {
+		for(j = 0; j < nCount; j++)
+		{
 			gUtil::TextOutLine(startx, starty + j * (INFOCHANGE_INFOSIZE_H + INFOCHANGE_INFOTERM_Y), szBuf[j]);
-		}*/
+		}
+#endif
 	}
+	gUtil::EndText();
 }
 
 void gUIGame::SetbCouple(bool mode)
