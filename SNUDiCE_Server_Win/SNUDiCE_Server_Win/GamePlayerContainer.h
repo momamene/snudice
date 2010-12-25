@@ -2,6 +2,8 @@
 #include "network.h"
 #include "Charinfo.h"
 
+#include <vector>
+
 #define MINIMUM_COUPLE_CONDITION 10
 #define SAMECLASS_FAVORPOINT 5
 #define SAMETILE_FAVORPOINT 5
@@ -9,6 +11,7 @@
 
 #define LOVEINITPOINT 3
 
+using namespace std;
 enum ItemUseState {
 	IUS_NONE,
 	IUS_NEXTTURN,
@@ -65,12 +68,17 @@ public:
 	// 기본적으로 능력 * 20 만큼 증가한다.
 	// grade는 subjectContainer에서 확인할 수 있다.
 	
-	int			m_ItemCoolTime[MAXROOM][ROOMMAXPLAYER][ITEMNUM];
+	vector< pair<int,int> > m_userItemList[MAXROOM][ROOMMAXPLAYER];	//		<Item num  , coolTime>
+	
+	//수정		개조시작!~
+//	int			m_ItemCoolTime[MAXROOM][ROOMMAXPLAYER][ITEMNUM];
+	
 	// 쿨 타임으로 사용되지만,
 	// 100단위에서 flag로 사용되기도 함
 	// 예컨대, 3번째 유저의 쿨타임 4는 304 값으로 저장됨
 	// releaseItemGlobal 함수와 연동되니 참고
 	// 개인적으로 m_ItemCoolTimeSub 를 만드는 것을 추천
+	
 
 	bool		m_bSyncronize[MAXROOM][ROOMMAXPLAYER];	
 	// 주사위 던진 뒤, 움직임 같이 모든 클라이언트가 같이 움직여야 하는 경우,
