@@ -4,9 +4,34 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="/godwar/css/loginPageStyle.css"/>
+<title>로그인 페이지</title>
 </head>
-<body>
-	어머
+<body onload=''>
+	<div class="header" id="loginHeader">
+		<img class="title" src="image/title.png"/><br/>
+	</div>
+	<br/>
+	<div class="container" id="loginContainer">
+		<div class="left">&nbsp;</div>
+		<div class="center" id="loginCenter">
+			<form method="post" action="login.do" onsubmit="return onLogin();">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;				
+				<span><img height="20" src="image/id.png"/></span>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input  type="text" name="userId" tabindex="1"><br/>
+				<img height="20" src="image/password.png"/>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="password" name ="password" tabindex="2"><br/><br/>
+				<input id="loginButton" type="image" src="image/gameStart.png" tabindex="2">							
+			</form>
+		</div>
+		<div class="right">&nbsp;</div>	
+	</div>
+	
+	<div class="footer" id="loginFooter">		
+		* <a class="highlight" href="join.jsp">회원가입</a>
+        | <a class="highlight" href="notimplemented.jsp">아이디, 비밀번호찾기</a>
+	</div>		
 </body>
 </html>

@@ -1,0 +1,54 @@
+@CHARSET "UTF-8";
+
+a:link {color :#666; text-decoration:none;}    /* unvisited link */
+a:visited {color :#666 ;text-decoration:none;} /* visited link */
+a:hover {text-decoration:none;}   /* mouse over link */
+a:active {text-decoration:none;}  /* selected link */
+
+body
+{
+	font-size : 25px;
+	font-family:Cursive;
+	font-face:"굴림";	
+}
+
+img 
+{
+	border : 0px;	
+}
+
+/*----------------header-----------*/
+div.header#loginHeader
+{
+	height : 100px;
+}
+
+div.header img.title
+{
+	margin-left : 150px;
+	width : 400px;
+	height : 100px;
+}
+
+/*----------------container-----------*/
+div.container#loginContainer
+{
+	margin-left : 0px;
+}
+
+
+div.container div.center#loginCenter input#loginButton
+{
+	margin-left:150px;
+	width : 200px;
+	height : 200px;
+} 
+
+
+/*----------------footer-----------*/
+
+div.footer#loginFooter
+{
+	
+	margin-left : 250px;
+}
