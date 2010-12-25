@@ -35,7 +35,7 @@
 #define WARPTICK				500 * 3
 #define WARPFRAME				8
 #define WARPDIST				10
-#define SLEEPTIMEMAX			10000	//최대 잠수 시간:10초
+#define SLEEPTIMEMAX			2000	//최대 잠수 시간:10초
 
 static gGameCore s_GameCore;
 
@@ -143,26 +143,27 @@ void gGameCore::MainLoop()
 		gMainWin::GetIF()->m_Keys[VK_RETURN] = false;
 	}
 	
-	if(GetTickCount() - m_turnTime>=SLEEPTIMEMAX || gMainWin::GetIF()->m_Keys[VK_SPACE])
+	if(GetTickCount() - SLEEPTIMEMAX >= m_turnTime || gMainWin::GetIF()->m_Keys[VK_SPACE])
 	{
 		SendMoveAsk();
 		gMainWin::GetIF()->m_Keys[VK_SPACE] = false;
 	}
-/*
-	if(GetTickCount() - m_turnTime>=SLEEPTIMEMAX && m_bBusSel) {
+
+	gChat::GetIF()->MainLoop();
+	gDice::GetIF()->DiceThrow();
+
+	if(GetTickCount() - m_turnTime_Bus>=SLEEPTIMEMAX && m_bBusSel) {
 		PK_BUSMOVESELECT_ASK		ask;
 		gPlayerContainer *gPC = gPlayerContainer::GetIF();
 		int nPos = gPC->m_GPlayerList[ m_nTurn ].nPos;
 
 		ask.nPos = nPos;
 		strcpy(ask.szID, gPC->m_MyGamePlayer.szID);
-			
+
 		gServer::GetIF()->Send(PL_BUSMOVESELECT_ASK, sizeof ask, &ask);
 		m_bBusSel = false;
 	}
-//////////////////////////////////////////////////////////////////////////////버스 잠수*/
-	gChat::GetIF()->MainLoop();
-	gDice::GetIF()->DiceThrow();
+//////////////////////////////////////////////////////////////////////////////버스 잠수
 }
 
 void gGameCore::MainLoopMouse()
@@ -885,8 +886,8 @@ void gGameCore::SendMoveAsk()
 	gPlayerContainer *gPC = gPlayerContainer::GetIF();
 //	int				couple = gPC->GetCoupleIndex(m_nTurn);
 
-	m_turnTime = 0x7fffffff;
 	// 내 차례가 아님
+	m_turnTime = 0x7fffffff;
 	if(strcmp(gPC->m_MyGamePlayer.szID, gPC->m_GPlayerList[m_nTurn].szID) != 0) {
 		return;
 	}
@@ -907,7 +908,8 @@ void gGameCore::SendMoveAsk()
 void gGameCore::pk_movestart_rep(PK_MOVESTART_REP *rep)
 {
 	gPlayerContainer *gPC = gPlayerContainer::GetIF();
-	
+
+	m_turnTime = 0x7fffffff; m_bMoved = true;
 	if(m_bMoving)
 		return;
 
@@ -958,7 +960,7 @@ void gGameCore::pk_movestart_rep(PK_MOVESTART_REP *rep)
 		d2++;
 
 
-	if(d1 == 1 && d2 == 1)
+	if(d1 == 1 && d2 == 1)	
 		c1 = rep->Dice4_1, c2 = rep->Dice6_1;
 	else if(d1 == 2)
 		c1 = rep->Dice4_1, c2 = rep->Dice4_2;
@@ -1153,7 +1155,7 @@ void gGameCore::pk_busmovechoose_rep(PK_BUSMOVECHOOSE_REP *rep)
 
 	if(m_nTurn == rep->nNowTurn) {
 		m_bBusSel = true;
-		//m_turnTime = GetTickCount();
+		m_turnTime_Bus = GetTickCount();
 	}
 }
 
@@ -1165,6 +1167,7 @@ void gGameCore::pk_busmovestart_rep(PK_BUSMOVESTART_REP *rep)
 
 	int  nPos = gPC->m_GPlayerList[m_nTurn].nPos;
 
+	m_turnTime_Bus = 0x7fffffff;
 	if(rep->nDist == 0)
 	{
 		PK_BUSMOVEEND_ASK   ask;
