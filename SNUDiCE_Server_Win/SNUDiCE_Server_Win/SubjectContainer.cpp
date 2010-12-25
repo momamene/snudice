@@ -68,7 +68,7 @@ float gSubjectContainer::gradeExpectOne (int weightCount, int nRound)
 		return 3.6f;
 	}	else if (33 < weightCount && weightCount <= 36)	{	// A0
 		return 4.0f;
-	}	else if (36 < weightCount && weightCount <= 40)	{	// A+
+	}	else if (36 < weightCount)	{	// A+
 		return 4.3f;
 	}
 	return -1.0f;
