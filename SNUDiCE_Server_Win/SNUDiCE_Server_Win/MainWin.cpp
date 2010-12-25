@@ -314,11 +314,11 @@ void gMainWin::Recv(PK_DEFAULT *pk, SOCKET sock)
 		case PL_GOLOGIN_ASK :
 			gGamePlayerContainer::GetIF()->pk_gologin_ask(pk,sock);
 			break;
-
+/*	서버처리로 대체
 		case PL_WHISPER_ASK:
 			gMessageCore::GetIF()->pk_whisper_ask(pk, sock);
 			break;
-
+*/
 		case PL_ANSCOUPLE_ASK :
 			gGamePlayerContainer::GetIF()->pk_anscouple_ask(pk,sock);
 			break;

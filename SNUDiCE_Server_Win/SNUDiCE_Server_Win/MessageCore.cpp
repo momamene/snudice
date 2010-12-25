@@ -7,6 +7,8 @@
 
 #include <sstream>
 
+#define GAMEPLAY_DEBUGER
+
 static gMessageCore s_MessageCore;
 
 gMessageCore *gMessageCore::GetIF()
@@ -56,7 +58,7 @@ void gMessageCore::pk_message_ask(PK_DEFAULT *pk, SOCKET sock)
 		// error
 	}
 	else if(ask.szMsg[0]=='/') {	//수정 임시디버그용
-		debuger(ask.szMsg,ask.szID);
+		command(ask.szMsg,ask.szID);
 	}
 	else if(mode==ECM_BATTLENET || mode==ECM_ROOM || mode==ECM_GAME) {
 		//int nChannelIndex = gCC->FindPlayer(ask.szID);
@@ -70,9 +72,10 @@ void gMessageCore::pk_message_ask(PK_DEFAULT *pk, SOCKET sock)
 	}
 }
 
-void gMessageCore::debuger(char* str,char* szID) {
+void gMessageCore::command(char* str,char* szID) {
 	char szStr1[128];
 	char szStr2[128];
+	char szStr3[128];
 	int nStr2;
 
 	gGamePlayerContainer *gGPCt = gGamePlayerContainer::GetIF();
@@ -91,54 +94,45 @@ void gMessageCore::debuger(char* str,char* szID) {
 	szStr1[n-1]='\0';
 
 	ss >> szStr2;
-	nStr2 = atoi(szStr2);
 
+	if(strcmp(szStr1,"w")==0)	{
+		ss >> szStr3;
+		msg_whisper(szID , szStr2 , szStr3);
+		return;
+	}
+#ifdef GAMEPLAY_DEBUGER
+	nStr2 = atoi(szStr2);
 	if(strcmp(szStr1,"move")==0) 
 		gGPCt->debuger_move(nStr2,szID);
 	else if(strcmp(szStr1,"card")==0) 
 		gGPCt->debuger_card(nStr2,szID);
 	else if (strcmp(szStr1,"turn")==0)
 		gGPCt->debuger_turn(szID);
+#endif
 }
 
-
-
-void gMessageCore::pk_whisper_ask(PK_DEFAULT *pk, SOCKET sock)
+void gMessageCore::msg_whisper(char	 szToID[IDLENGTH] , char szFromID[IDLENGTH] , char szComment[MSGLENGTH])
 {
-	PK_WHISPER_ASK		ask;		//from client
-
-	// for print
-	SOCKADDR_IN			clientAddr;
-	int					addrLen;
-	char				buf [1024];
-
-	addrLen = sizeof(clientAddr);
-	getpeername(sock, (SOCKADDR*)&clientAddr, &addrLen);
-
-	ask = *((PK_WHISPER_ASK*)pk->strPacket);
-
-	wsprintf(buf,"[PK_WHISPER_ASK] %s\tid : %s\t toId %s\tmessage : %s\n", inet_ntoa(clientAddr.sin_addr), ask.szFromID,ask.szToID, ask.szComment);
-	OutputDebugString(buf);
-
 
 	PK_MESSAGE_REP rep1,rep2;	//rep1 : 보낸놈 rep2 : 받는놈
-
-	SOCKET sendsock;	//보내려는 소켓 , toID로부터 구한다.
-	PLAYER toPlayer = gPlayerContainer::GetIF()->GetPlayerFromID(ask.szToID);
-	sendsock = toPlayer.sock;
 	
-	wsprintf(buf,"[PK_WHISPER_REP] %s\t \n", inet_ntoa(clientAddr.sin_addr));
-	OutputDebugString(buf);
+	char				buf [1024];
 
+	SOCKET sock , sendsock;	//보내려는 소켓 , toID로부터 구한다.
+	
+	sock		=	gPlayerContainer::GetIF()->GetPlayerFromID(szToID).sock;
+	sendsock	=	gPlayerContainer::GetIF()->GetPlayerFromID(szFromID).sock;
+	
 	strcpy(rep1.szID,"To ");
-	strcat(rep1.szID,ask.szToID);
-	strcpy(rep1.szMsg,ask.szComment);
+	strcat(rep1.szID,szToID);
+	strcpy(rep1.szMsg,szComment);
 	gMainWin::GetIF()->Send(PL_MESSAGE_REP, sizeof(rep1), &rep1, sock);
 
 	strcpy(rep2.szID,"From ");
-	strcat(rep2.szID,ask.szFromID);
-	strcpy(rep2.szMsg,ask.szComment);
+	strcat(rep2.szID,szFromID);
+	strcpy(rep2.szMsg,szComment);
 	gMainWin::GetIF()->Send(PL_MESSAGE_REP, sizeof(rep2), &rep2, sendsock);
 
 }
+
 

@@ -12,7 +12,7 @@
 #include <time.h>
 
 
-#define ENDROUND	50
+#define ENDROUND	10
 
 static gGamePlayerContainer s_GamePlayerContainer;
 
@@ -803,12 +803,12 @@ void gGamePlayerContainer::pk_gameend_rep(int nRoomIndex)
 	strcpy(rep.szID,m_GamePlayer[nRoomIndex][nWinnerIndex].szID);
 	
 	//다 끝나면 값을 다 0로 바꿈;
-	memset(m_GamePlayer[nRoomIndex], 0, sizeof(GAMEPLAYER) * ROOMMAXPLAYER);
+/*	memset(m_GamePlayer[nRoomIndex], 0, sizeof(GAMEPLAYER) * ROOMMAXPLAYER);
 	memset(m_isGamePlayer[nRoomIndex], 0, sizeof(bool) * ROOMMAXPLAYER);
 	memset(m_isNokdu[nRoomIndex], 0, sizeof(bool) * ROOMMAXPLAYER);
 	memset(m_favor[nRoomIndex], 0, sizeof(sFavor) * ROOMMAXPLAYER);
 	memset(m_bSyncronize[nRoomIndex], 0, sizeof(bool) * ROOMMAXPLAYER);
-
+*/
 	gPC->SendSelect(PL_GAMEEND_REP,sizeof(rep),&rep,ECM_GAME,nRoomIndex);
 }
 
