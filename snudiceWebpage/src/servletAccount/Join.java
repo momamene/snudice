@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import utility.Encrypt;
+
 import beans.UserInfo;
 import dbaccess.DB;
 
@@ -58,7 +60,7 @@ public class Join extends HttpServlet {
 			{
 				nextPage = "joinSuccess.jsp";
 				//계정 추가
-				db.dbAccount.insertNewUser(userId,password,email);	
+				db.dbAccount.insertNewUser(userId,Encrypt.encrypt(password),email);	
 			}			
 		}
 		
