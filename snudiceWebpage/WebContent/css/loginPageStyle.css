@@ -18,6 +18,11 @@ img
 }
 
 /*----------------header-----------*/
+div.header
+{
+	height : 100px;
+}
+
 div.header#loginHeader
 {
 	height : 100px;
@@ -25,11 +30,14 @@ div.header#loginHeader
 }
 
 /*----------------container-----------*/
+div.container
+{
+}
+
 div.container#loginContainer
 {
 	margin-left : 0px;
 }
-
 
 div.container div.center#loginCenter input#loginButton
 {
@@ -40,9 +48,18 @@ div.container div.center#loginCenter input#loginButton
 
 
 /*----------------footer-----------*/
+div.footer
+{
+}
+
 
 div.footer#loginFooter
 {
-	
+	color : red;
 	margin-left : 250px;
+}
+
+div.footer a.highlight
+{
+	color : blue;
 }
