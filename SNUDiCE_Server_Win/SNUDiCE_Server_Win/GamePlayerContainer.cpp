@@ -12,7 +12,7 @@
 #include <time.h>
 
 
-#define ENDROUND	2
+#define ENDROUND	50
 
 static gGamePlayerContainer s_GamePlayerContainer;
 
