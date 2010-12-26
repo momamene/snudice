@@ -349,12 +349,12 @@ bool gUIGame::SetUp()
 	if(!m_ImgUI[UIIMG_CROWN].Load(TURN_CROWN_FILE))
 		return false;
 
-	if(!m_ImgUI[UIIMG_NUMBER].Load(TEXT_NUM_FILE))
-		return false;
-	if(!m_ImgUI[UIIMG_ICON].Load(TEXT_ICON_FILE))
-		return false;
-	if(!m_ImgUI[UIIMG_USERBOX].Load(ITEM_USER_BOX_FILE))
-		return false;
+// 	if(!m_ImgUI[UIIMG_NUMBER].Load(TEXT_NUM_FILE))
+// 		return false;
+// 	if(!m_ImgUI[UIIMG_ICON].Load(TEXT_ICON_FILE))
+// 		return false;
+// 	if(!m_ImgUI[UIIMG_USERBOX].Load(ITEM_USER_BOX_FILE))
+// 		return false;
 
 
 	m_uimode = UIM_NONE;

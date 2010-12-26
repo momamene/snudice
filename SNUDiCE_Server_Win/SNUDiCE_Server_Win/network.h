@@ -12,9 +12,9 @@
 #define WM_SOCKET				WM_USER + 1
 
 #define	WINSOCK_VERSION_2_2		MAKEWORD(2, 2)
-#define SERVER_IP				"211.169.219.86"		// 현탁
+//#define SERVER_IP				"211.169.219.86"		// 현탁
 //#define SERVER_IP				"211.169.219.71"		// 상우
-//#define SERVER_IP				"211.169.219.87"		// 창규
+#define SERVER_IP				"211.169.219.87"		// 창규
 #define SERVER_PORT				9000
 #define BUFFERSIZE				2048
 

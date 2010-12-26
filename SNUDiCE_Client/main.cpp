@@ -5,6 +5,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 {
 	gMainWin	*main = gMainWin::GetIF();
 
+	if(strcmp(lpszCmdParam, "RunByUpdater") != 0)
+		return -1;
+
 	if(!main->SetUp(hInstance, lpszCmdParam, nCmdShow))
 	{
 		if(main->m_hWnd == NULL)
