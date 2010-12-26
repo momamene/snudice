@@ -31,28 +31,23 @@ public class ArticleModifyComplete extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(); 
+		
+		request.setCharacterEncoding("utf-8");		
+		
 		String boardName = (String) session.getAttribute("boardName");
-		Calendar cal = Calendar.getInstance();
-		cal.getTime();
-		 
-		Date today = new Date();
-		
-		request.setCharacterEncoding("utf-8");
-		
-		System.out.println(today.toString());
-		System.out.println("boardName is " + boardName);
-		ArticleInfo article = new ArticleInfo(boardName,
-				(String) session.getAttribute("userId"),
-				request.getParameter("title"), request.getParameter("content"),
-				today);
+		String userId = (String) session.getAttribute("userId");
+		String title = request.getParameter("title");
+		String content = request.getParameter("content");		
 		int articleIndex=Integer.parseInt( request.getParameter("articleIndex"));
+		
+		ArticleInfo article = new ArticleInfo(boardName,userId,title, content);		
 		article.setArticleIndex(articleIndex);
-		System.out.println("article info is " + article.toString());
-		System.out.println(" text is" + request.getParameter("content"));
+		
 		DB db = DB.getInstance();
 		int result = db.dbBoard.updateArticle(article);
 		if(result ==0)
 			System.out.println("아마 실패한듯 요 업데이트 병신 새끼");
+		
         String nextPage = "board/writeModifySuccess.jsp";
         request.setAttribute("WriteModify", "modify");
 		RequestDispatcher view = request.getRequestDispatcher(nextPage);

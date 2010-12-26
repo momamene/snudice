@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import utility.Util;
+
 import beans.ArticleInfo;
 import dbaccess.DB;
 
@@ -43,26 +45,22 @@ public class ArticleWrite extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession(); 
-		String boardName = (String) session.getAttribute("boardName");
-		Calendar cal = Calendar.getInstance();
-		cal.getTime();
-		 
-		Date today = new Date();
+		HttpSession session = request.getSession();			
 		
 		request.setCharacterEncoding("utf-8");
 		
-		System.out.println(today.toString());
-		System.out.println("boardName is " + boardName);
-		ArticleInfo article = new ArticleInfo(boardName,
-				(String) session.getAttribute("userId"),
-				request.getParameter("title"), request.getParameter("content"),
-				today);
-		System.out.println("article info is " + article.toString());
-		System.out.println(" text is" + request.getParameter("content"));
+		String boardName = (String) session.getAttribute("boardName");
+		String userId = (String)session.getAttribute("userId");
+		String title = request.getParameter("title");
+		String content = request.getParameter("content");		
+		
+		if(title.compareTo("")==0)
+			title = Util.currDateTime() + " 에 작성한 글입니다.";
+		
+		ArticleInfo article = new ArticleInfo(boardName,userId,title,content);		
+		
 		DB db = DB.getInstance();
-		int articleIndex = db.dbBoard.insertArticle(article);
-		System.out.println("article index is "+ articleIndex);
+		int articleIndex = db.dbBoard.insertArticle(article);		
 		//성공하면 성공 알림 -> 리스트 보기. 실패하면 즐        
         String nextPage = "board/writeModifySuccess.jsp";  
         session.setAttribute("articleIndex",articleIndex );

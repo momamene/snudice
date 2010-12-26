@@ -3,6 +3,8 @@ package beans;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import utility.Util;
+
 public class ArticleInfo {
 	private int articleIndex;
 	private String boardName;
@@ -14,16 +16,11 @@ public class ArticleInfo {
 	
 	public ArticleInfo() {}
 	
-	public ArticleInfo(String boardName,String id, String title, String content,
-			Date today) {
-		
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String formatDate = dateFormat.format(today);
-		
+	public ArticleInfo(String boardName,String id, String title, String content) {		
 		this.boardName= boardName;
 		this.userId = id;
 		this.title = title;
-		this.dateTime = formatDate;
+		this.dateTime = Util.currDateTime();
 		this.text = content;
 	}
 	
