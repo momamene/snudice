@@ -21,13 +21,13 @@ gLoginCore::~gLoginCore()
 {
 
 }
-
+/*
 void gLoginCore::Put(char* id,char* pw) 
 {
 
 	gMysql::GetIF()->put(id,pw);
 }
-
+*/
 USER* gLoginCore::GetID(char* id)
 {
 
@@ -43,6 +43,7 @@ bool gLoginCore::SetUp()
 	USER*	user;
 	char	buf[1024];
 
+	/*
 	Put("1","1");
 	Put("11","1");
 	Put("2","2");
@@ -78,7 +79,7 @@ bool gLoginCore::SetUp()
 	Put("sylairon","1111");
 	Put("장난죄송","1111");
 	Put("운영자","1111");
-
+*/
 	return true;
 }
 

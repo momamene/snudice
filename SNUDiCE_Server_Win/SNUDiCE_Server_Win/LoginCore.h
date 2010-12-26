@@ -28,6 +28,6 @@ public:
 //	void			PrintUserList();
 
 private:
-	void			Put(char* id, char* pw);
+//	void			Put(char* id, char* pw);
 	USER*			GetID(char* id);
 };
