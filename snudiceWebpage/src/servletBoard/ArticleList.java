@@ -13,6 +13,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import constant.Const;
+
 
 import beans.ArticleInfo;
 import dbaccess.DB;
@@ -37,15 +40,14 @@ public class ArticleList extends HttpServlet {
 	 */
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		final int articlePerPage = 10;//페이지당 보여주는 게시물 수		
+		final int articlePerPage = Const.articlePerPage;//페이지당 보여주는 게시물 수		
 		HttpSession session = request.getSession();
 		String boardName=(String) session.getAttribute("boardName");
 		
 		//boardName 처리 
 		if(request.getParameter("boardName")!=null)
 		{
-			boardName = request.getParameter("boardName");
-			
+			boardName = request.getParameter("boardName");			
 		}
 		session.setAttribute("boardName", boardName);
 

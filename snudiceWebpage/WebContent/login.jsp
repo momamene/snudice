@@ -25,6 +25,9 @@
 				<input type="password" name ="password" tabindex="2"><br/><br/>
 				<input id="loginButton" type="image" src="/snudiceWebpage/image/gameStart.png" tabindex="2">							
 			</form>
+			
+			<a href="/snudiceWebpage/clientFile/update/6001/a.txt">클라이언트 다운로드</a>
+			
 		</div>
 		<div class="right">&nbsp;</div>	
 	</div>
