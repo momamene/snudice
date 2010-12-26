@@ -22,7 +22,7 @@
                     <h1>${articleInfo.title }</h1>
                 </div>   
                 <div class="user">
-                    <h1>${articleInfo.userId }</h1>
+                    <h2>${articleInfo.userId }</h1>
                 </div>        
                 <div class="clear"></div>
  

@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import utility.Encrypt;
+
 import dbaccess.DB;
 
 import beans.UserInfo;
@@ -42,7 +44,7 @@ public class Login extends HttpServlet {
 		String nextPage = "loginSuccess.jsp";
 		
 		DB db = DB.getInstance();
-		boolean isExistingUser = db.dbAccount.isValidUser(userId,password);
+		boolean isExistingUser = db.dbAccount.isValidUser(userId,Encrypt.encrypt(password));
 		if(!isExistingUser)
 			nextPage = "loginFailed.jsp";
 		
