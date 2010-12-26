@@ -60,7 +60,7 @@ public class Join extends HttpServlet {
 			{
 				nextPage = "joinSuccess.jsp";
 				//계정 추가
-				db.dbAccount.insertNewUser(userId,Encrypt.encrypt(password),email);	
+				db.dbAccount.insertNewUser(userId,password,email);	
 			}			
 		}
 		

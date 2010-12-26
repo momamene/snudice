@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" type="text/css" href="/godwar/css/boardStyle.css"/>
+<link rel="stylesheet" type="text/css" href="/snudiceWebpage/css/boardStyle.css"/>
 <title>BBS</title>
 </head>
 <body>      
@@ -16,7 +16,7 @@
 	</center>
  	<br/>
 
-	<form action="/godwar/articleWrite.do" method = "post"><!--  post로 정보를 보내야 하나? -->
+	<form action="/snudiceWebpage/articleWrite.do" method = "post"><!--  post로 정보를 보내야 하나? -->
 	<center>
 		<table width = "650" border = "1" cellpadding = "2" cellspacing = "0" bordercolor = "#000000">
 			<tr>

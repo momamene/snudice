@@ -9,7 +9,7 @@
 <body>
 
 <div class="success">작업 성공</div>
-<a href="/godwar/articleList.do?currPage=0">처음목록</a>
-<a href="/godwar/articleView.do?articleIndex=${sessionScope.articleIndex}">쓴 글 보러가기</a>
+<a href="/snudiceWebpage/articleList.do?currPage=0">처음목록</a>
+<a href="/snudiceWebpage/articleView.do?articleIndex=${sessionScope.articleIndex}">쓴 글 보러가기</a>
 </body>
 </html>

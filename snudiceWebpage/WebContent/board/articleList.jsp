@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" type="text/css" href="/godwar/css/boardStyle.css"/>
+<link rel="stylesheet" type="text/css" href="/snudiceWebpage/css/boardStyle.css"/>
 <title>${sessionScope.boardName}게시판</title>
 </head>
 <body>	
@@ -22,7 +22,7 @@
 		<c:forEach var="article" items="${articleList}">	
 		<tr>
 			<td>${article.articleIndex}</td>
-			<td><a href="/godwar/articleView.do?articleIndex=${article.articleIndex}">${article.title}</a></td>
+			<td><a href="/snudiceWebpage/articleView.do?articleIndex=${article.articleIndex}">${article.title}</a></td>
 			<td>${article.userId}</td>
 			<td>${article.dateTime}</td> 
 			<td>${article.readCount}</td>		
@@ -31,28 +31,28 @@
 		</table>
 		<table class="boardList">
 		<tr>
-		<td class="pageNumber"> <a href="/godwar/articleList.do?goPrev=true&currPage=${currPage}">prev</a> </td>
+		<td class="pageNumber"> <a href="/snudiceWebpage/articleList.do?goPrev=true&currPage=${currPage}">prev</a> </td>
 		<c:forEach var="pageNumber" items="${pageList}">
 			<td class="pageNumber">
 			
 			<c:choose>
 				<c:when test="${pageNumber==currPage}">
-					<a href="/godwar/articleList.do?currPage=${pageNumber}"> (${pageNumber})</a>
+					<a href="/snudiceWebpage/articleList.do?currPage=${pageNumber}"> (${pageNumber})</a>
 				</c:when>
 			<c:otherwise>
-			<a href="/godwar/articleList.do?currPage=${pageNumber}"> ${pageNumber}</a>
+			<a href="/snudiceWebpage/articleList.do?currPage=${pageNumber}"> ${pageNumber}</a>
 			</c:otherwise>
 			</c:choose>
 			</td>
 		</c:forEach>
-		<td class="pageNumber"> <a href="/godwar/articleList.do?currPage=${currPage}&goNext=true">next</a> </td>
+		<td class="pageNumber"> <a href="/snudiceWebpage/articleList.do?currPage=${currPage}&goNext=true">next</a> </td>
 		</tr>
 		</table>
 	현재 페이지 : ${sessionScope.currPage}  		
 	<br/>
-	<a href="/godwar/articleList.do?currPage=0">처음목록</a>
-	<a href="/godwar/main.do">메인으로</a>
+	<a href="/snudiceWebpage/articleList.do?currPage=0">처음목록</a>
+	<a href="/snudiceWebpage/main.do">메인으로</a>
 	
-	<a id="boardWrite" href="/godwar/board/articleWrite.jsp?boardName=${sessionScope.boardName}">글쓰기</a>
+	<a id="boardWrite" href="/snudiceWebpage/board/articleWrite.jsp?boardName=${sessionScope.boardName}">글쓰기</a>
 </body>
 </html>
