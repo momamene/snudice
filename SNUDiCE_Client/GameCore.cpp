@@ -35,7 +35,7 @@
 #define WARPTICK				500 * 3
 #define WARPFRAME				8
 #define WARPDIST				10
-#define SLEEPTIMEMAX			2000	//최대 잠수 시간:10초
+#define SLEEPTIMEMAX			10000	//최대 잠수 시간:10초
 
 static gGameCore s_GameCore;
 
