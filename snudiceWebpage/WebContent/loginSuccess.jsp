@@ -8,6 +8,6 @@
 </head>
 <body>
 	로그인 성공입니다.<br/>
-	TODO : 게임 실행 시키기
+	<a href="/snudiceWebpage/articleList.do?boardName=free&currPage=0">게시판ㄱㄱ</a>
 </body>
 </html>

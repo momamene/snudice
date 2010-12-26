@@ -44,7 +44,7 @@ public class Login extends HttpServlet {
 		String nextPage = "loginSuccess.jsp";
 		
 		DB db = DB.getInstance();
-		boolean isExistingUser = db.dbAccount.isValidUser(userId,Encrypt.encrypt(password));
+		boolean isExistingUser = db.dbAccount.isValidUser(userId,password);
 		if(!isExistingUser)
 			nextPage = "loginFailed.jsp";
 		

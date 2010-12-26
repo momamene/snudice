@@ -4,15 +4,8 @@
 	<security-constraint>
 		<web-resource-collection>
 			<web-resource-name>login</web-resource-name>
-			<url-pattern>/*</url-pattern>
-			<http-method>POST</http-method>
-		</web-resource-collection>
-		
-		<!-- 
-		<auth-constraint>
-			<role-name>Member</role-name>
-		</auth-constraint>
-		 -->		
+			<url-pattern>/*</url-pattern>			
+		</web-resource-collection>			
 		
 		<user-data-constraint>
 			<transport-guarantee>CONFIDENTIAL</transport-guarantee>

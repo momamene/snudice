@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" type="text/css" href="/godwar/css/boardStyle.css"/>
+<link rel="stylesheet" type="text/css" href="/snudiceWebpage/css/boardStyle.css"/>
 <title>${sessionScope.boardName}게시판</title>
 </head>
 <body>	
@@ -22,7 +22,7 @@
                     <h1>${articleInfo.title }</h1>
                 </div>   
                 <div class="user">
-                    <h2>${articleInfo.userId }</h1>
+                    <h2>${articleInfo.userId }</h2>
                 </div>        
                 <div class="clear"></div>
  
@@ -53,9 +53,9 @@
                         </div>
                                     </div>
  
-<a href="/godwar/articleList.do?currPage = ${sessionScope.currPage}">처음목록</a>
-	<a id="boardModify" href="/godwar/articleModify.do?&articleIndex=${articleInfo.articleIndex}">수정</a>
-	<a id="boardWrite" href="/godwar/board/articleWrite.jsp?boardName=${sessionScope.boardName}">글쓰기</a>
+<a href="/snudiceWebpage/articleList.do?currPage = ${sessionScope.currPage}">처음목록</a>
+	<a id="boardModify" href="/snudiceWebpage/articleModify.do?&articleIndex=${articleInfo.articleIndex}">수정</a>
+	<a id="boardWrite" href="/snudiceWebpage/board/articleWrite.jsp?boardName=${sessionScope.boardName}">글쓰기</a>
 
  
 </div>

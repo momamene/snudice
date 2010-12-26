@@ -4,12 +4,12 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" type="text/css" href="css/loginPageStyle.css"/>
+<link rel="stylesheet" type="text/css" href="/snudiceWebpage/css/loginPageStyle.css"/>
 <title>가입 실패</title>
 </head>
 <body>
 회원가입 실패!!<br/><br/>
 ${message}<br/>
-<a href="join.jsp">회원가입 페이지로</a>
+<a href="/snudiceWebpage/join.jsp">회원가입 페이지로</a>
 </body>
 </html>

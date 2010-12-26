@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" type="text/css" href="css/loginPageStyle.css"/>
+<link rel="stylesheet" type="text/css" href="/snudiceWebpage/css/loginPageStyle.css"/>
 <title>회원가입 페이지</title>
 </head>
 <body>
@@ -13,7 +13,7 @@
 	<div class="container">
 		<div class="left"></div>
 		<div class="center">
-			<form action = "join.do" method = "post">
+			<form action = "/snudiceWebpage/join.do" method = "post">
 				아이디 : <input type = "text" name="userId"> <br/>
 				패스워드 : <input type = "password" name="password"> <br/>	
 				e-mail : <input type = "text" name="email"> <br/>	
