@@ -1,8 +1,5 @@
 package beans;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import utility.Util;
 
 public class ArticleInfo {
