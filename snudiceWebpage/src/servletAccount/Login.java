@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import constant.Const;
+
 import dbaccess.DB;
 
 /**
@@ -42,8 +44,7 @@ public class Login extends HttpServlet {
 		else
 		{
 			//session에 userId를 속성으로 지정
-			HttpSession session = request.getSession();	
-			session.setMaxInactiveInterval(3600);
+			HttpSession session = request.getSession();			
 			session.setAttribute("userId", userId);			
 		}
 		

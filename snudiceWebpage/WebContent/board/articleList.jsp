@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" type="text/css" href="/snudiceWebpage/css/boardStyle.css"/>
+<link rel="stylesheet" type="text/css" href="${root}/css/boardStyle.css"/>
 <title>${param.boardName} 게시판</title>
 </head>
 <body>	
@@ -22,7 +22,7 @@
 		<c:forEach var="article" items="${articleList}">	
 		<tr>
 			<td>${article.articleIndex}</td>
-			<td><a href="/snudiceWebpage/articleView.do?boardName=${param.boardName}&articleIndex=${article.articleIndex}&currPage=${param.currPage}">${article.title}</a></td>
+			<td><a href="${root}/articleView.do?boardName=${param.boardName}&articleIndex=${article.articleIndex}&currPage=${param.currPage}">${article.title}</a></td>
 			<td>${article.userId}</td>
 			<td>${article.dateTime}</td> 
 			<td>${article.readCount}</td>		
@@ -31,28 +31,28 @@
 	</table>
 	<table class="boardList">
 		<tr>
-		<td class="pageNumber"> <a href="/snudiceWebpage/articleList.do?boardName=${param.boardName}&currPage=${param.currPage}&goPrev=true">prev</a> </td>
+		<td class="pageNumber"> <a href="${root}/articleList.do?boardName=${param.boardName}&currPage=${param.currPage}&goPrev=true">prev</a> </td>
 		<c:forEach var="pageNumber" items="${pageList}">
 			<td class="pageNumber">
 			
 			<c:choose>
 				<c:when test="${pageNumber==param.currPage}">
-					<a href="/snudiceWebpage/articleList.do?boardName=${param.boardName}&currPage=${pageNumber}"> (${param.currPage})</a>
+					<a href="${root}/articleList.do?boardName=${param.boardName}&currPage=${pageNumber}"> (${param.currPage})</a>
 				</c:when>
 			<c:otherwise>
-			<a href="/snudiceWebpage/articleList.do?boardName=${param.boardName}&currPage=${pageNumber}"> ${pageNumber}</a>
+			<a href="${root}/articleList.do?boardName=${param.boardName}&currPage=${pageNumber}"> ${pageNumber}</a>
 			</c:otherwise>
 			</c:choose>
 			</td>
 		</c:forEach>
-		<td class="pageNumber"> <a href="/snudiceWebpage/articleList.do?boardName=${param.boardName}&currPage=${param.currPage}&goNext=true">next</a> </td>
+		<td class="pageNumber"> <a href="${root}/articleList.do?boardName=${param.boardName}&currPage=${param.currPage}&goNext=true">next</a> </td>
 		</tr>
 	</table>
 	현재 페이지 : ${param.currPage}  		
 	<br/>
-	<a href="/snudiceWebpage/articleList.do?boardName=${param.boardName}&currPage=0">처음목록</a>
-	<a href="/snudiceWebpage/main.do">메인으로</a>
+	<a href="${root}/articleList.do?boardName=${param.boardName}&currPage=0">처음목록</a>
+	<a href="${root}/main.do">메인으로</a>
 	
-	<a id="boardWrite" href="/snudiceWebpage/board/articleWrite.jsp?boardName=${param.boardName}&currPage=${param.currPage}">글쓰기</a>
+	<a id="boardWrite" href="${root}/board/articleWrite.jsp?boardName=${param.boardName}&currPage=${param.currPage}">글쓰기</a>
 </body>
 </html>

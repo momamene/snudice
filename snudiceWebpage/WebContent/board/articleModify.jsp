@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" type="text/css" href="/snudiceWebpage/css/boardStyle.css"/>
+<link rel="stylesheet" type="text/css" href="${root}/css/boardStyle.css"/>
 <title>BBS</title>
 </head>
 <body>      
@@ -16,7 +16,7 @@
 	</center>
  	<br/>
 
-	<form action="/snudiceWebpage/articleModifyComplete.do?articleIndex=${articleIndex}" method = "post">
+	<form action="${root}/articleModifyComplete.do?articleIndex=${articleIndex}" method = "post">
 	<center>
 		<table width = "650" border = "1" cellpadding = "2" cellspacing = "0" bordercolor = "#000000">
 			<tr>
