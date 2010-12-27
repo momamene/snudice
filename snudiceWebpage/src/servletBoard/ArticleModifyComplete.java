@@ -48,7 +48,7 @@ public class ArticleModifyComplete extends HttpServlet {
 		if(result ==0)
 			System.out.println("아마 실패한듯 요 업데이트 병신 새끼");
 		
-        String nextPage = "board/writeModifySuccess.jsp";
+        String nextPage = "articleView.do?articleIndex="+articleIndex;
         request.setAttribute("WriteModify", "modify");
 		RequestDispatcher view = request.getRequestDispatcher(nextPage);
 		view.forward(request, response);        
