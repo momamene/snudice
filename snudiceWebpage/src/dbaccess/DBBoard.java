@@ -1,6 +1,9 @@
 package dbaccess;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import beans.ArticleInfo;
 
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -28,13 +31,26 @@ public class DBBoard {
 		return instance;
 	}
 	
-	//특정 게시판의 startArticleIndex 번째 게시물 ~ endArticleIndex 번째 게시물 까지를 리턴함
-	@SuppressWarnings("unchecked")
-	public List<ArticleInfo> getArticleList(String boardName, int startArticleIndex, int endArticleIndex) {
+	//특정 게시판의 pageNumber 에 해당하는 글을 articlePerPage 개수만큼 가져온다.
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public List<ArticleInfo> getArticleList(String boardName, int pageNumber, int articlePerPage) {
 		List<ArticleInfo> result = null;
 		try
 		{			
-			result = sqlMap.queryForList("getArticleList", boardName,startArticleIndex, endArticleIndex);
+			int maxArticleIndex = (Integer)sqlMap.queryForObject("getMaxArticleIndex");
+			
+			//해당 게시판의 가장 최근글의 index를 가져온다.
+			Map m = new HashMap();
+			m.put("boardName", boardName);
+			m.put("startArticleIndex",maxArticleIndex);			
+			result = sqlMap.queryForList("getArticleList", m);	
+			int firstArticleIndex = result.get(0).getArticleIndex();
+			
+			int skipArticleCount = pageNumber * articlePerPage;
+			
+			m.remove("startArticleIndex");			
+			m.put("startArticleIndex",firstArticleIndex );
+			result = sqlMap.queryForList("getArticleList", m,skipArticleCount,articlePerPage);
 		}
 		catch(Exception e)
 		{

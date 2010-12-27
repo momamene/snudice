@@ -16,20 +16,20 @@
 	</center>
  	<br/>
 
-	<form action="/snudiceWebpage/articleWrite.do" method = "post"><!--  post로 정보를 보내야 하나? -->
+	<form action="/snudiceWebpage/articleWrite.do?boardName=${param.boardName}&currPage=${param.currPage}" method = "post"><!--  post로 정보를 보내야 하나? -->
 	<center>
 		<table width = "650" border = "1" cellpadding = "2" cellspacing = "0" bordercolor = "#000000">
 			<tr>
 				<td align = "center" width = "80">ID</td>
     			<td width = "*">
-    				${sessionScope.userId}
+    				${userId}
 					<br/>
 				</td>
     		</tr>
     		<tr>
 				<td align = "center" width = "80">게시판이름</td>
     			<td width = "*">
-    				${sessionScope.boardName}
+    				${param.boardName}
 					<br/>
 				</td>
     		</tr>

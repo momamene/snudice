@@ -1,21 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" version="3.0">
-<!-- 보안 설정 -->
- 
-	<security-constraint>
-		<web-resource-collection>
-			<web-resource-name>login</web-resource-name>
-			<url-pattern>/*</url-pattern>			
-		</web-resource-collection>			
-		
-		<user-data-constraint>
-			<transport-guarantee>CONFIDENTIAL</transport-guarantee>
-		</user-data-constraint>
-				
-	</security-constraint>	
-	
-
-<!-- 서블릿 매핑 -->
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>login</web-resource-name>
+      <url-pattern>/*</url-pattern>
+    </web-resource-collection>
+    <user-data-constraint>
+      <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+    </user-data-constraint>
+  </security-constraint>
   <servlet>
     <servlet-name>loginInternalName</servlet-name>
     <servlet-class>servletAccount.Login</servlet-class>
@@ -65,11 +58,21 @@
     <url-pattern>/articleModify.do</url-pattern>
   </servlet-mapping>
   <servlet>
-    <servlet-name>articleModifyCInternalName</servlet-name>
+    <servlet-name>articleModifyCompleteInternalName</servlet-name>
     <servlet-class>servletBoard.ArticleModifyComplete</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>articleModifyCInternalName</servlet-name>
+    <servlet-name>articleModifyCompleteInternalName</servlet-name>
     <url-pattern>/articleModifyComplete.do</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>articleDeleteInternalName</servlet-name>
+    <servlet-class>servletBoard.ArticleDelete</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>articleDeleteInternalName</servlet-name>
+    <url-pattern>/articleDelete.do</url-pattern>
   </servlet-mapping>  
+  
 </web-app>

@@ -29,11 +29,13 @@ public class ArticleView extends HttpServlet {
     public ArticleView() {
         super();
         // TODO Auto-generated constructor stub
-    }    
+    }  
+    
     
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	doGet(request,response);
     }
+    
     
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -42,6 +44,8 @@ public class ArticleView extends HttpServlet {
 		int articleIndex =  Integer.parseInt( request.getParameter("articleIndex"));
 		HttpSession session = request.getSession();
 		String userId = (String)session.getAttribute("userId");
+		String boardName = request.getParameter("boardName");
+		int currPage = Integer.parseInt(request.getParameter("currPage"));
 		
 		DB db = DB.getInstance();
 		//자기가 쓴 글이 아닐 경우 조회수 증가		
@@ -59,10 +63,8 @@ public class ArticleView extends HttpServlet {
 		
 		request.setAttribute("articleInfo",article);
 		
-		String nextPage = "board/articleView.jsp";	
+		String nextPage = "board/articleView.jsp?boardName="+boardName+"&currPage="+currPage;	
 		RequestDispatcher view = request.getRequestDispatcher(nextPage);
-		view.forward(request, response);        
-		
+		view.forward(request, response);		
 	}
-
 }

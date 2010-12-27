@@ -34,25 +34,21 @@ public class ArticleWrite extends HttpServlet {
     public ArticleWrite() {
         super();
         // TODO Auto-generated constructor stub
-    }
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	
+    }	
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();			
-		
 		request.setCharacterEncoding("utf-8");
 		
-		String boardName = (String) session.getAttribute("boardName");
+		HttpSession session = request.getSession();
+		
 		String userId = (String)session.getAttribute("userId");
+		String boardName = request.getParameter("boardName");		
 		String title = request.getParameter("title");
-		String content = request.getParameter("content");		
+		String content = request.getParameter("content");
+		String currPage = request.getParameter("currPage");		
 		
 		if(title.compareTo("")==0)
 			title = Util.currDateTime() + " 에 작성한 글입니다.";
@@ -62,9 +58,8 @@ public class ArticleWrite extends HttpServlet {
 		DB db = DB.getInstance();
 		int articleIndex = db.dbBoard.insertArticle(article);		
 		 
-        String nextPage = "articleView.do?articleIndex="+articleIndex;
-        session.setAttribute("articleIndex",articleIndex );
-		RequestDispatcher view = request.getRequestDispatcher(nextPage);
-		view.forward(request, response);        
+        String nextPage = "articleView.do?boardName="+boardName+"&articleIndex="+articleIndex+"&currPage="+currPage;
+        
+		response.sendRedirect(nextPage);     
 	}
 }
