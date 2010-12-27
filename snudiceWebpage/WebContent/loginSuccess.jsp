@@ -8,6 +8,6 @@
 </head>
 <body>
 	로그인 성공입니다.<br/>
-	<a href="/snudiceWebpage/articleList.do?boardName=free&currPage=0">게시판ㄱㄱ</a>
+	<a href="${root}/articleList.do?boardName=free&currPage=0">게시판ㄱㄱ</a>
 </body>
 </html>
