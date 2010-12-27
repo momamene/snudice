@@ -16,7 +16,7 @@
 	</center>
  	<br/>
 
-	<form action="/snudiceWebpage/articleModifyComplete.do" method = "post"><!--  post로 정보를 보내야 하나? -->
+	<form action="/snudiceWebpage/articleModifyComplete.do?articleIndex=${articleIndex}" method = "post">
 	<center>
 		<table width = "650" border = "1" cellpadding = "2" cellspacing = "0" bordercolor = "#000000">
 			<tr>
@@ -41,8 +41,7 @@
     		</tr>
     		<tr>
     			<td align = "center" width = "80">내용</td>
-    			<td>
-    			
+    			<td>    			
     				<textarea name = "content"  rows = "8" cols="60">${articleInfo.text}</textarea>
     			</td>
     		</tr>
@@ -53,7 +52,6 @@
     		</tr>
     	</table>
 	</center>
-<input type = "hidden" name = "articleIndex" value =${articleInfo.articleIndex}>
 	</form>
 </body>
 </html>

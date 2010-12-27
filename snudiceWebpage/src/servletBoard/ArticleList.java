@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import utility.Util;
 
 import constant.Const;
 
@@ -51,7 +53,6 @@ public class ArticleList extends HttpServlet {
 		}
 		session.setAttribute("boardName", boardName);
 
-
 		//현재 page 값 구하기 
 		int currPage;
 		if(request.getParameter("currPage")!=null)
@@ -87,12 +88,10 @@ public class ArticleList extends HttpServlet {
 		session.setAttribute("currPage", currPage);
 		
 	
-		List<ArticleInfo> articleList = db.dbBoard.getArticleList(boardName,startArticleIndex, 10);
+		List<ArticleInfo> articleList = db.dbBoard.getArticleList(boardName,startArticleIndex, 10);	
+		for(ArticleInfo article : articleList)		
+			article.setTitle(Util.toHtml(article.getTitle()));		
 		
-		/*for(ArticleInfo article : articleList)
-		{
-			System.out.println(article.toString());
-		} */
 		List<Integer> pageList= new ArrayList<Integer>();
 		
 		for(int i = (currPage/10)* 10; i<=endPage; i++)

@@ -61,8 +61,8 @@ public class ArticleWrite extends HttpServlet {
 		
 		DB db = DB.getInstance();
 		int articleIndex = db.dbBoard.insertArticle(article);		
-		//성공하면 성공 알림 -> 리스트 보기. 실패하면 즐        
-        String nextPage = "board/writeModifySuccess.jsp";  
+		 
+        String nextPage = "articleView.do?articleIndex="+articleIndex;
         session.setAttribute("articleIndex",articleIndex );
 		RequestDispatcher view = request.getRequestDispatcher(nextPage);
 		view.forward(request, response);        
