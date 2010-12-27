@@ -28,8 +28,8 @@
 			<td>${article.readCount}</td>		
 		</tr>
 		</c:forEach>
-		</table>
-		<table class="boardList">
+	</table>
+	<table class="boardList">
 		<tr>
 		<td class="pageNumber"> <a href="/snudiceWebpage/articleList.do?boardName=${param.boardName}&currPage=${param.currPage}&goPrev=true">prev</a> </td>
 		<c:forEach var="pageNumber" items="${pageList}">
@@ -47,7 +47,7 @@
 		</c:forEach>
 		<td class="pageNumber"> <a href="/snudiceWebpage/articleList.do?boardName=${param.boardName}&currPage=${param.currPage}&goNext=true">next</a> </td>
 		</tr>
-		</table>
+	</table>
 	현재 페이지 : ${param.currPage}  		
 	<br/>
 	<a href="/snudiceWebpage/articleList.do?boardName=${param.boardName}&currPage=0">처음목록</a>

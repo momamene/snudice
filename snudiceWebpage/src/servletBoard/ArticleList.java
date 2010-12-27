@@ -52,15 +52,23 @@ public class ArticleList extends HttpServlet {
 		int totalPageCount = (int)Math.ceil((double)totalArticleCount / (double)articlePerPage);		
 		
 		//페이지 범위 넘어가는 처리
-		if(request.getParameter("goPrev")!=null&&currPage>=articlePerPage)
+		if(request.getParameter("goPrev")!=null)
 		{
-			currPage =  currPage /articlePerPage;
-			currPage = currPage * articlePerPage - articlePerPage;
+			currPage -=  Const.pageNumberPerPage;
+			if(currPage<0)
+				currPage = 0;			
+			
+			response.sendRedirect("articleList.do?boardName="+boardName+"&currPage="+currPage);
+			return;
 		}
-		if(request.getParameter("goNext")!=null && (currPage/articlePerPage)< (totalPageCount/articlePerPage))
+		if(request.getParameter("goNext")!=null)
 		{
-			currPage = currPage /articlePerPage;
-			currPage =currPage * articlePerPage + articlePerPage;
+			currPage +=  Const.pageNumberPerPage;
+			if(currPage>totalPageCount-1)
+				currPage = totalPageCount-1;
+			
+			response.sendRedirect("articleList.do?boardName="+boardName+"&currPage="+currPage);
+			return;
 		}			
 	
 		//글 목록을 가져온다.
