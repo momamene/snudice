@@ -7,6 +7,14 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" type="text/css" href="/snudiceWebpage/css/boardStyle.css"/>
+<script type="text/javascript" src="/snudiceWebpage/javascript/util.js"></script> 
+<script type="text/javascript">
+var articleDeleteFunc = function() 
+{
+	window.location = "/snudiceWebpage/articleDelete.do?boardName=${param.boardName}&articleIndex=${articleInfo.articleIndex}&currPage=${param.currPage}";
+}
+</script>
+
 <title>${sessionScope.boardName}게시판</title>
 </head>
 <body>	
@@ -42,13 +50,15 @@
 		</div>
 	</div>
  
-	<a href="/snudiceWebpage/articleList.do?currPage = ${sessionScope.currPage}">처음목록</a>
+	<a href="/snudiceWebpage/articleList.do?boardName=${param.boardName}&currPage=${param.currPage}">처음목록</a>
 	<c:choose>
-		<c:when test="${myArticle==true}">
-			<a id="boardModify" href="/snudiceWebpage/articleModify.do?&articleIndex=${articleInfo.articleIndex}">수정</a>			
+		<c:when test="${myArticle==true}">			
+			<a id="boardModify" href="/snudiceWebpage/articleModify.do?&articleIndex=${articleInfo.articleIndex}">수정</a>
+			<a id="boardDelete" href="/snudiceWebpage/articleDelete.do?&articleIndex=${articleInfo.articleIndex}">삭제</a>
+			<input type="button" onclick="show_confirm('정말 지울꺼에요?',articleDeleteFunc)" value="Show confirm box" />		
 		</c:when>													
 	</c:choose>	
-	<a id="boardWrite" href="/snudiceWebpage/board/articleWrite.jsp?boardName=${sessionScope.boardName}">글쓰기</a> 
+	<a id="boardWrite" href="/snudiceWebpage/board/articleWrite.jsp?boardName=${param.boardName}&currPage=${param.currPage}">새글쓰기</a> 
 </div>
 		
 </body>

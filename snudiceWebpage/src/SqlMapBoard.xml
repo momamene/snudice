@@ -13,9 +13,18 @@
 	</resultMap>
 	
 	
-	<select id="getArticleList" parameterClass="String"
-		resultClass="ArticleInfo">select * from board_board where boardName = #boardName# order by
-		articleIndex desc</select>
+	<select id="getArticleList" parameterClass="HashMap" resultClass="ArticleInfo">
+		SELECT * 
+		FROM board_board 
+		WHERE boardName = #boardName:VARCHAR# AND articleIndex &lt;= #startArticleIndex:INT#	
+		ORDER BY articleIndex DESC
+	</select>
+	
+	<select id="getMaxArticleIndex" resultClass="Integer">
+		SELECT MAX(articleIndex)
+		FROM board_board
+	</select>
+	
 	<select id="getArticleCount" parameterClass="String" resultClass="int">select count(*) from board_board where boardName= #boardName#</select>
 	<insert id="insertArticle" parameterClass="ArticleInfo">insert into board_board(boardName, title, userId, dateTime,text)
 	values(#boardName:VARCHAR#, #title:VARCHAR#, #userId:VARCHAR#,#dateTime:dateTime#,#text:text#)

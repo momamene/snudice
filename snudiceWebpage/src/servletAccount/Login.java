@@ -36,10 +36,7 @@ public class Login extends HttpServlet {
 	 */	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String userId = request.getParameter("userId");
-		String password = request.getParameter("password");			
-		
-		UserInfo userInformation = new UserInfo(userId,password,null);
-		request.setAttribute("userInfo", userInformation);
+		String password = request.getParameter("password");		
 		
 		String nextPage = "loginSuccess.jsp";
 		
