@@ -27,6 +27,10 @@ public class Login extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
     
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	doPost(request,response);
+    }
+    
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */	
@@ -39,14 +43,23 @@ public class Login extends HttpServlet {
 		DB db = DB.getInstance();
 		boolean isExistingUser = db.dbAccount.isValidUser(userId,password);
 		if(!isExistingUser)
-			nextPage = "loginFailed.jsp";
-		
+			nextPage = "loginFailed.jsp";		
 		else
 		{
 			//session에 userId를 속성으로 지정
 			HttpSession session = request.getSession();			
-			session.setAttribute("userId", userId);			
-		}
+			session.setAttribute("userId", userId);	
+			
+			//로그인 뒤 다른 곳으로 가야 하는 경우(ex-로그인 하지 않고 링크를 통해 글을 보려고 시도한 경우)
+			String redirectUrl = (String)session.getAttribute("redirectUrl");			
+				
+			if(redirectUrl!=null)
+			{				
+				session.removeAttribute("redirectUrl");
+				response.sendRedirect(redirectUrl);
+				return;
+			}
+		}		
 		
 		RequestDispatcher view = request.getRequestDispatcher(nextPage);
 		view.forward(request, response);

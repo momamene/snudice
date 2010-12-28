@@ -31,8 +31,9 @@ public class ArticleModifyComplete extends HttpServlet {
 		
 		request.setCharacterEncoding("utf-8");		
 		
-		String boardName = (String) session.getAttribute("boardName");
 		String userId = (String) session.getAttribute("userId");
+		String boardName = request.getParameter("boardName");
+		String currPage = request.getParameter("currPage");		
 		String title = request.getParameter("title");
 		String content = request.getParameter("content");		
 		int articleIndex=Integer.parseInt( request.getParameter("articleIndex"));
@@ -45,9 +46,7 @@ public class ArticleModifyComplete extends HttpServlet {
 		if(result ==0)
 			System.out.println("아마 실패한듯 요 업데이트 병신 새끼");
 		
-        String nextPage = "articleView.do?articleIndex="+articleIndex;
-        request.setAttribute("WriteModify", "modify");
-		RequestDispatcher view = request.getRequestDispatcher(nextPage);
-		view.forward(request, response);        
+        String nextPage = "articleView.do?boardName="+boardName+"&currPage="+currPage+"&articleIndex="+articleIndex;        
+		response.sendRedirect(nextPage);     
 	}
 }

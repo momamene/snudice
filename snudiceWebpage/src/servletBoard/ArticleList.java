@@ -10,6 +10,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import utility.Util;
 
 import constant.Const;
@@ -38,6 +40,16 @@ public class ArticleList extends HttpServlet {
 	 */
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		String userId = (String)session.getAttribute("userId");
+		
+		//로그인 된 상태가 아닌 경우
+		if(userId==null)
+		{			
+			response.sendRedirect("first");
+			return;
+		}
+		
 		final int articlePerPage = Const.articlePerPage;//페이지당 보여주는 게시물 수		
 		
 		String boardName = request.getParameter("boardName");		

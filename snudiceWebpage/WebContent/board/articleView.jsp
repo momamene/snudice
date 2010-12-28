@@ -17,9 +17,8 @@ var articleDeleteFunc = function()
 
 <title>${sessionScope.boardName}게시판</title>
 </head>
-<body>	
-
-<div class="boardRead">
+<body>
+	<div class="boardRead">
     <div class="originalContent">
         <div class="readHeader">
             <div class="titleAndUser">
@@ -53,13 +52,11 @@ var articleDeleteFunc = function()
 	<a href="${root}/articleList.do?boardName=${param.boardName}&currPage=${param.currPage}">처음목록</a>
 	<c:choose>
 		<c:when test="${myArticle==true}">			
-			<a id="boardModify" href="${root}/articleModify.do?&articleIndex=${articleInfo.articleIndex}">수정</a>
-			<a id="boardDelete" href="${root}/articleDelete.do?&articleIndex=${articleInfo.articleIndex}">삭제</a>
-			<input type="button" onclick="show_confirm('정말 지울꺼에요?',articleDeleteFunc)" value="Show confirm box" />		
+			<a id="boardModify" href="${root}/articleModify.do?boardName=${param.boardName}&articleIndex=${articleInfo.articleIndex}&currPage=${param.currPage}">수정</a>
+			<input type="button" onclick="show_confirm('정말 지울꺼에요?',articleDeleteFunc)" value="삭제" />		
 		</c:when>													
 	</c:choose>	
-	<a id="boardWrite" href="${root}/board/articleWrite.jsp?boardName=${param.boardName}&currPage=${param.currPage}">새글쓰기</a> 
-</div>
-		
+	<a id="boardWrite" href="${root}/articleWriteForm.do?boardName=${param.boardName}&currPage=${param.currPage}">새글쓰기</a> 
+	</div>		
 </body>
 </html>
