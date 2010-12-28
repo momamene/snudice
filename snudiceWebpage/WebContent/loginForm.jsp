@@ -6,7 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>로그인 해주세요</title>
 </head>
-<body>
+<body> 
 	<form method="POST" action="login.do">
 		<img src="${root}/image/id.png"/>
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -15,6 +15,6 @@
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		<input type="password" name="password"><br/>		
 		<input type="image" src="${root}/image/gameStart.png">
-	</form>
+	</form>	
 </body>
 </html>

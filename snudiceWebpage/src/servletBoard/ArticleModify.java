@@ -43,7 +43,7 @@ public class ArticleModify extends HttpServlet {
 		//로그인 된 상태가 아닌 경우
 		if(userId==null)
 		{			
-			response.sendRedirect("first");
+			response.sendRedirect("first.do");
 			return;
 		}
 		
@@ -51,15 +51,18 @@ public class ArticleModify extends HttpServlet {
 		int articleIndex = Integer.parseInt(request.getParameter("articleIndex"));
 		ArticleInfo article= db.dbBoard.getArticleByIndex(articleIndex);
 		article.setTitle(Util.toHtml(article.getTitle()));
-		article.setText(Util.toHtml(article.getText()));
+		article.setText(Util.toHtml(article.getText()));		
 		
-		if(article.getUserId().compareTo(userId)!=0)
+		//글쓴이와 id가 일치하지 않는 경우
+		if(article.getUserId().compareTo(userId)!=0)  
 		{
-			// 아이디 불일치 시 ...
-		}
+			response.sendRedirect("articleList.do?boardName="+boardName+"&currPage="+currPage);
+			return;
+		}	
 		
 		request.setAttribute("articleInfo",article);
-		String nextPage = "board/articleModify.jsp?boardName="+boardName+"&articleIndex="+articleIndex+"&currPage="+currPage;	
+		String nextPage = "board/articleModify.jsp?boardName="+boardName+"&articleIndex="+articleIndex+"&currPage="+currPage;
+		
 		RequestDispatcher view = request.getRequestDispatcher(nextPage);
 		view.forward(request, response);		
 	}
