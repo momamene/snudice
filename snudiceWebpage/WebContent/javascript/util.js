@@ -1,10 +1,9 @@
-//È®ÀÎÃ¢(yes,no ¼±ÅÃ)À» ¶ç¿î´Ù. yes ¼±ÅÃ½Ã callbackFunc°¡ ½ÇÇàµÈ´Ù.
+//í™•ì¸ ì°½ì„ ë„ìš°ê³ , yesë¥¼ ì„ íƒí•˜ë©´ callbackFunc ë¥¼ ì‹¤í–‰í•œë‹¤.
 function show_confirm(msg,callbackFunc)
 {
 	var r=confirm(msg);
 	if (r==true)
-	{
-		alert("You pressed OK!");
+	{		
 		callbackFunc();
 	}	
 }

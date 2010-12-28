@@ -51,8 +51,8 @@
 	현재 페이지 : ${param.currPage}  		
 	<br/>
 	<a href="${root}/articleList.do?boardName=${param.boardName}&currPage=0">처음목록</a>
-	<a href="${root}/main.do">메인으로</a>
-	
-	<a id="boardWrite" href="${root}/board/articleWrite.jsp?boardName=${param.boardName}&currPage=${param.currPage}">글쓰기</a>
+	<a href="${root}/main.do">메인으로</a>	
+	<a id="boardWrite" href="${root}/articleWriteForm.do?boardName=${param.boardName}&currPage=${param.currPage}">글쓰기</a>
+	<a href="${root}/logout.do">로그아웃</a>
 </body>
 </html>

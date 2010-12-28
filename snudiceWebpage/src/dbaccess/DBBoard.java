@@ -72,9 +72,9 @@ public class DBBoard {
 			e.printStackTrace();
 		}
 		return result.intValue();
-	}
-	
+	}	
 
+	//새로운 글을 등록한다.
 	public int insertArticle(ArticleInfo article) {
 		int result=-1;
 		try
@@ -88,7 +88,7 @@ public class DBBoard {
 		return result;
 	}
 
-	//index를 전달하면 아티클에 대한 정보를 쿼리 해온다.
+	//index로 글을 가져온다.
 	public ArticleInfo getArticleByIndex(int articleIndex) {
 		ArticleInfo result=null;
 		try
@@ -100,36 +100,44 @@ public class DBBoard {
 			e.printStackTrace();
 		}
 		
-		return result;
-		
+		return result;		
 	}
 
+	//글을 수정한다.
 	public int updateArticle(ArticleInfo article) {
 		int result=0 ;
 		try
 		{
-			result= sqlMap.update("updateArticle", article);
-			
+			result= sqlMap.update("updateArticle", article);			
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
 		}
-		return result;
-		
+		return result;		
 	}
 
+	//조회수를 갱신한다.
 	public void updateArticleReadCount(int articleIndex) {
 		try
 		{
-			sqlMap.update("updateArticleReadCount", articleIndex);
-			
+			sqlMap.update("updateArticleReadCount", articleIndex);			
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}		
+	}
+	
+	//글을 삭제한다.
+	public void deleteArticle(int articleIndex) {
+		try
+		{
+			sqlMap.delete("deleteArticle", articleIndex);			
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
 		}
-		
-		
 	}
 }

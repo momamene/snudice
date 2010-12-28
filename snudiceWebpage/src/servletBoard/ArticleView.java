@@ -47,6 +47,15 @@ public class ArticleView extends HttpServlet {
 		String boardName = request.getParameter("boardName");
 		int currPage = Integer.parseInt(request.getParameter("currPage"));
 		
+		//로그인 된 상태가 아닌 경우
+		if(userId==null)
+		{
+			String fullUrl = request.getRequestURI()+"?boardName="+boardName+"&articleIndex="+articleIndex+"&currPage="+currPage;
+			session.setAttribute("redirectUrl",fullUrl );
+			response.sendRedirect("first");
+			return;
+		}		
+		
 		DB db = DB.getInstance();
 		//자기가 쓴 글이 아닐 경우 조회수 증가		
 		ArticleInfo article= db.dbBoard.getArticleByIndex(articleIndex);
@@ -61,7 +70,7 @@ public class ArticleView extends HttpServlet {
 		article.setTitle(Util.toHtml(article.getTitle()));
 		article.setText(Util.toHtml(article.getText()));
 		
-		request.setAttribute("articleInfo",article);
+		request.setAttribute("articleInfo",article);			
 		
 		String nextPage = "board/articleView.jsp?boardName="+boardName+"&currPage="+currPage;	
 		RequestDispatcher view = request.getRequestDispatcher(nextPage);

@@ -40,7 +40,7 @@ public class ArticleWrite extends HttpServlet {
 		String boardName = request.getParameter("boardName");		
 		String title = request.getParameter("title");
 		String content = request.getParameter("content");
-		String currPage = request.getParameter("currPage");		
+		String currPage = request.getParameter("currPage");			
 		
 		if(title.compareTo("")==0)
 			title = Util.currDateTime() + " 에 작성한 글입니다.";

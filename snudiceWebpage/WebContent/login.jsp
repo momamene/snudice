@@ -14,17 +14,7 @@
 	<div class="container" id="loginContainer">
 		<div class="left">&nbsp;</div>
 		<div class="center" id="loginCenter">
-			<form method="post" action="${root}/login.do">
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;				
-				<span><img height="20" src="${root}/image/id.png"/></span>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<input  type="text" name="userId" tabindex="1"><br/>
-				<img height="20" src="${root}/image/password.png"/>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<input type="password" name ="password" tabindex="2"><br/><br/>
-				<input id="loginButton" type="image" src="${root}/image/gameStart.png" tabindex="2">							
-			</form>
-			
+			<jsp:include page="loginForm.jsp"/>			
 			<a href="${root}/clientFile/update/6001/a.txt">클라이언트 다운로드</a>
 			
 		</div>
