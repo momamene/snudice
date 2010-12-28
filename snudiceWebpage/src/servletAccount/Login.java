@@ -34,7 +34,7 @@ public class Login extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
 		String userId = request.getParameter("userId");
 		String password = request.getParameter("password");		
 		
@@ -49,6 +49,9 @@ public class Login extends HttpServlet {
 			//session에 userId를 속성으로 지정
 			HttpSession session = request.getSession();			
 			session.setAttribute("userId", userId);	
+			
+			//secure login			
+			request.login(userId, password);
 			
 			//로그인 뒤 다른 곳으로 가야 하는 경우(ex-로그인 하지 않고 링크를 통해 글을 보려고 시도한 경우)
 			String redirectUrl = (String)session.getAttribute("redirectUrl");			

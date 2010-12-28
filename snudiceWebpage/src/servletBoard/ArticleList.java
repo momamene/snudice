@@ -46,7 +46,7 @@ public class ArticleList extends HttpServlet {
 		//로그인 된 상태가 아닌 경우
 		if(userId==null)
 		{			
-			response.sendRedirect("first");
+			response.sendRedirect("first.do");
 			return;
 		}
 		

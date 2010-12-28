@@ -25,5 +25,7 @@
 		* <a class="highlight" href="${root}/join.jsp">회원가입</a>
         | <a class="highlight" href="${root}/notimplemented.jsp">아이디, 비밀번호찾기</a>
 	</div>		
+	
+	<a href="logout.do">로그아웃</a>
 </body>
 </html>

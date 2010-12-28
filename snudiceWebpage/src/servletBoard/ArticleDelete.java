@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import beans.ArticleInfo;
+
 import dbaccess.DB;
 
 /**
@@ -36,7 +38,7 @@ public class ArticleDelete extends HttpServlet {
 		//로그인 된 상태가 아닌 경우
 		if(userId==null)
 		{			
-			response.sendRedirect("first");
+			response.sendRedirect("first.do");
 			return;
 		}		
 		
@@ -44,9 +46,13 @@ public class ArticleDelete extends HttpServlet {
 		String currPage = request.getParameter("currPage");
 		int articleIndex = Integer.parseInt(request.getParameter("articleIndex"));
 		
-		//글을 지운다.
 		DB db = DB.getInstance();
-		db.dbBoard.deleteArticle(articleIndex);
+		ArticleInfo article= db.dbBoard.getArticleByIndex(articleIndex);
+		if(article.getUserId().compareTo(userId)!=0) //아이디가 글쓴이와 일치하면
+		{
+			//글을 지운다.		
+			db.dbBoard.deleteArticle(articleIndex);
+		}		
 		
 		String nextPage = "articleList.do?boardName="+boardName+"&currPage="+currPage;		
 			

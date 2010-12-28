@@ -52,7 +52,7 @@ public class ArticleView extends HttpServlet {
 		{
 			String fullUrl = request.getRequestURI()+"?boardName="+boardName+"&articleIndex="+articleIndex+"&currPage="+currPage;
 			session.setAttribute("redirectUrl",fullUrl );
-			response.sendRedirect("first");
+			response.sendRedirect("first.do");
 			return;
 		}		
 		
