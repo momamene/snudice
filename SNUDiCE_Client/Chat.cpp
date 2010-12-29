@@ -91,12 +91,13 @@ void gChat::DrawMsg()
 		gUtil::BeginText();
 		for(i = SHOW_MAXMSG - m_nSize; i < SHOW_MAXMSG; i++)
 		{
+			memset(szTemp, 0, sizeof(szTemp));
 			if(m_szID[index][0] != 0 && !overend)
 			{
-				//wsprintf(szTemp, "[%s] %s", m_szID[index], m_szMsg[index--]);
+				// wsprintf(szTemp, "[%s] %s", m_szID[index], m_szMsg[index--]);
 				// 왜 위의 넘으로 한번에 하면, 맨 처음에 제대로 안 나오는지 모르겠음 ;
-
-				wsprintf(szTemp, "[%s] ", m_szID[index]);
+				// 친구 목록을 나열할 경우 MSG앞에 *을 붙여준다. "*1. 양현탁" 이런식으로 오도록.
+				if(m_szMsg[index][0]!='*') wsprintf(szTemp, "[%s] ", m_szID[index]);
 				strcat(szTemp, m_szMsg[index--]);
 				gUtil::Text(CHAT_MSG_X, CHAT_POS_Y + 70 - CHAT_INTERVALY * (i - (SHOW_MAXMSG - m_nSize)), szTemp);
 			}
@@ -115,12 +116,13 @@ void gChat::DrawMsg()
 	gUtil::BeginText();
 	for(i = 0; i < SHOW_MAXMSG; i++)
 	{
+		memset(szTemp, 0, sizeof(szTemp));
 		if(m_szID[index][0] != 0 && !overend)
 		{
 			//wsprintf(szTemp, "[%s] %s", m_szID[index], m_szMsg[index--]);
 			// 왜 위의 넘으로 한번에 하면, 맨 처음에 제대로 안 나오는지 모르겠음 ;
 
-			wsprintf(szTemp, "[%s] ", m_szID[index]);
+			if(m_szMsg[index][0]!='*') wsprintf(szTemp, "[%s] ", m_szID[index]);
 			strcat(szTemp, m_szMsg[index--]);
 			gUtil::Text(CHAT_MSG_X, CHAT_POS_Y + 70 - CHAT_INTERVALY * i, szTemp);
 		}
@@ -140,8 +142,8 @@ enum PARSE_CODE {
 	PLAYER_WHISPER,
 	FRIEND_WHISPER,
 	FRIEND_ADD,
-	CHEAT_CARD,
-	CHEAT_MOVE,
+	FRIEND_DELETE,
+	FRIEND_LIST,
 
 	ARGUMENT_ERROR,
 	COMMAND_ERROR
@@ -168,17 +170,31 @@ PARSE_CODE ParseStr(const char *szMsg, char *opID, char *opMsg, int *itemnum)
 
 		return PLAYER_WHISPER;
 	}
-	else if(cmd=="card") {
-		i++;
-		for(j=i;j<strlen(szMsg);j++) 
-			if(!(szMsg[j]>=48 && szMsg[j]<=57)) 
-				return ARGUMENT_ERROR;
 
-		*itemnum = atoi(szMsg+i);
-		return CHEAT_CARD;
-	}
-	return COMMAND_ERROR;
+	else if(cmd=="f") {
+		i++;
+		char chi = szMsg[i];
 	
+		if(chi == 'l') return FRIEND_LIST;
+		
+		if(szMsg[++i]!=' ') return ARGUMENT_ERROR;
+		if(chi == 'a' || chi=='r') {
+			i++;
+			while(szMsg[i]!=' ' && i<len) ID.push_back(szMsg[i++]);
+
+			strcpy(opID, ID.c_str());
+			if(chi=='a') return FRIEND_ADD;
+			return FRIEND_DELETE;
+		}
+		if(chi == 'm') {
+			strcpy(opMsg, szMsg+i+1);
+			return FRIEND_WHISPER;
+		}
+
+		return COMMAND_ERROR;
+	}
+
+	return COMMAND_ERROR;	
 }
 
 void gChat::AddStr(char* szID, char* szMsg)
@@ -235,23 +251,39 @@ void gChat::SendMsg()
 
 		code = ParseStr(m_Edit.m_szEdit, opID, opMsg, &itemnum);
 		
-		if(code == PLAYER_WHISPER) 
-		{
-			PK_WHISPER_ASK	ask_w;
-
-			strcpy(ask_w.szToID, opID);
-			strcpy(ask_w.szFromID, myplayer->szID);
-			strcpy(ask_w.szComment, opMsg);
-			gServer::GetIF()->Send(PL_WHISPER_ASK, sizeof(ask_w), &ask_w);
-		}
-		else if(code == FRIEND_ADD) {
+		if(code == FRIEND_ADD) {
+			PK_FRIEND_ADD_ASK ask;
 			
+			strcpy(ask.szMyID, myplayer->szID);
+			strcpy(ask.szFriendID, opID);
+			gServer::GetIF()->Send(PL_FRIEND_ADD_ASK, sizeof(ask), &ask);
 		}
-		else if(code == CHEAT_CARD) {
+		else if(code == FRIEND_DELETE) {
+			PK_FRIEND_DELETE_ASK ask;
 
+			strcpy(ask.szMyID, myplayer->szID);
+			strcpy(ask.szFriendID, opID);
+			gServer::GetIF()->Send(PL_FRIEND_DELETE_ASK, sizeof(ask), &ask);
 		}
+		else if(code == FRIEND_WHISPER) {
+			PK_FRIEND_WHISPER_ASK ask;
+
+			strcpy(ask.szMyID, myplayer->szID);
+			strcpy(ask.szComment, opMsg);
+			gServer::GetIF()->Send(PL_FRIEND_WHISPER_ASK, sizeof(ask), &ask);
+		}
+		else if(code == FRIEND_LIST) {
+			PK_FRIEND_LIST_ASK ask;
+
+			strcpy(ask.szMyID, myplayer->szID);
+			gServer::GetIF()->Send(PL_FRIEND_LIST_ASK, sizeof(ask), &ask);
+		}
+
 		else {
-			//TODO: Exception
+			//TODO: Exception: 그냥 메세지처럼 보냅니다.
+			strcpy(ask.szID, myplayer->szID);
+			strcpy(ask.szMsg, m_Edit.m_szEdit);
+			gServer::GetIF()->Send(PL_MESSAGE_ASK, sizeof(ask), &ask);
 		}
 	}
 	else
