@@ -12,9 +12,8 @@
 #define WM_SOCKET				WM_USER + 1
 
 #define	WINSOCK_VERSION_2_2		MAKEWORD(2, 2)
-//#define SERVER_IP				"211.169.219.86"		// 현탁
-//#define SERVER_IP				"211.169.219.71"		// 상우
-#define SERVER_IP				"211.169.219.87"		// 창규
+#define SERVER_IP				"211.169.219.86"		// 현탁
+//#define SERVER_IP				"211.169.219.87"		// 창규
 #define SERVER_PORT				9000
 #define BUFFERSIZE				2048
 
@@ -96,6 +95,12 @@ enum ePROTOCOL
 	PL_EXIT_REP,				// 게임중 강제종료 처리
 
 	PL_GOLOGIN_ASK,
+
+//	PL_WHISPER_ASK,				// Whisper
+	PL_FRIENDADD_ASK,			// 친구 추가
+	PL_FRIENDDELETE_ASK,		// 친구 삭제
+	PL_FRIENDWHISPER_ASK,		// 친구에게 귓말
+	PL_FRIENDLIST_ASK,			// 친구 목록 나열
 
 	PL_ASKCOUPLE_REP,			// 커플될건지 묻는다.
 	PL_ANSCOUPLE_ASK,			// 답변
@@ -271,7 +276,7 @@ struct PK_CHANNELCHANGE_REP
 #define MAXROOM				40								// 만들 수 있는 방 개수
 #define MAXROOMNAME			32
 #define MAXROOMPASS			16
-#define ROOMMAXPLAYER		6		
+#define ROOMMAXPLAYER		6
 #define MAXPAGE				(MAXROOM / MAXROOMFORPAGE)
 
 struct ROOM
@@ -426,8 +431,6 @@ struct PK_SUBMITREADY_REP
 #define MAXSUBJECT				6	// 한사람당 들을수잇는 과목수
 #define MAXITEMNUM				4	// 한사람당 갖고있을 수 있는 아이템 수
 
-
-
 struct GAMEPLAYER
 {
 	char		szID[IDLENGTH];
@@ -442,8 +445,6 @@ struct GAMEPLAYER
 
 	float		fGrade[MAXSUBJECT];
 	float		fAvGrade;
-	
-
 	BYTE		bySubIdx[MAXSUBJECT];
 	int			nRank;
 
@@ -648,6 +649,32 @@ struct PK_EXIT_REP
 	int			flag;							// 남은 사람 수 //아직까지는 그닥 있어야 할 이유는 없다.
 };
 
+/*//WHISPER 구현
+struct PK_WHISPER_ASK
+{
+	char		szToID[IDLENGTH];
+	char		szFromID[IDLENGTH];
+	char		szComment[MSGLENGTH];
+};
+*/
+typedef struct
+{
+	char		szMyID[IDLENGTH];
+	char		szFriendID[IDLENGTH];
+} PK_FRIENDADD_ASK, PK_FRIENDDELETE_ASK;
+
+struct PK_FRIENDWHISPER_ASK
+{
+	char		szMyID[IDLENGTH];
+	char		szComment[MSGLENGTH];
+};
+
+struct PK_FRIENDLIST_ASK
+{
+	char		szMyID[IDLENGTH];
+};
+
+
 // couple
 struct PK_ASKCOUPLE_REP
 {
@@ -663,7 +690,7 @@ struct PK_BECOUPLE_REP
 {
 	char		szMale[IDLENGTH];
 	char		szFeMale[IDLENGTH];
-	bool		bCouple;	// true이면 커플 false이면 깨짐
+	bool		bCouple;						// true면 커플, false면 깨짐
 };
 
 struct PK_BECOUPLEEND_ASK
