@@ -48,14 +48,14 @@ public class ArticleDelete extends HttpServlet {
 		
 		DB db = DB.getInstance();
 		ArticleInfo article= db.dbBoard.getArticleByIndex(articleIndex);
-		if(article.getUserId().compareTo(userId)!=0) //아이디가 글쓴이와 일치하면
-		{
+	
+		if(article.getUserId().compareTo(userId)==0) //아이디가 글쓴이와 일치하면
+		{			
 			//글을 지운다.		
 			db.dbBoard.deleteArticle(articleIndex);
 		}		
 		
-		String nextPage = "articleList.do?boardName="+boardName+"&currPage="+currPage;		
-			
+		String nextPage = "articleList.do?boardName="+boardName+"&currPage="+currPage;			
 		response.sendRedirect(nextPage);
 	}
 }

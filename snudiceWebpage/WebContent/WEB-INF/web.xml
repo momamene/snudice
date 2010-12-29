@@ -7,15 +7,20 @@
       <form-error-page>/loginFailed.jsp</form-error-page>
     </form-login-config>
   </login-config>
-  <security-constraint>
+  
+   <!--    
+  <security-constraint>  
     <web-resource-collection>
-      <web-resource-name>login</web-resource-name>
+      <web-resource-name>https</web-resource-name>
       <url-pattern>*.do</url-pattern>
-    </web-resource-collection>
-    <user-data-constraint>
-      <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-    </user-data-constraint>
+      <url-pattern>*.ajax</url-pattern> 
+    </web-resource-collection> 
+   
+    <user-data-constraint>    
+      <transport-guarantee>CONFIDENTIAL</transport-guarantee>      
+    </user-data-constraint>     
   </security-constraint>
+  -->
   <security-constraint>
     <display-name>JSP Protection</display-name>
     <web-resource-collection>
@@ -144,4 +149,16 @@
     <servlet-name>articleWriteFormInternalName</servlet-name>
     <url-pattern>/articleWriteForm.do</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>testAjax</servlet-name>
+    <servlet-class>ajax.TestAjax</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>testAjax</servlet-name>
+    <url-pattern>/testAjax.ajax</url-pattern>
+  </servlet-mapping>
+  
+  
+  
 </web-app>
