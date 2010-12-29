@@ -8,6 +8,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" type="text/css" href="${root}/css/boardStyle.css"/>
 <script type="text/javascript" src="${root}/javascript/util.js"></script> 
+<script type="text/javascript" src="${root}/javascript/json2.js"></script>
 <script type="text/javascript">
 var articleDeleteFunc = function() 
 {	
@@ -24,7 +25,9 @@ function init()
 	var replySubmitButton = document.getElementById("replySubmitButton");
 	replySubmitButton.onclick = replySubmit;
 
-	//ajaxtest();
+	
+	
+	ajaxtest();
 }
 
 function ajaxtest()
@@ -38,11 +41,13 @@ function ajaxtest()
 	
 	var url = "testAjax.ajax";	
 	var params = "arg0=haha&arg1=hoho";
+
+	var str = {"arg0":"a","arg1":"b"};	
 	
 	request.open("POST",url,true);
 	request.onreadystatechange = testcallback;
 	request.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-	request.send(params);
+	request.send(JSON.stringify(str));
 }
 
 function testcallback()
