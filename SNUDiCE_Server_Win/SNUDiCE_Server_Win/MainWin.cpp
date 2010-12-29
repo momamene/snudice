@@ -326,6 +326,19 @@ void gMainWin::Recv(PK_DEFAULT *pk, SOCKET sock)
 		case PL_BECOUPLEEND_ASK :
 			gGamePlayerContainer::GetIF()->pk_becoupleend_ask(pk,sock);
 			break;
+			
+		//模备贸府
+		case PL_FRIENDADD_ASK :
+			gPlayerContainer::GetIF()->pk_friendadd_ask(pk, sock);
+			break;
+		case PL_FRIENDDELETE_ASK :
+			gPlayerContainer::GetIF()->pk_frienddelete_ask(pk,sock);
+			break;
+		case PL_FRIENDWHISPER_ASK :
+			gMessageCore::GetIF()->pk_friendwhisper_ask(pk,sock);
+			break;
+		case PL_FRIENDLIST_ASK :
+			gMessageCore::GetIF()->pk_friendlist_ask(pk, sock);
 	}
 }
 
