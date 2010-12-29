@@ -24,7 +24,7 @@ function init()
 	var replySubmitButton = document.getElementById("replySubmitButton");
 	replySubmitButton.onclick = replySubmit;
 
-	ajaxtest();
+	//ajaxtest();
 }
 
 function ajaxtest()
@@ -68,7 +68,22 @@ function replySubmit()
 	replyContainer.appendChild(replyAuthor);
 	replyContainer.appendChild(replyContent);
 
-	writeTextTextarea.value = "";	
+	writeTextTextarea.value = "";
+
+	var request = createRequest();
+	if(request==null)
+	{
+		alert("AJAX 요청 객체를 만들 수 없습니다.");
+		return;
+	}
+	
+	var url = "testAjax.ajax";	
+	var params = "arg0=haha&arg1="+writeText;
+	
+	request.open("POST",url,true);
+	request.onreadystatechange = testcallback;
+	request.setRequestHeader("Content-type","application/x-www-form-urlencoded");	
+	request.send(params);	
 }
 
 </script>
