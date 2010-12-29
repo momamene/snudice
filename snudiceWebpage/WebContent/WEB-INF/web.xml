@@ -6,9 +6,8 @@
       <form-login-page>/secureLoginForm.jsp</form-login-page>
       <form-error-page>/loginFailed.jsp</form-error-page>
     </form-login-config>
-  </login-config>
+  </login-config>  
   
-   <!--    
   <security-constraint>  
     <web-resource-collection>
       <web-resource-name>https</web-resource-name>
@@ -20,7 +19,7 @@
       <transport-guarantee>CONFIDENTIAL</transport-guarantee>      
     </user-data-constraint>     
   </security-constraint>
-  -->
+ 
   <security-constraint>
     <display-name>JSP Protection</display-name>
     <web-resource-collection>
