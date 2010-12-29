@@ -12,8 +12,8 @@
 #define WM_SOCKET				WM_USER + 1
 
 #define	WINSOCK_VERSION_2_2		MAKEWORD(2, 2)
-//#define SERVER_IP				"211.169.219.86"		// 현탁
-#define SERVER_IP				"211.169.219.87"		// 창규
+#define SERVER_IP				"211.169.219.86"		// 현탁
+//#define SERVER_IP				"211.169.219.87"		// 창규
 #define SERVER_PORT				9000
 #define BUFFERSIZE				2048
 
@@ -97,6 +97,10 @@ enum ePROTOCOL
 	PL_GOLOGIN_ASK,
 
 //	PL_WHISPER_ASK,				// Whisper
+	PL_FRIEND_ADD_ASK,			// 친구 추가
+	PL_FRIEND_DELETE_ASK,		// 친구 삭제
+	PL_FRIEND_WHISPER_ASK,		// 친구에게 귓말
+	PL_FRIEND_LIST_ASK,			// 친구 목록 나열
 
 	PL_ASKCOUPLE_REP,			// 커플될건지 묻는다.
 	PL_ANSCOUPLE_ASK,			// 답변
@@ -651,7 +655,25 @@ struct PK_WHISPER_ASK
 	char		szToID[IDLENGTH];
 	char		szFromID[IDLENGTH];
 	char		szComment[MSGLENGTH];
-};*/
+};
+*/
+typedef struct
+{
+	char		szMyID[IDLENGTH];
+	char		szFriendID[IDLENGTH];
+} PK_FRIEND_ADD_ASK, PK_FRIEND_DELETE_ASK;
+
+struct PK_FRIEND_WHISPER_ASK
+{
+	char		szMyID[IDLENGTH];
+	char		szComment[MSGLENGTH];
+};
+
+struct PK_FRIEND_LIST_ASK
+{
+	char		szMyID[IDLENGTH];
+};
+
 
 // couple
 struct PK_ASKCOUPLE_REP

@@ -1,6 +1,6 @@
 #include "GameCore.h"
 #include "PopUp.h"
-#include "Util.h"
+#include "Util.h"  
 #include "stringconst.h"
 #include "MainWin.h"
 #include "Map.h"
@@ -35,7 +35,7 @@
 #define WARPTICK				500 * 3
 #define WARPFRAME				8
 #define WARPDIST				10
-#define SLEEPTIMEMAX			10000	//최대 잠수 시간:10초
+#define SLEEPTIMEMAX			50000	//최대 잠수 시간:10초 
 
 static gGameCore s_GameCore;
 
@@ -79,14 +79,14 @@ void gGameCore::MainLoop()
 	if(m_bScrolling)
 		ScrollOn();
 
-	gUIGame::GetIF()->MainLoop();
+	gUIGame::GetIF()->MainLoop();	//쓸데없음...
 
 	MainLoopMouse();		// 마우스 스크롤
 	
 	Draw();
 	
 	// popup 창 처리
-	if(gPopUp::GetIF()->isPopUp())
+ 	if(gPopUp::GetIF()->isPopUp())
 	{
 		gPopUp::GetIF()->MainLoop();
 //		if(GetTickCount - SLEEPTIMEMAX >= m_turnTime_CoupleAsk) 
@@ -1218,11 +1218,14 @@ void gGameCore::pk_gameplayerinfo_rep(PK_GAMEPLAYERINFO_REP *rep)
 
 void gGameCore::pk_gameend_rep(PK_GAMEEND_REP *rep)
 {
-	gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_ROOMBACK, rep->szID, STR_17);	//방나가고돌아오기수정
-	m_bMoved	= false;
-	gUIGame::GetIF()->m_bItemUsed = false;
+	char str2[IDLENGTH]={0,};
+	strcpy(str2, rep->szID);
 
 	gRoomCore::GetIF()->SendRoomBack();	//방나가고돌아오기수정
+//	MessageBox(gMainWin::GetIF()->m_hWnd, "시발", "발시발시", MB_OK);
+	gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_ROOMBACK, str2, STR_17);	//방나가고돌아오기수정
+	m_bMoved	= false;
+	gUIGame::GetIF()->m_bItemUsed = false;
 }
 
 void gGameCore::pk_exit_rep(PK_EXIT_REP *rep)

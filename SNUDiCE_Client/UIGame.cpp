@@ -349,12 +349,12 @@ bool gUIGame::SetUp()
 	if(!m_ImgUI[UIIMG_CROWN].Load(TURN_CROWN_FILE))
 		return false;
 
-// 	if(!m_ImgUI[UIIMG_NUMBER].Load(TEXT_NUM_FILE))
-// 		return false;
-// 	if(!m_ImgUI[UIIMG_ICON].Load(TEXT_ICON_FILE))
-// 		return false;
-// 	if(!m_ImgUI[UIIMG_USERBOX].Load(ITEM_USER_BOX_FILE))
-// 		return false;
+	if(!m_ImgUI[UIIMG_NUMBER].Load(TEXT_NUM_FILE))
+		return false;
+	if(!m_ImgUI[UIIMG_ICON].Load(TEXT_ICON_FILE))
+		return false;
+	if(!m_ImgUI[UIIMG_USERBOX].Load(ITEM_USER_BOX_FILE))
+		return false;
 
 
 	m_uimode = UIM_NONE;
@@ -777,6 +777,14 @@ bool gUIGame::OnLButtonDown()
 		else
 			m_uimode	= UIM_NONE;
 
+		return true;
+	}
+	//2010. 12. 28.
+	//MENU module 추가합시당....당....
+	//PopUp으로 메뉴 고르는걸 띄울까요?
+	//고르면 주사위 및 다른건 막히는건가? 아니면... 생각할 게 많네여...
+	if(m_BtnUI[UIBTN_MENU].PointInButton(mouse->m_nPosX, mouse->m_nPosY)) {
+		
 		return true;
 	}
 
