@@ -34,9 +34,11 @@ public class TestAjax extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
-		System.out.println("AJAX 요청1!");		
-		System.out.println("AJAX 요청2!");	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
+		
+		System.out.println("AJAX 요청!");	
+		
 		System.out.println(request.getParameter("arg0"));
 		System.out.println(request.getParameter("arg1"));
 	}
