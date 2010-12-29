@@ -111,7 +111,7 @@ void gMessageCore::command(char* str,char* szID) {
 #endif
 }
 
-void gMessageCore::msg_whisper(char	 szToID[IDLENGTH] , char szFromID[IDLENGTH] , char szComment[MSGLENGTH])
+void gMessageCore::msg_whisper(char	 szToID[IDLENGTH] , char szFromID[IDLENGTH] , char szComment[MSGLENGTH] )
 {
 
 	PK_MESSAGE_REP rep1,rep2;	//rep1 : º¸³½³ð rep2 : ¹Þ´Â³ð
@@ -133,6 +133,110 @@ void gMessageCore::msg_whisper(char	 szToID[IDLENGTH] , char szFromID[IDLENGTH] 
 	strcpy(rep2.szMsg,szComment);
 	gMainWin::GetIF()->Send(PL_MESSAGE_REP, sizeof(rep2), &rep2, sendsock);
 
+}
+
+
+void gMessageCore::pk_friendwhisper_ask(PK_DEFAULT *pk, SOCKET sock)
+{
+	PK_FRIENDWHISPER_ASK		ask;		//from client
+
+	// for print
+	SOCKADDR_IN			clientAddr;
+	int					addrLen;
+	char				buf [1024];
+
+	addrLen = sizeof(clientAddr);
+	getpeername(sock, (SOCKADDR*)&clientAddr, &addrLen);
+
+	ask = *((PK_FRIENDWHISPER_ASK*)pk->strPacket);
+
+	sprintf(buf,"[PK_FRIENDWHISPER_ASK] %s\tMYID : %s", inet_ntoa(clientAddr.sin_addr), ask.szMyID);
+	OutputDebugString(buf);
+
+	stringstream ss;
+	ss << gMysql::GetIF()->friendGet(ask.szMyID);
+	
+	char friendid[IDLENGTH];
+
+	friendid[0] = 0;
+	
+	PK_MESSAGE_REP rep1,rep2;	//rep1 : º¸³½³ð rep2 : ¹Þ´Â³ð
+	
+	SOCKET sendsock;
+
+	strcpy(rep1.szID,"To ");
+	strcat(rep1.szID,"Friends");
+	strcpy(rep1.szMsg,ask.szComment);
+
+	gMainWin::GetIF()->Send(PL_MESSAGE_REP, sizeof(rep1), &rep1, sock);
+	
+	
+	do //ÆÄ½Ì ±¸Çö
+	{
+		ss >> friendid;
+		if (!friendid[0])	break;
+		
+		strcpy(rep2.szID,"From ");
+		strcat(rep2.szID,ask.szMyID);
+		strcpy(rep2.szMsg,ask.szComment);
+
+		sendsock	=	gPlayerContainer::GetIF()->GetPlayerFromID(friendid).sock;
+		gMainWin::GetIF()->Send(PL_MESSAGE_REP, sizeof(rep2), &rep2, sendsock);
+
+		friendid [0] = 0;
+	
+	} while (ss);
+}
+
+void gMessageCore::pk_friendlist_ask(PK_DEFAULT *pk, SOCKET sock)
+{
+	PK_FRIENDLIST_ASK		ask;		//from client
+
+	// for print
+	SOCKADDR_IN			clientAddr;
+	int					addrLen;
+	char				buf [1024];
+
+	addrLen = sizeof(clientAddr);
+	getpeername(sock, (SOCKADDR*)&clientAddr, &addrLen);
+
+	ask = *((PK_FRIENDLIST_ASK*)pk->strPacket);
+
+	sprintf(buf,"[PK_FRIENDWHISPER_ASK] %s\tMYID : %s", inet_ntoa(clientAddr.sin_addr), ask.szMyID);
+	OutputDebugString(buf);
+
+	stringstream ss;
+	ss << gMysql::GetIF()->friendGet(ask.szMyID);
+
+	char friendid[IDLENGTH];
+
+	char FriendNum[5]; 
+		
+	friendid[0] = 0;
+
+	PK_MESSAGE_REP rep;
+
+	strcpy(rep.szID,ask.szMyID);
+	strcpy(rep.szMsg,"´ÔÀÇ Ä£±¸ ¸ñ·Ï");
+	gMainWin::GetIF()->Send(PL_MESSAGE_REP, sizeof(rep), &rep, sock);
+	
+	for (int i=1; ss ; i++ )	{
+		ss >> friendid;
+		if (!friendid[0])
+			break;
+
+		strcpy(rep.szID,ask.szMyID);
+		strcpy(rep.szMsg,"*");
+		itoa(i,FriendNum,10);
+		strcat(rep.szMsg,FriendNum);
+		strcat(rep.szMsg,".  ");
+
+		strcat(rep.szMsg,friendid);
+
+		gMainWin::GetIF()->Send(PL_MESSAGE_REP, sizeof(rep), &rep, sock);
+		friendid [0] = 0;
+
+	}
 }
 
 
