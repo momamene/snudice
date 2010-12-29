@@ -1645,6 +1645,7 @@ void gRoomCore::SendRoomBack()
 	strcpy(ask.szID, gPlayerContainer::GetIF()->m_MyPlayer.szID);
 
 	gServer::GetIF()->Send(PL_ROOMBACK_ASK, sizeof(ask), &ask);
+	//MessageBox(gMainWin::GetIF()->m_hWnd, "시발", "시발시발", MB_OK);
 }
 
 //방나가고돌아오기수정
