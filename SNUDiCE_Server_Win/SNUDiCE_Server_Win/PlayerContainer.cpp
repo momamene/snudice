@@ -2,6 +2,8 @@
 #include "GamePlayerContainer.h"	//수정사항, 에라 모르겟다 춤이나 추자
 #include "MainWin.h"
 
+#include "MysqlDB.h"
+
 static gPlayerContainer s_PlayerContainer;
 
 gPlayerContainer *gPlayerContainer::GetIF()
@@ -381,5 +383,48 @@ void gPlayerContainer::Draw (HDC hdc)
 		count++;
 	}
 	TextOut(hdc,0,0,"Player Infomation",strlen("Player Infomation"));
+}
+
+void gPlayerContainer::pk_friendadd_ask(PK_DEFAULT *pk, SOCKET sock)
+{
+	PK_FRIENDADD_ASK		ask;		//from client
+
+	// for print
+	SOCKADDR_IN			clientAddr;
+	int					addrLen;
+	char				buf [1024];
+
+	addrLen = sizeof(clientAddr);
+	getpeername(sock, (SOCKADDR*)&clientAddr, &addrLen);
+
+	ask = *((PK_FRIENDADD_ASK*)pk->strPacket);
+
+	sprintf(buf,"[PK_FRIENDADD_ASK] %s\tMYID : %s\t FRIENDID : %s\n", inet_ntoa(clientAddr.sin_addr), ask.szMyID, ask.szFriendID);
+	OutputDebugString(buf);
+
+	gMysql::GetIF()->friendPutOne(ask.szMyID , ask.szFriendID);
+	
+	
+}
+
+void gPlayerContainer::pk_frienddelete_ask(PK_DEFAULT *pk, SOCKET sock)
+{
+	PK_FRIENDDELETE_ASK		ask;		//from client
+
+	// for print
+	SOCKADDR_IN			clientAddr;
+	int					addrLen;
+	char				buf [1024];
+
+	addrLen = sizeof(clientAddr);
+	getpeername(sock, (SOCKADDR*)&clientAddr, &addrLen);
+
+	ask = *((PK_FRIENDDELETE_ASK*)pk->strPacket);
+
+	sprintf(buf,"[PK_FRIENDDELETE_ASK] %s\tMYID : %s\t FRIENDID : %s\n", inet_ntoa(clientAddr.sin_addr), ask.szMyID, ask.szFriendID);
+	OutputDebugString(buf);
+	
+	gMysql::GetIF()->friendDeleteOne(ask.szMyID , ask.szFriendID);
+
 }
 
