@@ -52,3 +52,26 @@ div.dateAndCount
 	text-align : right;
 }
 
+
+
+
+
+
+
+
+#reply
+{
+	border : 1px solid gray;	
+}
+
+/* 댓글 입력 textarea */
+#replyWriteText
+{	
+	margin-bottom : 5px;
+	
+	width : 470px;
+	height : 50px;
+	
+	overflow : hidden; /* 스크롤바를 숨긴다 */
+	resize : none; /* 크롬에서 크기 조절을 못하게 한다. */
+}

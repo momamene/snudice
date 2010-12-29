@@ -7,7 +7,8 @@
 <title>관리자 페이지</title>
 </head>
 <body>
-	어머어머어머<br/>
+	어머어머어머<br/>	
+	<a href="Admin">어드민민</a>
 	<a href="logout.do">로그아웃</a>
 </body>
 </html>

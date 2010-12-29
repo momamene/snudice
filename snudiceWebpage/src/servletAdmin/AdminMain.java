@@ -34,7 +34,10 @@ public class AdminMain extends HttpServlet {
 		HttpSession session = request.getSession();
 		session.setMaxInactiveInterval(3600);
 		session.setAttribute("root",Const.root);
-		session.setAttribute("userId",request.getUserPrincipal().getName());		
+		session.setAttribute("userId",request.getUserPrincipal().getName());
+		
+		System.out.println(request.getAttribute("test"));
+		
 		
 		String nextPage = "admin/adminMain.jsp";	
 		RequestDispatcher view = request.getRequestDispatcher(nextPage);
