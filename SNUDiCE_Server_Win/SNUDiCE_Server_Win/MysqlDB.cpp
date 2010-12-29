@@ -180,11 +180,11 @@ char* gMysql::friendGet(char* userId) {
 		else {
 			if(strcmp(userId,sql_row[0])==0) {
 				strcat(friendArr,sql_row[1]);
-				if(i != arrLength -1) strcat(friendArr,",");
+				if(i != arrLength -1) strcat(friendArr," ");
 			}
 			else if(strcmp(userId,sql_row[1])==0) {
 				strcat(friendArr,sql_row[0]);
-				if(i != arrLength -1) strcat(friendArr,",");
+				if(i != arrLength -1) strcat(friendArr," ");
 			}
 			else {
 				fprintf(stderr,"friendGet() : no userId error");
