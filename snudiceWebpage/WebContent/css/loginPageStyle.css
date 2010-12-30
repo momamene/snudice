@@ -7,7 +7,6 @@ a:active {text-decoration:none;}  /* selected link */
 
 body
 {
-	font-size : 25px;
 	font-family:Cursive;
 	font-face:"굴림";	
 }
@@ -23,7 +22,42 @@ img
 /*----------------container-----------*/
 div.container
 {
+	
 }
+
+/*----------------left-----------*/
+div.left {
+
+}
+
+div.leftTop {
+	background-image : url('/snudiceWebpage/image/mainpage/loginWindow.png');
+	background-repeat : no-repeat;
+	width : 256px;
+	height : 187px;
+}
+
+div.leftTop div.idpwWrap {
+	position : relative;
+	left : 50px;
+}
+
+div.leftTop div.idpw {
+	float : left;
+}
+
+div.leftTop div.loginHelp {
+	text-align : center;
+}
+
+div.leftBottom {
+	background-image : url('/snudiceWebpage/image/mainpage/buttonWindow.png');
+	background-repeat : no-repeat;
+	width : 264px;
+	height : 113px;
+}
+
+/*----------------center-----------*/
 
 div.container#loginContainer
 {
