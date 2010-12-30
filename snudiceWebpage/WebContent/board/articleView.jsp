@@ -161,15 +161,15 @@ function refresh()
 			<div id="replyHead">총 댓글 수 : ${replyCount}</div>
 			<hr/>
 			
+			<div id="replyContainer">
 			<c:forEach var="reply" items="${replyList}" varStatus="status">			
-				<div id="replyContainer">				
-					<div class="replyInfo">
-						[${status.count}] id : ${reply.userId}, ${reply.dateTime}
-					</div>									
-					<div class="replyContent">${reply.replyText}</div>				
-				</div>
+				<div class="replyInfo">
+					[${status.count}] id : ${reply.userId}, ${reply.dateTime}
+				</div>									
+				<div class="replyContent">${reply.replyText}</div>				
 				<hr/>
 			</c:forEach>
+			</div>
 			
 			<div id="replyWrite">
 				<textarea id="replyWriteText"></textarea>
