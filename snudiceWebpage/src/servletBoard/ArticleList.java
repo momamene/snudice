@@ -79,10 +79,19 @@ public class ArticleList extends HttpServlet {
 			return;
 		}			
 	
+		//리플 수를 저장
+		List<Integer> replyCountList = new ArrayList<Integer>();
+		
 		//글 목록을 가져온다.
 		List<Article> articleList = db.dbBoard.getArticleList(boardName,currPage, articlePerPage);	
 		for(Article article : articleList)		
-			article.setTitle(Util.toHtml(article.getTitle()));		
+		{
+			article.setTitle(Util.toHtml(article.getTitle()));
+			int replyCount = db.dbBoard.getReplyCount(article.getArticleIndex());
+			replyCountList.add(replyCount);			
+		}
+		
+		request.setAttribute("replyCountList", replyCountList);
 		
 		List<Integer> pageList= new ArrayList<Integer>();		
 		
