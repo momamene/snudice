@@ -49,6 +49,9 @@ public class DBBoard {
 			m.put("boardName", boardName);
 			m.put("startArticleIndex",maxArticleIndex);			
 			result = sqlMap.queryForList("getArticleList", m);	
+			if(result.size()==0) //글이 하나도 없는 경우
+				return result;
+			
 			int firstArticleIndex = result.get(0).getArticleIndex();
 			
 			int skipArticleCount = pageNumber * articlePerPage;

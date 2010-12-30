@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import constant.Const;
+import dbaccess.DB;
 
 /**
  * Servlet implementation class AdminMain
@@ -36,9 +37,10 @@ public class AdminMain extends HttpServlet {
 		session.setAttribute("root",Const.root);
 		session.setAttribute("userId",request.getUserPrincipal().getName());
 		
-		System.out.println(request.getAttribute("test"));
-		
-		
+		//게시판 목록을 가져온다.
+		DB db = DB.getInstance();
+		request.setAttribute("boardList", db.dbBoard.getBoardList());
+			
 		String nextPage = "admin/adminMain.jsp";	
 		RequestDispatcher view = request.getRequestDispatcher(nextPage);
 		view.forward(request, response);	
