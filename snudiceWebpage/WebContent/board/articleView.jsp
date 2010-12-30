@@ -115,6 +115,7 @@ function refresh()
 <title>${sessionScope.boardName}게시판</title>
 </head>
 <body>
+	<div class="wrapper">
 	<div class="boardRead">
     <div class="originalContent">
         <div class="readHeader">
@@ -176,6 +177,7 @@ function refresh()
 				<input id="replySubmitButton" type="button" value="댓글 쓰기">
 			</div>			
 		</div>
+	</div>
 	</div>
 </body>
 </html>
