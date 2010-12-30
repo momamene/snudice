@@ -179,4 +179,20 @@ public class DBBoard {
 		
 		return result;
 	}	
+	
+	//특정 글에 달린 댓글의 개수를 가져온다.
+	public int getReplyCount(int articleIndex)	{
+		Integer result = null;
+		
+		try
+		{
+			result = (Integer)sqlMap.queryForObject("getReplyCount", articleIndex);			
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
 }

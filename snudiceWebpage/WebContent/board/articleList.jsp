@@ -19,10 +19,17 @@
 			<td class="articleReadCount">조회수</td>
 		</tr>
 		
-		<c:forEach var="article" items="${articleList}">	
+		<c:forEach var="article" items="${articleList}" varStatus="status">	
 		<tr>
 			<td>${article.articleIndex}</td>
-			<td><a href="${root}/articleView.do?boardName=${param.boardName}&articleIndex=${article.articleIndex}&currPage=${param.currPage}">${article.title}</a></td>
+			<td>
+				<a href="${root}/articleView.do?boardName=${param.boardName}&articleIndex=${article.articleIndex}&currPage=${param.currPage}">
+					${article.title} 
+					<c:if test="${replyCountList[status.index]>0}">
+						<span id="replyCountInTitle"> (${replyCountList[status.index]})</span>
+					</c:if>
+				</a>
+			</td>
 			<td>${article.userId}</td>
 			<td>${article.dateTime}</td> 
 			<td>${article.readCount}</td>		
