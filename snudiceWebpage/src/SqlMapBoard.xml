@@ -35,6 +35,17 @@
 		WHERE articleIndex = #articleIndex:INT#
 	</select>
 	
+	<select id="getBoardAuth" parameterClass="beans.BoardAuth" resultClass="beans.BoardAuth">
+		SELECT *
+		FROM board_authorization
+		WHERE boardName = #boardName:VARCHAR# AND role=#role:VARCHAR#
+	</select>
+	
+	<select id="getBoardList" resultClass="beans.Board">
+		SELECT *
+		FROM board_boardlist		
+	</select>
+	
 	<select id="getArticleCount" parameterClass="String" resultClass="int">select count(*) from board_board where boardName= #boardName#</select>
 	<insert id="insertArticle" parameterClass="beans.Article">insert into board_board(boardName, title, userId, dateTime,text)
 	values(#boardName:VARCHAR#, #title:VARCHAR#, #userId:VARCHAR#,#dateTime:DATETIME#,#text:TEXT#)

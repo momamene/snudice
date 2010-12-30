@@ -62,6 +62,9 @@ public class Login extends HttpServlet {
 				response.sendRedirect(redirectUrl);
 				return;
 			}
+			
+			//게시판 목록을 가져온다.
+			request.setAttribute("boardList", db.dbBoard.getBoardList());
 		}		
 		
 		RequestDispatcher view = request.getRequestDispatcher(nextPage);

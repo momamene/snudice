@@ -1,6 +1,5 @@
 package dbaccess;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +7,8 @@ import java.util.Map;
 import utility.Util;
 
 import beans.Article;
+import beans.Board;
+import beans.BoardAuth;
 import beans.Reply;
 
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -194,5 +195,42 @@ public class DBBoard {
 		}
 		
 		return result;
+	}
+	
+	//게시판 목록을 가져온다.
+	@SuppressWarnings("unchecked")
+	public List<Board> getBoardList() {
+		List<Board> result = null;
+		
+		try
+		{			
+			result = (List<Board>)sqlMap.queryForList("getBoardList");			
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return result;	
+	}	
+	
+	//게시판 접근 권한 정보를 가져온다.
+	@SuppressWarnings("unchecked")
+	public BoardAuth getBoardAuth(String boardName,String role) {
+		List<BoardAuth> result = null;
+		
+		try
+		{
+			BoardAuth param = new BoardAuth();
+			param.setBoardName(boardName);
+			param.setRole(role);
+			result = (List<BoardAuth>)sqlMap.queryForList("getBoardAuth",param);			
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return result.get(0);
 	}
 }
