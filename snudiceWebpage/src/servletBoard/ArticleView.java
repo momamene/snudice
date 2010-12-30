@@ -1,6 +1,7 @@
 package servletBoard;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,8 +13,8 @@ import javax.servlet.http.HttpSession;
 
 import utility.Util;
 
-import beans.ArticleInfo;
-
+import beans.Article;
+import beans.Reply;
 import dbaccess.DB;
 
 /**
@@ -57,8 +58,9 @@ public class ArticleView extends HttpServlet {
 		}		
 		
 		DB db = DB.getInstance();
+		//글 정보를 가져옴
+		Article article= db.dbBoard.getArticleByIndex(articleIndex);
 		//자기가 쓴 글이 아닐 경우 조회수 증가		
-		ArticleInfo article= db.dbBoard.getArticleByIndex(articleIndex);
 		if(article.getUserId().compareTo(userId)!=0)
 		{
 			request.setAttribute("myArticle", false);
@@ -70,7 +72,12 @@ public class ArticleView extends HttpServlet {
 		article.setTitle(Util.toHtml(article.getTitle()));
 		article.setText(Util.toHtml(article.getText()));
 		
-		request.setAttribute("articleInfo",article);			
+		request.setAttribute("articleInfo",article);		
+		
+		//댓글들을 가져옴
+		List<Reply> replyList = db.dbBoard.getReplyList(articleIndex);
+		request.setAttribute("replyList", replyList);
+		request.setAttribute("replyCount", replyList.size());
 		
 		String nextPage = "board/articleView.jsp?boardName="+boardName+"&currPage="+currPage;	
 		RequestDispatcher view = request.getRequestDispatcher(nextPage);

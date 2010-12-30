@@ -20,16 +20,21 @@ window.onload = init;
 function init()
 {
 	//event handler 를 추가한다.
-	var articleDelButton = document.getElementById("articleDeleteButton");
-	articleDelButton.onclick = function() { show_confirm('정말 지울꺼에요?',articleDeleteFunc);	}
+	//댓글 쓰기 버튼
 	var replySubmitButton = document.getElementById("replySubmitButton");
 	replySubmitButton.onclick = replySubmit;
+	// 글 수정 버튼
+	var articleDelButton = document.getElementById("articleDeleteButton");
+	if(articleDelButton==null) //글 수정 버튼이 없는 경우 (자기 글이 아닌 경우)
+		return;
+	articleDelButton.onclick = function() { show_confirm('정말 지울꺼에요?',articleDeleteFunc);	}
 
 	
 	
-	ajaxtest();
+	//ajaxtest();
 }
 
+/*
 function ajaxtest()
 {
 	var request = createRequest();
@@ -54,11 +59,14 @@ function testcallback()
 {
 	alert('test callback');
 }
+*/
 
 function replySubmit()
 {	
 	var writeTextTextarea = document.getElementById("replyWriteText");
 	var writeText = writeTextTextarea.value;
+
+	/*
 	var replyContainer = document.getElementById("replyContainer");
 	var replyAuthor = document.createElement("div");
 	
@@ -72,6 +80,7 @@ function replySubmit()
 	replyContainer.appendChild(hr);	
 	replyContainer.appendChild(replyAuthor);
 	replyContainer.appendChild(replyContent);
+	*/
 
 	writeTextTextarea.value = "";
 
@@ -82,15 +91,25 @@ function replySubmit()
 		return;
 	}
 	
-	var url = "testAjax.ajax";	
-	var params = "arg0=haha&arg1="+writeText;
+	var url = "replyWrite.ajax";	
+	var params = "articleIndex=${param.articleIndex}&replyText="+writeText;
 	
-	request.open("POST",url,true);
-	request.onreadystatechange = testcallback;
+	request.open("POST",url,false);
+	request.onreadystatechange = refresh;
 	request.setRequestHeader("Content-type","application/x-www-form-urlencoded");	
 	request.send(params);	
 }
 
+function refresh()
+{
+	if(request.readyState == 4) //작업이 완료되었을 때
+	{
+		if(request.status == 200)
+		{
+			location.reload(); //페이지 새로고침
+		}
+	}	
+}
 </script>
 
 <title>${sessionScope.boardName}게시판</title>
@@ -139,13 +158,19 @@ function replySubmit()
 	
 	<div id="footer">
 		<div id="reply">
-			<div id="replyHead">reply Head - 총 리플 수 등</div>
+			<div id="replyHead">총 댓글 수 : ${replyCount}</div>
 			<hr/>
-			<div id="replyContainer">				
-				<div class="replyAuthor">글쓴이id</div>				
-				<div class="replyContent">리플 내용</div>				
-			</div>
-			<hr/>
+			
+			<c:forEach var="reply" items="${replyList}">			
+				<div id="replyContainer">				
+					<div class="replyInfo">
+						[${reply.replyIndex}] id : ${reply.userId}, ${reply.dateTime}
+					</div>									
+					<div class="replyContent">${reply.replyText}</div>				
+				</div>
+				<hr/>
+			</c:forEach>
+			
 			<div id="replyWrite">
 				<textarea id="replyWriteText"></textarea>
 				<input id="replySubmitButton" type="button" value="댓글 쓰기">

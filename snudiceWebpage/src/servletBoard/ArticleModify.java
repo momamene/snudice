@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import utility.Util;
 
-import beans.ArticleInfo;
+import beans.Article;
 
 import dbaccess.DB;
 
@@ -49,7 +49,7 @@ public class ArticleModify extends HttpServlet {
 		
 		DB db = DB.getInstance();
 		int articleIndex = Integer.parseInt(request.getParameter("articleIndex"));
-		ArticleInfo article= db.dbBoard.getArticleByIndex(articleIndex);
+		Article article= db.dbBoard.getArticleByIndex(articleIndex);
 		article.setTitle(Util.toHtml(article.getTitle()));
 		article.setText(Util.toHtml(article.getText()));		
 		

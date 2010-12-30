@@ -1,6 +1,6 @@
 package dbaccess;
 
-import beans.UserInfo;
+import beans.User;
 
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -30,7 +30,7 @@ public class DBAccount {
 	
 	//user id, password를 검사한다.
 	public boolean isValidUser(String userId,String password) {
-		UserInfo user = new UserInfo(userId,password,null);
+		User user = new User(userId,password,null);
 		
 		Integer userCount = null;
 		try {			
@@ -80,7 +80,7 @@ public class DBAccount {
 
 	//새로운 user를 추가한다.
 	public void insertNewUser(String userId, String password,String email) {	
-		UserInfo newUser = new UserInfo(userId,password,email);
+		User newUser = new User(userId,password,email);
 		try {
 			sqlMap.insert("insertUser",newUser);
 		} catch (Exception e) {			

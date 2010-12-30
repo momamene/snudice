@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import beans.ArticleInfo;
+import beans.Article;
 
 import dbaccess.DB;
 
@@ -47,7 +47,7 @@ public class ArticleDelete extends HttpServlet {
 		int articleIndex = Integer.parseInt(request.getParameter("articleIndex"));
 		
 		DB db = DB.getInstance();
-		ArticleInfo article= db.dbBoard.getArticleByIndex(articleIndex);
+		Article article= db.dbBoard.getArticleByIndex(articleIndex);
 	
 		if(article.getUserId().compareTo(userId)==0) //아이디가 글쓴이와 일치하면
 		{			

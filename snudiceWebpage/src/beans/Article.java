@@ -2,7 +2,7 @@ package beans;
 
 import utility.Util;
 
-public class ArticleInfo {
+public class Article {
 	private int articleIndex;
 	private String boardName;
 	private String title;
@@ -11,9 +11,9 @@ public class ArticleInfo {
 	private String text;
 	private int readCount;
 	
-	public ArticleInfo() {}
+	public Article() {}
 	
-	public ArticleInfo(String boardName,String id, String title, String content) {		
+	public Article(String boardName,String id, String title, String content) {		
 		this.boardName= boardName;
 		this.userId = id;
 		this.title = title;

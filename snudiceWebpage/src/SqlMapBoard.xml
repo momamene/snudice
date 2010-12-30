@@ -1,19 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
-<sqlMap>
-	<typeAlias alias="ArticleInfo" type="beans.ArticleInfo" />
-	<resultMap class="ArticleInfo" id="boardResultMap">
-	<result property="articleIndex" column="articleIndex" />
-	<result property="boardName" column="boardName" ></result>
-	<result property="title" column="title" />
-	<result property="userId" column="userId" />
-	<result property="dateTime" column="dateTime" />
-	<result property="text" column="text" />
-	<result property="readCount" column="readCount" />
-
-	</resultMap>
-	
-	
-	<select id="getArticleList" parameterClass="HashMap" resultClass="ArticleInfo">
+<sqlMap>	
+	<select id="getArticleList" parameterClass="HashMap" resultClass="beans.Article">
 		SELECT * 
 		FROM board_board 
 		WHERE boardName = #boardName:VARCHAR# AND articleIndex &lt;= #startArticleIndex:INT#	
@@ -30,15 +17,27 @@
 		WHERE articleIndex=#articleIndex:INT#
 	</delete>
 	
+	<insert id="insertReply" parameterClass="HashMap">
+		INSERT INTO board_boardreply
+		(articleIndex,userId,dateTime,replyText)
+		VALUES(#articleIndex:INT#,#userId:VARCHAR#,#dateTime:DATETIME#,#replyText:TEXT#)
+	</insert>
+	
+	<select id="getReplyList" parameterClass="Integer" resultClass="beans.Reply">
+		SELECT * 
+		FROM board_boardreply
+		WHERE articleIndex = #articleIndex:INT#
+	</select>
+	
 	<select id="getArticleCount" parameterClass="String" resultClass="int">select count(*) from board_board where boardName= #boardName#</select>
-	<insert id="insertArticle" parameterClass="ArticleInfo">insert into board_board(boardName, title, userId, dateTime,text)
-	values(#boardName:VARCHAR#, #title:VARCHAR#, #userId:VARCHAR#,#dateTime:dateTime#,#text:text#)
+	<insert id="insertArticle" parameterClass="beans.Article">insert into board_board(boardName, title, userId, dateTime,text)
+	values(#boardName:VARCHAR#, #title:VARCHAR#, #userId:VARCHAR#,#dateTime:DATETIME#,#text:TEXT#)
 	<selectKey keyProperty="articleIndex" resultClass="int">
 	select LAST_INSERT_ID() AS articleIndex </selectKey>
 	</insert>
-	<select id="getArticleByIndex" parameterClass="int" resultClass="ArticleInfo">select * from board_board where articleIndex = #articleIndex#</select>
+	<select id="getArticleByIndex" parameterClass="int" resultClass="beans.Article">select * from board_board where articleIndex = #articleIndex#</select>
 
-<update id="updateArticle" parameterClass="ArticleInfo">update board_board
+<update id="updateArticle" parameterClass="beans.Article">update board_board
 set text = #text:text#, title = #title:VARCHAR# where articleIndex =#articleIndex:int#</update>
 
 <update id="updateArticleReadCount">update board_board

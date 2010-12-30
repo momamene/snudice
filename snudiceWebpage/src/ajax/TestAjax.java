@@ -1,8 +1,7 @@
 package ajax;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.Enumeration;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -41,12 +40,21 @@ public class TestAjax extends HttpServlet {
 
 		request.setCharacterEncoding("UTF-8");		
 		
+		//모든 인자를 출력한다.
+		Enumeration<String> e = request.getParameterNames();
+		while(e.hasMoreElements())
+		{
+			String paramName = e.nextElement();
+			System.out.println(paramName+"="+request.getParameter(paramName));
+		}		
+		
+		//stream의 내용을 그대로 출력한다. (JSON string 확인 등에 사용)
+		//이것을 사용할 경우 위의 모든 인자 출력 코드를 주석처리 해야 한다.
+		/*
 		BufferedReader r = request.getReader();
 		char[] buf= new char[256];
 		while(r.read(buf)>0)
 			System.out.println(buf);
-		
-		System.out.println(request.getParameter("arg0"));
-		System.out.println(request.getParameter("arg1"));
+		*/		
 	}
 }
