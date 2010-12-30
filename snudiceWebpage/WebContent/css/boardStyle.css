@@ -36,10 +36,11 @@ div.titleAndUser{
 	width: 500px;
 	text-align : center;}
 
-div{
-	width: 500px;
-	text-align : center;}
-
+div.wrapper{
+	width : 600px;
+	text-align : center;
+	margin : 0px auto;
+}
 
 div.contentBody
 	{
