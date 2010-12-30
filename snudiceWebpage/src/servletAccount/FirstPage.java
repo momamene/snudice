@@ -33,10 +33,10 @@ public class FirstPage extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		session.setMaxInactiveInterval(3600);
-		session.setAttribute("root",Const.root);
+		session.setAttribute("root",Const.root);		
 		
 		String nextPage = "login.jsp";
 		RequestDispatcher view = request.getRequestDispatcher(nextPage);
-		view.forward(request, response);
+		view.forward(request, response);		
 	}
 }
