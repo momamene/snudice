@@ -13,14 +13,31 @@
 		</div>
 		<div class="container" id="loginContainer">
 			<div class="left">
-				<img src="${root}/image/mainpage/loginWindow.png" />
-				* <a class="highlight" href="${root}/join.jsp">회원가입</a>
-	        	| <a class="highlight" href="${root}/notimplemented.jsp">아이디, 비밀번호찾기</a>
-	        	<a href="logout.do">로그아웃</a>
+				<div class="leftTop">
+					<br/><br/>
+					<form method="POST" action="login.do">
+						<div class="idpwWrap">
+							<div class="idpw">
+								<input name="userId" type="text"><br/>
+								<input name="password" type="password">
+							</div>
+							<input id="login" type="image" src="${root}/image/mainpage/login.png">
+						</div>
+					</form>	
+					<div class="loginHelp">
+						<a href = "${root}/join.jsp">회원가입</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href = "${root}/notimplemented.jsp"> ID/PW찾기</a><br/>
+					</div>
+				</div>
+				<div class="leftBottom">
+					<br/>
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					<img src="${root}/image/mainpage/start.png">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<a href="${root}/clientFile/update/6001/a.txt"><img src="${root}/image/mainpage/download.png"></a>
+				</div>
 			</div>
 			<div class="center" id="loginCenter">
-				<jsp:include page="loginForm.jsp"/>			
-				<a href="${root}/clientFile/update/6001/a.txt">클라이언트 다운로드</a>	
+				<jsp:include page = "/articleList.do" />   
 			</div>
 			<div class="right">&nbsp;</div>	
 		</div>
