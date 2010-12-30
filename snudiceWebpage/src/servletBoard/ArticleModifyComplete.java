@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import utility.Util;
+
 import beans.Article;
 import dbaccess.DB;
 
@@ -37,6 +39,10 @@ public class ArticleModifyComplete extends HttpServlet {
 		String title = request.getParameter("title");
 		String content = request.getParameter("content");		
 		int articleIndex=Integer.parseInt( request.getParameter("articleIndex"));
+		
+		//제목을 안적은 경우
+		if(title.compareTo("")==0)		
+			title = Util.currDateTime() + " 에 수정한 글입니다.";		
 		
 		Article article = new Article(boardName,userId,title, content);		
 		article.setArticleIndex(articleIndex);

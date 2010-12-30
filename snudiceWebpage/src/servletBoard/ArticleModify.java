@@ -51,7 +51,7 @@ public class ArticleModify extends HttpServlet {
 		int articleIndex = Integer.parseInt(request.getParameter("articleIndex"));
 		Article article= db.dbBoard.getArticleByIndex(articleIndex);
 		article.setTitle(Util.toHtml(article.getTitle()));
-		article.setText(Util.toHtml(article.getText()));		
+		article.setText(Util.toHtml(article.getText()));
 		
 		//글쓴이와 id가 일치하지 않는 경우
 		if(article.getUserId().compareTo(userId)!=0)  
