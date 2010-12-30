@@ -10,11 +10,11 @@
 	<form method="POST" action="login.do">
 		<img src="${root}/image/id.png"/>
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<input type="text" name="userId"><br/>
+		<input type="text" name="userId"/><br/>
 		<img src="${root}/image/password.png"/>
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<input type="password" name="password"><br/>		
-		<input type="image" src="${root}/image/gameStart.png">
+		<input type="password" name="password"/><br/>		
+		<input type="image" src="${root}/image/gameStart.png"/>
 	</form>	
 </body>
 </html>

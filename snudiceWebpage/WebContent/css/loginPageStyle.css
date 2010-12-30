@@ -18,16 +18,7 @@ img
 }
 
 /*----------------header-----------*/
-div.header
-{
-	height : 100px;
-}
 
-div.header#loginHeader
-{
-	height : 100px;
-	color : red;
-}
 
 /*----------------container-----------*/
 div.container
