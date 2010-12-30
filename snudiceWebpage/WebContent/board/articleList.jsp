@@ -10,6 +10,18 @@
 <title>${param.boardName} 게시판</title>
 </head>
 <body>	
+	<div class="header"></div>
+	<div class="container">
+		<div class="left"></div>
+		<div class="center"></div>
+		<div class="right"></div>
+	</div>
+	<div class="footer"></div>
+
+
+
+
+
 	<table class="boardList">	
 		<tr>
 			<td class="articleNumber">번호</td>
