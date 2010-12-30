@@ -15,6 +15,7 @@
 			<img src="${root}/image/mainpage/title.png"/>
 		</div>
 		<div class="container" id="loginContainer">
+		<center>
 			<div class="left">
 				<div class="leftTop">
 					<br/><br/>
@@ -109,6 +110,7 @@
 				
 			</div>
 			<div class="right">&nbsp;</div>	
+			</center>
 		</div>
 		<div class="footer" id="loginFooter">		
 		</div>			

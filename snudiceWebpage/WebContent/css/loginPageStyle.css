@@ -27,7 +27,7 @@ div.container
 
 /*----------------left-----------*/
 div.left {
-
+	float : left;
 }
 
 div.leftTop {
@@ -58,6 +58,10 @@ div.leftBottom {
 }
 
 /*----------------center-----------*/
+
+div.container {
+}
+
 
 div.container#loginContainer
 {
