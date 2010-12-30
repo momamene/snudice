@@ -83,7 +83,7 @@ public class ArticleList extends HttpServlet {
 		List<Integer> replyCountList = new ArrayList<Integer>();
 		
 		//글 목록을 가져온다.
-		List<Article> articleList = db.dbBoard.getArticleList(boardName,currPage, articlePerPage);	
+		List<Article> articleList = db.dbBoard.getArticleList(boardName,currPage, articlePerPage);		
 		for(Article article : articleList)		
 		{
 			article.setTitle(Util.toHtml(article.getTitle()));
@@ -95,14 +95,17 @@ public class ArticleList extends HttpServlet {
 		
 		List<Integer> pageList= new ArrayList<Integer>();		
 		
-		//page 번호들로 이루어진 리스트를 만든다.
-		int pageListStart = (currPage/Const.pageNumberPerPage)*Const.pageNumberPerPage;
-		for(int i = pageListStart; i<pageListStart+Const.pageNumberPerPage; i++)
-		{			
-			pageList.add(new Integer(i));
-			if(i==totalPageCount-1)
-				break;
-		}
+		if(articleList.size()>0)
+		{
+			//page 번호들로 이루어진 리스트를 만든다.
+			int pageListStart = (currPage/Const.pageNumberPerPage)*Const.pageNumberPerPage;
+			for(int i = pageListStart; i<pageListStart+Const.pageNumberPerPage; i++)
+			{			
+				pageList.add(new Integer(i));
+				if(i==totalPageCount-1)
+					break;
+			}
+		}		
 		
 		request.setAttribute("pageList",pageList);
 		request.setAttribute("articleList",articleList);

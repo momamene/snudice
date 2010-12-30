@@ -8,7 +8,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<div id="boardList">
+	<div class="boardList">
 		<c:forEach var="board" items="${boardList}">
 			<a href="${root}/articleList.do?boardName=${board.boardName}&currPage=0">${board.aliasName}</a><br/>
 		</c:forEach>
