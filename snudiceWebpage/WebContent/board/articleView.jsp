@@ -27,39 +27,9 @@ function init()
 	var articleDelButton = document.getElementById("articleDeleteButton");
 	if(articleDelButton==null) //글 수정 버튼이 없는 경우 (자기 글이 아닌 경우)
 		return;
-	articleDelButton.onclick = function() { show_confirm('정말 지울꺼에요?',articleDeleteFunc);	}
-
-	
-	
-	//ajaxtest();
+	articleDelButton.onclick = function() { show_confirm('정말 지울꺼에요?',articleDeleteFunc);	}	
 }
 
-/*
-function ajaxtest()
-{
-	var request = createRequest();
-	if(request==null)
-	{
-		alert("AJAX 요청 객체를 만들 수 없습니다.");
-		return;
-	}
-	
-	var url = "testAjax.ajax";	
-	var params = "arg0=haha&arg1=hoho";
-
-	var str = {"arg0":"a","arg1":"b"};	
-	
-	request.open("POST",url,true);
-	request.onreadystatechange = testcallback;
-	request.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-	request.send(JSON.stringify(str));
-}
-
-function testcallback()
-{
-	alert('test callback');
-}
-*/
 
 function replySubmit()
 {	
@@ -83,33 +53,16 @@ function replySubmit()
 	*/
 
 	writeTextTextarea.value = "";
-
-	var request = createRequest();
-	if(request==null)
-	{
-		alert("AJAX 요청 객체를 만들 수 없습니다.");
-		return;
-	}
 	
 	var url = "replyWrite.ajax";	
-	var params = "articleIndex=${param.articleIndex}&replyText="+writeText;
+	var method = "POST";
+	var param = "articleIndex=${param.articleIndex}&replyText="+writeText;
+	var callback = refresh;
+	var async = false;
 	
-	request.open("POST",url,false);
-	request.onreadystatechange = refresh;
-	request.setRequestHeader("Content-type","application/x-www-form-urlencoded");	
-	request.send(params);	
+	sendRequest(url,method,param,callback,async);
 }
 
-function refresh()
-{
-	if(request.readyState == 4) //작업이 완료되었을 때
-	{
-		if(request.status == 200)
-		{
-			location.reload(); //페이지 새로고침
-		}
-	}	
-}
 </script>
 
 <title>${sessionScope.boardName}게시판</title>

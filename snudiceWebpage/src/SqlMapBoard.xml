@@ -46,6 +46,30 @@
 		FROM board_boardlist		
 	</select>
 	
+	<delete id="allDeleteReply" parameterClass="String">
+		DELETE FROM board_boardreply
+		WHERE articleIndex IN 
+			(SELECT articleIndex
+			FROM board_board
+			WHERE boardName=#boardName:VARCHAR#
+			)
+	</delete>
+	
+	<delete id="allDeleteArticle" parameterClass="String">
+		DELETE FROM board_board
+		WHERE boardName = #boardName:VARCHAR#
+	</delete>
+	
+	<delete id="deleteBoard" parameterClass="String">
+		DELETE FROM board_boardlist
+		WHERE boardName = #boardName:VARCHAR#
+	</delete>
+	
+	<delete id="deleteBoardAuth" parameterClass="String">
+		DELETE FROM board_authorization
+		WHERE boardName = #boardName:VARCHAR#
+	</delete>
+	
 	<select id="getArticleCount" parameterClass="String" resultClass="int">select count(*) from board_board where boardName= #boardName#</select>
 	<insert id="insertArticle" parameterClass="beans.Article">insert into board_board(boardName, title, userId, dateTime,text)
 	values(#boardName:VARCHAR#, #title:VARCHAR#, #userId:VARCHAR#,#dateTime:DATETIME#,#text:TEXT#)

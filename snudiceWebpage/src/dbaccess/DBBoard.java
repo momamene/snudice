@@ -236,4 +236,23 @@ public class DBBoard {
 		
 		return result.get(0);
 	}
+
+	//게시판을 삭제한다.
+	public void deleteBoard(String boardName) {
+		try
+		{
+			//댓글 삭제
+			sqlMap.delete("allDeleteReply",boardName);
+			//글삭제
+			sqlMap.delete("allDeleteArticle",boardName);
+			//권한 정보 삭제
+			sqlMap.delete("deleteBoardAuth",boardName);
+			//게시판삭제	
+			sqlMap.delete("deleteBoard",boardName);			
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}				
+	}
 }
