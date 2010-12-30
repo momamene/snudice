@@ -1,10 +1,14 @@
 package dbaccess;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import beans.ArticleInfo;
+import utility.Util;
+
+import beans.Article;
+import beans.Reply;
 
 import com.ibatis.sqlmap.client.SqlMapClient;
 
@@ -33,8 +37,8 @@ public class DBBoard {
 	
 	//특정 게시판의 pageNumber 에 해당하는 글을 articlePerPage 개수만큼 가져온다.
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public List<ArticleInfo> getArticleList(String boardName, int pageNumber, int articlePerPage) {
-		List<ArticleInfo> result = null;
+	public List<Article> getArticleList(String boardName, int pageNumber, int articlePerPage) {
+		List<Article> result = null;
 		try
 		{			
 			int maxArticleIndex = (Integer)sqlMap.queryForObject("getMaxArticleIndex");
@@ -75,7 +79,7 @@ public class DBBoard {
 	}	
 
 	//새로운 글을 등록한다.
-	public int insertArticle(ArticleInfo article) {
+	public int insertArticle(Article article) {
 		int result=-1;
 		try
 		{
@@ -89,11 +93,11 @@ public class DBBoard {
 	}
 
 	//index로 글을 가져온다.
-	public ArticleInfo getArticleByIndex(int articleIndex) {
-		ArticleInfo result=null;
+	public Article getArticleByIndex(int articleIndex) {
+		Article result=null;
 		try
 		{
-			 result= (ArticleInfo) sqlMap.queryForObject("getArticleByIndex", articleIndex);
+			 result= (Article) sqlMap.queryForObject("getArticleByIndex", articleIndex);
 		}
 		catch(Exception e)
 		{
@@ -104,7 +108,7 @@ public class DBBoard {
 	}
 
 	//글을 수정한다.
-	public int updateArticle(ArticleInfo article) {
+	public int updateArticle(Article article) {
 		int result=0 ;
 		try
 		{
@@ -139,5 +143,40 @@ public class DBBoard {
 		{
 			e.printStackTrace();
 		}
+	}
+
+	//댓글을 삽입한다.
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public void insertReply(int articleIndex, String userId, String replyText) {
+		try
+		{
+			HashMap m = new HashMap();
+			m.put("articleIndex", articleIndex);
+			m.put("userId", userId);
+			m.put("dateTime", Util.currDateTime());
+			m.put("replyText", replyText);
+			sqlMap.insert("insertReply", m);			
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}		
+	}
+
+	//특정 글에 달린 댓글들을 가져온다.
+	@SuppressWarnings("unchecked")
+	public List<Reply> getReplyList(int articleIndex) {
+		List<Reply> result = null;
+		
+		try
+		{
+			result = sqlMap.queryForList("getReplyList", articleIndex);			
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return result;
 	}	
 }

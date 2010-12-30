@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import beans.ArticleInfo;
+import beans.Article;
 import dbaccess.DB;
 
 /**
@@ -38,7 +38,7 @@ public class ArticleModifyComplete extends HttpServlet {
 		String content = request.getParameter("content");		
 		int articleIndex=Integer.parseInt( request.getParameter("articleIndex"));
 		
-		ArticleInfo article = new ArticleInfo(boardName,userId,title, content);		
+		Article article = new Article(boardName,userId,title, content);		
 		article.setArticleIndex(articleIndex);
 		
 		DB db = DB.getInstance();

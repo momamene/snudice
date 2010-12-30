@@ -1,13 +1,13 @@
 package beans;
 
-public class UserInfo {
+public class User {
 	private String userId;
 	private String password;
 	private String email;
 	
-	public UserInfo() {}
+	public User() {}
 	
-	public UserInfo(String userId,String password,String email) {
+	public User(String userId,String password,String email) {
 		this.userId = userId;
 		this.password = password;
 		this.email = email;

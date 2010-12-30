@@ -17,7 +17,7 @@ import utility.Util;
 import constant.Const;
 
 
-import beans.ArticleInfo;
+import beans.Article;
 import dbaccess.DB;
 
 /**
@@ -80,8 +80,8 @@ public class ArticleList extends HttpServlet {
 		}			
 	
 		//글 목록을 가져온다.
-		List<ArticleInfo> articleList = db.dbBoard.getArticleList(boardName,currPage, articlePerPage);	
-		for(ArticleInfo article : articleList)		
+		List<Article> articleList = db.dbBoard.getArticleList(boardName,currPage, articlePerPage);	
+		for(Article article : articleList)		
 			article.setTitle(Util.toHtml(article.getTitle()));		
 		
 		List<Integer> pageList= new ArrayList<Integer>();		

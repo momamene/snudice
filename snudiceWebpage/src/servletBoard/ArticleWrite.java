@@ -10,7 +10,7 @@ import javax.servlet.http.HttpSession;
 
 import utility.Util;
 
-import beans.ArticleInfo;
+import beans.Article;
 import dbaccess.DB;
 
 /**
@@ -45,7 +45,7 @@ public class ArticleWrite extends HttpServlet {
 		if(title.compareTo("")==0)
 			title = Util.currDateTime() + " 에 작성한 글입니다.";
 		
-		ArticleInfo article = new ArticleInfo(boardName,userId,title,content);		
+		Article article = new Article(boardName,userId,title,content);		
 		
 		DB db = DB.getInstance();
 		int articleIndex = db.dbBoard.insertArticle(article);		
