@@ -35,7 +35,8 @@
 						</div>
 					</form>	
 					<div id="loginHelp">
-						<a href = "${root}/join.jsp">회원가입</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href = "${root}/notimplemented.jsp"> ID/PW찾기</a><br/>
+						<input id="join" type="button" value="회원가입"/>
+						<a href = "${root}/notimplemented.jsp"> ID/PW찾기</a><br/>
 					</div>
 				</div>
 				<div id="mainLeftBottom">
@@ -56,7 +57,6 @@
 				<div id="intro">
 				TODO : 게임소개 등
 				</div>
-				<hr/>
 				<div id="notice">
 					공지사항<br/><hr/>					
 					<c:forEach var="article" items="${articleList}">
@@ -67,7 +67,8 @@
 			<div class="right"></div>				
 		</div>
 		
-		<div class="footer" id="loginFooter">		
+		<div class="footer" id="loginFooter">
+		<a href="logout.do">로그아웃(임시)</a>		
 		</div>			
 	</div>
 </body>

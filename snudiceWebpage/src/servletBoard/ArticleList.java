@@ -112,7 +112,7 @@ public class ArticleList extends HttpServlet {
 		request.setAttribute("currPage",currPage);
 		request.setAttribute("endPage",totalPageCount-1);		
 		
-		String nextPage = "board/articleList.jsp";
+		String nextPage = "/board/articleList.jsp";
 		
 		RequestDispatcher view = request.getRequestDispatcher(nextPage);
 		view.forward(request, response);        

@@ -51,7 +51,7 @@ public class ArticleModifyComplete extends HttpServlet {
 		if(result ==0)
 			System.out.println("아마 실패한듯 요 업데이트 병신 새끼");
 		
-        String nextPage = "articleView.do?boardName="+boardName+"&currPage="+currPage+"&articleIndex="+articleIndex;        
+        String nextPage = session.getAttribute("root")+"/board/articleView.do?boardName="+boardName+"&currPage="+currPage+"&articleIndex="+articleIndex;        
 		response.sendRedirect(nextPage);     
 	}
 }

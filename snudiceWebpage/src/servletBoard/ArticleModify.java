@@ -61,7 +61,7 @@ public class ArticleModify extends HttpServlet {
 		}	
 		
 		request.setAttribute("articleInfo",article);
-		String nextPage = "board/articleModify.jsp?boardName="+boardName+"&articleIndex="+articleIndex+"&currPage="+currPage;
+		String nextPage = "/board/articleModify.jsp?boardName="+boardName+"&articleIndex="+articleIndex+"&currPage="+currPage;
 		
 		RequestDispatcher view = request.getRequestDispatcher(nextPage);
 		view.forward(request, response);		

@@ -166,7 +166,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>articleWriteFormInternalName</servlet-name>
-    <url-pattern>/articleWriteForm.do</url-pattern>
+    <url-pattern>/board/articleWriteForm.do</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>testAjax</servlet-name>

@@ -51,9 +51,9 @@ public class ArticleView extends HttpServlet {
 		//로그인 된 상태가 아닌 경우
 		if(userId==null)
 		{
-			String fullUrl = request.getRequestURI()+"?boardName="+boardName+"&articleIndex="+articleIndex+"&currPage="+currPage;
-			session.setAttribute("redirectUrl",fullUrl );
-			response.sendRedirect("first.do");
+			//String fullUrl = request.getRequestURI()+"?boardName="+boardName+"&articleIndex="+articleIndex+"&currPage="+currPage;
+			//session.setAttribute("redirectUrl",fullUrl );
+			response.sendRedirect((String)session.getAttribute("root")+"/first.do");
 			return;
 		}		
 		
@@ -79,7 +79,7 @@ public class ArticleView extends HttpServlet {
 		request.setAttribute("replyList", replyList);
 		request.setAttribute("replyCount", replyList.size());
 		
-		String nextPage = "board/articleView.jsp?boardName="+boardName+"&currPage="+currPage;	
+		String nextPage = "/board/articleView.jsp?boardName="+boardName+"&currPage="+currPage;	
 		RequestDispatcher view = request.getRequestDispatcher(nextPage);
 		view.forward(request, response);		
 	}
