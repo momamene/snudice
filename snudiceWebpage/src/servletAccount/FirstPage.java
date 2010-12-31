@@ -55,7 +55,10 @@ public class FirstPage extends HttpServlet {
 		
 		request.setAttribute("articleList",articleList);
 		request.setAttribute("replyCountList", replyCountList);
-		request.setAttribute("boardName", "notice");		
+		request.setAttribute("boardName", "notice");
+		
+		//게시판 목록을 가져온다.
+		request.setAttribute("boardList", db.dbBoard.getBoardList());
 		
 		String nextPage = "login.jsp";
 		RequestDispatcher view = request.getRequestDispatcher(nextPage);

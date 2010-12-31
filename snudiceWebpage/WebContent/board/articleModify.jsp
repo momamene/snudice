@@ -16,7 +16,7 @@
 	</center>
  	<br/>
 
-	<form action="${root}/articleModifyComplete.do?boardName=${param.boardName}&articleIndex=${param.articleIndex}&currPage=${param.currPage}" method = "post">
+	<form action="${root}/board/articleModifyComplete.do?boardName=${param.boardName}&articleIndex=${param.articleIndex}&currPage=${param.currPage}" method = "post">
 	<center>
 		<table width = "650" border = "1" cellpadding = "2" cellspacing = "0" bordercolor = "#000000">
 			<tr>

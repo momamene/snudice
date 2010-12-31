@@ -16,7 +16,7 @@
 	</center>
  	<br/>
 
-	<form action="${root}/articleWrite.do?boardName=${param.boardName}&currPage=${param.currPage}" method = "post"><!--  post로 정보를 보내야 하나? -->
+	<form action="${root}/board/articleWrite.do?boardName=${param.boardName}&currPage=${param.currPage}" method = "post"><!--  post로 정보를 보내야 하나? -->
 	<center>
 		<table width = "650" border = "1" cellpadding = "2" cellspacing = "0" bordercolor = "#000000">
 			<tr>

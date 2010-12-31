@@ -8,7 +8,7 @@ import utility.Util;
 
 import beans.Article;
 import beans.Board;
-import beans.BoardAuth;
+import beans.Auth;
 import beans.Reply;
 
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -219,15 +219,12 @@ public class DBBoard {
 	
 	//게시판 접근 권한 정보를 가져온다.
 	@SuppressWarnings("unchecked")
-	public BoardAuth getBoardAuth(String boardName,String role) {
-		List<BoardAuth> result = null;
+	public Auth getBoardAuth(String boardName) {
+		List<Auth> result = null;
 		
 		try
-		{
-			BoardAuth param = new BoardAuth();
-			param.setBoardName(boardName);
-			param.setRole(role);
-			result = (List<BoardAuth>)sqlMap.queryForList("getBoardAuth",param);			
+		{			
+			result = (List<Auth>)sqlMap.queryForList("getBoardAuth",boardName);			
 		}
 		catch(Exception e)
 		{

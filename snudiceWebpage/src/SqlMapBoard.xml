@@ -35,10 +35,10 @@
 		WHERE articleIndex = #articleIndex:INT#
 	</select>
 	
-	<select id="getBoardAuth" parameterClass="beans.BoardAuth" resultClass="beans.BoardAuth">
+	<select id="getBoardAuth" parameterClass="String" resultClass="beans.Auth">
 		SELECT *
 		FROM board_authorization
-		WHERE boardName = #boardName:VARCHAR# AND role=#role:VARCHAR#
+		WHERE boardName = #boardName:VARCHAR#
 	</select>
 	
 	<select id="getBoardList" resultClass="beans.Board">
