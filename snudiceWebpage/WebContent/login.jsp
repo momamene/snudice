@@ -10,10 +10,11 @@
 </head>
 <body>
 	<div class="wrapper">
-		<div class="header" id="loginHeader">
+		<div class="header">
 			<img src="${root}/image/mainpage/title.png"/>
 		</div>
-		<div class="container" id="loginContainer">		
+		
+		<div class="container">		
 			<div class="left">
 				<div id="mainLeftTop">
 					<br/><br/>
@@ -46,8 +47,9 @@
 					</c:forEach>
 				</div>				
 			</div>
-			<div class="right">&nbsp;</div>				
+			<div class="right"></div>				
 		</div>
+		
 		<div class="footer" id="loginFooter">		
 		</div>			
 	</div>
