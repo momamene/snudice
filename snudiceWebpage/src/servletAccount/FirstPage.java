@@ -55,8 +55,7 @@ public class FirstPage extends HttpServlet {
 		
 		request.setAttribute("articleList",articleList);
 		request.setAttribute("replyCountList", replyCountList);
-		request.setAttribute("boardName", "notice");
-		request.setAttribute("currPage", 0);
+		request.setAttribute("boardName", "notice");		
 		
 		String nextPage = "login.jsp";
 		RequestDispatcher view = request.getRequestDispatcher(nextPage);
