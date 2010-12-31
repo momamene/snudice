@@ -10,6 +10,42 @@
 <script type="text/javascript" src="${root}/javascript/json2.js"></script>
 <script type="text/javascript">
 
+window.onload = init;
+
+function init()
+{
+	//event handler 를 추가한다.
+	//가입하기 버튼
+	var joinButton = document.getElementById("join");
+	joinButton.onclick = join;	
+	
+	//가입창닫기 버튼
+	var joinCloseButton = document.getElementById("joinClose");
+	joinCloseButton.onclick = joinClose;
+}
+
+function join()
+{	
+	var joinFormWrapper = document.getElementById("joinFormWrapper");	
+	joinFormWrapper.style.display = "block";
+
+	/*
+	var url = "${root}/board/replyWrite.ajax";	
+	var method = "POST";
+	var param = "articleIndex=${param.articleIndex}&replyText="+writeText;
+	var callback = refresh;
+	var async = false;
+	
+	sendRequest(url,method,param,callback,async);
+	*/
+}
+
+function joinClose()
+{		
+	var joinFormWrapper = document.getElementById("joinFormWrapper");	
+	joinFormWrapper.style.display = "none";	
+}
+
 
 </script>
 
@@ -23,6 +59,14 @@
 		
 		<div class="container">		
 			<div class="left">
+				<div id="joinFormWrapper">					
+					id : <input type="text" name="id"/><br/>
+					pw : <input type="password" name="pw"/><br/>
+					pw확인 : <input type="password" name="pwConfirm"/><br/>
+					email : <input type="text" name="email"/><br/>
+					<input type="submit" value="가입하기"/>					
+					<input id="joinClose" type="button" value="닫기">
+				</div>
 				<div id="mainLeftTop">
 					<br/><br/>
 					<form method="POST" action="login.do">
