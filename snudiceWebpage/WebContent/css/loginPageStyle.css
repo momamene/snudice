@@ -5,52 +5,55 @@ a:visited {color :#666 ;text-decoration:none;} /* visited link */
 a:hover {text-decoration:none;}   /* mouse over link */
 a:active {text-decoration:none;}  /* selected link */
 
-body
-{
-	font-family:Cursive;
-	font-face:"굴림";	
-}
-
 img 
 {
 	border : 0px;	
 }
 
-/*----------------header-----------*/
-
-
-/*----------------container-----------*/
-div.container
-{
-	
+div.wrapper 
+{		
+	width : auto;
+	margin-left : 20%;
+	margin-right : 20%
 }
 
+/*----------------header-----------*/
+
+/*----------------container-----------*/
+
 /*----------------left-----------*/
-div.left {
+
+div.left 
+{
 	float : left;
 }
 
-div.leftTop {
+#mainLeftTop 
+{
 	background-image : url('/snudiceWebpage/image/mainpage/loginWindow.png');
 	background-repeat : no-repeat;
 	width : 256px;
 	height : 187px;
 }
 
-div.leftTop div.idpwWrap {
+#idpwWrap 
+{
 	position : relative;
 	left : 50px;
 }
 
-div.leftTop div.idpw {
+#idpw 
+{
 	float : left;
 }
 
-div.leftTop div.loginHelp {
+#loginHelp 
+{
 	text-align : center;
 }
 
-div.leftBottom {
+#mainLeftBottom 
+{
 	background-image : url('/snudiceWebpage/image/mainpage/buttonWindow.png');
 	background-repeat : no-repeat;
 	width : 264px;
@@ -58,37 +61,15 @@ div.leftBottom {
 }
 
 /*----------------center-----------*/
-
-div.container {
+div.center
+{
+	width : auto;
 }
 
-
-div.container#loginContainer
+/*----------------center-----------*/
+div.right
 {
-	margin-left : 0px;
+	width : 0px;
 }
-
-div.container div.center#loginCenter input#loginButton
-{
-	margin-left:150px;
-	width : 200px;
-	height : 200px;
-} 
-
 
 /*----------------footer-----------*/
-div.footer
-{
-}
-
-
-div.footer#loginFooter
-{
-	color : red;
-	margin-left : 250px;
-}
-
-div.footer a.highlight
-{
-	color : blue;
-}
