@@ -6,6 +6,13 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" type="text/css" href="${root}/css/loginPageStyle.css"/>
+<script type="text/javascript" src="${root}/javascript/util.js"></script> 
+<script type="text/javascript" src="${root}/javascript/json2.js"></script>
+<script type="text/javascript">
+
+
+</script>
+
 <title>로그인 페이지</title>
 </head>
 <body>
@@ -38,14 +45,24 @@
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<a href="${root}/clientFile/update/6001/a.txt"><img src="${root}/image/mainpage/download.png"></a>
 				</div>
-			</div>
-			<div class="center">
+			</div>			
+			<div class="center">			
+				<div id="boardSelect">
+					<c:forEach var="board" items="${boardList}">
+						<a href="${root}/board/articleList.do?boardName=${board.boardName}&currPage=0">${board.aliasName}</a>&nbsp;|&nbsp;
+					</c:forEach>
+				</div>
+				<hr/>
+				<div id="intro">
+				TODO : 게임소개 등
+				</div>
+				<hr/>
 				<div id="notice">
 					공지사항<br/><hr/>					
 					<c:forEach var="article" items="${articleList}">
-						<a href="articleView.do?boardName=${boardName}&articleIndex=${article.articleIndex}&currPage=0">${article.title}</a><br/>						
+						<a href="${root}/board/articleView.do?boardName=${boardName}&articleIndex=${article.articleIndex}&currPage=0">${article.title}</a><br/>						
 					</c:forEach>
-				</div>				
+				</div>								
 			</div>
 			<div class="right"></div>				
 		</div>

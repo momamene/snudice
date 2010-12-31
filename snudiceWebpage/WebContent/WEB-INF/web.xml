@@ -32,7 +32,7 @@
   </security-constraint>
   <security-constraint>
     <web-resource-collection>
-      <web-resource-name>admin</web-resource-name>
+      <web-resource-name>관리자페이지</web-resource-name>
       <url-pattern>/admin/*</url-pattern>
       <http-method>GET</http-method>
       <http-method>POST</http-method>
@@ -44,6 +44,24 @@
       <transport-guarantee>CONFIDENTIAL</transport-guarantee>
     </user-data-constraint>
   </security-constraint>
+  
+   <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>일반게시판</web-resource-name>
+      <url-pattern>/board/*</url-pattern>
+      <http-method>GET</http-method>
+      <http-method>POST</http-method>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>admin</role-name>
+      <role-name>manager</role-name>
+      <role-name>member</role-name>
+    </auth-constraint>
+    <user-data-constraint>
+      <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+    </user-data-constraint>
+  </security-constraint>
+  
   <servlet>
     <servlet-name>adminInternalName</servlet-name>
     <servlet-class>servletAdmin.AdminMain</servlet-class>
@@ -82,7 +100,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>articleWriteInternalName</servlet-name>
-    <url-pattern>/articleWrite.do</url-pattern>
+    <url-pattern>/board/articleWrite.do</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>articleListInternalName</servlet-name>
@@ -90,7 +108,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>articleListInternalName</servlet-name>
-    <url-pattern>/articleList.do</url-pattern>
+    <url-pattern>/board/articleList.do</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>articleViewInternalName</servlet-name>
@@ -98,7 +116,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>articleViewInternalName</servlet-name>
-    <url-pattern>/articleView.do</url-pattern>
+    <url-pattern>/board/articleView.do</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>articleModifyInternalName</servlet-name>
@@ -106,7 +124,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>articleModifyInternalName</servlet-name>
-    <url-pattern>/articleModify.do</url-pattern>
+    <url-pattern>/board/articleModify.do</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>articleModifyCompleteInternalName</servlet-name>
@@ -114,7 +132,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>articleModifyCompleteInternalName</servlet-name>
-    <url-pattern>/articleModifyComplete.do</url-pattern>
+    <url-pattern>/board/articleModifyComplete.do</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>articleDeleteInternalName</servlet-name>
@@ -122,7 +140,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>articleDeleteInternalName</servlet-name>
-    <url-pattern>/articleDelete.do</url-pattern>
+    <url-pattern>/board/articleDelete.do</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>firstPageInternalName</servlet-name>
@@ -162,7 +180,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>replyWrite</servlet-name>
-    <url-pattern>/replyWrite.ajax</url-pattern>
+    <url-pattern>/board/replyWrite.ajax</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>boardDelete</servlet-name>

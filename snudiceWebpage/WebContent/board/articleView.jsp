@@ -12,7 +12,7 @@
 <script type="text/javascript">
 var articleDeleteFunc = function() 
 {	
-	window.location = "${root}/articleDelete.do?boardName=${param.boardName}&articleIndex=${articleInfo.articleIndex}&currPage=${param.currPage}";
+	window.location = "${root}/board/articleDelete.do?boardName=${param.boardName}&articleIndex=${articleInfo.articleIndex}&currPage=${param.currPage}";
 }
 
 window.onload = init;
@@ -54,7 +54,7 @@ function replySubmit()
 
 	writeTextTextarea.value = "";
 	
-	var url = "replyWrite.ajax";	
+	var url = "board/replyWrite.ajax";	
 	var method = "POST";
 	var param = "articleIndex=${param.articleIndex}&replyText="+writeText;
 	var callback = refresh;
@@ -100,14 +100,14 @@ function replySubmit()
 		</div>
 	</div>
  
-	<a href="${root}/articleList.do?boardName=${param.boardName}&currPage=${param.currPage}">목록으로</a>
+	<a href="${root}/board/articleList.do?boardName=${param.boardName}&currPage=${param.currPage}">목록으로</a>
 	<c:choose>
 		<c:when test="${myArticle==true}">						
-			<a id="boardModify" href="${root}/articleModify.do?boardName=${param.boardName}&articleIndex=${articleInfo.articleIndex}&currPage=${param.currPage}">수정</a>
+			<a id="boardModify" href="${root}/board/articleModify.do?boardName=${param.boardName}&articleIndex=${articleInfo.articleIndex}&currPage=${param.currPage}">수정</a>
 			<input id="articleDeleteButton" type="button" value="삭제" />		
 		</c:when>													
 	</c:choose>	
-	<a id="boardWrite" href="${root}/articleWriteForm.do?boardName=${param.boardName}&currPage=${param.currPage}">새글쓰기</a>	 
+	<a id="boardWrite" href="${root}/board/articleWriteForm.do?boardName=${param.boardName}&currPage=${param.currPage}">새글쓰기</a>	 
 	</div>		
 	
 	<div id="footer">
