@@ -32,13 +32,19 @@ td.articleReadCount { border: 1px solid black;
 td.pageNumber { width : 8%; text-align : left;}
 
 
-div.titleAndUser{
+div.titleAndUser
+{
 	width: 500px;
-	text-align : center;}
-
-div.wrapper{
 	text-align : center;
-	margin : 0px auto;
+}
+
+div.wrapper
+{
+	position : relative;
+	left : 50%;
+	margin-left : -300px;	
+	width : 600px;	
+	text-align : center;
 }
 
 div.contentBody
@@ -74,4 +80,14 @@ div.dateAndCount
 	
 	overflow : hidden; /* 스크롤바를 숨긴다 */
 	resize : none; /* 크롬에서 크기 조절을 못하게 한다. */
+}
+
+
+/* ... */
+div.boardTop 
+{
+	background-image : url('/snudiceWebpage/image/mainpage/boardFrameUpper.png');
+	background-repeat : no-repeat;
+	width : 612px;
+	height : 48px;
 }
