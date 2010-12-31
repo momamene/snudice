@@ -42,7 +42,7 @@ public class ArticleWriteForm extends HttpServlet {
 		String boardName = request.getParameter("boardName");
 		String currPage = request.getParameter("currPage");
 		
-		String nextPage = "board/articleWrite.jsp?boardName="+boardName+"&currPage="+currPage;	
+		String nextPage = "/board/articleWrite.jsp?boardName="+boardName+"&currPage="+currPage;	
 		RequestDispatcher view = request.getRequestDispatcher(nextPage);
 		view.forward(request, response);
 	}

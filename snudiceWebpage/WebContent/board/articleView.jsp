@@ -54,7 +54,7 @@ function replySubmit()
 
 	writeTextTextarea.value = "";
 	
-	var url = "board/replyWrite.ajax";	
+	var url = "${root}/board/replyWrite.ajax";	
 	var method = "POST";
 	var param = "articleIndex=${param.articleIndex}&replyText="+writeText;
 	var callback = refresh;

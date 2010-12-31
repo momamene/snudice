@@ -50,7 +50,7 @@ public class ArticleWrite extends HttpServlet {
 		DB db = DB.getInstance();
 		int articleIndex = db.dbBoard.insertArticle(article);		
 		 
-        String nextPage = "articleView.do?boardName="+boardName+"&articleIndex="+articleIndex+"&currPage="+currPage;
+        String nextPage = session.getAttribute("root")+"/board/articleView.do?boardName="+boardName+"&articleIndex="+articleIndex+"&currPage="+currPage;
         
 		response.sendRedirect(nextPage);     
 	}

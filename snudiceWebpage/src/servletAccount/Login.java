@@ -36,12 +36,14 @@ public class Login extends HttpServlet {
 		String userId = request.getParameter("userId");
 		String password = request.getParameter("password");		
 		
-		String nextPage = "loginSuccess.jsp";
-		
 		DB db = DB.getInstance();
 		boolean isExistingUser = db.dbAccount.isValidUser(userId,password);
 		if(!isExistingUser)
-			nextPage = "loginFailed.jsp";		
+		{
+			String nextPage = "loginFailed.jsp";
+			RequestDispatcher view = request.getRequestDispatcher(nextPage);
+			view.forward(request, response);
+		}
 		else
 		{
 			//session에 userId를 속성으로 지정
@@ -63,9 +65,8 @@ public class Login extends HttpServlet {
 			
 			//게시판 목록을 가져온다.
 			request.setAttribute("boardList", db.dbBoard.getBoardList());
+			
+			response.sendRedirect("first.do");
 		}		
-		
-		RequestDispatcher view = request.getRequestDispatcher(nextPage);
-		view.forward(request, response);
 	}
 }
