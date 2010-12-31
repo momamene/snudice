@@ -21,8 +21,8 @@
 					<form method="POST" action="login.do">
 						<div id="idpwWrap">
 							<div id="idpw">
-								<input name="userId" type="text"><br/>
-								<input name="password" type="password">
+								<input name="userId" type="text" size="16px"><br/>
+								<input name="password" type="password" size="16px">
 							</div>
 							<input id="login" type="image" src="${root}/image/mainpage/login.png">
 						</div>

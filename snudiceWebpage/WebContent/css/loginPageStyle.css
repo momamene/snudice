@@ -61,6 +61,7 @@ div.left
 	position : relative;
 	left : 50px;
 	border : 1px solid black;
+	margin-right : 50px;
 }
 
 #idpw 
