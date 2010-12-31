@@ -16,6 +16,9 @@
 	</div>
 	<div class="boardContainer">
 		<div class = "boardTop">
+			
+		</div>
+		<div class = "boardMiddle">
 			<table class="boardListTop">
 				<tr>
 					<td class="articleNumber">번호</td>
@@ -24,10 +27,6 @@
 					<td class="articleDateTime">날짜</td>
 					<td class="articleReadCount">조회수</td>
 				</tr>
-			</table>
-		</div>
-		<div class = "boardMiddle">
-			<table class="boardListMiddle">			
 				<c:forEach var="article" items="${articleList}" varStatus="status">	
 				<tr>
 					<td class="articleNumber">${article.articleIndex}</td>
