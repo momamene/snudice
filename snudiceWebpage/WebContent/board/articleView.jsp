@@ -36,22 +36,6 @@ function replySubmit()
 	var writeTextTextarea = document.getElementById("replyWriteText");
 	var writeText = writeTextTextarea.value;
 
-	/*
-	var replyContainer = document.getElementById("replyContainer");
-	var replyAuthor = document.createElement("div");
-	
-	replyAuthor.className = "replyAuthor";	
-	replyAuthor.innerHTML = "아 여기 글쓴이 id가 들어가야 되는데";	
-	var replyContent = document.createElement("div");
-	replyContent.className = "replyContent";
-	replyContent.innerHTML = writeText;
-	var hr = document.createElement("hr");
-	
-	replyContainer.appendChild(hr);	
-	replyContainer.appendChild(replyAuthor);
-	replyContainer.appendChild(replyContent);
-	*/
-
 	writeTextTextarea.value = "";
 	
 	var url = "${root}/board/replyWrite.ajax";	
