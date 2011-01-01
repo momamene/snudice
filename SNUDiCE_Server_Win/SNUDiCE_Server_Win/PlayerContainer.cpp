@@ -3,6 +3,7 @@
 #include "MainWin.h"
 
 #include "MysqlDB.h"
+#include "MessageCore.h"
 
 static gPlayerContainer s_PlayerContainer;
 
@@ -402,9 +403,10 @@ void gPlayerContainer::pk_friendadd_ask(PK_DEFAULT *pk, SOCKET sock)
 	sprintf(buf,"[PK_FRIENDADD_ASK] %s\tMYID : %s\t FRIENDID : %s\n", inet_ntoa(clientAddr.sin_addr), ask.szMyID, ask.szFriendID);
 	OutputDebugString(buf);
 
-	gMysql::GetIF()->friendPutOne(ask.szMyID , ask.szFriendID);
-	
-	
+	if (strcmp(ask.szFriendID , ask.szMyID) == 0)	{
+		gMessageCore::GetIF()->msg_failMessage(ask.szMyID , "자신을 친구로 둘 수는 없습니다.");
+	}	else
+		gMysql::GetIF()->friendPutOne(ask.szMyID , ask.szFriendID);
 }
 
 void gPlayerContainer::pk_frienddelete_ask(PK_DEFAULT *pk, SOCKET sock)
