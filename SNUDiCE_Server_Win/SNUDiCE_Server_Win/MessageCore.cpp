@@ -136,6 +136,21 @@ void gMessageCore::msg_whisper(char	 szToID[IDLENGTH] , char szFromID[IDLENGTH] 
 }
 
 
+void gMessageCore::msg_failMessage(char	 szToID[IDLENGTH] , char szComment[MSGLENGTH] )
+{
+
+	PK_MESSAGE_REP rep1,rep2;	//rep1 : 보낸놈 rep2 : 받는놈
+
+	char				buf [1024];
+
+	SOCKET sock		=	gPlayerContainer::GetIF()->GetPlayerFromID(szToID).sock;
+
+	strcpy(rep1.szID,"Fail");
+	strcpy(rep1.szMsg,szComment);
+	gMainWin::GetIF()->Send(PL_MESSAGE_REP, sizeof(rep1), &rep1, sock);
+
+}
+
 void gMessageCore::pk_friendwhisper_ask(PK_DEFAULT *pk, SOCKET sock)
 {
 	PK_FRIENDWHISPER_ASK		ask;		//from client
@@ -154,20 +169,29 @@ void gMessageCore::pk_friendwhisper_ask(PK_DEFAULT *pk, SOCKET sock)
 	OutputDebugString(buf);
 
 	stringstream ss;
-	ss << gMysql::GetIF()->friendGet(ask.szMyID);
+	PK_MESSAGE_REP rep1,rep2;	//rep1 : 보낸놈 rep2 : 받는놈
+
+	char *userFriendList = gMysql::GetIF()->friendGet(ask.szMyID);
+	if (!userFriendList)	{
+		strcpy(rep1.szID,"To ");
+		strcat(rep1.szID,"Friends");
+		strcpy(rep1.szMsg,ask.szComment);
+		gMainWin::GetIF()->Send(PL_MESSAGE_REP, sizeof(rep1), &rep1, sock);
+		
+		msg_failMessage(ask.szMyID , "그러나 그의 외침은 외로운 메아리만이 답해주었다.");
+		return;
+	}
+	ss << userFriendList;
 	
 	char friendid[IDLENGTH];
 
 	friendid[0] = 0;
-	
-	PK_MESSAGE_REP rep1,rep2;	//rep1 : 보낸놈 rep2 : 받는놈
 	
 	SOCKET sendsock;
 
 	strcpy(rep1.szID,"To ");
 	strcat(rep1.szID,"Friends");
 	strcpy(rep1.szMsg,ask.szComment);
-
 	gMainWin::GetIF()->Send(PL_MESSAGE_REP, sizeof(rep1), &rep1, sock);
 	
 	
@@ -206,15 +230,22 @@ void gMessageCore::pk_friendlist_ask(PK_DEFAULT *pk, SOCKET sock)
 	OutputDebugString(buf);
 
 	stringstream ss;
-	ss << gMysql::GetIF()->friendGet(ask.szMyID);
+	
+	char *userFriendList = gMysql::GetIF()->friendGet(ask.szMyID);
+
+	PK_MESSAGE_REP rep;
+	
+	if (!userFriendList)	{
+		msg_failMessage(ask.szMyID , "친구가 없군요 ㅜㅜ");
+		return;
+	}
+	ss << userFriendList;
 
 	char friendid[IDLENGTH];
 
 	char FriendNum[5]; 
 		
 	friendid[0] = 0;
-
-	PK_MESSAGE_REP rep;
 
 	strcpy(rep.szID,ask.szMyID);
 	strcpy(rep.szMsg,"님의 친구 목록");
