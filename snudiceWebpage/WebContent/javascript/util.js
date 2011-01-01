@@ -64,3 +64,20 @@ function refresh()
 		}
 	}	
 }
+
+//element를 만든다.
+function createElement(tagName,id,className)
+{
+	if(tagName==null )
+		return;
+	
+	var element = document.createElement(tagName);		
+	
+	if(id!=null)
+		element.id = id;
+	
+	if(className!=null)
+		element.className = className;
+	
+	return element;
+}

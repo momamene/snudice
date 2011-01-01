@@ -13,39 +13,86 @@
 window.onload = init;
 
 function init()
-{
-	//event handler 를 추가한다.
-	//가입하기 버튼
-	var joinButton = document.getElementById("join");
-	joinButton.onclick = join;	
-	
-	//가입창닫기 버튼
+{	
+	//event handler 추가	
+	//가입창 열기 버튼	
+	var joinOpen = document.getElementById("joinOpen");
+	joinOpen.onclick = joinOpenFunc;	
+	//가입창  버튼
 	var joinCloseButton = document.getElementById("joinClose");
-	joinCloseButton.onclick = joinClose;
+	joinCloseButton.onclick = joinCloseFunc;
+	//가입하기 버튼
+	var joinSubmit = document.getElementById("joinSubmit");
+	joinSubmit.onclick = joinSubmitFunc;
+	
+	var joinId = document.getElementById("joinId");
+	//joinId.onblur = function() {alert("joinId onblur 발생");}
 }
 
-function join()
+////////////////////event handler/////////////////////
+
+//회원 가입 창을 연다
+function joinOpenFunc()
 {	
 	var joinFormWrapper = document.getElementById("joinFormWrapper");	
-	joinFormWrapper.style.display = "block";
-
-	/*
-	var url = "${root}/board/replyWrite.ajax";	
-	var method = "POST";
-	var param = "articleIndex=${param.articleIndex}&replyText="+writeText;
-	var callback = refresh;
-	var async = false;
-	
-	sendRequest(url,method,param,callback,async);
-	*/
+	joinFormWrapper.style.display = "block";	
 }
 
-function joinClose()
-{		
+//회원 가입 창을 닫는다
+function joinCloseFunc()
+{			
+	var joinSubmit = document.getElementById("joinSubmit");
+	joinSubmit.disabled = false;
 	var joinFormWrapper = document.getElementById("joinFormWrapper");	
 	joinFormWrapper.style.display = "none";	
 }
 
+//회원 가입 요청을 보낸다
+function joinSubmitFunc()
+{	
+	var joinId = document.getElementById("joinId").value;
+	var joinPw = document.getElementById("joinPw").value;
+	var joinPwConfirm = document.getElementById("joinPwConfirm").value;
+	var joinEmail = document.getElementById("joinEmail").value;
+	
+	var url = "${root}/join.ajax";	
+	var method = "POST";
+	var param = "joinId="+joinId;
+	param += "&joinPw="+joinPw;
+	param += "&joinPwConfirm="+joinPwConfirm;
+	param += "&joinEmail="+joinEmail;
+	var callback = joinFormRefresh;
+	var async = false;	
+	
+	sendRequest(url,method,param,callback,async);
+		
+}
+
+////////////////////callback function/////////////////////
+function joinFormRefresh()
+{	
+	var joinSubmit = document.getElementById("joinSubmit");
+	
+	if(request.readyState == 4)
+	{
+		if(request.status == 200)
+		{	
+			if(request.responseText == "OK")
+			{			
+				alert("회원 가입이 완료되었습니다.");
+				joinCloseFunc();
+			}
+			joinSubmit.disabled = false;		
+		}
+	}
+	else if(request.readyState == 2)
+	{
+		joinSubmit.disabled = true;
+		
+		var joinMsg = document.getElementById("joinMsg");
+		joinMsg.innerHTML = "처리중입니다...";
+	}
+}
 
 </script>
 
@@ -54,32 +101,46 @@ function joinClose()
 <body>
 	<div class="wrapper">
 		<div class="header">
-			<img src="${root}/image/mainpage/title.png"/>
+			<img src="${root}/image/mainpage/title.png"/>			
 		</div>
 		
 		<div class="container">		
 			<div class="left">
-				<div id="joinFormWrapper">					
-					id : <input type="text" name="id"/><br/>
-					pw : <input type="password" name="pw"/><br/>
-					pw확인 : <input type="password" name="pwConfirm"/><br/>
-					email : <input type="text" name="email"/><br/>
-					<input type="submit" value="가입하기"/>					
-					<input id="joinClose" type="button" value="닫기">
+				<div id="joinFormWrapper">	
+					<table id="joinFormTable">
+						<tr>
+							<td class="label">ID</td>
+							<td><input id="joinId" type="text" maxlength="16" name="id"/></td>
+						</tr>
+						<tr>
+							<td class="label">PW</td>
+							<td><input id="joinPw" type="password" maxlength="255" name="pw"/></td>
+						</tr>
+						<tr>
+							<td class="label">PW확인</td>
+							<td><input id="joinPwConfirm" type="password" maxlength="255" name="pwConfirm"/></td>
+						</tr>
+						<tr>
+							<td class="label">email</td>
+							<td><input id="joinEmail" type="text" maxlength="255" name="email"/></td>
+						</tr>
+					</table>								
+				
+					<input id="joinSubmit" type="submit" value="가입하기"/>					
+					<input id="joinClose" type="button" value="닫기"/>
+					<div id="joinMsg"></div>
 				</div>
 				<div id="mainLeftTop">
 					<br/><br/>
-					<form method="POST" action="login.do">
-						<div id="idpwWrap">
-							<div id="idpw">
-								<input name="userId" type="text" size="16px"><br/>
-								<input name="password" type="password" size="16px">
-							</div>
-							<input id="login" type="image" src="${root}/image/mainpage/login.png">
+					<form method="POST" action="login.do">						
+						<div id="idpw">
+							<input id="userId" name="userId" type="text"/><br/>
+							<input id="password" name="password" type="password"/>
 						</div>
+						<input id="login" type="image" src="${root}/image/mainpage/login.png"/>						
 					</form>	
 					<div id="loginHelp">
-						<input id="join" type="button" value="회원가입"/>
+						<input id="joinOpen" type="button" value="회원가입"/>
 						<a href = "${root}/notimplemented.jsp"> ID/PW찾기</a><br/>
 					</div>
 				</div>
