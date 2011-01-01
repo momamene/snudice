@@ -97,10 +97,10 @@ enum ePROTOCOL
 	PL_GOLOGIN_ASK,
 
 //	PL_WHISPER_ASK,				// Whisper
-	PL_FRIEND_ADD_ASK,			// 친구 추가
-	PL_FRIEND_DELETE_ASK,		// 친구 삭제
-	PL_FRIEND_WHISPER_ASK,		// 친구에게 귓말
-	PL_FRIEND_LIST_ASK,			// 친구 목록 나열
+	PL_FRIENDADD_ASK,			// 친구 추가
+	PL_FRIENDDELETE_ASK,		// 친구 삭제
+	PL_FRIENDWHISPER_ASK,		// 친구에게 귓말
+	PL_FRIENDLIST_ASK,			// 친구 목록 나열
 
 	PL_ASKCOUPLE_REP,			// 커플될건지 묻는다.
 	PL_ANSCOUPLE_ASK,			// 답변
@@ -661,15 +661,15 @@ typedef struct
 {
 	char		szMyID[IDLENGTH];
 	char		szFriendID[IDLENGTH];
-} PK_FRIEND_ADD_ASK, PK_FRIEND_DELETE_ASK;
+} PK_FRIENDADD_ASK, PK_FRIENDDELETE_ASK;
 
-struct PK_FRIEND_WHISPER_ASK
+struct PK_FRIENDWHISPER_ASK
 {
 	char		szMyID[IDLENGTH];
 	char		szComment[MSGLENGTH];
 };
 
-struct PK_FRIEND_LIST_ASK
+struct PK_FRIENDLIST_ASK
 {
 	char		szMyID[IDLENGTH];
 };

@@ -252,31 +252,31 @@ void gChat::SendMsg()
 		code = ParseStr(m_Edit.m_szEdit, opID, opMsg, &itemnum);
 		
 		if(code == FRIEND_ADD) {
-			PK_FRIEND_ADD_ASK ask;
+			PK_FRIENDADD_ASK ask;
 			
 			strcpy(ask.szMyID, myplayer->szID);
 			strcpy(ask.szFriendID, opID);
-			gServer::GetIF()->Send(PL_FRIEND_ADD_ASK, sizeof(ask), &ask);
+			gServer::GetIF()->Send(PL_FRIENDADD_ASK, sizeof(ask), &ask);
 		}
 		else if(code == FRIEND_DELETE) {
-			PK_FRIEND_DELETE_ASK ask;
+			PK_FRIENDDELETE_ASK ask;
 
 			strcpy(ask.szMyID, myplayer->szID);
 			strcpy(ask.szFriendID, opID);
-			gServer::GetIF()->Send(PL_FRIEND_DELETE_ASK, sizeof(ask), &ask);
+			gServer::GetIF()->Send(PL_FRIENDDELETE_ASK, sizeof(ask), &ask);
 		}
 		else if(code == FRIEND_WHISPER) {
-			PK_FRIEND_WHISPER_ASK ask;
+			PK_FRIENDWHISPER_ASK ask;
 
 			strcpy(ask.szMyID, myplayer->szID);
 			strcpy(ask.szComment, opMsg);
-			gServer::GetIF()->Send(PL_FRIEND_WHISPER_ASK, sizeof(ask), &ask);
+			gServer::GetIF()->Send(PL_FRIENDWHISPER_ASK, sizeof(ask), &ask);
 		}
 		else if(code == FRIEND_LIST) {
-			PK_FRIEND_LIST_ASK ask;
+			PK_FRIENDLIST_ASK ask;
 
 			strcpy(ask.szMyID, myplayer->szID);
-			gServer::GetIF()->Send(PL_FRIEND_LIST_ASK, sizeof(ask), &ask);
+			gServer::GetIF()->Send(PL_FRIENDLIST_ASK, sizeof(ask), &ask);
 		}
 
 		else {
