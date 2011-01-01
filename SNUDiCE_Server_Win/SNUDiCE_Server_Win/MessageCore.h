@@ -17,6 +17,8 @@ public:
 	void			pk_friendwhisper_ask(PK_DEFAULT *pk, SOCKET sock);
 	void			pk_friendlist_ask(PK_DEFAULT *pk, SOCKET sock);
 	
+	void			msg_failMessage(char	 szToID[IDLENGTH] , char szComment[MSGLENGTH] );
+	
 	void			command(char* str,char* szID);
 	
 };
