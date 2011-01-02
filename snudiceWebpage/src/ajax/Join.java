@@ -32,27 +32,18 @@ public class Join extends HttpServlet {
 		request.setCharacterEncoding("utf-8");
 		
 		String joinId = request.getParameter("joinId");
-		String joinPw = request.getParameter("joinPw");	
-		String joinPwConfirm = request.getParameter("joinPwConfirm");	
+		String joinPw = request.getParameter("joinPw");			
 		String joinEmail = request.getParameter("joinEmail");
 		
 		ServletOutputStream os = response.getOutputStream();		
 		
-		//parameter validation
-		if(joinId.compareTo("")==0)
-			os.print("idEmpty");
-		else if(joinId.indexOf(' ')>=0)
-			os.print("idContainSpace");
-		else if(joinPw.compareTo("")==0)
-			os.print("pwEmpty");
-		else if(joinPw.indexOf(' ')>=0)
+		//parameter validation		
+		if(joinId.indexOf(' ')>=0)
+			os.print("idContainSpace");		
+		else if(joinPw.indexOf(' ')>=0)				
 			os.print("pwContainSpace");
-		else if(joinPwConfirm.compareTo("")==0)
-			os.print("pwConfirmEmpty");
-		else if(joinPw.compareTo(joinPwConfirm)!=0)
-			os.print("pwNotEqual");
-		else if(joinEmail.compareTo("")==0)
-			os.print("emailEmpty");		
+		else if(joinEmail.indexOf(' ')>=0)
+			os.print("emailContainSpace");
 		else
 		{
 			DB db = DB.getInstance();
