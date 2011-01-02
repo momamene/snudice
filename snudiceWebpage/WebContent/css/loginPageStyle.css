@@ -1,37 +1,74 @@
 @CHARSET "UTF-8";
 
+/*----------------공통 적용 사항-----------*/
+
 a:link {color :#666; text-decoration:none;}    /* unvisited link */
 a:visited {color :#666 ;text-decoration:none;} /* visited link */
 a:hover {text-decoration:none;}   /* mouse over link */
 a:active {text-decoration:none;}  /* selected link */
 
-img 
-{
-	border : 0px;	
-}
+img { border : 0px; }
+div.centerAlign { text-align : center; }
 
 div.wrapper 
 {	
+	/* 중앙 정렬 */
 	position : relative;
 	left : 50%;
 	margin-left : -512px;	
 	width : 1024px;	
 }
 
-/*----------------header-----------*/
+div.left { float:left; }
+div.center { float:left; }
+div.right { float:left; }
 
-/*----------------container-----------*/
-div.container
+/*----------------header-----------*/
+#headerImage
 {
-	border : 1px solid black;
+	background-image : url('/snudiceWebpage/image/mainpage/title.png');
+	background-repeat : no-repeat;	
+	height : 255px;
+}	 		
+	
+/*----------------center-----------*/
+div.center
+{
+	width : 750px;		
+	margin-left: 5px;
 }
 
-/*----------------left-----------*/
-
-div.left 
+/*------------- login form ---------*/
+div.left
 {
-	float : left;
-	border : 1px solid black;
+	width : 264px;		
+}
+
+#mainLeftTop
+{
+	background-image : url('/snudiceWebpage/image/mainpage/loginWindow.png');
+	background-repeat : no-repeat;
+	width : 264px;
+	height : 187px;
+}
+	
+#loginFormWrapper.visible
+{	
+	display : block;	
+}
+
+#loginFormWrapper.invisible
+{
+	display : none;
+}
+	
+#loginButton
+{
+	background-image : url('/snudiceWebpage/image/mainpage/login.png');
+	background-repeat : no-repeat;
+	width : 64px;
+	height : 63px;
+	margin-left : 180px;
 }
 
 #mainLeftBottom 
@@ -40,33 +77,6 @@ div.left
 	background-repeat : no-repeat;
 	width : 264px;
 	height : 113px;
-	border : 1px solid black;
-}
-
-
-/*----------------center-----------*/
-div.center
-{
-	width : auto;
-	border : 1px solid black;
-}
-
-div.right
-{
-	width : auto;
-	border : 1px solid black;
-}
-
-/*----------------footer-----------*/
-
-/*------------- login form ---------*/
-#mainLeftTop 
-{
-	background-image : url('/snudiceWebpage/image/mainpage/loginWindow.png');
-	background-repeat : no-repeat;
-	width : 256px;
-	height : 187px;
-	border : 1px solid black;
 }
 
 #idpw 
@@ -79,9 +89,51 @@ div.right
 #loginHelp { text-align : center; }
 #userId { width:120px; }
 #password { width:120px; margin-top:5px;}
+#loginMsg 
+{ 
+	color:red;
+	margin-left : 30px; 
+}
+
+#logoutWrapper.invisible 
+{
+	visibility : hidden;
+}
+
+#logoutWrapper.visible 
+{
+	visibility : visible;
+	margin-left : 30px;
+}
+	
+
+#gameStart 
+{
+	background-image : url('/snudiceWebpage/image/mainpage/start.png');
+	background-repeat : no-repeat;
+	width : 109px;
+	height : 98px;
+	
+	float : left;
+	margin-left : 22px;
+	margin-top : 15px;
+}
+
+#clientDownload 
+{
+	background-image : url('/snudiceWebpage/image/mainpage/download.png');
+	background-repeat : no-repeat;
+	width : 109px;
+	height : 98px;
+	
+	float : left;
+	margin-left : 18px;
+	margin-top : 15px;
+}
 
 /*---------------join form-----------*/
-#joinFormWrapper
+#joinFormWrapper.display_none {	display : none; }
+#joinFormWrapper.display_block
 {
 	/*
 	background-image : url('/snudiceWebpage/image/mainpage/loginWindow.png');
@@ -89,12 +141,12 @@ div.right
 	*/
 	background-color : white;
 	position : absolute;
-	left : 50px;
-	top : 50px;
-	display : none;	
+	left : 30px;
+	top : 30px;
+	display : block;	
 	
-	width : 240px;
-	height : 180px;
+	width : 280px;
+	height : 220px;	
 }
 
 #joinFormTable
@@ -114,3 +166,12 @@ div.right
 #joinemail { width : 140px; }
 
 #joinMsg { color : red; }
+
+
+/*---------------footer-----------*/
+.footer
+{
+	width : 1024px;
+	clear : left;
+	text-align : center;	
+}
