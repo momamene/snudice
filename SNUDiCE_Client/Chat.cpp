@@ -153,7 +153,6 @@ PARSE_CODE ParseStr(const char *szMsg, char *opID, char *opMsg, int *itemnum)
 {
 	int i=1, c=0, len=strlen(szMsg);
 	string cmd, ID;
-	int j;
 	
 	cmd.clear(); ID.clear();
 	while(szMsg[i]!=' ' && i<len) cmd=cmd + szMsg[i++];

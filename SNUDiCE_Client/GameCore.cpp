@@ -144,7 +144,7 @@ void gGameCore::MainLoop()
 		gMainWin::GetIF()->m_Keys[VK_RETURN] = false;
 	}
 	
-	if(GetTickCount() - SLEEPTIMEMAX >= m_turnTime || gMainWin::GetIF()->m_Keys[VK_SPACE])
+	if((int)GetTickCount() - SLEEPTIMEMAX >= m_turnTime || gMainWin::GetIF()->m_Keys[VK_SPACE])
 	{
 		SendMoveAsk();
 		gMainWin::GetIF()->m_Keys[VK_SPACE] = false;

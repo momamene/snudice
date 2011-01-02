@@ -1,8 +1,5 @@
 #pragma once
-#include "Core.h"
 #include "fmod.h"
-
-
 
 class gPlaySoundCore
 {

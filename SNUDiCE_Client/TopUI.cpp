@@ -6,6 +6,27 @@
 #include "Server.h"
 #include "Chat.h"
 
+#define TOP_FILE_BACK			".\\Data\\Interface\\top_back.img"
+#define TOP_POS_BACK_X			0
+#define TOP_POS_BACK_Y			0
+#define TOP_POS_BACK_W			640
+#define TOP_POS_BACK_H			60
+
+#define TOP_BTN_BACK_FILE		".\\Data\\Interface\\top_btn_back.img"
+#define TOP_BTN_SIZEW			30
+#define TOP_BTN_SIZEH			30
+#define TOP_BTN_POS_X			595
+#define TOP_BTN_POS_Y			15
+#define TOP_BTN_TERM_X			40
+
+#define TOP_BTN_OPTION_FILE		".\\Data\\Interface\\top_btn_option.img"
+
+#define OPTION_BACK				".\\Data\\Interface\\option.img"
+#define OPTION_SIZE_W			242
+#define OPTION_SIZE_H			301
+#define OPTION_POS_X			(WNDSIZEW - OPTION_SIZE_W) / 2
+#define OPTION_POS_Y			(WNDSIZEH - OPTION_SIZE_H) / 2
+
 static gTopUI s_TopUI;
 
 gTopUI *gTopUI::GetIF()
@@ -42,22 +63,50 @@ bool gTopUI::SetUp()
 		TOP_BTN_POS_Y + TOP_BTN_SIZEH );
 
 	rcTemp = rcDest;
-	OffsetRect(&rcTemp, - (TOP_END - TOP_BACK) * TOP_BTN_TERM_X, 0);
-	if(!m_Btn[TOP_BACK].SetUp(TOP_BTN_BACK_FILE, false, rcDest))
+	OffsetRect(&rcTemp, - ((TOP_END - 1) * TOP_BTN_TERM_X), 0);
+	if(!m_Btn[TOP_OPTION].SetUp(TOP_BTN_OPTION_FILE, false, rcTemp))
 		return false;
+	OffsetRect(&rcTemp, TOP_BTN_TERM_X, 0);
+	if(!m_Btn[TOP_BACK].SetUp(TOP_BTN_BACK_FILE, false, rcTemp))
+		return false;
+
+	m_uimode = RC_END;
+
+	if(!m_Img[IMG_OPTION].Load(OPTION_BACK))
+		return false;
+	SetRect(&m_rc[RC_OPTION], OPTION_POS_X, OPTION_POS_Y,
+		OPTION_POS_X + OPTION_SIZE_W, OPTION_POS_Y + OPTION_SIZE_H);
+
 	
 	return true;
 }
 
 void gTopUI::Draw()
 {
+	Draw_Back();
+
+	Draw_Option();
+}
+
+void gTopUI::Draw_Back()
+{
 	m_ImgBack.Draw(m_rcPos.left, m_rcPos.top);
+
 
 	int		i;
 
 	for(i = 0; i < TOP_END; i++)
 		m_Btn[i].Draw();
 }
+
+void gTopUI::Draw_Option()
+{
+	if(m_uimode == RC_OPTION)
+	{
+		m_Img[IMG_OPTION].Draw(m_rc[RC_OPTION].left, m_rc[RC_OPTION].top);
+	}
+}
+
 
 void gTopUI::Release()
 {
@@ -89,6 +138,11 @@ void gTopUI::OnLButtonDown(int x, int y)
 	{
 		OnLButtonDown_Back();
 		return;
+	}
+	else if(m_Btn[TOP_OPTION].PointInButton(x, y))
+	{
+		m_uimode = RC_OPTION;
+		
 	}
 }
 
@@ -151,10 +205,22 @@ void gTopUI::OnMouseMove(int x, int y)
 	}
 }
 
+void gTopUI::OnRButtonDown(int x, int y)
+{
+	if(m_uimode == RC_OPTION)
+		m_uimode = RC_END;
+}
+
 bool gTopUI::PointInUI(int x, int y)
 {
 	if(gUtil::PointInRect(x, y, m_rcPos))
 		return true;
+
+	if(m_uimode == RC_OPTION)
+	{
+		if(gUtil::PointInRect(x, y, m_rc[RC_OPTION]))
+			return true;
+	}
 
 	return false;
 }
