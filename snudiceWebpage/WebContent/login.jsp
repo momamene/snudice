@@ -44,6 +44,18 @@ function joinCloseFunc()
 	var joinSubmit = document.getElementById("joinSubmit");
 	joinSubmit.disabled = false;
 	var joinFormWrapper = document.getElementById("joinFormWrapper");	
+	var joinId = document.getElementById("joinId");
+	var joinPw = document.getElementById("joinPw");
+	var joinPwConfirm = document.getElementById("joinPwConfirm");
+	var joinEmail = document.getElementById("joinEmail");
+	var joinMsg = document.getElementById("joinMsg");
+
+	joinId.value = "";
+	joinPw.value = "";
+	joinPwConfirm.value = "";
+	joinEmail.value = "";
+	joinMsg.innerHTML = "";
+	
 	joinFormWrapper.style.display = "none";	
 }
 
@@ -62,22 +74,39 @@ function joinSubmitFunc()
 	param += "&joinPwConfirm="+joinPwConfirm;
 	param += "&joinEmail="+joinEmail;
 	var callback = joinFormRefresh;
-	var async = false;	
+	var async = true;
 	
-	sendRequest(url,method,param,callback,async);
-		
+	sendRequest(url,method,param,callback,async);		
 }
 
 ////////////////////callback function/////////////////////
 function joinFormRefresh()
 {	
-	var joinSubmit = document.getElementById("joinSubmit");
-	
+	var joinSubmit = document.getElementById("joinSubmit");	
+	var joinMsg = document.getElementById("joinMsg");
+
 	if(request.readyState == 4)
 	{
 		if(request.status == 200)
 		{	
-			if(request.responseText == "OK")
+			if(request.responseText == "idEmpty")
+				joinMsg.innerHTML = "id를 입력해주세요.";
+			else if(request.responseText == "idContainSpace")
+				joinMsg.innerHTML = "id는 공백문자를 포함할 수 없습니다.";
+			else if(request.responseText == "pwEmpty")
+				joinMsg.innerHTML = "password를 입력해주세요.";
+			else if(request.responseText == "pwContainSpace")
+				joinMsg.innerHTML = "password는 공백문자를 포함할 수 없습니다.";
+			else if(request.responseText == "pwConfirmEmpty")
+				joinMsg.innerHTML = "password 확인란에 입력해 주세요.";
+			else if(request.responseText == "pwNotEqual")
+				joinMsg.innerHTML = "password와 password 확인란이 일치하지 않습니다.";
+			else if(request.responseText == "emailEmpty")
+				joinMsg.innerHTML = "email을 입력해주세요";
+			else if(request.responseText == "existingUser")
+				joinMsg.innerHTML = "이미 존재하는 id입니다.";			
+				 
+			if(request.responseText == "joinOK")
 			{			
 				alert("회원 가입이 완료되었습니다.");
 				joinCloseFunc();
@@ -85,11 +114,9 @@ function joinFormRefresh()
 			joinSubmit.disabled = false;		
 		}
 	}
-	else if(request.readyState == 2)
+	else
 	{
-		joinSubmit.disabled = true;
-		
-		var joinMsg = document.getElementById("joinMsg");
+		joinSubmit.disabled = true;		
 		joinMsg.innerHTML = "처리중입니다...";
 	}
 }

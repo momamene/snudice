@@ -36,32 +36,35 @@ public class Join extends HttpServlet {
 		String joinPwConfirm = request.getParameter("joinPwConfirm");	
 		String joinEmail = request.getParameter("joinEmail");
 		
-		ServletOutputStream os = response.getOutputStream();
-		os.print("OK");
-		os.flush();
+		ServletOutputStream os = response.getOutputStream();		
 		
-		
-		/*		
-		if(joinId.compareTo("")==0 || joinPw.compareTo("")==0 || joinEmail.compareTo("")==0)
-			msg = "모든 항목을 채워주세요!";		
-		else if(joinId.length()>16)
-			msg = "id는 16자까지만 가능합니다.";
+		//parameter validation
+		if(joinId.compareTo("")==0)
+			os.print("idEmpty");
+		else if(joinId.indexOf(' ')>=0)
+			os.print("idContainSpace");
+		else if(joinPw.compareTo("")==0)
+			os.print("pwEmpty");
+		else if(joinPw.indexOf(' ')>=0)
+			os.print("pwContainSpace");
+		else if(joinPwConfirm.compareTo("")==0)
+			os.print("pwConfirmEmpty");
+		else if(joinPw.compareTo(joinPwConfirm)!=0)
+			os.print("pwNotEqual");
+		else if(joinEmail.compareTo("")==0)
+			os.print("emailEmpty");		
 		else
 		{
 			DB db = DB.getInstance();
 			boolean isExistingUser = db.dbAccount.isExistingUser(joinId);
-			boolean isExistingEmail = db.dbAccount.isExistingEmail(joinEmail);
 			if(isExistingUser)
-				msg = "이미 존재하는 id 입니다.";
-			else if(isExistingEmail)
-				msg = "이미 존재하는 email 입니다.";
+				os.print("existingUser");			
 			else
-			{
-				nextPage = "joinSuccess.jsp";
+			{				
 				//계정 추가
-				db.dbAccount.insertNewUser(joinId,joinPw,joinEmail);	
+				db.dbAccount.insertNewUser(joinId,joinPw,joinEmail,"member");	
+				os.print("joinOK");
 			}			
-		}
-		*/
+		}		
 	}
 }

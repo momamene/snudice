@@ -55,7 +55,7 @@ public class Join extends HttpServlet {
 			{
 				nextPage = "joinSuccess.jsp";
 				//계정 추가
-				db.dbAccount.insertNewUser(userId,password,email);	
+				db.dbAccount.insertNewUser(userId,password,email,"member");	
 			}			
 		}
 		
