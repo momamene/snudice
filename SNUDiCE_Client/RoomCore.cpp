@@ -400,6 +400,10 @@ void gRoomCore::OnMouseMove()
 
 void gRoomCore::OnRButtonDown()
 {
+	gTopUI		*top	= gTopUI::GetIF();
+	gMouse		*mouse	= gMouse::GetIF();
+	top->OnRButtonDown(mouse->m_nPosX, mouse->m_nPosY);
+
 	switch(m_eRoom)
 	{
 		case ERM_ROOM:
@@ -789,10 +793,10 @@ void gRoomCore::Draw_Make()
 			m_MakeBtn[i].Draw();
 	}
 
-	gTopUI::GetIF()->Draw();
-
 	m_EditRoom.Draw();
 	m_EditPass.Draw();
+
+	gTopUI::GetIF()->Draw();
 }
 
 void gRoomCore::OnLButtonDown_Make()
@@ -1024,7 +1028,6 @@ void gRoomCore::MainLoop_Join()
 void gRoomCore::Draw_Join()
 {
 	m_ImgBack[ERM_JOIN].Draw(ROOM_POS_JOIN_X, ROOM_POS_JOIN_Y);
-	gTopUI::GetIF()->Draw();
 
 	int			i, j;
 
@@ -1140,6 +1143,7 @@ void gRoomCore::Draw_Join()
 		m_JoinBtn[BJM_PASS].Draw();
 		m_EditPassEnter.Draw();
 	}
+	gTopUI::GetIF()->Draw();
 }
 
 bool gRoomCore::SetUp_Room()
@@ -1283,7 +1287,7 @@ void gRoomCore::MainLoop_Room()
 void gRoomCore::Draw_Room()
 {
 	m_ImgBack[ERM_ROOM].Draw(ROOM_POS_ROOM_X, ROOM_POS_ROOM_Y);
-	gTopUI::GetIF()->Draw();
+	gTopUI::GetIF()->Draw_Back();
 
 	int			i;
 
@@ -1494,6 +1498,7 @@ void gRoomCore::Draw_Room()
 			}
 		gUtil::EndText();
 	}
+	gTopUI::GetIF()->Draw_Option();
 }
 
 
@@ -1886,6 +1891,7 @@ void gRoomCore::OnRButtonDown_Room()
 
 	m_bCharSel = false;
 	m_nSelChar = -1;
+
 }
 
 void gRoomCore::pk_gamestart_rep(PK_GAMESTART_REP *rep)

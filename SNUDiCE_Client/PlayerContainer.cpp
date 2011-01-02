@@ -362,7 +362,7 @@ void gPlayerContainer::Draw()
 	}
 
 	sort(PlayerRect.begin(), PlayerRect.end());
-	for(int i = 0 ; i < PlayerRect.size() ; i++) {
+	for(int i = 0 ; i < (int)PlayerRect.size() ; i++) {
 		int k = PlayerRect[i].index;
 		m_ImgInfo[ m_GPlayerList[k].ctype ].ImgDot.Draw(PlayerRect[i].rcScr, PlayerRect[i].rcImg, false);
 	}
@@ -413,7 +413,7 @@ void gPlayerContainer::Draw_Busing(gImage *bus, RECT *rcDest, RECT *rcSour, int 
 
 	bool printed = false;
 	sort(PlayerRect.begin(), PlayerRect.end());
-	for(int i = 0 ; i < PlayerRect.size() ; i++) {
+	for(int i = 0 ; i < (int)PlayerRect.size() ; i++) {
 		if(bus!=NULL && !printed && PlayerRect[i].rcScr.top >= rcDest->top) {
 				bus->Draw(*rcDest, *rcSour, false);
 			printed=true;
@@ -474,7 +474,7 @@ void gPlayerContainer::Draw_Warp(int charidx, int dY)
 		}
 	}
 	sort(PlayerRect.begin(), PlayerRect.end());
-	for(int i = 0 ; i < PlayerRect.size() ; i++) {
+	for(int i = 0 ; i < (int)PlayerRect.size() ; i++) {
 		int k = PlayerRect[i].index;
 		m_ImgInfo[ m_GPlayerList[k].ctype ].ImgDot.Draw(PlayerRect[i].rcScr, PlayerRect[i].rcImg, false);
 	}
@@ -519,7 +519,7 @@ void gPlayerContainer::Draw_WarpList(int *dest, bool drawAll, int dY)
 		}
 	}
 	sort(PlayerRect.begin(), PlayerRect.end());
-	for(int i = 0 ; i < PlayerRect.size() ; i++) {
+	for(int i = 0 ; i < (int)PlayerRect.size() ; i++) {
 		int k = PlayerRect[i].index;
 		m_ImgInfo[ m_GPlayerList[k].ctype ].ImgDot.Draw(PlayerRect[i].rcScr, PlayerRect[i].rcImg, false);
 	}

@@ -152,7 +152,6 @@ void gBattleNetCore::Draw()
 	m_ImgBack.Draw(BNET_POS_BACK_X, BNET_POS_BACK_Y);
 	m_ImgOutline.Draw(BNET_POS_OUTLINE_X, BNET_POS_OUTLINE_Y);
 
-	gTopUI::GetIF()->Draw();
 	gChat::GetIF()->Draw();
 	m_ChannelUI.Draw();
 
@@ -160,7 +159,8 @@ void gBattleNetCore::Draw()
 
 	for(i = 0; i < BBTN_END; i++)
 		m_ImgBtn[i].Draw();
-	
+
+	gTopUI::GetIF()->Draw();
 }
 
 void gBattleNetCore::Release()
@@ -293,7 +293,9 @@ void gBattleNetCore::OnMouseMove()
 void gBattleNetCore::OnRButtonDown()
 {
 	gMouse		*mouse = gMouse::GetIF();
+	gTopUI		*top	= gTopUI::GetIF();
 
+	top->OnRButtonDown(mouse->m_nPosX, mouse->m_nPosY);
 	if(m_ChannelUI.isPointInUI(mouse->m_nPosX, mouse->m_nPosY))
 	{
 		m_ChannelUI.OnRButtonDown(mouse->m_nPosX, mouse->m_nPosY);
