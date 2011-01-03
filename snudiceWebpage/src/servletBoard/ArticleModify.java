@@ -43,6 +43,7 @@ public class ArticleModify extends HttpServlet {
 		DB db = DB.getInstance();
 		int articleIndex = Integer.parseInt(request.getParameter("articleIndex"));
 		Article article= db.dbBoard.getArticleByIndex(articleIndex);
+		article.setUserId(Util.toHtml(article.getUserId()));
 		article.setTitle(Util.toHtml(article.getTitle()));
 		article.setText(Util.toHtml(article.getText()));
 		

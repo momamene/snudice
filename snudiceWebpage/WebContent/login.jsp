@@ -74,6 +74,7 @@ function joinSubmitFunc()
 	var joinPw = document.getElementById("joinPw");
 	var joinPwConfirm = document.getElementById("joinPwConfirm");
 	var joinEmail = document.getElementById("joinEmail");
+	var joinSubmit = document.getElementById("joinSubmit");	
 
 	var joinMsg = document.getElementById("joinMsg");
 	
@@ -109,7 +110,9 @@ function joinSubmitFunc()
 		joinEmail.focus();
 		return;
 	}
-	
+
+	joinMsg.innerHTML = "가입처리중입니다...";
+	joinSubmit.disabled = true;	
 	
 	var url = "${root}/join.ajax";	
 	var method = "POST";
@@ -117,7 +120,7 @@ function joinSubmitFunc()
 	param += "&joinPw="+joinPw.value;	
 	param += "&joinEmail="+joinEmail.value;
 	var callback = joinFormRefresh;
-	var async = true;
+	var async = false;
 	
 	sendRequest(url,method,param,callback,async);		
 }
@@ -142,14 +145,16 @@ function loginFunc()
 		loginMsg.innerHTML = "password를 입력해 주세요";
 		password.focus();
 		return;
-	}
+	}	
+
+	loginMsg.innerHTML = "로그인 중입니다..";
 	
 	var url = "${root}/login.ajax";	
 	var method = "POST";
 	var param = "userId="+userId.value;
 	param += "&password="+password.value;	
 	var callback = loginFormRefresh;
-	var async = true;
+	var async = false;
 	
 	sendRequest(url,method,param,callback,async);	
 }
@@ -164,7 +169,9 @@ function joinFormRefresh()
 	var joinMsg = document.getElementById("joinMsg");
 
 	if(request.readyState == 4)
-	{
+	{		
+		joinSubmit.disabled = false;
+		
 		if(request.status == 200)
 		{				
 			if(request.responseText == "idContainSpace")
@@ -190,8 +197,7 @@ function joinFormRefresh()
 				joinMsg.innerHTML = "이미 존재하는 id입니다.";
 				joinId.focus();
 				joinId.select();
-			}
-			joinSubmit.disabled = false;			
+			}						
 				 
 			if(request.responseText == "joinOK")
 			{			
@@ -199,12 +205,7 @@ function joinFormRefresh()
 				joinCloseFunc();
 			}
 		}
-	}
-	else
-	{
-		joinSubmit.disabled = true;		
-		joinMsg.innerHTML = "가입처리중입니다...";
-	}
+	}	
 }
 
 function loginFormRefresh()
@@ -214,9 +215,9 @@ function loginFormRefresh()
 	var logoutWrapper = document.getElementById("logoutWrapper");		
 	
 	if(request.readyState == 4)
-	{
+	{		
 		if(request.status == 200)
-		{	
+		{			
 			if(request.responseText=="loginOK")
 			{
 				loginMsg.innerHTML = userId.value + " 님 로그인 하셨습니다.";
@@ -237,12 +238,7 @@ function loginFormRefresh()
 				logoutWrapper.className = "visible";
 			}			
 		}
-	}
-	else
-	{
-		//TODO: login 버튼 비활성화된 이미지로 변경		
-		loginMsg.innerHTML = "로그인 중입니다..";
-	}
+	}	
 }
 
 function testFunc()

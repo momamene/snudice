@@ -29,16 +29,13 @@ public class ReplyWrite extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
-		
-		request.setCharacterEncoding("UTF-8");		
-		
+		HttpSession session = request.getSession();		
 		String userId = (String)session.getAttribute("userId");
-		if(userId==null)
-			return;
 		
 		int articleIndex = Integer.parseInt(request.getParameter("articleIndex"));
 		String replyText = request.getParameter("replyText");
+		
+		System.out.println("<"+replyText+">");
 		
 		DB db = DB.getInstance();
 		db.dbBoard.insertReply(articleIndex,userId,replyText);

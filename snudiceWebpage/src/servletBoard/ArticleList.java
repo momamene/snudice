@@ -10,8 +10,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import utility.Util;
 
 import constant.Const;
@@ -76,6 +74,7 @@ public class ArticleList extends HttpServlet {
 		List<Article> articleList = db.dbBoard.getArticleList(boardName,currPage, articlePerPage);		
 		for(Article article : articleList)		
 		{
+			article.setUserId(Util.toHtml(article.getUserId()));
 			article.setTitle(Util.toHtml(article.getTitle()));
 			int replyCount = db.dbBoard.getReplyCount(article.getArticleIndex());
 			replyCountList.add(replyCount);			
