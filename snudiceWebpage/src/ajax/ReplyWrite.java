@@ -33,9 +33,7 @@ public class ReplyWrite extends HttpServlet {
 		String userId = (String)session.getAttribute("userId");
 		
 		int articleIndex = Integer.parseInt(request.getParameter("articleIndex"));
-		String replyText = request.getParameter("replyText");
-		
-		System.out.println("<"+replyText+">");
+		String replyText = request.getParameter("replyText");		
 		
 		DB db = DB.getInstance();
 		db.dbBoard.insertReply(articleIndex,userId,replyText);
