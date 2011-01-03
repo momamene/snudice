@@ -46,16 +46,7 @@ public class ArticleView extends HttpServlet {
 		HttpSession session = request.getSession();
 		String userId = (String)session.getAttribute("userId");
 		String boardName = request.getParameter("boardName");
-		int currPage = Integer.parseInt(request.getParameter("currPage"));
-		
-		//로그인 된 상태가 아닌 경우
-		if(userId==null)
-		{
-			//String fullUrl = request.getRequestURI()+"?boardName="+boardName+"&articleIndex="+articleIndex+"&currPage="+currPage;
-			//session.setAttribute("redirectUrl",fullUrl );
-			response.sendRedirect((String)session.getAttribute("root")+"/first.do");
-			return;
-		}		
+		int currPage = Integer.parseInt(request.getParameter("currPage"));	
 		
 		DB db = DB.getInstance();
 		//글 정보를 가져옴
@@ -69,6 +60,7 @@ public class ArticleView extends HttpServlet {
 		else
 			request.setAttribute("myArticle", true);
 		
+		article.setUserId(Util.toHtml(article.getUserId()));
 		article.setTitle(Util.toHtml(article.getTitle()));
 		article.setText(Util.toHtml(article.getText()));
 		
@@ -76,6 +68,11 @@ public class ArticleView extends HttpServlet {
 		
 		//댓글들을 가져옴
 		List<Reply> replyList = db.dbBoard.getReplyList(articleIndex);
+		for(Reply reply : replyList)
+		{
+			reply.setUserId(Util.toHtml(reply.getUserId()));
+			reply.setReplyText(Util.toHtml(reply.getReplyText()));
+		}
 		request.setAttribute("replyList", replyList);
 		request.setAttribute("replyCount", replyList.size());
 		
