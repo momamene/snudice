@@ -1,9 +1,12 @@
 #include "PlaySoundCore.h"
 #include "fmod.h"
+#include <windows.h>
 
 #define TRUE 1
 #define FALSE 0
 #define NULL 0
+
+#define REG_DIRECTORY	"SOFTWARE\\Project N\\SNUDiCE"
 
 static gPlaySoundCore s_PlaySoundCore;
 
@@ -32,6 +35,9 @@ bool gPlaySoundCore::isBGMLoaded()
 
 void gPlaySoundCore::StartBGM(const char* filename)
 {
+	if(this->bgmState == BGM_PLAYING || this->bgmState == BGM_PAUSED)
+		StopBGM();
+	
 	this->bgmStream=FSOUND_Stream_Open(filename,FSOUND_LOOP_NORMAL, 0, 0);
 	if (this->bgmStream!=NULL) {
 		this->bgmChannel=FSOUND_Stream_Play(FSOUND_FREE, this->bgmStream);		
@@ -59,7 +65,7 @@ void gPlaySoundCore::ResumeBGM()
 }
 void gPlaySoundCore::StopBGM()
 {
-	if(this->bgmState!=BGM_PLAYING || this->bgmState!=BGM_PAUSED)
+	if(this->bgmState != BGM_PLAYING && this->bgmState!=BGM_PAUSED)
 		return;
 
 	FSOUND_Stream_Stop(bgmStream);
@@ -71,6 +77,8 @@ void gPlaySoundCore::StopBGM()
 void gPlaySoundCore::PlayEffectSound(const char* filename)
 {
 	FSOUND_STREAM *effectSoundStream = FSOUND_Stream_Open(filename,FSOUND_NORMAL,0,0);
+	if(!effectSoundStream)
+		return;
 	int effectSoundChannel = FSOUND_Stream_Play(FSOUND_FREE,effectSoundStream);
 	FSOUND_SetVolume(effectSoundChannel,this->effectSoundVolume);
 	FSOUND_Stream_SetEndCallback(effectSoundStream,&gPlaySoundCore::disposeEffectSoundStream,NULL);
@@ -102,4 +110,78 @@ int gPlaySoundCore::getEffectSoundVolume()
 void gPlaySoundCore::setEffectSoundVolume(int newEffectSoundVolume)
 {
 	this->effectSoundVolume = newEffectSoundVolume;
+}
+
+
+bool gPlaySoundCore::SetUp()
+{
+	HKEY			key;
+	DWORD			dwDisp;
+	DWORD			dwSize;
+
+	m_nBGM = VOLUME_MAX / 2;
+	m_nEffect = VOLUME_MAX / 2;
+
+	if(RegCreateKeyEx(HKEY_LOCAL_MACHINE, REG_DIRECTORY, 0, NULL,
+		REG_OPTION_VOLATILE, KEY_READ, NULL, &key, &dwDisp) != ERROR_SUCCESS)
+		return false;
+
+	dwSize = sizeof(int);
+	if(RegQueryValueEx(key, "bgm", 0, NULL, (LPBYTE)&m_nBGM, &dwSize) == ERROR_SUCCESS)
+		RegCloseKey(key);
+	else
+	{
+		RegCloseKey(key);
+
+		if(RegCreateKeyEx(HKEY_LOCAL_MACHINE, REG_DIRECTORY, 0, NULL,
+			REG_OPTION_VOLATILE, KEY_WRITE, NULL, &key, &dwDisp) == ERROR_SUCCESS)
+		{
+			RegSetValueEx(key, "bgm", 0, REG_DWORD, (LPBYTE)&m_nBGM, sizeof(int));
+		}
+		RegCloseKey(key);
+	}
+
+	if(RegCreateKeyEx(HKEY_LOCAL_MACHINE, REG_DIRECTORY, 0, NULL,
+		REG_OPTION_VOLATILE, KEY_READ, NULL, &key, &dwDisp) != ERROR_SUCCESS)
+		return false;
+
+	dwSize = sizeof(int);
+	if(RegQueryValueEx(key, "effect", 0, NULL, (LPBYTE)&m_nEffect, &dwSize) == ERROR_SUCCESS)
+		RegCloseKey(key);
+	else
+	{
+		RegCloseKey(key);
+
+		if(RegCreateKeyEx(HKEY_LOCAL_MACHINE, REG_DIRECTORY, 0, NULL,
+			REG_OPTION_VOLATILE, KEY_WRITE, NULL, &key, &dwDisp) == ERROR_SUCCESS)
+		{
+			RegSetValueEx(key, "effect", 0, REG_DWORD, (LPBYTE)&m_nEffect, sizeof(int));
+		}
+		RegCloseKey(key);
+	}
+
+	setBGMVolume(m_nBGM);
+	setBGMVolume(m_nEffect);
+
+	return true;
+}
+
+void gPlaySoundCore::Release()
+{
+	HKEY		key;
+	DWORD		dwDisp;
+
+	if(RegCreateKeyEx(HKEY_LOCAL_MACHINE, REG_DIRECTORY, 0, NULL,
+		REG_OPTION_VOLATILE, KEY_WRITE, NULL, &key, &dwDisp) != ERROR_SUCCESS)
+		return;
+	if(RegSetValueEx(key, "bgm", 0, REG_DWORD, (LPBYTE)&m_nBGM, sizeof(int)) != ERROR_SUCCESS)
+		return;
+	RegCloseKey(key);
+
+	if(RegCreateKeyEx(HKEY_LOCAL_MACHINE, REG_DIRECTORY, 0, NULL,
+		REG_OPTION_VOLATILE, KEY_WRITE, NULL, &key, &dwDisp) != ERROR_SUCCESS)
+		return;
+	if(RegSetValueEx(key, "effect", 0, REG_DWORD, (LPBYTE)&m_nEffect, sizeof(int)) != ERROR_SUCCESS)
+		return;
+	RegCloseKey(key);
 }

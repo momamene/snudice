@@ -8,6 +8,7 @@
 #include "Chat.h"
 #include "Dice.h"
 #include "PlayerContainer.h"
+#include "PlaySoundCore.h"
 
 
 #define LOGIN_FILE_CONNECTBTN		".\\Data\\Login\\connect.img"
@@ -335,6 +336,7 @@ void gLoginCore::pk_login_rep(PK_LOGIN_REP *rep)
 			SetFocus(gMainWin::GetIF()->m_hWnd);
 			gChat::GetIF()->m_bShow = true;
 			gPlayerContainer::GetIF()->SetMyPlayer(rep);
+			gPlaySoundCore::GetIF()->PlayEffectSound(EFFECT_FILE_7);
 
 			gUtil::DebugMsg("login success\n");
 			break;

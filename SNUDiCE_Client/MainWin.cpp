@@ -20,7 +20,7 @@
 #include "UIGame.h"
 #include "networkconst.h"
 #include "resource.h"
-#include "SoundFiles.h"
+#include "PlaySoundCore.h"
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
@@ -157,8 +157,13 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 
 	m_eCoreMode = ECM_LOGIN;
 
-	//srand(NULL);
+	if(!gPlaySoundCore::GetIF()->SetUp())
+		return false;
 
+	gPlaySoundCore::GetIF()->StartBGM(BGM_FILE_0);
+
+
+	//srand(NULL);
 	return true;
 }
 
@@ -187,6 +192,7 @@ void gMainWin::Release()
 	gItemContainer::GetIF()->Release();
 	gChat::GetIF()->Release();
 	gMap::GetIF()->Release();
+	gPlaySoundCore::GetIF()->Release();
 	SAFE_RELEASE(m_lpDDBack);
 	SAFE_RELEASE(m_lpDDPrimary);
 	SAFE_RELEASE(m_lpDD);
@@ -391,21 +397,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 					{
 						mw->m_bActive = true;
 						//ShowCursor(FALSE);
-#ifdef SOUND_ON
-						if(!playSound->isBGMLoaded())						
-							playSound->StartBGM(BGM_FILE_0);
-						else
+						if(playSound->isBGMLoaded())
 							playSound->ResumeBGM();
-#endif
 					}
 					break;
 				case WA_INACTIVE:
 					{
 						mw->m_bActive = false;
 						//ShowCursor(TRUE);
-#ifdef SOUND_ON
 						playSound->PauseBGM();
-#endif
 					}
 					break;
 			}
