@@ -6,6 +6,7 @@
 #include "SubmitCore.h"
 #include "RoomCore.h"
 #include "GameCore.h"
+#include "PlaySoundCore.h"
 
 #define MOUSEIMG			".\\Data\\Interface\\mouse.img"
 #define MOUSESIZEW			25
@@ -63,6 +64,8 @@ void gMouse::Draw()
 
 void gMouse::OnLButtonDown()
 {
+	gPlaySoundCore::GetIF()->PlayEffectSound(EFFECT_FILE_8);
+
 	m_modeMouse = MM_DEFAULT2;
 
 	if(gPopUp::GetIF()->isPopUp())
@@ -152,6 +155,8 @@ void gMouse::OnMouseMove()
 
 void gMouse::OnRButtonDown()
 {
+	gPlaySoundCore::GetIF()->PlayEffectSound(EFFECT_FILE_9);
+
 	if(gPopUp::GetIF()->isPopUp())
 	{
 		gPopUp::GetIF()->OnRButtonDown();

@@ -17,16 +17,24 @@ enum TOPUIBTN
 	TOP_END,
 };
 
+enum TOPOPTBTN
+{
+	OPT_OK,
+	OPT_CANCEL,
+	OPT_END,
+};
+
 enum TOPUIIMG
 {
 	IMG_OPTION,
+	IMG_BAR,
 	IMG_END,
 };
 
 enum TOPUIRANGE
 {
-	RC_OPTION,
-	RC_END,
+	RC_OPTION,		// m_uimode 에 쓰임
+	RC_END,			// == NONE, 아무 모드도 아님
 };
 
 class gTopUI
@@ -46,6 +54,7 @@ public:
 	RECT			m_rc[RC_END];
 
 	gImgButton		m_Btn[TOP_END];
+	gImgButton		m_OptBtn[OPT_END];
 
 	TOPUIRANGE		m_uimode;
 

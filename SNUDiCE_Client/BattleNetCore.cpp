@@ -261,6 +261,12 @@ void gBattleNetCore::OnMouseMove()
 	gChat		*chat	= gChat::GetIF();
 	gTopUI		*top	= gTopUI::GetIF();
 
+	if(top->PointInUI(mouse->m_nPosX, mouse->m_nPosY))
+	{
+		top->OnMouseMove(mouse->m_nPosX, mouse->m_nPosY);
+		return;
+	}
+
 	if(chat->PointInUI(mouse->m_nPosX, mouse->m_nPosY))
 	{
 		chat->OnMouseMove(mouse->m_nPosX, mouse->m_nPosY);
@@ -272,13 +278,6 @@ void gBattleNetCore::OnMouseMove()
 		m_ChannelUI.OnMouseMove(mouse->m_nPosX, mouse->m_nPosY);
 		return;
 	}
-
-	if(top->PointInUI(mouse->m_nPosX, mouse->m_nPosY))
-	{
-		top->OnMouseMove(mouse->m_nPosX, mouse->m_nPosY);
-		return;
-	}
-
 	int			i;
 	
 	for(i = 0; i < BBTN_END; i++)

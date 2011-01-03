@@ -12,7 +12,6 @@
 #include "Image.h"
 #include "networkconst.h"
 
-//#define SOUND_ON
 #define DEF_WHISPER
 
 #define DEFAULT_FULLSCREEN		false
