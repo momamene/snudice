@@ -33,14 +33,7 @@ public class ArticleDelete extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
-		String userId = (String)session.getAttribute("userId");	
-		
-		//로그인 된 상태가 아닌 경우
-		if(userId==null)
-		{			
-			response.sendRedirect("first.do");
-			return;
-		}		
+		String userId = (String)session.getAttribute("userId");				
 		
 		String boardName = request.getParameter("boardName");
 		String currPage = request.getParameter("currPage");

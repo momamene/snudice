@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Enumeration;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -56,5 +57,8 @@ public class TestAjax extends HttpServlet {
 		while(r.read(buf)>0)
 			System.out.println(buf);
 		*/		
+		
+		ServletOutputStream os = response.getOutputStream();
+		os.print("<top>abcd</top>");
 	}
 }

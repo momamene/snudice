@@ -37,10 +37,6 @@ public class FirstPage extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession();
-		session.setMaxInactiveInterval(3600);
-		session.setAttribute("root",Const.root);		
-		
 		DB db = DB.getInstance();		
 		//공지 글 목록을 가져온다.		
 		List<Integer> replyCountList = new ArrayList<Integer>(); //리플 수 저장용

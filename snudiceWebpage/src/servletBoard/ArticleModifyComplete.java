@@ -28,9 +28,7 @@ public class ArticleModifyComplete extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession session = request.getSession(); 
-		
-		request.setCharacterEncoding("utf-8");		
+		HttpSession session = request.getSession(); 		
 		
 		String userId = (String) session.getAttribute("userId");
 		String boardName = request.getParameter("boardName");

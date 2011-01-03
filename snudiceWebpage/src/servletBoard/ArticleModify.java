@@ -38,14 +38,7 @@ public class ArticleModify extends HttpServlet {
 		HttpSession session = request.getSession();
 		String userId = (String)session.getAttribute("userId");
 		String currPage = request.getParameter("currPage");
-		String boardName = request.getParameter("boardName");
-		
-		//로그인 된 상태가 아닌 경우
-		if(userId==null)
-		{			
-			response.sendRedirect("first.do");
-			return;
-		}
+		String boardName = request.getParameter("boardName");	
 		
 		DB db = DB.getInstance();
 		int articleIndex = Integer.parseInt(request.getParameter("articleIndex"));

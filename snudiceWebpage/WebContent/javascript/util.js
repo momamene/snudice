@@ -10,20 +10,20 @@ function show_confirm(msg,callbackFunc)
 
 //요청 객체를 만든다. 모든 브라우져를 고려한다.
 function createRequest()
-{
-	try 
-	{
+{	
+	try //IE7+,Chrome,Fireforx,Opera,Safari 
+	{		
 		request = new XMLHttpRequest();
 	}
 	catch(tryMS)
 	{
-		try
+		try 
 		{
 			request = new ActiveXObject("Msxml2.XMLHTTP");
 		}
 		catch(otherMS)
 		{
-			try
+			try //IE6,5
 			{
 				request = new ActiveXObject("Microsoft.XMLHTTP");
 			}
