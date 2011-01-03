@@ -5,7 +5,8 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" type="text/css" href="${root}/css/loginPageStyle.css"/>
+<link rel="stylesheet" type="text/css" href="${root}/css/loginPageStyle.css">
+<link rel="stylesheet" type="text/css" href="${root}/css/boardStyle.css">
 <script type="text/javascript" src="${root}/javascript/util.js"></script> 
 <script type="text/javascript" src="${root}/javascript/json2.js"></script>
 <script type="text/javascript">
@@ -23,11 +24,10 @@ function init()
 	joinCloseButton.onclick = joinCloseFunc;
 	//가입하기 버튼
 	var joinSubmit = document.getElementById("joinSubmit");
-	joinSubmit.onclick = joinSubmitFunc;	
-
+	joinSubmit.onclick = joinSubmitFunc;
 	//로그인 버튼
 	var loginButton = document.getElementById("loginButton");
-	loginButton.onclick = loginFunc;	
+	loginButton.onclick = loginFunc;
 }
 
 ////////////////////event handler/////////////////////
@@ -211,8 +211,7 @@ function loginFormRefresh()
 {	
 	var userId = document.getElementById("userId");	
 	var loginMsg = document.getElementById("loginMsg");	
-	var logoutWrapper = document.getElementById("logoutWrapper");
-		
+	var logoutWrapper = document.getElementById("logoutWrapper");		
 	
 	if(request.readyState == 4)
 	{
@@ -244,6 +243,43 @@ function loginFormRefresh()
 		//TODO: login 버튼 비활성화된 이미지로 변경		
 		loginMsg.innerHTML = "로그인 중입니다..";
 	}
+}
+
+function testFunc()
+{	
+	var url = "${root}/board/articleList.do?boardName=test&currPage=0";	
+	//var url = "testAjax.ajax";	
+	var method = "GET";
+	var param = null;
+	var callback = testCallback;
+	var async = true;
+	
+	sendRequest(url,method,param,callback,async);	
+}
+
+function testCallback()
+{
+	if(request.readyState == 4)
+	{
+		if(request.status == 200)
+		{	
+			var test = document.getElementById("test");
+			var responseXML = request.responseXML;			
+
+			if(!window.DOMParser) //IE인 경우			
+			{						
+				responseXML = new ActiveXObject("Microsoft.XMLDOM");
+				responseXML.async = "false";								
+				responseXML.loadXML(request.responseText);
+				responseXML = responseXML.documentElement;
+				test.innerHTML = responseXML.getElementsByTagName("body")[0].xml;
+			}	
+			else
+			{				
+				test.innerHTML = responseXML.getElementsByTagName("body")[0].innerHTML;
+			}			
+		}
+	}	
 }
 
 </script>
@@ -285,11 +321,18 @@ function loginFormRefresh()
 					<div id="joinMsg"></div>
 				</div>
 				<div id="mainLeftTop">
-					<br/><br/>			
-					<div id="loginFormWrapper" class="visible">							
+					<br/><br/>		
+					<c:choose>
+						<c:when test="${not empty userId}">
+							<div id="loginFormWrapper" class="invisible">		
+						</c:when>
+						<c:otherwise>
+							<div id="loginFormWrapper" class="visible">	
+						</c:otherwise>
+					</c:choose>											
 						<div id="idpw">
-							<input id="userId" name="userId" type="text"/><br/>
-							<input id="password" name="password" type="password"/>
+							<input id="userId" name="userId" maxlength="16" type="text"/><br/>
+							<input id="password" name="password" maxlength="255" type="password"/>
 						</div>					
 						<div id="loginButton"></div>					
 						<div id="loginHelp">
@@ -297,8 +340,21 @@ function loginFormRefresh()
 							<a href = "${root}/notimplemented.jsp"> ID/PW찾기</a><br/>
 						</div>
 					</div>
-					<div id="loginMsg"></div>
-					<div id="logoutWrapper" class="invisible">						
+					<div id="loginMsg">
+					<c:choose>
+						<c:when test="${not empty userId}">
+							${userId} 님 로그인 하셨습니다.
+						</c:when>												
+					</c:choose>	
+					</div>
+					<c:choose>
+						<c:when test="${not empty userId}">
+							<div id="logoutWrapper" class="visible">		
+						</c:when>
+						<c:otherwise>
+							<div id="logoutWrapper" class="invisible">	
+						</c:otherwise>
+					</c:choose>	
 						<a href="logout.do">로그아웃</a>	
 					</div>						
 				</div>
@@ -322,14 +378,16 @@ function loginFormRefresh()
 					<c:forEach var="article" items="${articleList}">
 						<a href="${root}/board/articleView.do?boardName=${boardName}&articleIndex=${article.articleIndex}&currPage=0">${article.title}</a><br/>						
 					</c:forEach>
-				</div>								
+				</div>
 			</div>
 			<div class="right">&nbsp;</div>				
 		</div>		
 		
-		<div class="footer" id="loginFooter">		
+		<div class="footer">		
 		<hr/>
-		PrjN			
+		PrjN<br/>
+			<input type="button" onclick="testFunc();" value="test"/> 
+			<div id="test"></div>				
 		</div>			
 	</div>
 </body>

@@ -13,8 +13,7 @@
   <security-constraint>
     <web-resource-collection>
       <web-resource-name>https</web-resource-name>
-      <url-pattern>*.do</url-pattern>
-      <url-pattern>*.ajax</url-pattern>
+      <url-pattern>*.do</url-pattern>      
     </web-resource-collection>
     <user-data-constraint>
       <transport-guarantee>CONFIDENTIAL</transport-guarantee>
@@ -40,6 +39,35 @@
     <auth-constraint>
       <role-name>admin</role-name>
     </auth-constraint>
+    <user-data-constraint>
+      <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+    </user-data-constraint>
+  </security-constraint>
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>게시판,AJAX</web-resource-name>
+      <url-pattern>/board/*</url-pattern>
+      <url-pattern>*.ajax</url-pattern>
+      <http-method>GET</http-method>
+      <http-method>POST</http-method>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>admin</role-name>
+      <role-name>member</role-name>
+    </auth-constraint>
+    <user-data-constraint>
+      <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+    </user-data-constraint>
+  </security-constraint>
+   <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>게시판,AJAX</web-resource-name>
+      <url-pattern>/testAjax.ajax</url-pattern>
+      <url-pattern>/login.ajax</url-pattern>
+      <url-pattern>/join.ajax</url-pattern>
+      <http-method>GET</http-method>
+      <http-method>POST</http-method>
+    </web-resource-collection>   
     <user-data-constraint>
       <transport-guarantee>CONFIDENTIAL</transport-guarantee>
     </user-data-constraint>
@@ -117,11 +145,11 @@
     <url-pattern>/board/articleDelete.do</url-pattern>
   </servlet-mapping>
   <servlet>
-    <servlet-name>firstPageInternalName</servlet-name>
+    <servlet-name>firstPage</servlet-name>
     <servlet-class>servletAccount.FirstPage</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>firstPageInternalName</servlet-name>
+    <servlet-name>firstPage</servlet-name>
     <url-pattern>/first.do</url-pattern>
   </servlet-mapping>
   <servlet>
@@ -180,4 +208,14 @@
     <servlet-name>login</servlet-name>
     <url-pattern>/login.ajax</url-pattern>
   </servlet-mapping>
+ 
+  <filter>
+  	<filter-name>allRequestFilter</filter-name>
+  	<filter-class>filter.AllRequestFilter</filter-class>
+  </filter>
+  <filter-mapping>
+  	<filter-name>allRequestFilter</filter-name>
+  	<url-pattern>/*</url-pattern>
+  </filter-mapping>   
+
 </web-app>

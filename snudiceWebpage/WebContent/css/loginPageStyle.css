@@ -61,15 +61,6 @@ div.left
 {
 	display : none;
 }
-	
-#loginButton
-{
-	background-image : url('/snudiceWebpage/image/mainpage/login.png');
-	background-repeat : no-repeat;
-	width : 64px;
-	height : 63px;
-	margin-left : 180px;
-}
 
 #mainLeftBottom 
 {
@@ -82,11 +73,22 @@ div.left
 #idpw 
 {
 	float : left;	
-	margin-left : 50px;	
+	margin-left : 40px;	
+}
+
+#loginButton
+{
+	background-image : url('/snudiceWebpage/image/mainpage/login.png');
+	background-repeat : no-repeat;
+	width : 64px;
+	height : 63px;
+	float : left;
+	position : relative;
+	left : 10px;
 }
 
 #login { margin-left : 5px; }
-#loginHelp { text-align : center; }
+#loginHelp { text-align : center; clear:left;}
 #userId { width:120px; }
 #password { width:120px; margin-top:5px;}
 #loginMsg 
@@ -173,5 +175,5 @@ div.left
 {
 	width : 1024px;
 	clear : left;
-	text-align : center;	
+	text-align : center;
 }
