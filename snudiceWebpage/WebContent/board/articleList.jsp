@@ -34,7 +34,7 @@
 								<a href="${root}/board/articleView.do?boardName=${param.boardName}&amp;articleIndex=${article.articleIndex}&amp;currPage=${param.currPage}">															
 									<span>${article.title}</span> 
 									<c:if test="${replyCountList[status.index]>0}">
-										<span id="replyCountInTitle"> (${replyCountList[status.index]})</span>
+										<span> (${replyCountList[status.index]})</span>
 									</c:if>
 								</a>
 							</td>
