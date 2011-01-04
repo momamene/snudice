@@ -42,7 +42,7 @@ void gPlaySoundCore::StartBGM(const char* filename)
 	if (this->bgmStream!=NULL) {
 		this->bgmChannel=FSOUND_Stream_Play(FSOUND_FREE, this->bgmStream);		
 		// 새로 생성되는 채널은 항상 최대 볼륨이므로 강제로 맞춰줘야 함
-		FSOUND_SetVolume(this->bgmChannel,this->bgmVolume);		
+		FSOUND_SetVolume(this->bgmChannel,this->m_nBGM);		
 
 		this->bgmState = BGM_PLAYING;
 	}	
@@ -74,14 +74,49 @@ void gPlaySoundCore::StopBGM()
 	this->bgmState = BGM_NOT_LOADED;
 }
 
-void gPlaySoundCore::PlayEffectSound(const char* filename)
+void gPlaySoundCore::PlayEffectSound(const char* filename, bool bRepeat)
 {
-	FSOUND_STREAM *effectSoundStream = FSOUND_Stream_Open(filename,FSOUND_NORMAL,0,0);
+	FSOUND_STREAM *effectSoundStream;
+	if(bRepeat)
+	{
+		effectSoundStream = FSOUND_Stream_Open(filename,FSOUND_LOOP_NORMAL,0,0);
+		PAIR_SOUND		add;
+		strcpy(add.szFileName, filename);
+		add.pStream = effectSoundStream;
+
+		// 이미 반복재생하려는 사운드가 목록에 있으면 return
+		vector<PAIR_SOUND>::iterator		it;
+		for(it = m_vSoundList.begin(); it != m_vSoundList.end(); it++)
+			if(strcmp(it->szFileName, filename) == 0)
+				return;
+
+		m_vSoundList.push_back(add);
+	}
+	else
+		effectSoundStream = FSOUND_Stream_Open(filename,FSOUND_NORMAL,0,0);
+
 	if(!effectSoundStream)
 		return;
 	int effectSoundChannel = FSOUND_Stream_Play(FSOUND_FREE,effectSoundStream);
 	FSOUND_SetVolume(effectSoundChannel,this->effectSoundVolume);
-	FSOUND_Stream_SetEndCallback(effectSoundStream,&gPlaySoundCore::disposeEffectSoundStream,NULL);
+	if(!bRepeat)
+		FSOUND_Stream_SetEndCallback(effectSoundStream,&gPlaySoundCore::disposeEffectSoundStream,NULL);
+}
+
+void gPlaySoundCore::StopEffectSound(const char* filename)
+{
+	vector<PAIR_SOUND>::iterator		it;
+
+	for(it = m_vSoundList.begin(); it != m_vSoundList.end(); it++)
+	{
+		if(strcmp(it->szFileName, filename) == 0)
+		{
+			FSOUND_Stream_Stop(it->pStream);
+			FSOUND_Stream_Close(it->pStream);
+			m_vSoundList.erase(it);
+			return;
+		}
+	}
 }
 
 

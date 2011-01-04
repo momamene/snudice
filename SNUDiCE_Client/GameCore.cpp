@@ -12,6 +12,7 @@
 #include "UIGame.h"
 #include "PopUp.h"
 #include "RoomCore.h"
+#include "PlaySoundCore.h"
 
 #define MINMOVE					10
 #define WORLDX					2228
@@ -103,6 +104,7 @@ void gGameCore::MainLoop()
 				{
 					case ECLK_OK:
 						gMainWin::GetIF()->m_eCoreMode = ECM_ROOM;//클라이언트에서룸상태변경
+						gPlaySoundCore::GetIF()->StartBGM(BGM_FILE_0);
 						break;
 				}
 				break;
@@ -994,6 +996,22 @@ void gGameCore::Start(int spacor)
 
 void gGameCore::Start(int spacor,int conPosX, int conPosY)
 {
+	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
+	int couple = gPC->GetCoupleIndex(m_nTurn);
+
+	if(couple != -1)
+	{
+		gPlaySoundCore::GetIF()->PlayEffectSound(EFFECT_FILE_11, true);
+		gPlaySoundCore::GetIF()->PlayEffectSound(EFFECT_FILE_12, true);
+	}
+	else
+	{
+		if(gPC->m_CharInfo[ gPC->m_GPlayerList[m_nTurn].ctype ].bMale)
+			gPlaySoundCore::GetIF()->PlayEffectSound(EFFECT_FILE_11, true);
+		else
+			gPlaySoundCore::GetIF()->PlayEffectSound(EFFECT_FILE_12, true);
+	}
+
 	gMap::GetIF()->posSetter(conPosX,conPosY);
 	Start(spacor);
 }
@@ -1022,6 +1040,7 @@ void gGameCore::StepOn()
 	else
 	{
 		int couple = gPC->GetCoupleIndex(m_nTurn);
+
 //		if(couple == m_nTurn) couple = gPC->GetMyGPIndex();
 		gMap::GetIF()->posMover(l_frame, gt->m_frame);
 
@@ -1063,6 +1082,20 @@ void gGameCore::End(bool Abnormal_End)		// 이동 끝남
 	int					couple = gPC->GetCoupleIndex(m_nTurn);
 	PK_MOVEEND_ASK		ask;
 	static int			newPos;
+
+	if(couple != -1)
+	{
+		gPlaySoundCore::GetIF()->StopEffectSound(EFFECT_FILE_11);
+		gPlaySoundCore::GetIF()->StopEffectSound(EFFECT_FILE_12);
+	}
+	else
+	{
+		if(gPC->m_CharInfo[ gPC->m_GPlayerList[m_nTurn].ctype ].bMale)
+			gPlaySoundCore::GetIF()->StopEffectSound(EFFECT_FILE_11);
+		else
+			gPlaySoundCore::GetIF()->StopEffectSound(EFFECT_FILE_12);
+	}
+
 
 //	if(couple == m_nTurn) couple = gPC->GetMyGPIndex();
 	if(couple >= 0) {
