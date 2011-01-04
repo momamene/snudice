@@ -10,7 +10,7 @@
 <title>${param.boardName} 게시판</title>
 </head>
 <body>
-	<div class="wrapper">
+	<div class="bodyWrapper">
 		<div class="boardHeader">
 			<h1>게시판</h1>
 		</div>		
