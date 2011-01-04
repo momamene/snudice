@@ -1,8 +1,17 @@
 #pragma once
 #include "fmod.h"
 #include "SoundFiles.h"
+#include <vector>
+
+using namespace std;
 
 #define VOLUME_MAX	200
+
+struct PAIR_SOUND
+{
+	char			szFileName[256];
+	FSOUND_STREAM*	pStream;
+};
 
 class gPlaySoundCore
 {
@@ -38,7 +47,8 @@ public:
 	void	PauseBGM();
 	void	ResumeBGM();
 	void	StopBGM();
-	void	PlayEffectSound(const char* filename);
+	void	PlayEffectSound(const char* filename, bool bRepeat = false);
+	void	StopEffectSound(const char* filename);
 
 	int		getBGMVolume();
 	void	setBGMVolume(int newBGMVolume);
@@ -46,6 +56,8 @@ public:
 	void	setEffectSoundVolume(int newEffectSoundVolume);
 
 private:
+	vector<PAIR_SOUND>	m_vSoundList;
+
 	FSOUND_STREAM	*bgmStream;	
 	int				bgmChannel;
 	int				bgmVolume;

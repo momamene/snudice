@@ -2,6 +2,7 @@
 #include "GameCore.h"
 #include "PlayerContainer.h"
 #include "Map.h"
+#include "PlaySoundCore.h"
 
 static gDice s_Dice;
 
@@ -67,6 +68,8 @@ void gDice::DiceStart(int hedron, int cube, int n1, int n2, int spacor)
 
 	if(!m_start)
 	{
+		gPlaySoundCore::GetIF()->PlayEffectSound(EFFECT_FILE_6);
+
 		m_frametime.SetUp();
 		m_frametime.frameStart(2300, 23); //위에서 해주세요도
 		m_start = true;
