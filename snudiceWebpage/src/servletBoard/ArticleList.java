@@ -82,7 +82,7 @@ public class ArticleList extends HttpServlet {
 		
 		request.setAttribute("replyCountList", replyCountList);
 		
-		List<Integer> pageList= new ArrayList<Integer>();		
+		List<Integer> pageList= new ArrayList<Integer>();			
 		
 		if(articleList.size()>0)
 		{
@@ -95,7 +95,7 @@ public class ArticleList extends HttpServlet {
 					break;
 			}
 		}		
-		
+				
 		request.setAttribute("pageList",pageList);
 		request.setAttribute("articleList",articleList);
 		request.setAttribute("currPage",currPage);
