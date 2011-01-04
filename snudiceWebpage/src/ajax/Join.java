@@ -29,8 +29,6 @@ public class Join extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
-		request.setCharacterEncoding("utf-8");
-		
 		String joinId = request.getParameter("joinId");
 		String joinPw = request.getParameter("joinPw");			
 		String joinEmail = request.getParameter("joinEmail");

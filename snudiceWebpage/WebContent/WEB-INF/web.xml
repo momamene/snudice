@@ -88,14 +88,7 @@
     <servlet-name>adminTestInternalName</servlet-name>
     <url-pattern>/admin/test.do</url-pattern>
   </servlet-mapping>
-  <servlet>
-    <servlet-name>loginInternalName</servlet-name>
-    <servlet-class>servletAccount.Login</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>loginInternalName</servlet-name>
-    <url-pattern>/login.do</url-pattern>
-  </servlet-mapping>
+
   <servlet>
     <servlet-name>articleWriteInternalName</servlet-name>
     <servlet-class>servletBoard.ArticleWrite</servlet-class>

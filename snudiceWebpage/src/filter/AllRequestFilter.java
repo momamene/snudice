@@ -44,8 +44,14 @@ public class AllRequestFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest)request;
 		HttpSession session = req.getSession();
 		session.setMaxInactiveInterval(1800);
+		
 		if(session.getAttribute("root")==null)
-			session.setAttribute("root",Const.root); //root 경로 설정
+		{
+			synchronized(session)
+			{
+				session.setAttribute("root",Const.root); //root 경로 설정
+			}
+		}
 		
 		StringBuffer log = new StringBuffer("["+Util.currDateTime()+"]");
 		log.append(" from "+"<"+req.getRemoteAddr()+">");
@@ -53,7 +59,12 @@ public class AllRequestFilter implements Filter {
 		{
 			log.append(" user="+"<"+req.getRemoteUser()+">");
 			if(session.getAttribute("userId")==null)
-				session.setAttribute("userId", req.getRemoteUser()); //userId 설정
+			{
+				synchronized(session)
+				{
+					session.setAttribute("userId", req.getRemoteUser()); //userId 설정
+				}
+			}				
 		}
 		if(req.isSecure())
 			log.append(" (HTTPS)");
