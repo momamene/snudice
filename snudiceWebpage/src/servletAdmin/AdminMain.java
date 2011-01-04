@@ -32,11 +32,6 @@ public class AdminMain extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
-		HttpSession session = request.getSession();
-		session.setMaxInactiveInterval(3600);
-		session.setAttribute("root",Const.root);
-		session.setAttribute("userId",request.getUserPrincipal().getName());
-		
 		//게시판 목록을 가져온다.
 		DB db = DB.getInstance();
 		request.setAttribute("boardList", db.dbBoard.getBoardList());
