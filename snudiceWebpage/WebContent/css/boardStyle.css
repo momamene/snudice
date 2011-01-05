@@ -1,5 +1,31 @@
 @CHARSET "UTF-8";
 
+/* 큰 영역 size 설정 */
+.header,.bodyWrapper,.footer {	width : 1024px; }
+.left { width : 264px; }
+.center { width : 750px; }
+.right { width : 0px; }
+
+/* 큰 영역 position 설정 */
+.bodyWrapper 
+{	
+	/* 중앙 정렬 */
+	position : relative;
+	left : 50%;
+	margin-left : -512px;	
+}
+
+.left { float:left; }
+.center { float:left; margin-left: 5px; }
+.right { float:left; }
+
+.footer
+{
+	clear : left;
+	text-align : center;
+}
+
+
 a:link {text-decoration:none;}    /* unvisited link */
 a:visited {text-decoration:none;} /* visited link */
 a:hover {text-decoration:underline;}   /* mouse over link */
@@ -20,6 +46,13 @@ table  {
 }
 */
 
+/*------------header-------------*/
+#headerImage
+{
+	background-image : url('/snudiceWebpage/image/mainpage/title.png');
+	background-repeat : no-repeat;	
+	height : 255px;
+}
 
 td.articleNumber { border: 1px solid black;
 	width : 10%; text-align : center; }

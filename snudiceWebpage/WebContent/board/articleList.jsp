@@ -11,11 +11,11 @@
 </head>
 <body>
 	<div class="bodyWrapper">
-		<div class="boardHeader">
-			<h1>게시판</h1>
+		<div class="header">
+			<div id="headerImage"></div>
 		</div>		
 		
-		<div class="boardContainer">
+		<div class="container">
 			<div class = "boardTop"></div>
 			<div class = "boardMiddle">
 				<table class="boardListTop">
@@ -73,13 +73,12 @@
 		</div>			
 	</div>		
 	
-	<div class="boardFooter">
+	<div class="footer">
 		<span>현재 페이지 : ${param.currPage}</span>  		
 		<br/>
 		<a href="${root}/board/articleList.do?boardName=${param.boardName}&amp;currPage=0">처음목록</a>
 		<a id="boardWrite" href="${root}/board/articleWriteForm.do?boardName=${param.boardName}&amp;currPage=${param.currPage}">글쓰기</a>
 		<a href="${root}/logout.do">로그아웃</a>
 	</div>	
-	
 </body>
 </html>

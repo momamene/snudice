@@ -6,7 +6,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" type="text/css" href="${root}/css/loginPageStyle.css">
-<link rel="stylesheet" type="text/css" href="${root}/css/boardStyle.css">
 <script type="text/javascript" src="${root}/javascript/util.js"></script> 
 <script type="text/javascript" src="${root}/javascript/json2.js"></script>
 <script type="text/javascript">
@@ -28,10 +27,17 @@ function init()
 	//로그인 버튼
 	var loginButton = document.getElementById("loginButton");
 	loginButton.onclick = loginFunc;
+	loginButton.onmouseover = mousOverFunc;
+	loginButton.onmouseout = mouseOutFunc;
+
+	//로그아웃 버튼
+	var logoutWrapper = document.getElementById("logoutWrapper");
+	logoutWrapper.onclick = function() { window.location = "logout.do"; }
+	
+	
 }
 
-////////////////////event handler/////////////////////
-
+////////////////////ajax 요청을 하는 event handler/////////////////////
 //회원 가입 창을 연다
 function joinOpenFunc()
 {	
@@ -159,6 +165,19 @@ function loginFunc()
 	sendRequest(url,method,param,callback,async);	
 }
 
+////////////////////이미지 변화 event handler/////////////////////
+//마우스를 올려놓는 경우
+function mousOverFunc()
+{
+	this.className = "mouseOver";	
+}
+
+//마우스를 떼는 경우
+function mouseOutFunc()
+{
+	this.className = "mouseOut";
+}
+
 ////////////////////callback function/////////////////////
 function joinFormRefresh()
 {		
@@ -223,6 +242,7 @@ function loginFormRefresh()
 				loginMsg.innerHTML = userId.value + " 님 로그인 하셨습니다.";
 				var loginFormWrapper = document.getElementById("loginFormWrapper");
 				
+				loginMsg.className = "loggined";
 				loginFormWrapper.className = "invisible";				
 				logoutWrapper.className = "visible";				
 			}
@@ -236,43 +256,6 @@ function loginFormRefresh()
 			{
 				loginMsg.innerHTML = "이미 로그인 되어있습니다.";
 				logoutWrapper.className = "visible";
-			}			
-		}
-	}	
-}
-
-function testFunc()
-{	
-	var url = "${root}/board/articleList.do?boardName=test&currPage=0";	
-	//var url = "testAjax.ajax";	
-	var method = "GET";
-	var param = null;
-	var callback = testCallback;
-	var async = true;
-	
-	sendRequest(url,method,param,callback,async);	
-}
-
-function testCallback()
-{
-	if(request.readyState == 4)
-	{
-		if(request.status == 200)
-		{	
-			var test = document.getElementById("test");
-			var responseXML = request.responseXML;			
-
-			if(!window.DOMParser) //IE인 경우			
-			{						
-				responseXML = new ActiveXObject("Microsoft.XMLDOM");
-				responseXML.async = "false";								
-				responseXML.loadXML(request.responseText);
-				responseXML = responseXML.documentElement;
-				test.innerHTML = responseXML.getElementsByTagName("body")[0].xml;
-			}	
-			else
-			{				
-				test.innerHTML = responseXML.getElementsByTagName("body")[0].innerHTML;
 			}			
 		}
 	}	
@@ -317,7 +300,7 @@ function testCallback()
 					<div id="joinMsg"></div>
 				</div>
 				<div id="mainLeftTop">
-					<br/><br/>		
+					<div id="loginFormTitle">회원로그인</div>								
 					<c:choose>
 						<c:when test="${not empty userId}">
 							<div id="loginFormWrapper" class="invisible">		
@@ -330,13 +313,22 @@ function testCallback()
 							<input id="userId" name="userId" maxlength="16" type="text"/><br/>
 							<input id="password" name="password" maxlength="255" type="password"/>
 						</div>					
-						<div id="loginButton"></div>					
-						<div id="loginHelp">
-							<input id="joinOpen" type="button" value="회원가입"/>
-							<a href = "${root}/notimplemented.jsp"> ID/PW찾기</a><br/>
-						</div>
+						<div id="loginButton" class="mouseOut"></div>
+						<div id="loginFormHorzLine"></div>					
+						<div id="loginHelp">						
+							<a id="joinOpen" href="#">회원가입</a>							
+							<a id="findIdPw" href="#">ID/PW찾기</a>
+						</div>						
 					</div>
-					<div id="loginMsg">
+					<c:choose>
+						<c:when test="${not empty userId}">
+							<div id="loginMsg" class="loggined">
+						</c:when>	
+						<c:otherwise>
+							<div id="loginMsg" class="logouted">
+						</c:otherwise>											
+					</c:choose>	
+					
 					<c:choose>
 						<c:when test="${not empty userId}">
 							${userId} 님 로그인 하셨습니다.
@@ -350,8 +342,7 @@ function testCallback()
 						<c:otherwise>
 							<div id="logoutWrapper" class="invisible">	
 						</c:otherwise>
-					</c:choose>	
-						<a href="logout.do">로그아웃</a>	
+					</c:choose>							
 					</div>						
 				</div>
 				<div id="mainLeftBottom">					
@@ -381,9 +372,7 @@ function testCallback()
 		
 		<div class="footer">		
 		<hr/>
-		PrjN<br/>
-			<input type="button" onclick="testFunc();" value="test"/> 
-			<div id="test"></div>				
+		PrjN
 		</div>			
 	</div>
 </body>
