@@ -17,6 +17,11 @@
 		WHERE articleIndex=#articleIndex:INT#
 	</delete>
 	
+	<delete id="deleteReply" parameterClass="Integer">
+		DELETE FROM board_boardreply
+		WHERE articleIndex=#articleIndex:INT#
+	</delete>
+	
 	<insert id="insertReply" parameterClass="HashMap">
 		INSERT INTO board_boardreply
 		(articleIndex,userId,dateTime,replyText)

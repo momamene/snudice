@@ -7,6 +7,18 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <link rel="stylesheet" type="text/css" href="${root}/css/boardStyle.css"/>
+<script type="text/javascript">
+
+window.onload = init;
+
+function init()
+{
+	var headerImage = document.getElementById("headerImage");
+	headerImage.onclick = function() { window.location = "${root}/first.do"};
+}
+
+</script> 
+
 <title>${param.boardName} 게시판</title>
 </head>
 <body>

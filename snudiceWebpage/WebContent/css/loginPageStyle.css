@@ -2,7 +2,7 @@
 /* 큰 영역 size 설정 */
 .header,.bodyWrapper,.footer {	width : 1024px; }
 .left { width : 264px; }
-.center { width : 750px; }
+.center { width : 755px; }
 .right { width : 0px; }
 #mainLeftTop,#mainLeftBottom  { width : 264px; }
 
@@ -26,12 +26,19 @@
 }
 
 /*----------------공통 적용 사항-----------*/
-a:link {color :#666; text-decoration:none;}    /* unvisited link */
-a:visited {color :#666 ;text-decoration:none;} /* visited link */
+a:link { text-decoration:none;}    /* unvisited link */
+a:visited {text-decoration:none;} /* visited link */
 a:hover {text-decoration:none;}   /* mouse over link */
 a:active {text-decoration:none;}  /* selected link */
 
 img { border : 0px; }
+hr
+{	
+	background-color : #262E69;
+	height : 4px;
+	border : 0px;
+}
+	
 .centerAlign { text-align : center; }
 
 .bodyWrapper { background-color : #E4E4F9; }
@@ -82,8 +89,8 @@ img { border : 0px; }
 
 #loginButton.mouseOut,#loginButton.mouseOver
 {
-	width : 64px;
-	height : 63px;
+	width : 71px;
+	height : 70px;
 	float : left;
 	position : relative;
 	left : 10px;
@@ -99,29 +106,26 @@ img { border : 0px; }
 {
 	background-image : url('/snudiceWebpage/image/mainpage/loginMouseOver.png');
 	background-repeat : no-repeat;
-	width : 71px;
-	height : 70px;	
 	left : 5px;
-	top : -5px;
+	top : -5px;	
 }
 
 #login { margin-left : 5px; }
 
-#loginFormHorzLine
-{
-	border : 2px solid #262E69;	
+hr#loginFormHorzLine
+{	
 	position : relative;
 	left : 50%;
 	margin-left : -100px;
 	width : 200px;
-	top : 70px;
+	top : 5px;	
 }
 
 #loginHelp 
 { 
 	text-align : center; 
 	clear:left;
-	margin-top : 80px;
+	margin-top : 20px;
 }
 
 #userId,#password
@@ -229,3 +233,49 @@ img { border : 0px; }
 #joinemail { width : 140px; }
 
 #joinMsg { color : red; }
+
+/*-----------메인 섹션------------*/
+#boardSelect
+{
+	background-image : url('/snudiceWebpage/image/mainpage/menubar.png');
+	background-repeat : repeat;
+	color : white;
+	height : 52px;
+}
+
+#boardSelect a
+{
+	color : white;
+}
+
+#centerLU
+{
+	background-color : #67ABC9;
+	width : 50%;
+	height : 300px;
+	float : left;
+}
+
+#centerRU
+{
+	background-color : #CEDFFF;
+	width : 50%;
+	height : 300px;
+	float: left;
+}
+
+#centerLD
+{
+	background-color : #C1D6F4;
+	width : 50%;
+	height : 300px;
+	float : left;	
+}
+
+#centerRD
+{
+	background-color : #FFFFFF;	
+	width : 50%;
+	height : 300px;
+	float : left;
+}
