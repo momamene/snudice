@@ -34,6 +34,8 @@ a:active {text-decoration:none;}  /* selected link */
 img { border : 0px; }
 .centerAlign { text-align : center; }
 
+.bodyWrapper { background-color : #E4E4F9; }
+
 /*----------------header-----------*/
 #headerImage
 {
@@ -45,21 +47,26 @@ img { border : 0px; }
 /*------------- login form ---------*/
 #mainLeftTop
 {
-	background-image : url('/snudiceWebpage/image/mainpage/loginWindow.png');
-	background-repeat : no-repeat;
-	height : 187px;
+	background-color : #464D9C;	
+	height : 170px;
 }
 
-#mainLeftBottom 
-{
-	background-image : url('/snudiceWebpage/image/mainpage/buttonWindow.png');
-	background-repeat : no-repeat;
-	height : 113px;
+#loginFormTitle
+{	
+	/*가로 세로 번짐 색깔*/	
+	color : #CDC783;
+	text-shadow : 2px 2px 1px black;
+	
+	text-align : center;
+	font-size : 120%;
+	position : relative;
+	top : 5px;	
 }
 	
 #loginFormWrapper.visible
 {	
-	display : block;	
+	display : block;
+	margin-top : 10px;	
 }
 
 #loginFormWrapper.invisible
@@ -70,13 +77,11 @@ img { border : 0px; }
 #idpw 
 {
 	float : left;	
-	margin-left : 40px;	
+	margin-left : 40px;		
 }
 
-#loginButton
+#loginButton.mouseOut,#loginButton.mouseOver
 {
-	background-image : url('/snudiceWebpage/image/mainpage/login.png');
-	background-repeat : no-repeat;
 	width : 64px;
 	height : 63px;
 	float : left;
@@ -84,15 +89,60 @@ img { border : 0px; }
 	left : 10px;
 }
 
-#login { margin-left : 5px; }
-#loginHelp { text-align : center; clear:left;}
-#userId { width:120px; }
-#password { width:120px; margin-top:5px;}
-#loginMsg 
-{ 
-	color:red;
-	margin-left : 30px; 
+#loginButton.mouseOut
+{
+	background-image : url('/snudiceWebpage/image/mainpage/login.png');	
+	background-repeat : no-repeat;	
 }
+
+#loginButton.mouseOver
+{
+	background-image : url('/snudiceWebpage/image/mainpage/loginMouseOver.png');
+	background-repeat : no-repeat;
+	width : 71px;
+	height : 70px;	
+	left : 5px;
+	top : -5px;
+}
+
+#login { margin-left : 5px; }
+
+#loginFormHorzLine
+{
+	border : 2px solid #262E69;	
+	position : relative;
+	left : 50%;
+	margin-left : -100px;
+	width : 200px;
+	top : 70px;
+}
+
+#loginHelp 
+{ 
+	text-align : center; 
+	clear:left;
+	margin-top : 80px;
+}
+
+#userId,#password
+{
+	width : 120px;
+	background-color : #262E69;
+	border : 2px outset #20275F;
+	color : white;
+}
+
+#password { margin-top:5px;}
+
+#loginMsg
+{
+	color:red;	
+	position : relative;
+	text-align : center; 
+}
+
+#loginMsg.logouted { top : 10px; }
+#loginMsg.loggined { top : 30px; }
 
 #logoutWrapper.invisible 
 {
@@ -101,9 +151,27 @@ img { border : 0px; }
 
 #logoutWrapper.visible 
 {
-	visibility : visible;
-	margin-left : 30px;
-}	
+	text-align : center;
+	background-image : url('/snudiceWebpage/image/mainpage/logout.png');
+	background-repeat : no-repeat;
+	width : 68px;
+	height : 31px;
+	visibility : visible;	
+	position : relative;
+	left : 50%;
+	margin-left : -34px;
+	top : 50px;
+}
+
+#joinOpen,#findIdPw { color : #ACB1E6; }
+#findIdPw { margin-left : 25px; }
+
+#mainLeftBottom 
+{
+	background-image : url('/snudiceWebpage/image/mainpage/buttonWindow.png');
+	background-repeat : no-repeat;
+	height : 113px;
+}
 
 #gameStart 
 {
@@ -133,18 +201,15 @@ img { border : 0px; }
 #joinFormWrapper.display_none {	display : none; }
 #joinFormWrapper.display_block
 {
-	/*
-	background-image : url('/snudiceWebpage/image/mainpage/loginWindow.png');
-	background-repeat : no-repeat;
-	*/
-	background-color : white;
+	background-color : #464D9C;
+	color : white;
 	position : absolute;
 	left : 30px;
 	top : 30px;
 	display : block;	
 	
 	width : 280px;
-	height : 220px;	
+	height : 215px;	
 }
 
 #joinFormTable
