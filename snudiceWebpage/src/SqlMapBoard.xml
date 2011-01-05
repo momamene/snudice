@@ -46,6 +46,12 @@
 		WHERE boardName = #boardName:VARCHAR#
 	</select>
 	
+	<select id="getBoardAliasName" parameterClass="String" resultClass="beans.Board">
+		SELECT *
+		FROM board_boardlist
+		WHERE boardName = #boardName:VARCHAR#
+	</select>
+	
 	<select id="getBoardList" resultClass="beans.Board">
 		SELECT *
 		FROM board_boardlist		

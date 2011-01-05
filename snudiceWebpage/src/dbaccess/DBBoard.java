@@ -264,4 +264,21 @@ public class DBBoard {
 			e.printStackTrace();
 		}				
 	}
+
+	//게시판의 aliasName을 얻는다.
+	@SuppressWarnings("unchecked")
+	public String getBoardAliasName(String boardName) {
+		List<Board> result = null;
+		
+		try
+		{			
+			result = (List<Board>)sqlMap.queryForList("getBoardAliasName",boardName);			
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return result.get(0).getAliasName();	
+	}
 }

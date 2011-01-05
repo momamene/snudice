@@ -137,8 +137,7 @@
 		</div>		
 		
 		<div class="footer">		
-		<hr/>
-		PrjN
+		<hr/>PrjN
 		</div>			
 	</div>
 </body>

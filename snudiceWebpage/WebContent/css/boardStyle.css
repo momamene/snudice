@@ -2,8 +2,8 @@
 
 /* 큰 영역 size 설정 */
 .header,.bodyWrapper,.footer {	width : 1024px; }
-.left { width : 264px; }
-.center { width : 750px; }
+.left { width : 0px; }
+.center { width : 1024px; }
 .right { width : 0px; }
 
 /* 큰 영역 position 설정 */
@@ -16,35 +16,17 @@
 }
 
 .left { float:left; }
-.center { float:left; margin-left: 5px; }
+.center { float:left; }
 .right { float:left; }
 
-.footer
-{
-	clear : left;
-	text-align : center;
-}
+.footer { text-align : center; }
 
-
+/*----------------공통 적용 사항-----------*/
 a:link {text-decoration:none;}    /* unvisited link */
 a:visited {text-decoration:none;} /* visited link */
-a:hover {text-decoration:underline;}   /* mouse over link */
-a:active {text-decoration:underline;}  /* selected link */
+a:hover {text-decoration:none;}   /* mouse over link */
+a:active {text-decoration:none;}  /* selected link */
 
-/*
-body
-{
-	font-size : 15px;
-}
-
-table  {
-	text-align : center;
-	width : 600px;
-	border : 1px solid black;
-	padding : 0px;	
-	border-collapse:collapse;
-}
-*/
 
 /*------------header-------------*/
 #headerImage
@@ -54,50 +36,34 @@ table  {
 	height : 255px;
 }
 
-td.articleNumber { border: 1px solid black;
-	width : 10%; text-align : center; }
-td.articleTitle { border: 1px solid black;
-	width : 50%; text-align : center;}
-td.articleWriter { border: 1px solid black;
-	width : 15%; text-align : center;}
-td.articleDateTime { border: 1px solid black;
-	width : 15%; text-align : center;}
-td.articleReadCount { border: 1px solid black;
-	width : 20%; text-align : right;}
 
-td.pageNumber { width : 8%; text-align : left;}
-
-
-div.titleAndUser
+/*----------글 목록 보기-------*/
+table#articleListMain,table#articleListBottom
 {
-	width: 500px;
+	width : 100%;
 	text-align : center;
 }
 
-/*
-div.wrapper
+tr#articleListHeader
 {
-	position : relative;
-	left : 50%;
-	margin-left : -300px;	
-	width : 600px;	
-	text-align : center;
+	background-color : #2C2B70;
+	color : white;
+	height : 40px;
 }
-*/
 
+tr.article
+{
+	background-color : #E4E4F9;	
+}
 
-div.contentBody
-	{
-	text-align : left;
-	border : 1px solid black;
-	}
-	
-div.dateAndCount
-	{
-	text-align : right;
+table#articleListBottom,table#articleListBottom a
+{
+	background-color : #2C2B70;
+	color : white;	
 }
 
 
+/*----------글 보기---------*/
 #reply
 {
 	border : 1px solid gray;	
@@ -115,19 +81,3 @@ div.dateAndCount
 	overflow : hidden; /* 스크롤바를 숨긴다 */
 	resize : none; /* 크롬에서 크기 조절을 못하게 한다. */
 }
-
-
-
-div.boardTop 
-{
-	background-image : url('/snudiceWebpage/image/mainpage/boardFrameUpper.png');
-	background-repeat : no-repeat;
-	width : 612px;
-	height : 48px;
-}
-
-.boardFooter
-{
-	text-align : center;	
-}
-

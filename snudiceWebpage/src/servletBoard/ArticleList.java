@@ -96,10 +96,12 @@ public class ArticleList extends HttpServlet {
 			}
 		}		
 				
+		;
 		request.setAttribute("pageList",pageList);
 		request.setAttribute("articleList",articleList);
 		request.setAttribute("currPage",currPage);
-		request.setAttribute("endPage",totalPageCount-1);		
+		request.setAttribute("endPage",totalPageCount-1);	
+		request.setAttribute("boardAliasName", db.dbBoard.getBoardAliasName(boardName));
 		
 		String nextPage = "/board/articleList.jsp";
 		
