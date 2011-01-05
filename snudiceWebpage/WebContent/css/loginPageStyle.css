@@ -38,6 +38,11 @@ hr
 	height : 4px;
 	border : 0px;
 }
+
+hr.hr1
+{
+	width : 200px;
+}
 	
 .centerAlign { text-align : center; }
 
@@ -111,15 +116,6 @@ hr
 }
 
 #login { margin-left : 5px; }
-
-hr#loginFormHorzLine
-{	
-	position : relative;
-	left : 50%;
-	margin-left : -100px;
-	width : 200px;
-	top : 5px;	
-}
 
 #loginHelp 
 { 

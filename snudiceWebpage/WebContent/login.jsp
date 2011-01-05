@@ -61,8 +61,9 @@
 							<input id="password" name="password" maxlength="255" type="password"/>
 						</div>					
 						<div id="loginButton" class="mouseOut"></div>
-						<hr id="loginFormHorzLine"/>	
-						<div id="loginHelp">												
+												
+						<div id="loginHelp">
+							<hr class="hr1"/>												
 							<a id="joinOpen" href="#">회원가입</a>							
 							<a id="findIdPw" href="#">ID/PW찾기</a>
 						</div>						
