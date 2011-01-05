@@ -19,7 +19,7 @@ function init()
 
 </script> 
 
-<title>${param.boardName} 게시판</title>
+<title>${boardAliasName}</title>
 </head>
 <body>
 	<div class="bodyWrapper">
@@ -27,22 +27,23 @@ function init()
 			<div id="headerImage"></div>
 		</div>		
 		
-		<div class="container">
-			<div class = "boardTop"></div>
-			<div class = "boardMiddle">
-				<table class="boardListTop">
-					<tr>
-						<td class="articleNumber">번호</td>
-						<td class="articleTitle">제목</td>
-						<td class="articleWriter">글쓴이</td>
-						<td class="articleDateTime">날짜</td>
-						<td class="articleReadCount">조회수</td>
+		<div class="container">	
+			<div class="left"></div>
+					
+			<div class = "center">
+				<table id = "articleListMain">
+					<tr id="articleListHeader">
+						<td>번호</td>
+						<td>제목</td>
+						<td>글쓴이</td>
+						<td>날짜</td>
+						<td>조회수</td>
 					</tr>
 					
 					<c:forEach var="article" items="${articleList}" varStatus="status">	
-						<tr>
-							<td class="articleNumber">${article.articleIndex}</td>
-							<td class="articleTitle">								
+						<tr class="article">
+							<td>${article.articleIndex}</td>
+							<td>								
 								<a href="${root}/board/articleView.do?boardName=${param.boardName}&amp;articleIndex=${article.articleIndex}&amp;currPage=${param.currPage}">															
 									<span>${article.title}</span> 
 									<c:if test="${replyCountList[status.index]>0}">
@@ -50,23 +51,23 @@ function init()
 									</c:if>
 								</a>
 							</td>
-							<td class="articleWriter">${article.userId}</td>
-							<td class="articleDateTime">${article.dateTime}</td> 
-							<td class="articleReadCount">${article.readCount}</td>		
+							<td>${article.userId}</td>
+							<td>${article.dateTime}</td> 
+							<td>${article.readCount}</td>		
 						</tr>
 					</c:forEach>					 
 				</table>
 			</div>
-		</div>		
-		
-		<div class = "boardBottom">
-			<table class="boardListBottom">
+			
+			<table id="articleListBottom">
 				<tr>
-					<td class="pageNumber"> 
-						<a href="${root}/board/articleList.do?boardName=${param.boardName}&amp;currPage=${param.currPage}&amp;goPrev=true">prev</a> 
+					<td> 
+						<a href="${root}/board/articleList.do?boardName=${param.boardName}&amp;currPage=${param.currPage}&amp;goPrev=true">
+							<img src="${root}/image/board/prev.png" alt="앞페이지"/>
+						</a> 
 					</td>
 					<c:forEach var="pageNumber" items="${pageList}">
-						<td class="pageNumber">					
+						<td>					
 							<c:choose>
 								<c:when test="${pageNumber==param.currPage}">
 									<a href="${root}/board/articleList.do?boardName=${param.boardName}&amp;currPage=${pageNumber}"> (${param.currPage})</a>
@@ -77,20 +78,35 @@ function init()
 							</c:choose>
 						</td>
 					</c:forEach>
-					<td class="pageNumber"> 
-						<a href="${root}/board/articleList.do?boardName=${param.boardName}&amp;currPage=${param.currPage}&amp;goNext=true">next</a> 
+					<td> 
+						<a href="${root}/board/articleList.do?boardName=${param.boardName}&amp;currPage=${param.currPage}&amp;goNext=true">
+							<img src="${root}/image/board/next.png" alt="뒷페이지"/>
+						</a> 
 					</td>
-				</tr>
+				</tr>			
+			
+				<tr>
+					<td colspan="3">현재 페이지 : ${param.currPage}	</td>					
+				</tr>  					
+				<tr>
+					<td>
+						<a href="${root}/board/articleList.do?boardName=${param.boardName}&amp;currPage=0">처음목록</a>
+					</td>
+					<td>
+						<a href="${root}/board/articleWriteForm.do?boardName=${param.boardName}&amp;currPage=${param.currPage}">글쓰기</a>
+					</td>
+					<td>
+						<a href="${root}/logout.do">로그아웃</a>
+					</td>					
+				</tr>			
 			</table>
-		</div>			
-	</div>		
+			
+			<div class="right"></div>
+		</div>		
 	
-	<div class="footer">
-		<span>현재 페이지 : ${param.currPage}</span>  		
-		<br/>
-		<a href="${root}/board/articleList.do?boardName=${param.boardName}&amp;currPage=0">처음목록</a>
-		<a id="boardWrite" href="${root}/board/articleWriteForm.do?boardName=${param.boardName}&amp;currPage=${param.currPage}">글쓰기</a>
-		<a href="${root}/logout.do">로그아웃</a>
+		<div class="footer">
+		<hr/>PrjN
+		</div>	
 	</div>	
 </body>
 </html>
