@@ -148,6 +148,18 @@ public class DBBoard {
 			e.printStackTrace();
 		}
 	}
+	
+	//글에 달린 모든 리플을 지운다.
+	public void deleteReply(int articleIndex) {
+		try
+		{
+			sqlMap.delete("deleteReply", articleIndex);			
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}		
+	}
 
 	//댓글을 삽입한다.
 	@SuppressWarnings({ "rawtypes", "unchecked" })

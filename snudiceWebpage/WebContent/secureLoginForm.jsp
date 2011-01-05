@@ -10,7 +10,7 @@
 	<form method="POST" action="j_security_check">		
 		<input type="text" name="j_username"><br/>		
 		<input type="password" name="j_password"><br/>		
-		<input type="image" src="/snudiceWebpage/image/gameStart.png">
+		<input type="image" src="/snudiceWebpage/image/mainpage/login.png">
 	</form>
 </body>
 </html>

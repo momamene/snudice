@@ -44,6 +44,8 @@ public class ArticleDelete extends HttpServlet {
 	
 		if(article.getUserId().compareTo(userId)==0) //아이디가 글쓴이와 일치하면
 		{			
+			//글에 달린 리플들을 지운다.
+			db.dbBoard.deleteReply(articleIndex);
 			//글을 지운다.		
 			db.dbBoard.deleteArticle(articleIndex);
 		}		
