@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 <sqlMap>	
-	<select id="getArticleList" parameterClass="HashMap" resultClass="beans.Article">
+	<select id="getArticleList" parameterClass="String" resultClass="beans.Article">
 		SELECT * 
 		FROM board_board 
-		WHERE boardName = #boardName:VARCHAR# AND articleIndex &lt;= #startArticleIndex:INT#	
+		WHERE boardName = #boardName:VARCHAR#
 		ORDER BY articleIndex DESC
 	</select>
 	
-	<select id="getMaxArticleIndex" resultClass="Integer">
-		SELECT MAX(articleIndex)
+	<select id="getArticleListWithTitle" parameterClass="HashMap" resultClass="beans.Article">
+		SELECT *
 		FROM board_board
+		WHERE boardName = #boardName:VARCHAR# AND BINARY(title) LIKE CONCAT('%',#titleKeyword:VARCHAR#,'%')
+		ORDER BY articleIndex DESC
 	</select>
 	
 	<delete id="deleteArticle" parameterClass="Integer">
@@ -81,7 +83,18 @@
 		WHERE boardName = #boardName:VARCHAR#
 	</delete>
 	
-	<select id="getArticleCount" parameterClass="String" resultClass="int">select count(*) from board_board where boardName= #boardName#</select>
+	<select id="getArticleCount" parameterClass="String" resultClass="Integer">
+		SELECT COUNT(*) 
+		FROM board_board 
+		WHERE boardName= #boardName#
+	</select>
+	
+	<select id="getArticleCountWithTitle" parameterClass="HashMap" resultClass="Integer">
+		SELECT COUNT(*) 
+		FROM board_board 
+		WHERE boardName= #boardName# AND BINARY(title) LIKE CONCAT('%',#titleKeyword:VARCHAR#,'%')
+	</select>
+	
 	<insert id="insertArticle" parameterClass="beans.Article">insert into board_board(boardName, title, userId, dateTime,text)
 	values(#boardName:VARCHAR#, #title:VARCHAR#, #userId:VARCHAR#,#dateTime:DATETIME#,#text:TEXT#)
 	<selectKey keyProperty="articleIndex" resultClass="int">

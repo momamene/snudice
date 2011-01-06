@@ -56,8 +56,14 @@ public class Article {
 	public String getTitle() {
 		return title;
 	}
-	public void setTitle(String title) {
-		this.title = title;
+	public void setTitle(byte[] title) {
+		try {
+			this.title = Util.toHtml(new String(title,"utf-8"));
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 	public String getUserId() {
 		return userId;
@@ -74,8 +80,15 @@ public class Article {
 	public String getText() {
 		return text;
 	}
-	public void setText(String text) {
-		this.text = text;
+		
+	public void setText(byte[] text) {
+		try {
+			this.text = Util.toHtml(new String(text,"utf-8"));
+		}	
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 	public void setReadCount(int readCount) {
 		this.readCount = readCount;

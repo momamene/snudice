@@ -2,6 +2,9 @@ package utility;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Enumeration;
+
+import javax.servlet.http.HttpServletRequest;
 
 public class Util {
 	public static String currDateTime() {
@@ -20,4 +23,15 @@ public class Util {
 		result = result.replace(")", "&#41;");
 		return result;
 	}	
+	
+	//모든 인자를 출력한다.
+	public static void printAllParams(HttpServletRequest request)
+	{
+		Enumeration<String> e = request.getParameterNames();
+		while(e.hasMoreElements())
+		{
+			String paramName = e.nextElement();
+			System.out.println(paramName+"="+request.getParameter(paramName));		
+		}
+	}
 }

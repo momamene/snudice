@@ -14,7 +14,7 @@ window.onload = init;
 function init()
 {
 	var headerImage = document.getElementById("articleListHeaderImage");
-	headerImage.onclick = function() { window.location = "${root}/first.do"};
+	headerImage.onclick = function() { window.location = "${root}/first.do"};	
 }
 
 </script> 
@@ -59,34 +59,62 @@ function init()
 				</table>
 			</div>
 			
+			<c:url var="titleKeywordEncoded" value="${titleKeyword}"/>			
 			<table id="articleListBottom">
 				<tr>
-					<td> 
-						<a href="${root}/board/articleList.do?boardName=${param.boardName}&amp;currPage=${param.currPage}&amp;goPrev=true">
+					<td> 					
+						<c:choose>
+							<c:when test="${not empty search}">
+								<c:set var="nextUrl" value="${root}/board/articleSearch.do?titleKeyword=${titleKeywordEncoded}&boardName=${param.boardName}&amp;currPage=${param.currPage}&amp;goPrev=true"/>								
+							</c:when>
+							<c:otherwise>
+								<c:set var="nextUrl" value="${root}/board/articleList.do?boardName=${param.boardName}&amp;currPage=${param.currPage}&amp;goPrev=true"/>
+							</c:otherwise>
+						</c:choose>	
+						<a href="${nextUrl}">
 							<img src="${root}/image/board/prev.png" alt="앞페이지"/>
 						</a> 
-					</td>
+					</td>			
+						
 					<c:forEach var="pageNumber" items="${pageList}">
-						<td>					
+						<td>
 							<c:choose>
-								<c:when test="${pageNumber==param.currPage}">
-									<a href="${root}/board/articleList.do?boardName=${param.boardName}&amp;currPage=${pageNumber}"> (${param.currPage})</a>
+								<c:when test="${not empty search}">
+									<c:set var="nextUrl" value="${root}/board/articleSearch.do?titleKeyword=${titleKeywordEncoded}&boardName=${param.boardName}&amp;currPage=${pageNumber}"/>								
 								</c:when>
 								<c:otherwise>
-									<a href="${root}/board/articleList.do?boardName=${param.boardName}&amp;currPage=${pageNumber}"> ${pageNumber}</a>
+									<c:set var="nextUrl" value="${root}/board/articleList.do?boardName=${param.boardName}&amp;currPage=${pageNumber}"/>
 								</c:otherwise>
 							</c:choose>
+										
+							<c:choose>
+								<c:when test="${pageNumber==param.currPage}">
+									<c:set var="formattedPageNumber" value="(${pageNumber})"/>
+								</c:when>
+								<c:otherwise>
+									<c:set var="formattedPageNumber" value="${pageNumber}"/>
+								</c:otherwise>
+							</c:choose>
+							<a href=${nextUrl}>${formattedPageNumber }</a>							
 						</td>
 					</c:forEach>
 					<td> 
-						<a href="${root}/board/articleList.do?boardName=${param.boardName}&amp;currPage=${param.currPage}&amp;goNext=true">
+						<c:choose>
+							<c:when test="${not empty search}">
+								<c:set var="nextUrl" value="${root}/board/articleSearch.do?titleKeyword=${titleKeywordEncoded}&boardName=${param.boardName}&amp;currPage=${param.currPage}&amp;goNext=true"/>								
+							</c:when>
+							<c:otherwise>
+								<c:set var="nextUrl" value="${root}/board/articleList.do?boardName=${param.boardName}&amp;currPage=${param.currPage}&amp;goNext=true"/>
+							</c:otherwise>
+						</c:choose>	
+						<a href="${nextUrl}">
 							<img src="${root}/image/board/next.png" alt="뒷페이지"/>
-						</a> 
+						</a> 					
 					</td>
 				</tr>			
 			
 				<tr>
-					<td colspan="3">현재 페이지 : ${param.currPage}	</td>					
+					<td colspan="2">현재 페이지 : ${param.currPage}	</td>					
 				</tr>  					
 				<tr>
 					<td>
@@ -96,10 +124,17 @@ function init()
 						<a href="${root}/board/articleWriteForm.do?boardName=${param.boardName}&amp;currPage=${param.currPage}">글쓰기</a>
 					</td>
 					<td>
-						<a href="${root}/logout.do">로그아웃</a>
-					</td>					
+						<form method="get" action="${root}/board/articleSearch.do">
+							<span>검색 : </span><input name="titleKeyword" type="text"/>
+							<input type="submit" value="검색"/>
+							<input type="hidden" name="boardName" value="${param.boardName}"/>
+							<input type="hidden" name="currPage" value="0"/>							
+						</form>
+					</td>										
 				</tr>			
 			</table>
+			
+
 			
 			<div class="right"></div>
 		</div>		

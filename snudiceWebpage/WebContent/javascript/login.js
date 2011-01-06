@@ -1,6 +1,6 @@
 window.onload = initLogin;
-var root = "/snudiceWebpage"; 
-	
+var root = "/snudiceWebpage";
+
 //event handler 추가	
 function initLogin()
 {	
@@ -198,6 +198,12 @@ function joinFormRefresh()
 				joinEmail.focus();
 				joinEmail.select();
 			}				
+			else if(request.responseText == "invalidId")
+			{
+				joinMsg.innerHTML = "id 는 영어 소문자,숫자만 허용됩니다."
+				joinId.focus();
+				joinId.select();
+			}
 			else if(request.responseText == "existingUser")
 			{
 				joinMsg.innerHTML = "이미 존재하는 id입니다.";
