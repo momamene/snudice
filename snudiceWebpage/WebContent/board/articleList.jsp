@@ -13,7 +13,7 @@ window.onload = init;
 
 function init()
 {
-	var headerImage = document.getElementById("headerImage");
+	var headerImage = document.getElementById("articleListHeaderImage");
 	headerImage.onclick = function() { window.location = "${root}/first.do"};
 }
 
@@ -24,7 +24,7 @@ function init()
 <body>
 	<div class="bodyWrapper">
 		<div class="header">
-			<div id="headerImage"></div>
+			<div id="articleListHeaderImage" class="headerImage"></div>
 		</div>		
 		
 		<div class="container">	
@@ -104,8 +104,8 @@ function init()
 			<div class="right"></div>
 		</div>		
 	
-		<div class="footer">
-		<hr/>PrjN
+		<div class="footer centerAlign">
+			<hr/>PrjN
 		</div>	
 	</div>	
 </body>

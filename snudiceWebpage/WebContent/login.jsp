@@ -137,8 +137,8 @@
 			<div class="right">&nbsp;</div>				
 		</div>		
 		
-		<div class="footer">		
-		<hr/>PrjN
+		<div class="footer centerAlign">		
+			<hr/>PrjN
 		</div>			
 	</div>
 </body>
