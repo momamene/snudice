@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import constant.Const;
+
 import dbaccess.DB;
 
 /**
@@ -42,6 +44,8 @@ public class Join extends HttpServlet {
 			os.print("pwContainSpace");
 		else if(joinEmail.indexOf(' ')>=0)
 			os.print("emailContainSpace");
+		else if(!joinId.matches(Const.validIdRegex))		
+			os.print("invalidId");		
 		else
 		{
 			DB db = DB.getInstance();

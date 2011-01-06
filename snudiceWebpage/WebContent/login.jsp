@@ -50,12 +50,14 @@
 					<div id="loginFormTitle">회원로그인</div>								
 					<c:choose>
 						<c:when test="${not empty userId}">
-							<div id="loginFormWrapper" class="invisible">		
+							<c:set var="loginFormWrapperClass" value="invisible"/>	
 						</c:when>
 						<c:otherwise>
-							<div id="loginFormWrapper" class="visible">	
+							<c:set var="loginFormWrapperClass" value="visible"/>	
 						</c:otherwise>
-					</c:choose>											
+					</c:choose>			
+					
+					<div id="loginFormWrapper" class="${loginFormWrapperClass}">									
 						<div id="idpw">
 							<input id="userId" name="userId" maxlength="16" type="text"/><br/>
 							<input id="password" name="password" maxlength="255" type="password"/>
@@ -70,27 +72,29 @@
 					</div>
 					<c:choose>
 						<c:when test="${not empty userId}">
-							<div id="loginMsg" class="loggined">
+							<c:set var="loginMsgClass" value="loggined"/>
 						</c:when>	
 						<c:otherwise>
-							<div id="loginMsg" class="logouted">
+							<c:set var="loginMsgClass" value="logouted"/>
 						</c:otherwise>											
 					</c:choose>	
 					
-					<c:choose>
-						<c:when test="${not empty userId}">
-							${userId} 님 로그인 하셨습니다.
-						</c:when>												
-					</c:choose>	
+					<div id="loginMsg" class="${loginMsgClass}">
+						<c:choose>
+							<c:when test="${not empty userId}">
+								${userId} 님 로그인 하셨습니다.
+							</c:when>												
+						</c:choose>	
 					</div>
 					<c:choose>
 						<c:when test="${not empty userId}">
-							<div id="logoutWrapper" class="visible">		
+							<c:set var="logoutWrapperClass" value="visible"/>		
 						</c:when>
 						<c:otherwise>
-							<div id="logoutWrapper" class="invisible">	
+							<c:set var="logoutWrapperClass" value="invisible"/>		
 						</c:otherwise>
-					</c:choose>							
+					</c:choose>			
+					<div id="logoutWrapper" class="${logoutWrapperClass}">				
 					</div>						
 				</div>
 				<div id="mainLeftBottom">					

@@ -1,7 +1,6 @@
 package servletAccount;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -10,9 +9,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import utility.Util;
 import beans.Article;
 
 import constant.Const;
@@ -58,10 +54,8 @@ public class FirstPage extends HttpServlet {
 		DB db = DB.getInstance();
 		
 		//공지 글 목록을 가져온다.				
-		List<Article> articleList = db.dbBoard.getArticleList(boardName,0, Const.artilcePerPageMain);		
-		for(Article article : articleList)			
-			article.setTitle(Util.toHtml(article.getTitle()));			
-		
+		List<Article> articleList = db.dbBoard.getArticleList(boardName,0, Const.artilcePerPageMain);
+				
 		request.setAttribute(articleListName,articleList);
 		request.setAttribute(boardNameAttrbName, boardName);
 	}

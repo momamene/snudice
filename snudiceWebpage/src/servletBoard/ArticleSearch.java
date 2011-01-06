@@ -1,6 +1,8 @@
 package servletBoard;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,73 +12,54 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import constant.Const;
 
+import utility.Util;
 
 import beans.Article;
+import constant.Const;
 import dbaccess.DB;
 
 /**
- * Servlet implementation class BoardList
+ * Servlet implementation class ArticleSearch
  */
-@WebServlet("/ArticleList")
-public class ArticleList extends HttpServlet {
+@WebServlet("/ArticleSearch")
+public class ArticleSearch extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ArticleList() {
+    public ArticleSearch() {
         super();
         // TODO Auto-generated constructor stub
     }
-
+    
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		final int articlePerPage = Const.articlePerPage;//페이지당 보여주는 게시물 수		
-		
+			
 		String boardName = request.getParameter("boardName");		
-		int currPage = Integer.parseInt(request.getParameter("currPage"));		
+		int currPage = Integer.parseInt(request.getParameter("currPage"));	
+		String titleKeyword = request.getParameter("titleKeyword");		
 		
-		DB db = DB.getInstance();
-		int totalArticleCount = db.dbBoard.getArticleCount(boardName);	
+		DB db = DB.getInstance();		
+		int totalArticleCount = db.dbBoard.getArticleCount(boardName,titleKeyword);
 		int totalPageCount = (int)Math.ceil((double)totalArticleCount / (double)articlePerPage);		
-		
-		//페이지 범위 넘어가는 처리
-		if(request.getParameter("goPrev")!=null)
-		{
-			currPage -=  Const.pageNumberPerPage;
-			if(currPage<0)
-				currPage = 0;			
-			
-			response.sendRedirect("articleList.do?boardName="+boardName+"&currPage="+currPage);
-			return;
-		}
-		if(request.getParameter("goNext")!=null)
-		{
-			currPage +=  Const.pageNumberPerPage;
-			if(currPage>totalPageCount-1)
-				currPage = totalPageCount-1;
-			
-			response.sendRedirect("articleList.do?boardName="+boardName+"&currPage="+currPage);
-			return;
-		}			
 	
 		//리플 수를 저장
 		List<Integer> replyCountList = new ArrayList<Integer>();
 		
 		//글 목록을 가져온다.
-		List<Article> articleList = db.dbBoard.getArticleList(boardName,currPage, articlePerPage);		
+		List<Article> articleList = db.dbBoard.getArticleList(boardName,currPage,articlePerPage,titleKeyword);
 		for(Article article : articleList)		
 		{			
 			int replyCount = db.dbBoard.getReplyCount(article.getArticleIndex());
 			replyCountList.add(replyCount);			
 		}
 		
-		request.setAttribute("replyCountList", replyCountList);
+		request.setAttribute("replyCountList", replyCountList);		
 		
 		List<Integer> pageList= new ArrayList<Integer>();			
 		
@@ -90,7 +73,29 @@ public class ArticleList extends HttpServlet {
 				if(i==totalPageCount-1)
 					break;
 			}
-		}				
+		}
+		
+		//페이지 범위 넘어가는 처리
+		if(request.getParameter("goPrev")!=null)
+		{
+			currPage -=  Const.pageNumberPerPage;
+			if(currPage<0)
+				currPage = 0;			
+			
+			titleKeyword = URLEncoder.encode(titleKeyword, "utf-8");
+			response.sendRedirect("articleSearch.do?titleKeyword="+titleKeyword+"&boardName="+boardName+"&currPage="+currPage);
+			return;
+		}
+		if(request.getParameter("goNext")!=null)
+		{
+			currPage +=  Const.pageNumberPerPage;
+			if(currPage>totalPageCount-1)
+				currPage = totalPageCount-1;
+			
+			titleKeyword = URLEncoder.encode(titleKeyword, "utf-8");
+			response.sendRedirect("articleSearch.do?titleKeyword="+titleKeyword+"&boardName="+boardName+"&currPage="+currPage);
+			return;
+		}
 		
 		request.setAttribute("pageList",pageList);
 		request.setAttribute("articleList",articleList);
@@ -98,9 +103,12 @@ public class ArticleList extends HttpServlet {
 		request.setAttribute("endPage",totalPageCount-1);	
 		request.setAttribute("boardAliasName", db.dbBoard.getBoardAliasName(boardName));
 		
+		request.setAttribute("search","yes");
+		request.setAttribute("titleKeyword", titleKeyword);
+		
 		String nextPage = "/board/articleList.jsp";
 		
 		RequestDispatcher view = request.getRequestDispatcher(nextPage);
-		view.forward(request, response);        
+		view.forward(request, response);   
 	}
 }

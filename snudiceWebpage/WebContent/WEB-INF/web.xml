@@ -161,6 +161,16 @@
     <servlet-name>articleWriteFormInternalName</servlet-name>
     <url-pattern>/board/articleWriteForm.do</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>articleSearch</servlet-name>
+    <servlet-class>servletBoard.ArticleSearch</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>articleSearch</servlet-name>
+    <url-pattern>/board/articleSearch.do</url-pattern>
+  </servlet-mapping>  
+  
   <servlet>
     <servlet-name>testAjax</servlet-name>
     <servlet-class>ajax.TestAjax</servlet-class>

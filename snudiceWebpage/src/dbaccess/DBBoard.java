@@ -1,5 +1,6 @@
 package dbaccess;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,28 +38,15 @@ public class DBBoard {
 	}
 	
 	//특정 게시판의 pageNumber 에 해당하는 글을 articlePerPage 개수만큼 가져온다.
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked" })
 	public List<Article> getArticleList(String boardName, int pageNumber, int articlePerPage) {
 		List<Article> result = null;
 		try
 		{			
-			int maxArticleIndex = (Integer)sqlMap.queryForObject("getMaxArticleIndex");
-			
-			//해당 게시판의 가장 최근글의 index를 가져온다.
-			Map m = new HashMap();
-			m.put("boardName", boardName);
-			m.put("startArticleIndex",maxArticleIndex);			
-			result = sqlMap.queryForList("getArticleList", m);	
-			if(result.size()==0) //글이 하나도 없는 경우
-				return result;
-			
-			int firstArticleIndex = result.get(0).getArticleIndex();
-			
-			int skipArticleCount = pageNumber * articlePerPage;
-			
-			m.remove("startArticleIndex");			
-			m.put("startArticleIndex",firstArticleIndex );
-			result = sqlMap.queryForList("getArticleList", m,skipArticleCount,articlePerPage);
+			int skipArticleCount = pageNumber * articlePerPage;			
+			result = sqlMap.queryForList("getArticleList", boardName,skipArticleCount,articlePerPage);
+			if(result==null)
+				result = new ArrayList<Article>();
 		}
 		catch(Exception e)
 		{
@@ -67,7 +55,28 @@ public class DBBoard {
 		return result;
 	}
 	
-	//보드 네임을 받아, 전체 게시물의 갯수르
+	//글 제목으로 글을 검색함
+	@SuppressWarnings({"unchecked", "rawtypes" })
+	public List<Article> getArticleList(String boardName, int pageNumber, int articlePerPage,String titleKeyword) {
+		List<Article> result = null;
+		try
+		{				
+			Map m = new HashMap();
+			m.put("boardName", boardName);
+			m.put("titleKeyword", titleKeyword.replace("%", "\\%"));			
+			int skipArticleCount = pageNumber * articlePerPage;			
+			result = sqlMap.queryForList("getArticleListWithTitle", m,skipArticleCount,articlePerPage);
+			if(result==null)
+				result = new ArrayList<Article>();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	//특정 게시판의 전체 게시물 수를 리턴
 	public int getArticleCount(String boardName) {
 		Integer result = null;
 		
@@ -81,6 +90,25 @@ public class DBBoard {
 		}
 		return result.intValue();
 	}	
+	
+	//특정 게시판에서 제목에 키워드가 포함된 게시물 수를 리턴
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public int getArticleCount(String boardName,String titleKeyword) {
+		Integer result = null;
+		
+		try
+		{
+			Map m = new HashMap();
+			m.put("boardName", boardName);
+			m.put("titleKeyword", titleKeyword);
+			result = (Integer) sqlMap.queryForObject("getArticleCountWithTitle", m);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return result.intValue();
+	}
 
 	//새로운 글을 등록한다.
 	public int insertArticle(Article article) {

@@ -58,11 +58,7 @@ public class ArticleView extends HttpServlet {
 			db.dbBoard.updateArticleReadCount(articleIndex);
 		}
 		else
-			request.setAttribute("myArticle", true);
-		
-		article.setUserId(Util.toHtml(article.getUserId()));
-		article.setTitle(Util.toHtml(article.getTitle()));
-		article.setText(Util.toHtml(article.getText()));
+			request.setAttribute("myArticle", true);		
 		
 		request.setAttribute("articleInfo",article);		
 		

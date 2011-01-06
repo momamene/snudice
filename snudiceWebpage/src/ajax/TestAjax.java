@@ -1,14 +1,14 @@
 package ajax;
 
 import java.io.IOException;
-import java.util.Enumeration;
-
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import utility.Util;
 
 /**
  * Servlet implementation class TestAjax
@@ -41,13 +41,7 @@ public class TestAjax extends HttpServlet {
 
 		request.setCharacterEncoding("UTF-8");		
 		
-		//모든 인자를 출력한다.
-		Enumeration<String> e = request.getParameterNames();
-		while(e.hasMoreElements())
-		{
-			String paramName = e.nextElement();
-			System.out.println(paramName+"="+request.getParameter(paramName));
-		}		
+		Util.printAllParams(request);
 		
 		//stream의 내용을 그대로 출력한다. (JSON string 확인 등에 사용)
 		//이것을 사용할 경우 위의 모든 인자 출력 코드를 주석처리 해야 한다.

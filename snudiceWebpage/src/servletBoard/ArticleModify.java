@@ -10,8 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import utility.Util;
-
 import beans.Article;
 
 import dbaccess.DB;
@@ -42,10 +40,7 @@ public class ArticleModify extends HttpServlet {
 		
 		DB db = DB.getInstance();
 		int articleIndex = Integer.parseInt(request.getParameter("articleIndex"));
-		Article article= db.dbBoard.getArticleByIndex(articleIndex);
-		article.setUserId(Util.toHtml(article.getUserId()));
-		article.setTitle(Util.toHtml(article.getTitle()));
-		article.setText(Util.toHtml(article.getText()));
+		Article article= db.dbBoard.getArticleByIndex(articleIndex);		
 		
 		//글쓴이와 id가 일치하지 않는 경우
 		if(article.getUserId().compareTo(userId)!=0)  
