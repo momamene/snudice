@@ -5,53 +5,69 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" type="text/css" href="${root}/css/boardStyle.css"/>
-<title>BBS</title>
-</head>
-<body>      
-	<br/>
-  	<center>
-   	<b>
-    	<font size = "4">글 수정</font>
-	</b>
-	</center>
- 	<br/>
+<script type="text/javascript">
+window.onload = init;
 
-	<form action="${root}/board/articleModifyComplete.do?boardName=${param.boardName}&articleIndex=${param.articleIndex}&currPage=${param.currPage}" method = "post">
-	<center>
-		<table width = "650" border = "1" cellpadding = "2" cellspacing = "0" bordercolor = "#000000">
-			<tr>
-				<td align = "center" width = "80">ID</td>
-    			<td width = "*">
-    				${sessionScope.userId}
-					<br/>
-				</td>
-    		</tr>
-    		<tr>
-				<td align = "center" width = "80">게시판이름</td>
-    			<td width = "*">
-    				${param.boardName}
-					<br/>
-				</td>
-    		</tr>
-    		<tr>
-     			<td align = "center" width = "80">제목</td>
-     			<td width = "*">
-     				<input type = "text" value = ${articleInfo.title} name = "title" size = "60">
-     			</td>
-    		</tr>
-    		<tr>
-    			<td align = "center" width = "80">내용</td>
-    			<td>    			
-    				<textarea name = "content"  rows = "8" cols="60">${articleInfo.text}</textarea>
-    			</td>
-    		</tr>
-			<tr>
-				<td colspan = "2">
-					<input type = "submit" value = "글수정">
-				</td>
-    		</tr>
-    	</table>
-	</center>
-	</form>
+function init()
+{
+	//event handler 를 추가한다.
+	//header image 클릭시
+	var headerImage = document.getElementById("articleModifyHeaderImage");
+	headerImage.onclick = function() { window.location = "${root}/first.do"};
+}
+</script>
+
+<title>글 수정하기</title>
+</head>
+<body> 
+	<div class="bodyWrapper"> 
+		<div class="header">
+			<div id="articleModifyHeaderImage" class="headerImage"></div>
+		</div>
+	 
+		<div class="container">
+			<div class="left"></div>
+		
+			<div class="center centerAlign">
+				<span>글 수정</span>
+				<br/>
+				<form action="${root}/board/articleModifyComplete.do?boardName=${param.boardName}&articleIndex=${param.articleIndex}&currPage=${param.currPage}" method = "post">	
+					<table id="articleModifyTable">
+						<tr>
+							<td>ID</td>
+    						<td>${sessionScope.userId}</td>
+    					</tr>
+    					<tr>
+							<td>게시판이름</td>
+    						<td>${param.boardName}</td>
+    					</tr>
+    					<tr>
+     						<td>제목</td>
+     						<td>
+     							<input type = "text" value = ${articleInfo.title} name = "title">
+     						</td>
+    					</tr>
+    					<tr>
+    						<td>내용</td>
+    						<td>    			
+    							<textarea name = "content"  rows = "8" cols="60">${articleInfo.text}</textarea>
+    						</td>
+    					</tr>
+						<tr>
+							<td colspan = "2">
+								<input type = "submit" value = "글수정">
+							</td>
+    					</tr>
+    				</table>	
+				</form>
+			</div>
+		
+			<div class="right"></div>
+		</div> 
+	
+		<div class="footer centerAlign">
+			<hr/>PrjN
+		</div>
+	</div>
 </body>
 </html>

@@ -21,8 +21,7 @@
 
 .footer
 {
-	clear : left;
-	text-align : center;
+	clear : left;	
 }
 
 /*----------------공통 적용 사항-----------*/
@@ -45,8 +44,8 @@ hr.hr1
 }
 	
 .centerAlign { text-align : center; }
-
 .bodyWrapper { background-color : #E4E4F9; }
+.footer { background-color : white; }
 
 /*----------------header-----------*/
 #headerImage

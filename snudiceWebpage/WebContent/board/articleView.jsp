@@ -10,16 +10,14 @@
 <script type="text/javascript" src="${root}/javascript/util.js"></script> 
 <script type="text/javascript" src="${root}/javascript/json2.js"></script>
 <script type="text/javascript">
-var articleDeleteFunc = function() 
-{	
-	window.location = "${root}/board/articleDelete.do?boardName=${param.boardName}&articleIndex=${articleInfo.articleIndex}&currPage=${param.currPage}";
-}
-
 window.onload = init;
 
 function init()
 {
 	//event handler 를 추가한다.
+	//header image 클릭시
+	var headerImage = document.getElementById("articleViewHeaderImage");
+	headerImage.onclick = function() { window.location = "${root}/first.do"};
 	//댓글 쓰기 버튼
 	var replySubmitButton = document.getElementById("replySubmitButton");
 	replySubmitButton.onclick = replySubmit;
@@ -30,7 +28,14 @@ function init()
 	articleDelButton.onclick = function() { show_confirm('정말 지울꺼에요?',articleDeleteFunc);	}	
 }
 
+//---------------event handler---------------
+//글을 지운다.
+var articleDeleteFunc = function() 
+{	
+	window.location = "${root}/board/articleDelete.do?boardName=${param.boardName}&articleIndex=${articleInfo.articleIndex}&currPage=${param.currPage}";
+}
 
+//댓글을 쓴다
 function replySubmit()
 {	
 	var writeTextTextarea = document.getElementById("replyWriteText");
@@ -49,72 +54,75 @@ function replySubmit()
 
 </script>
 
-<title>${sessionScope.boardName}게시판</title>
+<title>글 보기</title>
 </head>
 <body>
-	<div class="wrapper">
-	<div class="boardRead">
-    <div class="originalContent">
-        <div class="readHeader">
-            <div class="titleAndUser">
-            	<div class="title">
-                	<h1>${articleInfo.title }</h1>
-                </div>   
-                <div class="user">
-                    <h2>${articleInfo.userId }</h2>
-                </div>        
-                <div class="clear"></div> 
-            </div>
- 
-            <div class="dateAndCount"> 
-                <div class="date" title="등록일">
-                    <strong>${articleInfo.dateTime }</strong>
-                </div>
-                <div class="clear"></div>
-            </div> 
-            <div class="clear"></div>
-        </div>
- 
-        <div class="clear"></div>
-         
-        <div class="readBody">
-            <div class="contentBody">
- 				${articleInfo.text }
-            </div>
+	<div class="bodyWrapper">
+		<div class="header">
+			<div id="articleViewHeaderImage" class="headerImage"></div>
 		</div>
-	</div>
- 
-	<a href="${root}/board/articleList.do?boardName=${param.boardName}&currPage=${param.currPage}">목록으로</a>
-	<c:choose>
-		<c:when test="${myArticle==true}">						
-			<a id="boardModify" href="${root}/board/articleModify.do?boardName=${param.boardName}&articleIndex=${articleInfo.articleIndex}&currPage=${param.currPage}">수정</a>
-			<input id="articleDeleteButton" type="button" value="삭제" />		
-		</c:when>													
-	</c:choose>	
-	<a id="boardWrite" href="${root}/board/articleWriteForm.do?boardName=${param.boardName}&currPage=${param.currPage}">새글쓰기</a>	 
-	</div>		
-	
-	<div id="footer">
-		<div id="reply">
-			<div id="replyHead">총 댓글 수 : ${replyCount}</div>
-			<hr/>
+				
+    	<div class="container">
+    		<div class="left"></div>
+    		
+    		<div class="center centerAlign">          	
+            	<span>
+            		${articleInfo.title}
+            	</span>   
+            	<br/>
+                <span>
+                	${articleInfo.userId}
+                </span>
+                <br/> 
+                <span>
+                	${articleInfo.dateTime }
+                </span>            	
+                <br/>
+            	<span>
+ 					${articleInfo.text }
+            	</span>		
+            	<br/>
+            	
+            	<a href="${root}/board/articleList.do?boardName=${param.boardName}&currPage=${param.currPage}">목록으로</a>
+				<c:choose>
+					<c:when test="${myArticle==true}">						
+						<a id="boardModify" href="${root}/board/articleModify.do?boardName=${param.boardName}&articleIndex=${articleInfo.articleIndex}&currPage=${param.currPage}">
+							<img src="${root}/image/board/articleModify.png"/>
+						</a>
+						<input id="articleDeleteButton" type="image" src="${root}/image/board/articleDelete.png" />		
+					</c:when>													
+				</c:choose>	
+				<a id="boardWrite" href="${root}/board/articleWriteForm.do?boardName=${param.boardName}&currPage=${param.currPage}">
+					<img src="${root}/image/board/articleWrite.png"/>
+				</a>
+				
+				<div id="reply">
+					<div id="replyHead">총 댓글 수 : ${replyCount}</div>
+					<hr/>
 			
-			<div id="replyContainer">
-			<c:forEach var="reply" items="${replyList}" varStatus="status">			
-				<div class="replyInfo">
-					[${status.count}] id : ${reply.userId}, ${reply.dateTime}
-				</div>									
-				<div class="replyContent">${reply.replyText}</div>				
-				<hr/>
-			</c:forEach>
-			</div>
+					<div id="replyContainer">
+					<c:forEach var="reply" items="${replyList}" varStatus="status">			
+						<div class="replyInfo">
+							[${status.count}] id : ${reply.userId}, ${reply.dateTime}
+						</div>									
+						<div class="replyContent">${reply.replyText}</div>				
+						<hr/>
+					</c:forEach>
+					</div>
 			
-			<div id="replyWrite">
-				<textarea id="replyWriteText"></textarea>
-				<input id="replySubmitButton" type="button" value="댓글 쓰기">
-			</div>			
+					<div id="replyWrite">
+						<textarea id="replyWriteText"></textarea>
+						<input id="replySubmitButton" type="button" value="댓글 쓰기">
+					</div>			
+				</div>	 	         		
+        	</div>
+			
+        	<div class="right"></div>
+		</div>	
+			
+		<div class="footer centerAlign">
+			<hr/>PrjN	
 		</div>
-	</div>
 	</div>
 </body>
 </html>

@@ -19,17 +19,30 @@
 .center { float:left; }
 .right { float:left; }
 
-.footer { text-align : center; }
-
 /*----------------공통 적용 사항-----------*/
 a:link {text-decoration:none;}    /* unvisited link */
 a:visited {text-decoration:none;} /* visited link */
 a:hover {text-decoration:none;}   /* mouse over link */
 a:active {text-decoration:none;}  /* selected link */
 
+hr
+{	
+	background-color : #262E69;
+	height : 4px;
+	border : 0px;
+}
+
+.centerAlign { text-align : center;}
+.bodyWrapper { background-color : #E4E4F9; }
+.header,.container,.footer,.center,.left,.right,table,tr,td 
+{
+	border : 0px;
+	border-collapse : collapse; 	
+	margin : 0px;
+}
 
 /*------------header-------------*/
-#headerImage
+.headerImage
 {
 	background-image : url('/snudiceWebpage/image/mainpage/title.png');
 	background-repeat : no-repeat;	
@@ -75,9 +88,31 @@ table#articleListBottom,table#articleListBottom a
 	margin-bottom : 5px;
 	
 	width : 470px;
-	height : 50px;
-	
+	height : 50px;	
 	
 	overflow : hidden; /* 스크롤바를 숨긴다 */
 	resize : none; /* 크롬에서 크기 조절을 못하게 한다. */
+}
+
+
+/*----------글 수정하기---------------*/
+table#articleModifyTable
+{
+	width : 100%;
+}
+	
+table#articleModifyTable tr,table#articleModifyTable td
+{
+	text-align : center;
+}
+
+/*-------------글쓰기---------------*/
+table#articleWriteTable
+{
+	width : 100%;
+}
+
+table#articleWriteTable tr,table#articleWriteTable td
+{
+	text-align : center;
 }
