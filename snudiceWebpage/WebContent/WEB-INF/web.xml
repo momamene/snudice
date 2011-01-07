@@ -129,14 +129,7 @@
     <servlet-name>articleModifyCompleteInternalName</servlet-name>
     <url-pattern>/board/articleModifyComplete.do</url-pattern>
   </servlet-mapping>
-  <servlet>
-    <servlet-name>articleDeleteInternalName</servlet-name>
-    <servlet-class>servletBoard.ArticleDelete</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>articleDeleteInternalName</servlet-name>
-    <url-pattern>/board/articleDelete.do</url-pattern>
-  </servlet-mapping>
+
   <servlet>
     <servlet-name>firstPage</servlet-name>
     <servlet-class>servletAccount.FirstPage</servlet-class>
@@ -211,6 +204,16 @@
     <servlet-name>login</servlet-name>
     <url-pattern>/login.ajax</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>articleDelete</servlet-name>
+    <servlet-class>ajax.ArticleDelete</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>articleDelete</servlet-name>
+    <url-pattern>/board/articleDelete.ajax</url-pattern>
+  </servlet-mapping>
+  
  
   <filter>
   	<filter-name>allRequestFilter</filter-name>
@@ -219,6 +222,6 @@
   <filter-mapping>
   	<filter-name>allRequestFilter</filter-name>
   	<url-pattern>/*</url-pattern>
-  </filter-mapping>   
+  </filter-mapping>  
 
 </web-app>

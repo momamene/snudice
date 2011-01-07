@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import constant.Const;
+
 import utility.Util;
 
 import beans.Article;
@@ -37,6 +39,12 @@ public class ArticleModifyComplete extends HttpServlet {
 		String content = request.getParameter("content");		
 		int articleIndex=Integer.parseInt( request.getParameter("articleIndex"));
 		
+		//길면 자른다.
+		if(title.length()>Const.articleTitleMaxLen)
+			title = title.substring(0,Const.articleTitleMaxLen);
+		if(content.length()>Const.articleTextMaxLen)
+			content = content.substring(0,Const.articleTextMaxLen);	
+		
 		//제목을 안적은 경우
 		if(title.compareTo("")==0)		
 			title = Util.currDateTime() + " 에 수정한 글입니다.";		
@@ -44,10 +52,9 @@ public class ArticleModifyComplete extends HttpServlet {
 		Article article = new Article(boardName,userId,title, content);		
 		article.setArticleIndex(articleIndex);
 		
+		//글을 수정한다.
 		DB db = DB.getInstance();
-		int result = db.dbBoard.updateArticle(article);
-		if(result ==0)
-			System.out.println("아마 실패한듯 요 업데이트 병신 새끼");
+		db.dbBoard.updateArticle(article);		
 		
         String nextPage = session.getAttribute("root")+"/board/articleView.do?boardName="+boardName+"&currPage="+currPage+"&articleIndex="+articleIndex;        
 		response.sendRedirect(nextPage);     

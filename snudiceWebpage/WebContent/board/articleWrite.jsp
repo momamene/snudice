@@ -28,7 +28,10 @@ function init()
 			<div class="left"></div>
 			
 			<div class="center">
-				<form action="${root}/board/articleWrite.do?boardName=${param.boardName}&currPage=${param.currPage}" method = "post"><!--  post로 정보를 보내야 하나? -->
+				<form method = "post" action="${root}/board/articleWrite.do">
+					<input type="hidden" name="boardName" value="${param.boardName}"/>
+					<input type="hidden" name="currPage" value="${param.currPage}"/>
+					
 					<table id="articleWriteTable">
 						<tr>
 							<td>ID</td>

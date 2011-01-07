@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import constant.Const;
+
 import utility.Util;
 
 import beans.Article;
@@ -38,7 +40,13 @@ public class ArticleWrite extends HttpServlet {
 		String boardName = request.getParameter("boardName");		
 		String title = request.getParameter("title");
 		String content = request.getParameter("content");
-		String currPage = request.getParameter("currPage");			
+		String currPage = request.getParameter("currPage");	
+		
+		//길면 자른다.
+		if(title.length()>Const.articleTitleMaxLen)
+			title = title.substring(0,Const.articleTitleMaxLen);
+		if(content.length()>Const.articleTextMaxLen)
+			content = content.substring(0,Const.articleTextMaxLen);		
 		
 		if(title.compareTo("")==0)
 			title = Util.currDateTime() + " 에 작성한 글입니다.";

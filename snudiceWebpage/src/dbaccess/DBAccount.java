@@ -1,5 +1,7 @@
 package dbaccess;
 
+import java.util.List;
+
 import beans.User;
 import beans.UserRole;
 
@@ -90,5 +92,18 @@ public class DBAccount {
 		} catch (Exception e) {			
 			e.printStackTrace();
 		}
+	}
+
+	//user의 role 정보를 얻는다.
+	@SuppressWarnings("unchecked")
+	public String getUserRole(String remoteUser) {
+		List<String> result = null;
+		try {			
+			result = (List<String>)sqlMap.queryForList("getUserRole",remoteUser);
+		} catch (Exception e) {			
+			e.printStackTrace();
+		}
+		
+		return result.get(0);
 	}		
 }
