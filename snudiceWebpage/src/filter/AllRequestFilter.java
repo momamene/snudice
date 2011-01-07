@@ -73,7 +73,7 @@ public class AllRequestFilter implements Filter {
 					session.setAttribute("userId", req.getRemoteUser()); //userId 설정
 				}
 			}				
-		}
+		}		
 		else //로그인 안된 경우
 		{
 			if(session.getAttribute("userId")!=null)
@@ -81,14 +81,8 @@ public class AllRequestFilter implements Filter {
 				synchronized(session)
 				{
 					session.removeAttribute("userId");
-				}				
-			}
-			if(session.getAttribute("role")!=null)
-			{
-				synchronized(session)
-				{
 					session.removeAttribute("role");
-				}
+				}				
 			}
 		}
 		if(req.isSecure())
