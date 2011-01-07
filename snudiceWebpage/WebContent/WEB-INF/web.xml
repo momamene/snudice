@@ -212,8 +212,7 @@
   <servlet-mapping>
     <servlet-name>articleDelete</servlet-name>
     <url-pattern>/board/articleDelete.ajax</url-pattern>
-  </servlet-mapping>
-  
+  </servlet-mapping> 
  
   <filter>
   	<filter-name>allRequestFilter</filter-name>
@@ -223,5 +222,14 @@
   	<filter-name>allRequestFilter</filter-name>
   	<url-pattern>/*</url-pattern>
   </filter-mapping>  
+  
+  <filter>
+  	<filter-name>boardFilter</filter-name>
+  	<filter-class>filter.BoardFilter</filter-class>
+  </filter>
+  <filter-mapping>
+  	<filter-name>boardFilter</filter-name>
+  	<url-pattern>/board/*</url-pattern>
+  </filter-mapping>
 
 </web-app>

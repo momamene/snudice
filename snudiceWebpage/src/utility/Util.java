@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 public class Util {
 	public static String currDateTime() {
@@ -25,13 +26,33 @@ public class Util {
 	}	
 	
 	//모든 인자를 출력한다.
-	public static void printAllParams(HttpServletRequest request)
-	{
+	public static void printAllParams(HttpServletRequest request){
 		Enumeration<String> e = request.getParameterNames();
 		while(e.hasMoreElements())
 		{
 			String paramName = e.nextElement();
-			System.out.println(paramName+"="+request.getParameter(paramName));		
+			System.out.println("[param] "+paramName+"=["+request.getParameter(paramName)+"]");		
+		}
+	}
+	
+	//세션의 속성을 출력한다.
+	public static void printAllSessionAttr(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		Enumeration<String> e = session.getAttributeNames();
+		while(e.hasMoreElements())
+		{
+			String attrName = e.nextElement();
+			System.out.println("[session] "+attrName+"=["+session.getAttribute(attrName)+"]");		
+		}
+	}
+	
+	//request 객체의 모든 속성을 출력한다.
+	public static void printAllRequestAttr(HttpServletRequest request) {
+		Enumeration<String> e = request.getAttributeNames();
+		while(e.hasMoreElements())
+		{
+			String attrName = e.nextElement();
+			System.out.println("[req] "+attrName+"=["+request.getAttribute(attrName)+"]");		
 		}
 	}
 }
