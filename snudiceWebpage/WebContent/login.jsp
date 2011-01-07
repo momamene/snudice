@@ -26,19 +26,19 @@
 					<table id="joinFormTable">
 						<tr>
 							<td class="label">ID</td>
-							<td><input id="joinId" type="text" maxlength="16" name="id"/></td>
+							<td><input id="joinId" type="text" name="id"/></td>
 						</tr>
 						<tr>
 							<td class="label">PW</td>
-							<td><input id="joinPw" type="password" maxlength="255" name="pw"/></td>
+							<td><input id="joinPw" type="password" name="pw"/></td>
 						</tr>
 						<tr>
 							<td class="label">PW확인</td>
-							<td><input id="joinPwConfirm" type="password" maxlength="255" name="pwConfirm"/></td>
+							<td><input id="joinPwConfirm" type="password" name="pwConfirm"/></td>
 						</tr>
 						<tr>
 							<td class="label">email</td>
-							<td><input id="joinEmail" type="text" maxlength="255" name="email"/></td>
+							<td><input id="joinEmail" type="text" name="email"/></td>
 						</tr>
 					</table>								
 				
@@ -59,8 +59,8 @@
 					
 					<div id="loginFormWrapper" class="${loginFormWrapperClass}">									
 						<div id="idpw">
-							<input id="userId" name="userId" maxlength="16" type="text"/><br/>
-							<input id="password" name="password" maxlength="255" type="password"/>
+							<input id="userId" name="userId" type="text"/><br/>
+							<input id="password" name="password" type="password"/>
 						</div>					
 						<div id="loginButton" class="mouseOut"></div>
 												

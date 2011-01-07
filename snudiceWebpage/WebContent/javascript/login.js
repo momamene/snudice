@@ -109,9 +109,9 @@ function joinSubmitFunc()
 	
 	var url = root+"/join.ajax";	
 	var method = "POST";
-	var param = "joinId="+joinId.value;
-	param += "&joinPw="+joinPw.value;	
-	param += "&joinEmail="+joinEmail.value;
+	var param = "joinId="+encodeURIComponent(joinId.value);
+	param += "&joinPw="+encodeURIComponent(joinPw.value);	
+	param += "&joinEmail="+encodeURIComponent(joinEmail.value);
 	var callback = joinFormRefresh;
 	var async = false;
 	
@@ -144,8 +144,8 @@ function loginFunc()
 	
 	var url = root+"/login.ajax";	
 	var method = "POST";
-	var param = "userId="+userId.value;
-	param += "&password="+password.value;	
+	var param = "userId="+encodeURIComponent(userId.value);
+	param += "&password="+encodeURIComponent(password.value);	
 	var callback = loginFormRefresh;
 	var async = false;
 	
@@ -186,18 +186,36 @@ function joinFormRefresh()
 				joinId.focus();
 				joinId.select();
 			}				
+			else if(request.responseText == "idTooLong")
+			{
+				joinMsg.innerHTML = "id가 너무 깁니다.";
+				joinId.focus();
+				joinId.select();
+			}
 			else if(request.responseText == "pwContainSpace")
 			{
 				joinMsg.innerHTML = "password는 공백문자를 포함할 수 없습니다.";
 				joinPw.focus();
 				joinPw.select();
 			}	
+			else if(request.responseText == "pwTooLong")
+			{
+				joinMsg.innerHTML = "password가 너무 깁니다.";
+				joinPw.focus();
+				joinPw.select();
+			}
 			else if(request.responseText == "emailContainSpace")
 			{
 				joinMsg.innerHTML = "email은 공백문자를 포함할 수 없습니다.";
 				joinEmail.focus();
 				joinEmail.select();
-			}				
+			}	
+			else if(request.responseText == "emailTooLong")
+			{
+				joinMsg.innerHTML = "email이 너무 깁니다.";
+				joinEmail.focus();
+				joinEmail.select();
+			}
 			else if(request.responseText == "invalidId")
 			{
 				joinMsg.innerHTML = "id 는 영어 소문자,숫자만 허용됩니다."

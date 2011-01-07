@@ -32,7 +32,16 @@ function init()
 //글을 지운다.
 var articleDeleteFunc = function() 
 {	
-	window.location = "${root}/board/articleDelete.do?boardName=${param.boardName}&articleIndex=${articleInfo.articleIndex}&currPage=${param.currPage}";
+	var url = "${root}/board/articleDelete.ajax";	
+	var method = "POST";
+	var param = "articleIndex="+encodeURIComponent("${param.articleIndex}");	
+	var callback = function()
+	{
+		window.location = "${root}/board/articleList.do?boardName=${param.boardName}&currPage=${param.currPage}";	
+	}
+	var async = false;
+	
+	sendRequest(url,method,param,callback,async);	
 }
 
 //댓글을 쓴다
@@ -45,7 +54,8 @@ function replySubmit()
 	
 	var url = "${root}/board/replyWrite.ajax";	
 	var method = "POST";
-	var param = "articleIndex=${param.articleIndex}&replyText="+writeText;
+	var param = "articleIndex="+encodeURIComponent("${param.articleIndex}");
+	param += "&replyText="+encodeURIComponent(writeText);
 	var callback = refresh;
 	var async = false;
 	
@@ -66,21 +76,13 @@ function replySubmit()
     		<div class="left"></div>
     		
     		<div class="center centerAlign">          	
-            	<span>
-            		${articleInfo.title}
-            	</span>   
+            	<span>${articleInfo.title}</span>   
             	<br/>
-                <span>
-                	${articleInfo.userId}
-                </span>
+                <span>${articleInfo.userId}</span>
                 <br/> 
-                <span>
-                	${articleInfo.dateTime }
-                </span>            	
+                <span>${articleInfo.dateTime}</span>            	
                 <br/>
-            	<span>
- 					${articleInfo.text }
-            	</span>		
+            	<span>${articleInfo.text}</span>		
             	<br/>
             	
             	<a href="${root}/board/articleList.do?boardName=${param.boardName}&currPage=${param.currPage}">목록으로</a>

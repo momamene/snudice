@@ -31,7 +31,10 @@ function init()
 			<div class="center centerAlign">
 				<span>글 수정</span>
 				<br/>
-				<form action="${root}/board/articleModifyComplete.do?boardName=${param.boardName}&articleIndex=${param.articleIndex}&currPage=${param.currPage}" method = "post">	
+				<form method = "post" action="${root}/board/articleModifyComplete.do">
+					<input type="hidden" name="boardName" value="${param.boardName}"/>
+					<input type="hidden" name="articleIndex" value="${param.articleIndex}"/>
+					<input type="hidden" name="currPage" value="${param.currPage}"/>	
 					<table id="articleModifyTable">
 						<tr>
 							<td>ID</td>
@@ -44,7 +47,7 @@ function init()
     					<tr>
      						<td>제목</td>
      						<td>
-     							<input type = "text" value = ${articleInfo.title} name = "title">
+     							<input type = "text" value = ${articleInfo.title} name = "title"/>
      						</td>
     					</tr>
     					<tr>
@@ -55,7 +58,7 @@ function init()
     					</tr>
 						<tr>
 							<td colspan = "2">
-								<input type = "submit" value = "글수정">
+								<input type = "submit" value = "글수정"/>
 							</td>
     					</tr>
     				</table>	

@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import constant.Const;
+
 import dbaccess.DB;
 
 /**
@@ -32,7 +34,13 @@ public class Login extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String userId = request.getParameter("userId");
-		String password = request.getParameter("password");			
+		String password = request.getParameter("password");	
+		
+		//길면 자른다.
+		if(userId.length()>Const.userIdMaxLen)
+			userId = userId.substring(0, Const.userIdMaxLen);
+		if(password.length()>Const.passwordMaxLen)
+			password = password.substring(0,Const.passwordMaxLen);
 		
 		ServletOutputStream os = response.getOutputStream();
 		

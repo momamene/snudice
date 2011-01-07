@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import utility.Util;
 
 import constant.Const;
+import dbaccess.DB;
 
 /**
  * Servlet Filter implementation class AllRequestFilter
@@ -55,9 +56,16 @@ public class AllRequestFilter implements Filter {
 		
 		StringBuffer log = new StringBuffer("["+Util.currDateTime()+"]");
 		log.append(" from "+"<"+req.getRemoteAddr()+">");
-		if(req.getRemoteUser()!=null)
+		if(req.getRemoteUser()!=null) //로그인 된 경우
 		{
-			log.append(" user="+"<"+req.getRemoteUser()+">");
+			if(session.getAttribute("role")==null)
+			{
+				DB db= DB.getInstance();
+				String role = db.dbAccount.getUserRole(req.getRemoteUser());
+				session.setAttribute("role", role);
+			}
+			
+			log.append(" user="+"<"+req.getRemoteUser()+":"+session.getAttribute("role")+">");
 			if(session.getAttribute("userId")==null)
 			{
 				synchronized(session)
@@ -65,6 +73,23 @@ public class AllRequestFilter implements Filter {
 					session.setAttribute("userId", req.getRemoteUser()); //userId 설정
 				}
 			}				
+		}
+		else //로그인 안된 경우
+		{
+			if(session.getAttribute("userId")!=null)
+			{
+				synchronized(session)
+				{
+					session.removeAttribute("userId");
+				}				
+			}
+			if(session.getAttribute("role")!=null)
+			{
+				synchronized(session)
+				{
+					session.removeAttribute("role");
+				}
+			}
 		}
 		if(req.isSecure())
 			log.append(" (HTTPS)");

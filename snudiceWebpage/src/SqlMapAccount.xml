@@ -8,4 +8,10 @@
 		INSERT INTO user_roles (userId,role)
 		VALUES(#userId:VARCHAR#,#role:VARCHAR#)
 	</insert>	
+	
+	<select id="getUserRole" parameterClass="String" resultClass="String">
+		SELECT role
+		FROM user_roles
+		WHERE userId=#userId:VARCHAR#
+	</select>
 </sqlMap>

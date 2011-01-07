@@ -33,17 +33,23 @@ public class Join extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
 		String joinId = request.getParameter("joinId");
 		String joinPw = request.getParameter("joinPw");			
-		String joinEmail = request.getParameter("joinEmail");
+		String joinEmail = request.getParameter("joinEmail");		
 		
 		ServletOutputStream os = response.getOutputStream();		
 		
 		//parameter validation		
 		if(joinId.indexOf(' ')>=0)
-			os.print("idContainSpace");		
+			os.print("idContainSpace");	
+		else if(joinId.length()>Const.userIdMaxLen)
+			os.print("idTooLong");
 		else if(joinPw.indexOf(' ')>=0)				
-			os.print("pwContainSpace");
+			os.print("pwContainSpace");	
+		else if(joinPw.length()>Const.passwordMaxLen)
+			os.print("pwTooLong");
 		else if(joinEmail.indexOf(' ')>=0)
 			os.print("emailContainSpace");
+		else if(joinEmail.length()>Const.emailMaxLen)
+			os.print("emailTooLong");
 		else if(!joinId.matches(Const.validIdRegex))		
 			os.print("invalidId");		
 		else
