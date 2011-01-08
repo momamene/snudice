@@ -15,16 +15,25 @@ public class Util {
 		return dateFormat.format(today);
 	}
 	
-	public static String toHtml(String str) {
-		String result = null;
-		result = str.replace("<", "&lt;");
-		result = result.replace(">", "&gt");
-		result = result.replace("\n", "<br/>");
-		result = result.replace(" ", "&nbsp;");
-		result = result.replace("(", "&#40;");
-		result = result.replace(")", "&#41;");
-		return result;
-	}	
+	public static String encodeHtml(String html) {
+		StringBuffer result = new StringBuffer();
+		
+		for(int i=0;i<html.length();i++)
+		{
+			char c = html.charAt(i);
+			if(c>127 || c=='"' || c=='<' || c=='>')
+				result.append("&#"+(int)c+";");
+			else if(c=='\t')
+				result.append("&nbsp;&nbsp;&nbsp;&nbsp;");
+			else if(c=='\n')
+				result.append("<br/>");
+			else if(c==' ')
+				result.append("&nbsp;");
+			else
+				result.append(c);
+		}
+		return result.toString();
+	}
 	
 	//모든 인자를 출력한다.
 	public static void printAllParams(HttpServletRequest request){

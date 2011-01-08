@@ -59,7 +59,8 @@ public class ArticleWrite extends HttpServlet {
 		if(title.compareTo("")==0)
 			title = Util.currDateTime() + " 에 작성한 글입니다.";
 		
-		Article article = new Article(boardName,userId,title,content);		
+		Article article = new Article(boardName,userId,title,content);
+		article.setRawStr(true);
 		
 		DB db = DB.getInstance();
 		int articleIndex = db.dbBoard.insertArticle(article);		
