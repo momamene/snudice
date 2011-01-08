@@ -18,6 +18,9 @@ function initLogin()
 	loginButton.onclick = loginFunc;
 	loginButton.onmouseover = mousOverFunc;
 	loginButton.onmouseout = mouseOutFunc;
+	
+	//패스워드 창에서 엔터 치면 로그인시킴
+	enterKeyExec("password",loginFunc);
 
 	//로그아웃 버튼
 	var logoutWrapper = document.getElementById("logoutWrapper");

@@ -7,7 +7,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" type="text/css" href="${root}/css/loginPageStyle.css">
 <script type="text/javascript" src="${root}/javascript/util.js"></script> 
-<script type="text/javascript" src="${root}/javascript/json2.js"></script>
 <script type="text/javascript" src="${root}/javascript/login.js"></script>
 
 <title>SNUDice Web Page에 오신 것을 환영합니다.</title>
