@@ -65,6 +65,12 @@ public:
 	bool		m_bWarpingList;
 
 	int			m_remain;
+
+	bool		m_bBreak;					// ±úÁ³³Ä
+	int			m_nCoupleDebuffRemain;		// Ä¿ÇÃ ±úÁö°í µð¹öÇÁ ³²Àº ÅÏ ¼ö
+
+	bool		m_bPrevInNokdu;				// ³» ÇÃ·¹ÀÌ¾î°¡ ³ìµÎ¿¡ ÀÖ¾ú³ª
+											// ³ìµÎ -> !³ìµÎ,  !³ìµÎ -> ³ìµÎ ÆÄ¾Ç À§ÇÏ¿©.
 //
 private:
 	BUSMOVE		m_busmode;

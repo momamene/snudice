@@ -417,6 +417,7 @@ void gGameCore::DrawBus()
 	gTimer			 *gt = gTimer::GetIF();
 	gMap			*map = gMap::GetIF();
 	gPlayerContainer *pc = gPlayerContainer::GetIF();
+	gPlaySoundCore	*sound = gPlaySoundCore::GetIF();
 
 	switch(m_busmode)
 	{
@@ -437,6 +438,8 @@ void gGameCore::DrawBus()
 				if(nFrame >= BUSMOVEFRAME)
 				{
 					m_busmode = BUS_BOARD;
+					sound->StopEffectSound(EFFECT_FILE_1);
+					sound->PlayEffectSound(EFFECT_FILE_2);
 					gt->frameEnd();
 					gt->frameStart(BUSBOARDTICK, 4);
 
@@ -488,6 +491,7 @@ void gGameCore::DrawBus()
 					m_curframe = 0;
 					gt->frameStart(BUSMOVETICK, BUSMOVEFRAME + 1);
 					m_busmode = BUS_START;
+					sound->PlayEffectSound(EFFECT_FILE_1);
 				}
 				if(nFrame >= 2)
 				{
@@ -540,6 +544,7 @@ void gGameCore::DrawBus()
 					gt->frameEnd();
 					m_curframe = 0;
 					ScrollStart(m_buspos);
+					sound->StopEffectSound(EFFECT_FILE_1);
 
 					pc->MainLoop_Busing(NULL, NULL, NULL, m_nTurn);
 				}
@@ -590,6 +595,7 @@ void gGameCore::DrawBus()
 					gTimer::GetIF()->frameStart(BUSMOVETICK, BUSMOVEFRAME + 1);
 					m_curframe = 0;	
 					m_busmode = BUS_COME2;
+					sound->PlayEffectSound(EFFECT_FILE_1);
 					pc->m_GPlayerList[m_nTurn].nPos = m_buspos;
 					map->posSetter(m_buspos / LINEY, m_buspos % LINEY);
 					pc->SyncronizeToMap(m_nTurn);
@@ -622,6 +628,8 @@ void gGameCore::DrawBus()
 				if(nFrame >= BUSMOVEFRAME)
 				{
 					m_busmode = BUS_BOARD2;
+					sound->StopEffectSound(EFFECT_FILE_1);
+					sound->PlayEffectSound(EFFECT_FILE_2);
 					gt->frameEnd();
 					gt->frameStart(BUSBOARDTICK, 4);
 
@@ -673,6 +681,7 @@ void gGameCore::DrawBus()
 					m_curframe = 0;
 					gt->frameStart(BUSMOVETICK, BUSMOVEFRAME + 1);
 					m_busmode = BUS_START2;
+					sound->PlayEffectSound(EFFECT_FILE_1);
 				}
 				if(nFrame >= 1)
 				{
@@ -717,6 +726,7 @@ void gGameCore::DrawBus()
 					gt->frameEnd(); 
 					pc->FootClear();
 					m_bBusing = false;
+					sound->StopEffectSound(EFFECT_FILE_1);
 
 //					pc->m_GPlayerList[ m_nTurn ].nPos = map->m_xSpacePos * LINEY + map->m_ySpacePos;
 
@@ -1146,6 +1156,36 @@ void gGameCore::pk_nextturn_rep(PK_NEXTTURN_REP *rep)
 {
 	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
 
+	if(m_bBreak)
+	{
+		if(m_nTurn == gPC->GetMyGPIndex())
+		{
+			m_nCoupleDebuffRemain--;
+			if(m_nCoupleDebuffRemain < 0)
+			{
+				m_bBreak = false;
+				gPlaySoundCore	*sound = gPlaySoundCore::GetIF();
+				if(gPC->IsNokdu(m_nTurn))
+					sound->StartBGM(BGM_FILE_1);
+				else
+					sound->StartBGM(BGM_FILE_2);
+			}
+		}
+	}
+	gPlaySoundCore	*sound = gPlaySoundCore::GetIF();
+	bool	bMeInNokdu = gPC->IsNokdu(gPC->GetMyGPIndex());
+	// ³ìµÎ -> !³ìµÎ
+	if(!m_bBreak && !gUIGame::GetIF()->m_bCouple)
+	{
+		if(m_bPrevInNokdu && !bMeInNokdu)
+			sound->StartBGM(BGM_FILE_2);
+		// !³ìµÎ -> ³ìµÎ
+		else if(!m_bPrevInNokdu && bMeInNokdu)
+			sound->StartBGM(BGM_FILE_1);
+	}
+	
+	m_bPrevInNokdu = bMeInNokdu;
+
 	m_turnTime = GetTickCount();		//Àá¼öÅ¸´Â ½Ã°£ Àç±â ½ÃÀÛ
 //	if(m_nTurn == rep->nNowTurn) {		//why this?
 		m_nTurn		= rep->nNextTurn;
@@ -1222,6 +1262,8 @@ void gGameCore::pk_busmovestart_rep(PK_BUSMOVESTART_REP *rep)
 	{
 		m_bBusing = true;
 		BusComeStart(nPos);
+		gPlaySoundCore	*sound = gPlaySoundCore::GetIF();
+		sound->PlayEffectSound(EFFECT_FILE_1);
 		m_buspos = gMap::GetIF()->Destination(nPos, rep->nDist);
 		if(rep->nDist >= 0)
 			gMap::GetIF()->posSpacor();
@@ -1368,4 +1410,6 @@ void gGameCore::Clear(int newTurn)
 {
 	m_nTurn		= newTurn;
 	m_turnTime	= GetTickCount();
+	m_bBreak	= false;
+	m_bPrevInNokdu = false;
 }

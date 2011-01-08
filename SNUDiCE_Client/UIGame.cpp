@@ -13,6 +13,8 @@
 #include "stringconst.h"
 #include "Map.h"
 #include "Mouse.h"
+#include "PlaySoundCore.h"
+#include "SubmitCore.h"
 
 #define	UI_FILE_MAININFO					".\\Data\\Interface\\game_maininfo.img"
 #define UI_SIZE_MAININFO_W					220
@@ -176,6 +178,12 @@
 #define MAPTOOLTIP_TEXT_X					7
 #define MAPTOOLTIP_TEXT_Y					7
 #define MAPTOOLTIP_TEXT_TERM_Y				20
+#define MAPTOOLTIP_TEXT_TERM_X				75
+#define MAPTOOLTIP_IMG_SIZE_W				30
+#define MAPTOOLTIP_IMG_SIZE_H				35
+#define MAPTOOLTIP_IMG_POS_X				10
+#define MAPTOOLTIP_IMG_POS_Y				42
+#define MAPTOOLTIP_IMG_TERM_X				7
 
 #define COUPLE_OUTLINE_FILE					".\\Data\\Interface\\game_coupleoutline.img"
 #define COUPLE_OUTLINE_POS_X				12
@@ -412,13 +420,40 @@ void gUIGame::Draw()
 				if(tile->college)
 				{
 					gUtil::Text(textPosX, textPosY, tile->college);
-					textPosY += MAPTOOLTIP_TEXT_TERM_Y;
+					//textPosY += MAPTOOLTIP_TEXT_TERM_Y;
 				}
 				if(tile->building)
 				{
-					gUtil::Text(textPosX, textPosY, tile->building);
+					gUtil::Text(textPosX + MAPTOOLTIP_TEXT_TERM_X, textPosY, tile->building);
 				}
 				gUtil::EndText();
+
+				if(tile->tileType == TY_CLASS)
+				{
+					gSubmitCore	*submit = gSubmitCore::GetIF();
+
+					RECT	rcDest, rcSour;
+
+					SetRect(&rcDest,
+						ptMouse.x + MAPTOOLTIP_IMG_POS_X,
+						ptMouse.y + MAPTOOLTIP_IMG_POS_Y,
+						ptMouse.x + MAPTOOLTIP_IMG_POS_X + MAPTOOLTIP_IMG_SIZE_W,
+						ptMouse.y + MAPTOOLTIP_IMG_POS_Y + MAPTOOLTIP_IMG_SIZE_H);
+
+					for(i = 0; i < CLASSSEAT; i++)
+					{
+						BYTE	subject = submit->m_subject[tile->flag2][i];
+						if(subject != NOSEAT && subject != AVAILSEAT)
+						{
+							gImage	*img = &gPC->m_ImgInfo[ gPC->m_GPlayerList[ subject ].ctype ].ImgPic;
+							SetRect(&rcSour,
+									0, 0, img->m_nWidth, img->m_nHeight);
+
+							img->Draw(rcDest, rcSour);
+							OffsetRect(&rcDest, (MAPTOOLTIP_IMG_SIZE_W + MAPTOOLTIP_IMG_TERM_X), 0);
+						}
+					}
+				}
 			}
 		}
 	}
@@ -1635,6 +1670,8 @@ void gUIGame::pk_itemuse_rep(PK_ITEMUSE_REP* rep)
 			}
 			break;
 	}
+	gPlaySoundCore	*sound = gPlaySoundCore::GetIF();
+	sound->PlayEffectSound(EFFECT_FILE_3);
 	m_uimode = UIM_ITEMUSEINFO;
 	m_timer.frameStart(USEINFO_TICK, 2);
 }
@@ -1886,18 +1923,60 @@ void gUIGame::pk_infochange_rep(PK_INFOCHANGE_REP *rep)
 	int		i;
 	int		nCount = 0;
 	
+	bool	bBuff = false;
+	bool	bDeBuff = false;
+	bool	bClass = false;
 	for(i = 0; i < ROOMMAXPLAYER; i++)
 	{
 		if(strlen(rep->info[i].szID) == 0)
 			continue;
 
 		m_info[nCount] = rep->info[i];
+		if(m_info[nCount].nGrade)
+			bClass = true;
+		if(m_info[nCount].nLang != 0)
+		{
+			if(m_info[nCount].nLang > 0)
+				bBuff = true;
+			else
+				bDeBuff = true;
+		}
+		if(m_info[nCount].nMath != 0)
+		{
+			if(m_info[nCount].nMath > 0)
+				bBuff = true;
+			else
+				bDeBuff = true;
+		}
+		if(m_info[nCount].nArt != 0)
+		{
+			if(m_info[nCount].nArt > 0)
+				bBuff = true;
+			else
+				bDeBuff = true;
+		}
+		if(m_info[nCount].nStamina != 0)
+		{
+			if(m_info[nCount].nStamina > 0)
+				bBuff = true;
+			else
+				bDeBuff = true;
+		}
+
 		nCount++;
 	}
 	m_uimode = UIM_INFOCHANGE;
 	m_timer.frameStart(INFOCHANGE_TICK, 2);
 	m_nTargetNum = nCount;
 	SetTargetButton_InfoChange();
+
+	gPlaySoundCore	*sound = gPlaySoundCore::GetIF();
+	if(bClass)
+		sound->PlayEffectSound(EFFECT_FILE_4);
+	else if(bBuff)
+		sound->PlayEffectSound(EFFECT_FILE_0);
+	else if(bDeBuff)
+		sound->PlayEffectSound(EFFECT_FILE_5);
 }
 
 void gUIGame::SetTargetButton_InfoChange()
@@ -2237,6 +2316,7 @@ void gUIGame::SetbCouple(bool mode)
 void gUIGame::pk_becouple_rep(PK_BECOUPLE_REP *rep)
 {
 	gPlayerContainer	*pc = gPlayerContainer::GetIF();
+	gPlaySoundCore		*sound = gPlaySoundCore::GetIF();
 
 	m_nTargetNum = 2;
 
@@ -2261,5 +2341,23 @@ void gUIGame::pk_becouple_rep(PK_BECOUPLE_REP *rep)
 
 	int Me = pc->GetMyGPIndex();
 	if(Me==m_target[0].idx || Me==m_target[1].idx)
+	{
 		m_bCouple = rep->bCouple;
+		if(rep->bCouple)
+		{
+			sound->StartBGM(BGM_FILE_4);
+		}
+		else
+		{
+			gGameCore::GetIF()->m_bBreak = true;
+			gGameCore::GetIF()->m_nCoupleDebuffRemain = COUPLE_DEBUFFTURN;
+			sound->StartBGM(BGM_FILE_3);
+		}
+	}
+}
+
+void gUIGame::Clear()
+{
+	SetRankList();
+	m_bCouple = false;
 }

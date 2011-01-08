@@ -743,3 +743,15 @@ GAMEPLAYER*	gPlayerContainer::GetPlayerByPos(int nPos)
 	}
 	return NULL;
 }
+
+bool gPlayerContainer::IsNokdu(int nPlayerIndex)
+{
+
+	gMap		*map = gMap::GetIF();
+
+	gTile	*tile = &map->tileMap[m_GPlayerList[nPlayerIndex].nPos];
+	if(strcmp(tile->building, "³ìµÎ") == 0)
+		return true;
+
+	return false;
+}
