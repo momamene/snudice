@@ -44,15 +44,7 @@ public class AllRequestFilter implements Filter {
 		
 		HttpServletRequest req = (HttpServletRequest)request;
 		HttpSession session = req.getSession();
-		session.setMaxInactiveInterval(1800);
-		
-		if(session.getAttribute("root")==null)
-		{
-			synchronized(session)
-			{
-				session.setAttribute("root",Const.root); //root 경로 설정
-			}
-		}
+		session.setMaxInactiveInterval(1800);		
 		
 		StringBuffer log = new StringBuffer("["+Util.currDateTime()+"]");
 		log.append(" from "+"<"+req.getRemoteAddr()+">");
