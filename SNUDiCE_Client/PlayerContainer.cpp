@@ -2,6 +2,7 @@
 #include "Map.h"
 #include "MainWin.h"
 #include "UIGame.h"
+#include "Util.h"
 #include <stdio.h>
 #include <algorithm>
 #include <vector>
@@ -413,15 +414,22 @@ void gPlayerContainer::Draw_Busing(gImage *bus, RECT *rcDest, RECT *rcSour, int 
 
 	bool printed = false;
 	sort(PlayerRect.begin(), PlayerRect.end());
-	for(int i = 0 ; i < (int)PlayerRect.size() ; i++) {
-		if(bus!=NULL && !printed && PlayerRect[i].rcScr.top >= rcDest->top) {
-				bus->Draw(*rcDest, *rcSour, false);
+	for(int i = 0 ; i < (int)PlayerRect.size() ; i++)
+	{
+		if(bus!=NULL && !printed && PlayerRect[i].rcScr.top >= rcDest->top)
+		{
+			bus->Draw(*rcDest, *rcSour, false);
 			printed=true;
 		}
 
 		int k = PlayerRect[i].index;
 		m_ImgInfo[ m_GPlayerList[k].ctype ].ImgDot.Draw(PlayerRect[i].rcScr, PlayerRect[i].rcImg, false);
 	}
+	if(bus && !printed)
+	{
+		bus->Draw(*rcDest, *rcSour, false);
+	}
+
 }
 
 void gPlayerContainer::MainLoop_Warp(int charidx, int dY)

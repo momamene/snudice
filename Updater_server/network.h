@@ -11,7 +11,7 @@
 #define BUFFERSIZE				2048
 #define PK_HEADER_SIZE			4
 
-#define FILEPATH_UPDATE			"http://211.169.219.93:8080/snudiceWebpage/clientFile/update/"
+#define FILEPATH_UPDATE			"http://projectn.co.kr/snudiceWebpage/clientFile/update/"
 
 struct PK_DEFAULT
 {

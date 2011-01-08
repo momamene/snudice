@@ -338,8 +338,19 @@ void Recv()
 						strcpy(szTemp, szPath);
 						strcat(szTemp, "\\");
 						strcat(szTemp, "SNUDiCE_Client.exe");// RunByUpdate");
-						WinExec((LPCSTR)szPath, SW_SHOWNORMAL);
 
+						SHELLEXECUTEINFO		si;
+						memset(&si, 0, sizeof(si));
+						si.cbSize = sizeof(si);
+						si.lpVerb = "open";
+						si.lpFile = szTemp;
+						si.lpParameters = "RunByUpdater";
+						si.lpDirectory = szPath;
+						si.nShow = SW_SHOWDEFAULT;
+
+						ShellExecuteEx(&si);
+
+						EndDialog(hDlgMain, IDOK);
 					}
 				}
 				else
@@ -510,7 +521,8 @@ bool HTTPDown(HWND hWnd,  char *url, char *path)
 
 	// open url
 	hURL = InternetOpenUrl(hInternet, url, NULL, 0, INTERNET_FLAG_RELOAD, 0);
-	if(!hURL)
+
+if(!hURL)
 	{
 		InternetCloseHandle(hInternet);
 		return false;
