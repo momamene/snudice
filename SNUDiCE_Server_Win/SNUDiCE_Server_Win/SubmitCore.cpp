@@ -20,6 +20,7 @@ bool gSubmitCore::SetUp()
 
 void gSubmitCore::init(int nRoomIndex)
 {
+	InitializeCriticalSection(&crit[nRoomIndex]);
 	gRoomCore* gRC = gRoomCore::GetIF();
 	if(nRoomIndex < 0 || nRoomIndex >= MAXROOM) return;
 	else {
@@ -115,6 +116,7 @@ bool gSubmitCore::isFinishAllSubmit(int nRoomIndex)
 		}
 	}
 	putFavorsameclass(nRoomIndex);
+	DeleteCriticalSection(&crit[nRoomIndex]);
 	return true;
 }
 
@@ -174,8 +176,12 @@ bool gSubmitCore::putSubject(int nRoomIndex,int nInRoomIndex,int nSubjectIndex)
 			continue;
 		}
 		else if(m_submitSubject[nRoomIndex][nSubjectIndex][i]==AVAILSEAT) {
+			EnterCriticalSection(&crit[nRoomIndex]);	//공유자원 침범방지!
+			
 			m_submitSubject[nRoomIndex][nSubjectIndex][i] = nInRoomIndex;
 			putSubjectToPlayer(nRoomIndex,nInRoomIndex,nSubjectIndex);
+			
+			LeaveCriticalSection(&crit[nRoomIndex]);
 			return true;
 		}
 	}

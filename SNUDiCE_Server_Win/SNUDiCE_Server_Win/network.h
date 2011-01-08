@@ -21,6 +21,8 @@
 
 #define SNUDICE_VERSION			"0.6000"
 
+#define DEF_SERVER
+
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 //	통신 프로토콜
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
@@ -203,7 +205,7 @@ struct PLAYER
 {
 	char		szID[IDLENGTH];
 	eCOREMODE	coreWhere;
-	int			nCoreFlag;
+	int			nCoreFlag;		//이놈 뭐하는 놈이냐
 	SOCKET		sock;
 
 	// 게임관련 정보
@@ -538,7 +540,11 @@ struct PK_GAMEEND_REP
 	char		szID[IDLENGTH];		// 이긴넘
 };
 
+#ifdef DEF_SERVER
+#define ITEMNUM		29 +1			// 
+#else
 #define ITEMNUM		29
+#endif
 
 enum ITEMTARGET
 {
@@ -697,3 +703,6 @@ struct PK_BECOUPLEEND_ASK
 {
 	char		szID[IDLENGTH];
 };
+
+#define COUPLE_DEBUFFTURN      5
+#define COUPLE_MINUS_STAT      -5
