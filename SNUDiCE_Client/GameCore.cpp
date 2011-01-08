@@ -438,9 +438,11 @@ void gGameCore::DrawBus()
 				if(nFrame >= BUSMOVEFRAME)
 				{
 					m_busmode = BUS_BOARD;
+					gt->frameEnd();
+
 					sound->StopEffectSound(EFFECT_FILE_1);
 					sound->PlayEffectSound(EFFECT_FILE_2);
-					gt->frameEnd();
+
 					gt->frameStart(BUSBOARDTICK, 4);
 
 					RECT	rcDest, rcSour;
@@ -488,10 +490,12 @@ void gGameCore::DrawBus()
 				if(nFrame >= 3)
 				{
 					gt->frameEnd();
+
+					sound->PlayEffectSound(EFFECT_FILE_1);
+
 					m_curframe = 0;
 					gt->frameStart(BUSMOVETICK, BUSMOVEFRAME + 1);
 					m_busmode = BUS_START;
-					sound->PlayEffectSound(EFFECT_FILE_1);
 				}
 				if(nFrame >= 2)
 				{
@@ -542,9 +546,11 @@ void gGameCore::DrawBus()
 				{
 					m_busmode = BUS_SCROLLSTART;
 					gt->frameEnd();
+
+					sound->StopEffectSound(EFFECT_FILE_1);
+
 					m_curframe = 0;
 					ScrollStart(m_buspos);
-					sound->StopEffectSound(EFFECT_FILE_1);
 
 					pc->MainLoop_Busing(NULL, NULL, NULL, m_nTurn);
 				}
@@ -592,10 +598,11 @@ void gGameCore::DrawBus()
 
 				if(nFrame >= 1)
 				{
+					sound->PlayEffectSound(EFFECT_FILE_1);
+
 					gTimer::GetIF()->frameStart(BUSMOVETICK, BUSMOVEFRAME + 1);
 					m_curframe = 0;	
 					m_busmode = BUS_COME2;
-					sound->PlayEffectSound(EFFECT_FILE_1);
 					pc->m_GPlayerList[m_nTurn].nPos = m_buspos;
 					map->posSetter(m_buspos / LINEY, m_buspos % LINEY);
 					pc->SyncronizeToMap(m_nTurn);
@@ -628,9 +635,11 @@ void gGameCore::DrawBus()
 				if(nFrame >= BUSMOVEFRAME)
 				{
 					m_busmode = BUS_BOARD2;
+					gt->frameEnd();
+
 					sound->StopEffectSound(EFFECT_FILE_1);
 					sound->PlayEffectSound(EFFECT_FILE_2);
-					gt->frameEnd();
+
 					gt->frameStart(BUSBOARDTICK, 4);
 
 					RECT	rcDest, rcSour;
@@ -678,10 +687,12 @@ void gGameCore::DrawBus()
 				if(nFrame >= 3)
 				{
 					gt->frameEnd();
+
+					sound->PlayEffectSound(EFFECT_FILE_1);
+
 					m_curframe = 0;
 					gt->frameStart(BUSMOVETICK, BUSMOVEFRAME + 1);
 					m_busmode = BUS_START2;
-					sound->PlayEffectSound(EFFECT_FILE_1);
 				}
 				if(nFrame >= 1)
 				{
@@ -726,6 +737,7 @@ void gGameCore::DrawBus()
 					gt->frameEnd(); 
 					pc->FootClear();
 					m_bBusing = false;
+
 					sound->StopEffectSound(EFFECT_FILE_1);
 
 //					pc->m_GPlayerList[ m_nTurn ].nPos = map->m_xSpacePos * LINEY + map->m_ySpacePos;
