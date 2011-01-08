@@ -1,24 +1,32 @@
 package beans;
 
+import java.io.UnsupportedEncodingException;
+
 import utility.Util;
 
 public class Article {
 	private int articleIndex;
 	private String boardName;
-	private String title;
+	private byte[] title;
 	private String userId;
 	private String dateTime;
-	private String text;
+	private byte[] text;
 	private int readCount;
+	private boolean rawStr; //html mode 지원을 위한 변수
 	
 	public Article() {}
 	
 	public Article(String boardName,String id, String title, String content) {		
 		this.boardName= boardName;
-		this.userId = id;
-		this.title = title;
-		this.dateTime = Util.currDateTime();
-		this.text = content;
+		this.userId = id;		
+		this.dateTime = Util.currDateTime();		
+		try {
+			this.title = title.getBytes("utf-8");
+			this.text = content.getBytes("utf-8");
+		} catch (UnsupportedEncodingException e) {			
+			e.printStackTrace();
+		}
+		this.rawStr = false;
 	}
 	
 	@Override
@@ -54,16 +62,20 @@ public class Article {
 		this.boardName = boardName;
 	}
 	public String getTitle() {
-		return title;
-	}
-	public void setTitle(byte[] title) {
+		String result = null;
 		try {
-			this.title = Util.toHtml(new String(title,"utf-8"));
+			result = new String(title,"utf-8");	
+			if(!isRawStr())			
+				result = Util.encodeHtml(result);
 		}
-		catch(Exception e)
-		{
+		catch (UnsupportedEncodingException e) {			
 			e.printStackTrace();
 		}
+		
+		return result;
+	}
+	public void setTitle(byte[] title) {
+		this.title = title;
 	}
 	public String getUserId() {
 		return userId;
@@ -78,22 +90,34 @@ public class Article {
 		this.dateTime = dateTime;
 	}
 	public String getText() {
-		return text;
-	}
-		
-	public void setText(byte[] text) {
+		String result = null;
 		try {
-			this.text = Util.toHtml(new String(text,"utf-8"));
-		}	
-		catch(Exception e)
-		{
+			result = new String(text,"utf-8");	
+			if(!isRawStr())			
+				result = Util.encodeHtml(result);
+		}
+		catch (UnsupportedEncodingException e) {			
 			e.printStackTrace();
 		}
+		
+		return result;
+	}
+	
+	public void setText(byte[] text) {		
+		this.text = text;
 	}
 	public void setReadCount(int readCount) {
 		this.readCount = readCount;
 	}
 	public int getReadCount() {
 		return readCount;
+	}
+
+	public void setRawStr(boolean rawStr) {
+		this.rawStr = rawStr;
+	}
+
+	public boolean isRawStr() {
+		return rawStr;
 	}
 }

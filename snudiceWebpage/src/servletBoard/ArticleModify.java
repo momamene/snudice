@@ -49,14 +49,15 @@ public class ArticleModify extends HttpServlet {
 		
 		DB db = DB.getInstance();
 		int articleIndex = Integer.parseInt(request.getParameter("articleIndex"));
-		Article article= db.dbBoard.getArticleByIndex(articleIndex);		
+		Article article= db.dbBoard.getArticleByIndex(articleIndex);
+		article.setRawStr(true);
 		
 		//글쓴이와 id가 일치하지 않는 경우 ( admin 도 남의 글을 수정할 수는 없음 )
 		if(article.getUserId().compareTo(userId)!=0)  
 		{
 			response.sendRedirect("articleList.do?boardName="+boardName+"&currPage="+currPage);
 			return;
-		}	
+		}		
 		
 		request.setAttribute("articleInfo",article);
 		String nextPage = "/board/articleModify.jsp?boardName="+boardName+"&articleIndex="+articleIndex+"&currPage="+currPage;

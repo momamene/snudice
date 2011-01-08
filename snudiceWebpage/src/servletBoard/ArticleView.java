@@ -74,8 +74,8 @@ public class ArticleView extends HttpServlet {
 		List<Reply> replyList = db.dbBoard.getReplyList(articleIndex);
 		for(Reply reply : replyList)
 		{
-			reply.setUserId(Util.toHtml(reply.getUserId()));
-			reply.setReplyText(Util.toHtml(reply.getReplyText()));
+			reply.setUserId(Util.encodeHtml(reply.getUserId()));
+			reply.setReplyText(Util.encodeHtml(reply.getReplyText()));
 		}
 		request.setAttribute("replyList", replyList);
 		request.setAttribute("replyCount", replyList.size());

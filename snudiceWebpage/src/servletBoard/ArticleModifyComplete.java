@@ -59,6 +59,7 @@ public class ArticleModifyComplete extends HttpServlet {
 		
 		Article article = new Article(boardName,userId,title, content);		
 		article.setArticleIndex(articleIndex);
+		article.setRawStr(true);
 		
 		//글을 수정한다.
 		DB db = DB.getInstance();

@@ -25,6 +25,8 @@ a:visited {text-decoration:none;} /* visited link */
 a:hover {text-decoration:none;}   /* mouse over link */
 a:active {text-decoration:none;}  /* selected link */
 
+img { border : 0px; }
+
 hr
 {	
 	background-color : #262E69;
