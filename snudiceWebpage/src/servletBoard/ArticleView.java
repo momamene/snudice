@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -42,6 +43,13 @@ public class ArticleView extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		if((Boolean)request.getAttribute("canRead")==false)
+		{
+			String root = (String)Util.getServletContextAttr(request, "root");
+			response.sendRedirect(root);
+			return;
+		}
+		
 		int articleIndex =  Integer.parseInt( request.getParameter("articleIndex"));
 		HttpSession session = request.getSession();
 		String userId = (String)session.getAttribute("userId");

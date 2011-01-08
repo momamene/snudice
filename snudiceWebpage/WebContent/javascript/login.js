@@ -274,9 +274,11 @@ function loginFormRefresh()
 			{
 				loginMsg.innerHTML = userId.value + " 님 로그인 하셨습니다.";
 				var loginFormWrapper = document.getElementById("loginFormWrapper");
+				var loginFormTitle = document.getElementById("loginFormTitle");
 				
 				loginMsg.className = "loggined";
-				loginFormWrapper.className = "invisible";				
+				loginFormWrapper.className = "invisible";
+				loginFormTitle.className = "invisible";
 				logoutWrapper.className = "visible";				
 			}
 			else if(request.responseText=="loginFail")

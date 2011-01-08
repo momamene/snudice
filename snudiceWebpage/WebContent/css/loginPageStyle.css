@@ -73,6 +73,11 @@ hr.hr1
 	position : relative;
 	top : 5px;	
 }
+
+#loginFormTitle.invisible
+{
+	visibility : hidden;
+}	
 	
 #loginFormWrapper.visible
 {	

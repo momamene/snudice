@@ -47,7 +47,7 @@ public class BoardFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest)request;
 		HttpSession session = req.getSession();
 		String role = (String)session.getAttribute("role");
-		String boardName = req.getParameter("boardName");
+		String boardName = req.getParameter("boardName");		
 		
 		DB db = DB.getInstance();
 		Auth boardAuth = db.dbBoard.getBoardAuth(boardName);		
@@ -69,15 +69,18 @@ public class BoardFilter implements Filter {
 		request.setAttribute("canRead", false);
 		request.setAttribute("canWrite", false);
 		request.setAttribute("canAdmin", false);
+		request.setAttribute("canList", false);
 		
 		char[] auth = authString.toCharArray();
-		//auth[0],auth[1],auth[2] 는 차례로 read,write,admin 권한을 의미
+		//auth[0],auth[1],auth[2],auth[3] 는 차례로 read,write,admin,list 권한을 의미
 		if(auth[0]!='-')
-			request.setAttribute("canRead", true);
+			request.setAttribute("canRead", true); //글읽기
 		if(auth[1]!='-')
-			request.setAttribute("canWrite", true);
+			request.setAttribute("canWrite", true); //글쓰기
 		if(auth[2]!='-')
-			request.setAttribute("canAdmin", true);		
+			request.setAttribute("canAdmin", true); //게시판 관리
+		if(auth[3]!='-')
+			request.setAttribute("canList", true); //글목록보기
 		
 		chain.doFilter(request, response);
 	}

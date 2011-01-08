@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -54,5 +55,11 @@ public class Util {
 			String attrName = e.nextElement();
 			System.out.println("[req] "+attrName+"=["+request.getAttribute(attrName)+"]");		
 		}
+	}
+	
+	//servlet context 의 속성을 얻는다
+	public static Object getServletContextAttr(HttpServletRequest request,String attrName) {
+		ServletContext sc = request.getServletContext();
+		return sc.getAttribute(attrName);
 	}
 }
