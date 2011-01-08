@@ -21,7 +21,11 @@ function initLogin()
 
 	//로그아웃 버튼
 	var logoutWrapper = document.getElementById("logoutWrapper");
-	logoutWrapper.onclick = function() { window.location = "logout.do"; }	
+	logoutWrapper.onclick = function() { window.location = "logout.do"; }
+	
+	//손님 로그인 버튼
+	var guestLogin = document.getElementById("guestLogin");
+	guestLogin.onclick = guestLoginFunc;
 }
 
 ////////////////////ajax 요청을 하는 event handler/////////////////////
@@ -146,6 +150,24 @@ function loginFunc()
 	var method = "POST";
 	var param = "userId="+encodeURIComponent(userId.value);
 	param += "&password="+encodeURIComponent(password.value);	
+	var callback = loginFormRefresh;
+	var async = false;
+	
+	sendRequest(url,method,param,callback,async);	
+}
+
+//손님으로 로그인한다.
+function guestLoginFunc()
+{
+	var userId = document.getElementById("userId");	
+	userId.value = "guest";
+	var loginMsg = document.getElementById("loginMsg");	
+	loginMsg.innerHTML = "로그인 중입니다..";
+	
+	var url = root+"/login.ajax";	
+	var method = "POST";
+	var param = "userId=guest";
+	param += "&password=guest";	
 	var callback = loginFormRefresh;
 	var async = false;
 	
