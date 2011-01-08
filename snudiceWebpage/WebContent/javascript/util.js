@@ -81,3 +81,20 @@ function createElement(tagName,id,className)
 	
 	return element;
 }
+
+//엔터키를 치면 callback function이 실행되게 한다.
+function enterKeyExec(elementId,callback)
+{
+	var element = document.getElementById(elementId);
+	element.onkeydown = function()
+	{
+		var keynum;
+		if(window.event) //IE			
+			keynum = event.keyCode;		
+		else if(event.which) //Firefox, Chorme, ETC
+			keynum = event.which;		
+		
+		if(keynum==13) //엔터키를 친 경우
+			callback();
+	}
+}

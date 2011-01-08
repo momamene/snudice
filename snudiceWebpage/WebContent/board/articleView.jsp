@@ -8,7 +8,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" type="text/css" href="${root}/css/boardStyle.css"/>
 <script type="text/javascript" src="${root}/javascript/util.js"></script> 
-<script type="text/javascript" src="${root}/javascript/json2.js"></script>
 <script type="text/javascript">
 window.onload = init;
 
@@ -25,7 +24,13 @@ function init()
 	var articleDelButton = document.getElementById("articleDeleteButton");
 	if(articleDelButton==null) //글 수정 버튼이 없는 경우 (자기 글이 아닌 경우)
 		return;
-	articleDelButton.onclick = function() { show_confirm('정말 지울꺼에요?',articleDeleteFunc);	}	
+	articleDelButton.onclick = function() { show_confirm('정말 지울꺼에요?',articleDeleteFunc);	}
+}
+
+function focusToReply()
+{
+	var replyWriteText = document.getElementById("replyWriteText");
+	replyWriteText.focus();
 }
 
 //---------------event handler---------------
@@ -58,10 +63,21 @@ function replySubmit()
 	var param = "articleIndex="+encodeURIComponent("${param.articleIndex}");
 	param += "&replyText="+encodeURIComponent(writeText);
 	param += "&boardName="+encodeURIComponent("${param.boardName}");
-	var callback = refresh;
+	var callback = replyComplete;
 	var async = false;
 	
 	sendRequest(url,method,param,callback,async);
+}
+
+function replyComplete()
+{
+	if(request.readyState == 4) //작업이 완료되었을 때
+	{
+		if(request.status == 200)
+		{
+			window.location = "${root}/board/articleView.do?boardName=${param.boardName}&articleIndex=${param.articleIndex}&currPage=${param.currPage}&replySubmit=yes";
+		}
+	}
 }
 
 </script>
@@ -109,7 +125,9 @@ function replySubmit()
 				</c:if>
 				
 				<div id="reply">
-					<div id="replyHead">총 댓글 수 : ${replyCount}</div>
+					<div id="replyHead">
+						총 댓글 수 : ${replyCount}
+					</div>
 					<hr/>
 			
 					<div id="replyContainer">
@@ -123,6 +141,7 @@ function replySubmit()
 					</div>
 			
 					<div id="replyWrite">
+						한번 단 댓글은 수정,삭제가 불가능 합니다. 쓰기 전에 한번 더 생각해 주세요.<br/>					
 						<textarea id="replyWriteText"></textarea>
 						<input id="replySubmitButton" type="button" value="댓글 쓰기">
 					</div>			
@@ -135,6 +154,13 @@ function replySubmit()
 		<div class="footer centerAlign">
 			<hr/>PrjN	
 		</div>
+		
+		<!-- 댓글을 썼다면 자신이 쓴 댓글을 볼 수 있게 focus를 댓글 쓰는 폼에 맞춘다 -->
+		<c:if test="${param.replySubmit == 'yes' }">
+			<script type="text/javascript">
+				focusToReply();
+			</script>
+		</c:if>
 	</div>
 </body>
 </html>
