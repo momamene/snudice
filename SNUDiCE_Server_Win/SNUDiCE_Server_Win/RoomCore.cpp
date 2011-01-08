@@ -165,6 +165,8 @@ void gRoomCore::DeleteTheRoom (int index)
 {
 	m_isRoom[index] = false;
 	memset(&(m_rooms[index]),0,sizeof(ROOM));
+
+	DeleteCriticalSection(&crit[index]);
 //	SendRoomListCauseChange(i/MAXROOMFORPAGE);
 }
 
@@ -222,6 +224,8 @@ void gRoomCore::pk_roommaker_ask(PK_DEFAULT *pk, SOCKET sock)
 
 		gCC->pk_channelrefresh_rep(befCoreFlag);
 		SendRoomListCauseChange(emptyRoom/MAXROOMFORPAGE);
+
+		InitializeCriticalSection(&crit[emptyRoom]);	//크리티컬섹션
 	}
 	gMainWin::GetIF()->Send(PL_ROOMMAKER_REP, sizeof(rep), &rep, sock);
 
@@ -277,8 +281,12 @@ void gRoomCore::pk_charselect_ask(PK_DEFAULT *pk, SOCKET sock)
 	int nRoomIndex = gPC->GetCoreFlag(ask.szID);
 	if(nRoomIndex<0) return;
 	else if(!gPC->isClasstypeExistedInRoom(nRoomIndex,ask.classtype)) {
-		gPC->PutClassType(ask.szID,ask.classtype);		
+		EnterCriticalSection(&crit[nRoomIndex]);
+	
+		gPC->PutClassType(ask.szID,ask.classtype);
 		SendRoomRefreshCauseChange(nRoomIndex);
+
+		LeaveCriticalSection(&crit[nRoomIndex]);
 	}
 }
 

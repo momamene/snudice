@@ -21,7 +21,6 @@ void gMysql::init() {
 	mysql_init(&m_conn);
 
 	unsigned int maxtime = 4294967293;
-	mysql_options(&m_conn , MYSQL_OPT_CONNECT_TIMEOUT , &maxtime);
 
 	m_connection = mysql_real_connect(&m_conn,DB_HOST,
 		DB_USER,DB_PASS,DB_NAME,DB_PORT,(char*)NULL,0);

@@ -136,6 +136,14 @@ bool gItemContainer::SetUp()
 		}
 		nIndex++;
 	}
+	
+	//커플 깨졌을때 디버프 (아이템처럼 여겨지지만 실제로 아이템이 아닌)
+	m_ItemList[COUPLE_BROCKEN_DEBUF_INDEX].type = ITEM_STAT;
+	m_ItemList[COUPLE_BROCKEN_DEBUF_INDEX].target = TARGET_ME;
+	m_ItemList[COUPLE_BROCKEN_DEBUF_INDEX].nLang = COUPLE_MINUS_STAT;
+	m_ItemList[COUPLE_BROCKEN_DEBUF_INDEX].nArt = COUPLE_MINUS_STAT;
+	m_ItemList[COUPLE_BROCKEN_DEBUF_INDEX].nMath = COUPLE_MINUS_STAT;
+	
 	fclose(fp);
 
 	return true;

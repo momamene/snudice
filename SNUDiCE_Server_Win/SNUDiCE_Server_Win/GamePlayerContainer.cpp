@@ -2054,8 +2054,8 @@ void gGamePlayerContainer::pk_anscouple_ask(PK_DEFAULT *pk,SOCKET sock)	//수정 ,
 	}
 }
 
-void gGamePlayerContainer::pk_becouple_rep(int nRoomIndex , PLAYER player_a , PLAYER player_b , bool bCouple)
-{
+void gGamePlayerContainer::pk_becouple_rep(int nRoomIndex , PLAYER player_a , PLAYER player_b , bool bCouple)	//player_a 가 player_b를 bCouple하게 했다.
+{	
 	
 	PK_BECOUPLE_REP rep;
 	gCharinfo *gCI = gCharinfo::GetIF();
@@ -2109,7 +2109,7 @@ void gGamePlayerContainer::pk_becouple_rep(int nRoomIndex , PLAYER player_a , PL
 //			m_isNokdu[nRoomIndex][playerIndex_a] = 
 			pk_gameplayerinfo_rep(nRoomIndex);
 		}
-	}	else	{
+	}	else	{	//깨졌어혛
 		
 		m_favor[nRoomIndex][playerIndex_a].point[playerIndex_b] = 0;	
 		m_favor[nRoomIndex][playerIndex_b].point[playerIndex_a] = 0;	
@@ -2118,6 +2118,13 @@ void gGamePlayerContainer::pk_becouple_rep(int nRoomIndex , PLAYER player_a , PL
 		
 		strcpy(m_GamePlayer[nRoomIndex][playerIndex_a].szCouple , "");
 		strcpy(m_GamePlayer[nRoomIndex][playerIndex_b].szCouple , "");
+		
+		vector< pair<int,int> > m_userItemList[MAXROOM][ROOMMAXPLAYER];	//		<Item num  , coolTime>
+
+		pair<int, int > element;
+		element.first = COUPLE_BROCKEN_DEBUF_INDEX;
+		element.second = COUPLE_DEBUFFTURN;
+		m_userItemList[nRoomIndex][playerIndex_b].push_back(element);
 		
 	}
 

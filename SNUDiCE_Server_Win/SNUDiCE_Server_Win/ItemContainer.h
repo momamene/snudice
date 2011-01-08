@@ -8,6 +8,7 @@
 #pragma once
 #include "network.h"
 
+#define COUPLE_BROCKEN_DEBUF_INDEX 29
 class gItemContainer
 {
 public:

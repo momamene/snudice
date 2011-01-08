@@ -6,7 +6,7 @@
 #define DB_HOST "211.169.219.93" // ½Â¿±ÀÌÇüÀÇ dbÁÖ¼Ò
 #define DB_PORT 3306
 #define DB_USER "root"
-#define DB_PASS "root"
+#define DB_PASS "prjn1267650600228229401496703205376"
 #define DB_NAME "snudice"
 
 #define USER_SELECT "SELECT `password` FROM `user` \

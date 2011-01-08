@@ -499,3 +499,6 @@ server : 5 14 , client : 13 16 player : test2 etc : 0 0
 	 [문제3] 비범용성
 	 [문제4] 중복 사용의 문제
 	 (둘 다 현실의 문제는 아님)
+
+
+ 뭐지 gPC->GetCoreFlag(ask.szID); 이놈 방번호임 채널임? -> 둘다로구나!~

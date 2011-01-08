@@ -12,6 +12,7 @@ public:
 	bool			m_isRoom[MAXROOM]; // 방은 0-9 까지!
 	ROOM			m_rooms[MAXROOM];
 
+	CRITICAL_SECTION crit[MAXROOM];
 
 public:
 	// start function

@@ -8,11 +8,14 @@ public:
 	static gSubmitCore *GetIF();
 
 public:
+	CRITICAL_SECTION crit[MAXROOM];	
+	
 	bool			m_isValidSubmitSubject[MAXROOM];
 	BYTE			m_submitSubject[MAXROOM][CLASSNUM][CLASSSEAT];
 	BYTE			m_submitSubjectPlayer[MAXROOM][ROOMMAXPLAYER][MAXSUBJECT];
 	bool			m_isFinishSubmitSubject[MAXROOM][ROOMMAXPLAYER];
 
+	
 public:
 	bool			SetUp();
 	void			init(int nRoomindex);
