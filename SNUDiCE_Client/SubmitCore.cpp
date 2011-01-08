@@ -384,7 +384,7 @@ void gSubmitCore::pk_maingametart_rep(PK_MAINGAMESTART_REP *rep)
 	//gGameCore::GetIF()->m_nTurn		= rep->nTurn;
 	gMainWin::GetIF()->m_eCoreMode	= ECM_GAME;
 	gChat::GetIF()->MsgStackClear();
-	gUIGame::GetIF()->SetRankList();
+	gUIGame::GetIF()->Clear();
 	gPlaySoundCore::GetIF()->StartBGM(BGM_FILE_2);
 
 }

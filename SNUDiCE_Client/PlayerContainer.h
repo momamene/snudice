@@ -96,6 +96,8 @@ public:
 	int				GetCharNumPos(int nPos);		// nPos에 있는 캐릭터 갯수 return
 	GAMEPLAYER*		GetPlayerByPos(int nPos);		// nPos에 있는 캐릭터 정보 return. 단 나는 제외.!!!
 
+	bool			IsNokdu(int nPlayerIndex);
+
 private:
 	bool			SetUpCharInfo();
 	bool			SetUpCharImg();

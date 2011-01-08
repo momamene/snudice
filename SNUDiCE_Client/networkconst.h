@@ -697,3 +697,6 @@ struct PK_BECOUPLEEND_ASK
 {
 	char		szID[IDLENGTH];
 };
+
+#define COUPLE_DEBUFFTURN						5
+#define COUPLE_MINUS_STAT						-5

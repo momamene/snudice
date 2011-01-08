@@ -162,4 +162,6 @@ public:
 	void		SetTargetButton_InfoChange();				// infochange_rep
 
 	void		Draw_InfoChange();
+
+	void		Clear();
 };
