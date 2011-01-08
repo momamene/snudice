@@ -44,7 +44,12 @@ function init()
 						<tr class="article">
 							<td>${article.articleIndex}</td>
 							<td>								
-								<a href="${root}/board/articleView.do?boardName=${param.boardName}&amp;articleIndex=${article.articleIndex}&amp;currPage=${param.currPage}">															
+								<c:set var="articleReadLink" value="#"/>								
+								<c:if test="${canRead == true}">
+									<c:set var="articleReadLink" value="${root}/board/articleView.do?boardName=${param.boardName}&amp;articleIndex=${article.articleIndex}&amp;currPage=${param.currPage}"/>
+								</c:if>														
+													
+								<a href="${articleReadLink}">															
 									<span>${article.title}</span> 
 									<c:if test="${replyCountList[status.index]>0}">
 										<span> (${replyCountList[status.index]})</span>

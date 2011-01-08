@@ -34,7 +34,8 @@ var articleDeleteFunc = function()
 {	
 	var url = "${root}/board/articleDelete.ajax";	
 	var method = "POST";
-	var param = "articleIndex="+encodeURIComponent("${param.articleIndex}");	
+	var param = "articleIndex="+encodeURIComponent("${param.articleIndex}");
+	param += "&boardName="+encodeURIComponent("${param.boardName}");
 	var callback = function()
 	{
 		window.location = "${root}/board/articleList.do?boardName=${param.boardName}&currPage=${param.currPage}";	
@@ -56,6 +57,7 @@ function replySubmit()
 	var method = "POST";
 	var param = "articleIndex="+encodeURIComponent("${param.articleIndex}");
 	param += "&replyText="+encodeURIComponent(writeText);
+	param += "&boardName="+encodeURIComponent("${param.boardName}");
 	var callback = refresh;
 	var async = false;
 	

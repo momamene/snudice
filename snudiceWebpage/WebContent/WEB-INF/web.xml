@@ -10,6 +10,12 @@
       <form-error-page>/loginFailed.jsp</form-error-page>
     </form-login-config>
   </login-config>
+  
+  <security-role><role-name>admin</role-name></security-role>
+  <security-role><role-name>manager</role-name></security-role>
+  <security-role><role-name>member</role-name></security-role>
+  <security-role><role-name>guest</role-name></security-role>  
+  
   <security-constraint>
     <web-resource-collection>
       <web-resource-name>https</web-resource-name>
@@ -53,7 +59,9 @@
     </web-resource-collection>
     <auth-constraint>
       <role-name>admin</role-name>
+      <role-name>manager</role-name>
       <role-name>member</role-name>
+      <role-name>guest</role-name>
     </auth-constraint>
     <user-data-constraint>
       <transport-guarantee>CONFIDENTIAL</transport-guarantee>
