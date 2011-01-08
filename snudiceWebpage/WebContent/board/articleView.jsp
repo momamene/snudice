@@ -88,17 +88,25 @@ function replySubmit()
             	<br/>
             	
             	<a href="${root}/board/articleList.do?boardName=${param.boardName}&currPage=${param.currPage}">목록으로</a>
-				<c:choose>
-					<c:when test="${myArticle==true}">						
-						<a id="boardModify" href="${root}/board/articleModify.do?boardName=${param.boardName}&articleIndex=${articleInfo.articleIndex}&currPage=${param.currPage}">
-							<img src="${root}/image/board/articleModify.png"/>
-						</a>
-						<input id="articleDeleteButton" type="image" src="${root}/image/board/articleDelete.png" />		
-					</c:when>													
-				</c:choose>	
-				<a id="boardWrite" href="${root}/board/articleWriteForm.do?boardName=${param.boardName}&currPage=${param.currPage}">
-					<img src="${root}/image/board/articleWrite.png"/>
-				</a>
+            	
+            	<!-- 글 수정 버튼 : admin도 남의 글을 수정할 수는 없음 -->
+				<c:if test="${myArticle==true && canWrite==true}">						
+					<a id="boardModify" href="${root}/board/articleModify.do?boardName=${param.boardName}&articleIndex=${articleInfo.articleIndex}&currPage=${param.currPage}">
+						<img src="${root}/image/board/articleModify.png"/>
+					</a>
+				</c:if>
+				
+				<!--  글 삭제 버튼 : 본인과 admin 이 삭제 가능 -->
+				<c:if test="${myArticle==true || canAdmin==true}">					
+					<input id="articleDeleteButton" type="image" src="${root}/image/board/articleDelete.png" />
+				</c:if>							
+				
+				<!-- 글쓰기 버튼 -->
+				<c:if test="${canWrite == true}">
+					<a id="boardWrite" href="${root}/board/articleWriteForm.do?boardName=${param.boardName}&currPage=${param.currPage}">
+						<img src="${root}/image/board/articleWrite.png"/>
+					</a>
+				</c:if>
 				
 				<div id="reply">
 					<div id="replyHead">총 댓글 수 : ${replyCount}</div>

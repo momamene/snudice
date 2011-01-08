@@ -126,7 +126,9 @@ function init()
 						<a href="${root}/board/articleList.do?boardName=${param.boardName}&amp;currPage=0">처음목록</a>
 					</td>
 					<td>
-						<a href="${root}/board/articleWriteForm.do?boardName=${param.boardName}&amp;currPage=${param.currPage}">글쓰기</a>
+						<c:if test="${canWrite == true}">
+							<a href="${root}/board/articleWriteForm.do?boardName=${param.boardName}&amp;currPage=${param.currPage}">글쓰기</a>
+						</c:if>
 					</td>
 					<td>
 						<form method="get" action="${root}/board/articleSearch.do">

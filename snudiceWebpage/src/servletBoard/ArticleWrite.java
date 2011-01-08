@@ -34,6 +34,14 @@ public class ArticleWrite extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String root = (String)Util.getServletContextAttr(request, "root");
+		
+		if((Boolean)request.getAttribute("canWrite")==false)
+		{
+			response.sendRedirect(root);
+			return;
+		}
+		
 		HttpSession session = request.getSession();
 		
 		String userId = (String)session.getAttribute("userId");
@@ -56,7 +64,7 @@ public class ArticleWrite extends HttpServlet {
 		DB db = DB.getInstance();
 		int articleIndex = db.dbBoard.insertArticle(article);		
 		 
-        String nextPage = session.getAttribute("root")+"/board/articleView.do?boardName="+boardName+"&articleIndex="+articleIndex+"&currPage="+currPage;
+        String nextPage = root+"/board/articleView.do?boardName="+boardName+"&articleIndex="+articleIndex+"&currPage="+currPage;
         
 		response.sendRedirect(nextPage);     
 	}

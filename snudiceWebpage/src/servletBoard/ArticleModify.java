@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import utility.Util;
+
 import beans.Article;
 
 import dbaccess.DB;
@@ -33,6 +35,13 @@ public class ArticleModify extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		if((Boolean)request.getAttribute("canWrite")==false)
+		{
+			String root = (String)Util.getServletContextAttr(request, "root");
+			response.sendRedirect(root);
+			return;
+		}
+		
 		HttpSession session = request.getSession();
 		String userId = (String)session.getAttribute("userId");
 		String currPage = request.getParameter("currPage");
@@ -42,7 +51,7 @@ public class ArticleModify extends HttpServlet {
 		int articleIndex = Integer.parseInt(request.getParameter("articleIndex"));
 		Article article= db.dbBoard.getArticleByIndex(articleIndex);		
 		
-		//글쓴이와 id가 일치하지 않는 경우
+		//글쓴이와 id가 일치하지 않는 경우 ( admin 도 남의 글을 수정할 수는 없음 )
 		if(article.getUserId().compareTo(userId)!=0)  
 		{
 			response.sendRedirect("articleList.do?boardName="+boardName+"&currPage="+currPage);

@@ -42,7 +42,8 @@ public class ArticleDelete extends HttpServlet {
 		DB db = DB.getInstance();
 		Article article= db.dbBoard.getArticleByIndex(articleIndex);
 	
-		if(article.getUserId().compareTo(userId)==0) //아이디가 글쓴이와 일치하면
+		//아이디가 글쓴이와 일치하거나 admin이면
+		if(article.getUserId().compareTo(userId)==0 || (Boolean)request.getAttribute("canAdmin")==true) 
 		{			
 			//글에 달린 리플들을 지운다.
 			db.dbBoard.deleteReply(articleIndex);

@@ -30,6 +30,14 @@ public class ArticleModifyComplete extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String root = (String)Util.getServletContextAttr(request, "root");
+		
+		if((Boolean)request.getAttribute("canWrite")==false)
+		{
+			response.sendRedirect(root);
+			return;
+		}
+		
 		HttpSession session = request.getSession(); 		
 		
 		String userId = (String) session.getAttribute("userId");
@@ -38,7 +46,7 @@ public class ArticleModifyComplete extends HttpServlet {
 		String title = request.getParameter("title");
 		String content = request.getParameter("content");		
 		int articleIndex=Integer.parseInt( request.getParameter("articleIndex"));
-		
+				
 		//길면 자른다.
 		if(title.length()>Const.articleTitleMaxLen)
 			title = title.substring(0,Const.articleTitleMaxLen);
@@ -56,7 +64,7 @@ public class ArticleModifyComplete extends HttpServlet {
 		DB db = DB.getInstance();
 		db.dbBoard.updateArticle(article);		
 		
-        String nextPage = session.getAttribute("root")+"/board/articleView.do?boardName="+boardName+"&currPage="+currPage+"&articleIndex="+articleIndex;        
+        String nextPage = root+"/board/articleView.do?boardName="+boardName+"&currPage="+currPage+"&articleIndex="+articleIndex;        
 		response.sendRedirect(nextPage);     
 	}
 }

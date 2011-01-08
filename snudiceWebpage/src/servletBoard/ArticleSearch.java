@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import utility.Util;
+
 import beans.Article;
 import constant.Const;
 import dbaccess.DB;
@@ -35,6 +37,13 @@ public class ArticleSearch extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		if((Boolean)request.getAttribute("canList")==false)
+		{
+			String root = (String)Util.getServletContextAttr(request, "root");
+			response.sendRedirect(root);
+			return;
+		}
+		
 		final int articlePerPage = Const.articlePerPage;//페이지당 보여주는 게시물 수		
 			
 		String boardName = request.getParameter("boardName");		

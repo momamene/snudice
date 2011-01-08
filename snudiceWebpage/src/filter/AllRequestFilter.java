@@ -49,22 +49,24 @@ public class AllRequestFilter implements Filter {
 		StringBuffer log = new StringBuffer("["+Util.currDateTime()+"]");
 		log.append(" from "+"<"+req.getRemoteAddr()+">");
 		if(req.getRemoteUser()!=null) //로그인 된 경우
-		{
-			if(session.getAttribute("role")==null)
-			{
-				DB db= DB.getInstance();
-				String role = db.dbAccount.getUserRole(req.getRemoteUser());
-				session.setAttribute("role", role);
-			}
-			
-			log.append(" user="+"<"+req.getRemoteUser()+":"+session.getAttribute("role")+">");
+		{			
 			if(session.getAttribute("userId")==null)
 			{
 				synchronized(session)
 				{
-					session.setAttribute("userId", req.getRemoteUser()); //userId 설정
+					session.setAttribute("userId", req.getRemoteUser()); //userId 설정					
 				}
-			}				
+			}
+			if(session.getAttribute("role")==null)
+			{
+				synchronized(session)
+				{
+					DB db= DB.getInstance();
+					String role = db.dbAccount.getUserRole(req.getRemoteUser()); //role 설정
+					session.setAttribute("role", role);
+				}				
+			}
+			log.append(" user="+"<"+req.getRemoteUser()+":"+session.getAttribute("role")+">");
 		}		
 		else //로그인 안된 경우
 		{
@@ -72,9 +74,15 @@ public class AllRequestFilter implements Filter {
 			{
 				synchronized(session)
 				{
-					session.removeAttribute("userId");
-					session.removeAttribute("role");
+					session.removeAttribute("userId");					
 				}				
+			}
+			if(session.getAttribute("role")!=null)
+			{
+				synchronized(session)
+				{
+					session.removeAttribute("role");
+				}
 			}
 		}
 		if(req.isSecure())

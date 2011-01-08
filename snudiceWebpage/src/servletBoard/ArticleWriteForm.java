@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import utility.Util;
+
 /**
  * Servlet implementation class ArticleWriteForm
  */
@@ -29,6 +31,13 @@ public class ArticleWriteForm extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		if((Boolean)request.getAttribute("canWrite")==false)
+		{
+			String root = (String)Util.getServletContextAttr(request, "root");
+			response.sendRedirect(root);
+			return;
+		}
+		
 		String boardName = request.getParameter("boardName");
 		String currPage = request.getParameter("currPage");
 		

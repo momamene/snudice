@@ -47,10 +47,6 @@
 					<div id="joinMsg"></div>
 				</div>
 				<div id="mainLeftTop">
-					<div id="loginFormTitle">
-						회원로그인
-						<input id="guestLogin" type="button" value="손님로그인"/> 
-					</div>								
 					<c:choose>
 						<c:when test="${not empty userId}">
 							<c:set var="loginFormWrapperClass" value="invisible"/>	
@@ -58,7 +54,12 @@
 						<c:otherwise>
 							<c:set var="loginFormWrapperClass" value="visible"/>	
 						</c:otherwise>
-					</c:choose>			
+					</c:choose>
+					
+					<div id="loginFormTitle" class="${loginFormWrapperClass}">
+						회원로그인
+						<input id="guestLogin" type="button" value="손님로그인"/> 
+					</div>		
 					
 					<div id="loginFormWrapper" class="${loginFormWrapperClass}">									
 						<div id="idpw">

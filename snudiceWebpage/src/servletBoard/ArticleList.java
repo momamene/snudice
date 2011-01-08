@@ -5,11 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import utility.Util;
 import constant.Const;
 
 
@@ -36,6 +39,13 @@ public class ArticleList extends HttpServlet {
 	 */
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		if((Boolean)request.getAttribute("canList")==false)
+		{
+			String root = (String)Util.getServletContextAttr(request, "root");
+			response.sendRedirect(root);
+			return;
+		}
+		
 		final int articlePerPage = Const.articlePerPage;//페이지당 보여주는 게시물 수		
 		
 		String boardName = request.getParameter("boardName");		
