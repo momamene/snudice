@@ -94,6 +94,8 @@ public:
 	sFavor m_favor[MAXROOM][ROOMMAXPLAYER];
 	//호감도
 
+
+
 	void		pk_maingamestart_rep(int nRoomIndex);
 	void		pk_movestart_ask(PK_DEFAULT *pk,SOCKET sock);
 	
@@ -128,7 +130,7 @@ public:
 
 
 	void		pk_anscouple_ask(PK_DEFAULT *pk , SOCKET sock);
-	void		pk_becoupleend_ask(PK_DEFAULT *pk , SOCKET sock);
+	void		pk_becoupleend_ask(PK_DEFAULT *pk , SOCKET sock );
 
 	void		pk_askcouple_rep( int nRoomIndex , int playerIndex_a, int playerIndex_b);	//	 a, b : 플레이어의 인덱스값	
 

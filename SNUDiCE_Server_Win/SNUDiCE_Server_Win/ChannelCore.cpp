@@ -67,7 +67,7 @@ void gChannelCore::pk_channelchange_ask (PK_DEFAULT *pk, SOCKET sock)
 	addrLen = sizeof(clientAddr);
 	getpeername(sock, (SOCKADDR*)&clientAddr, &addrLen);
 
-	ask = *((PK_CHANNELCHANGE_ASK*)pk->strPacket);	//수정사항
+	ask = *((PK_CHANNELCHANGE_ASK*)pk->strPacket);
 
 
 
