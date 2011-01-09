@@ -15,6 +15,7 @@
 #include "Mouse.h"
 #include "PlaySoundCore.h"
 #include "SubmitCore.h"
+#include "RoomCore.h"
 
 #define	UI_FILE_MAININFO					".\\Data\\Interface\\game_maininfo.img"
 #define UI_SIZE_MAININFO_W					220
@@ -223,6 +224,17 @@
 #define TIMER_NUMBER_POS_X					((WNDSIZEW - TIMER_NUMBER_SIZE_W) / 2)
 #define TIMER_NUMBER_POS_Y					((WNDSIZEH - TIMER_NUMBER_SIZE_H) / 2 - 30)
 
+#define RESULT_FILE							".\\Data\\Interface\\result.img"
+#define RESULT_SIZE_W						250
+#define RESULT_SIZE_H						200
+#define RESULT_POS_X						((WNDSIZEW - RESULT_SIZE_W) / 2)
+#define RESULT_POS_Y						((WNDSIZEH - RESULT_SIZE_H) / 2 - 30)
+#define RESULT_POS_START_Y					(RESULT_POS_Y + 50)
+#define RESULT_POS_START_X					(RESULT_POS_X + 30)
+#define RESULT_TERM_X						70
+#define RESULT_TERM_Y						22
+#define RESULT_SHOWTIME						10000
+
 
 static gUIGame s_UIGame;
 
@@ -381,6 +393,8 @@ bool gUIGame::SetUp()
 	if(!m_ImgUI[UIIMG_TIMER].Load(TIMER_NUMBER_FILE))
 		return false;
 
+	if(!m_ImgUI[UIIMG_RESULT].Load(RESULT_FILE))
+		return false;
 
 	m_uimode = UIM_NONE;
 	m_bTargetByMove = false;
@@ -677,6 +691,11 @@ void gUIGame::Draw()
 				m_ImgUI[UIIMG_LOVE].Draw(rcDest, rcSour);
 			}
 			break;
+		case UIM_RESULT:
+			{
+				m_ImgUI[UIIMG_RESULT].Draw(RESULT_POS_X, RESULT_POS_Y);
+			}
+			break;
 	}
 	
 
@@ -745,6 +764,32 @@ void gUIGame::Draw()
 			sprintf_s(szBuf, "%.1f", gp->fAvGrade);
 		}
 		//sprintf_s(szBuf, ".1f", )
+
+	// result
+		if(m_uimode == UIM_RESULT)
+		{
+			for(i = 0; i < ROOMMAXPLAYER; i++)
+			{
+				if(m_rankIdx[i] == -1)
+					continue;
+
+				gUtil::TextOutLine(RESULT_POS_START_X, RESULT_POS_START_Y + i * RESULT_TERM_Y,
+								gPC->m_GPlayerList[ m_rankIdx[i] ].szID);
+
+				sprintf_s(szBuf, "%.1f", gPC->m_GPlayerList[ m_rankIdx[i] ].fAvGrade);
+				gUtil::TextOutLine(RESULT_POS_START_X + RESULT_TERM_X, RESULT_POS_START_Y + i * RESULT_TERM_Y, szBuf);
+
+				wsprintf(szBuf, "%d", gPC->m_GPlayerList[ m_rankIdx[i] ].nRank);
+				gUtil::TextOutLine(RESULT_POS_START_X + RESULT_TERM_X * 2, RESULT_POS_START_Y + i * RESULT_TERM_Y, szBuf);
+			}
+
+			int		nFrame = gTimer::GetIF()->frame();
+			if(nFrame >= 1)
+			{
+				gTimer::GetIF()->frameEnd();
+				gRoomCore::GetIF()->SendRoomBack();	//방나가고돌아오기수정
+			}
+		}
 
 	gUtil::EndText();
 
@@ -2419,8 +2464,18 @@ void gUIGame::pk_becouple_rep(PK_BECOUPLE_REP *rep)
 
 void gUIGame::Clear()
 {
+	m_uimode = UIM_NONE;
 	SetRankList();
 	m_bCouple = false;
 	m_bShowYourTurn = false;
 	m_bShowTimeCount = true;
+	m_bItemUsed = false;
+}
+
+void gUIGame::GameEnd()
+{
+	m_bShowTimeCount = false;
+	gPlaySoundCore::GetIF()->StopEffectSound(EFFECT_FILE_10);
+	m_uimode = UIM_RESULT;
+	gTimer::GetIF()->frameStart(RESULT_SHOWTIME, 2);
 }

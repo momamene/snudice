@@ -1664,7 +1664,7 @@ void gRoomCore::pk_roomback_rep(PK_ROOMBACK_REP *rep)
 	m_nSelChar = -1;
 	gChat::GetIF()->MsgStackClear();
 	gPlaySoundCore::GetIF()->StartBGM(BGM_FILE_0);
-	
+	gMainWin::GetIF()->m_eCoreMode = ECM_ROOM;
 }
 
 
@@ -1913,6 +1913,8 @@ void gRoomCore::pk_gamestart_rep(PK_GAMESTART_REP *rep)
 		case EGS_SUCCESS:
 			gMainWin::GetIF()->m_eCoreMode = ECM_SUBMIT;
 			gSubmitCore::GetIF()->SetSubject((BYTE*)rep->subject);
+			gSubmitCore::GetIF()->m_nTimeCount = GetTickCount();
+			gSubmitCore::GetIF()->m_bSendTick = false;
 			break;
 	}
 }

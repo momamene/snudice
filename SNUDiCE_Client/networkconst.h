@@ -21,6 +21,8 @@
 
 #define SNUDICE_VERSION			"0.6000"
 
+//#define DEF_SERVER
+
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 //	통신 프로토콜
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
@@ -57,6 +59,8 @@ enum ePROTOCOL
 
 	PL_SUBMITREADY_ASK,
 	PL_SUBMITREADY_REP,
+
+	PL_SUBMITCOUNT_ASK,			// 수강신청모드, 일정시간 지나면 시간 지났다고 알려주는 용도
 
 	PL_MAINGAMESTART_REP,
 
@@ -96,7 +100,7 @@ enum ePROTOCOL
 
 	PL_GOLOGIN_ASK,
 
-//	PL_WHISPER_ASK,				// Whisper
+	//	PL_WHISPER_ASK,				// Whisper
 	PL_FRIENDADD_ASK,			// 친구 추가
 	PL_FRIENDDELETE_ASK,		// 친구 삭제
 	PL_FRIENDWHISPER_ASK,		// 친구에게 귓말
@@ -203,7 +207,7 @@ struct PLAYER
 {
 	char		szID[IDLENGTH];
 	eCOREMODE	coreWhere;
-	int			nCoreFlag;
+	int			nCoreFlag;		//이놈 뭐하는 놈이냐
 	SOCKET		sock;
 
 	// 게임관련 정보
@@ -399,6 +403,8 @@ struct PK_GAMESTART_REP
 	BYTE				subject[CLASSNUM][CLASSSEAT];
 };
 
+#define	SUBMITTICK		20000
+
 // 수강 신청
 struct PK_SUBMIT_ASK
 {
@@ -426,6 +432,11 @@ enum ESUBMITERROR
 struct PK_SUBMITREADY_REP
 {
 	ESUBMITERROR	result;
+};
+
+struct PK_SUBMITCOUNT_ASK
+{
+	char			szID[IDLENGTH];
 };
 
 #define MAXSUBJECT				6	// 한사람당 들을수잇는 과목수
@@ -538,7 +549,11 @@ struct PK_GAMEEND_REP
 	char		szID[IDLENGTH];		// 이긴넘
 };
 
+#ifdef DEF_SERVER
+#define ITEMNUM		29 +1			// 
+#else
 #define ITEMNUM		29
+#endif
 
 enum ITEMTARGET
 {
@@ -652,9 +667,9 @@ struct PK_EXIT_REP
 /*//WHISPER 구현
 struct PK_WHISPER_ASK
 {
-	char		szToID[IDLENGTH];
-	char		szFromID[IDLENGTH];
-	char		szComment[MSGLENGTH];
+char		szToID[IDLENGTH];
+char		szFromID[IDLENGTH];
+char		szComment[MSGLENGTH];
 };
 */
 typedef struct
@@ -698,5 +713,5 @@ struct PK_BECOUPLEEND_ASK
 	char		szID[IDLENGTH];
 };
 
-#define COUPLE_DEBUFFTURN						5
-#define COUPLE_MINUS_STAT						-5
+#define COUPLE_DEBUFFTURN      5
+#define COUPLE_MINUS_STAT      -5

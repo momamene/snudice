@@ -38,6 +38,9 @@ public:
 	bool			m_bReady;
 	bool			m_bChange;
 
+	bool			m_bSendTick;
+	int				m_nTimeCount;
+
 	BYTE			m_subject[CLASSNUM][CLASSSEAT];
 
 public:
