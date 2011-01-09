@@ -17,8 +17,6 @@ import beans.Auth;
 
 import dbaccess.DB;
 
-import utility.Util;
-
 /**
  * Servlet Filter implementation class BoardFilter
  */

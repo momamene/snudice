@@ -13,7 +13,6 @@ import javax.servlet.http.HttpSession;
 
 import utility.Util;
 
-import constant.Const;
 import dbaccess.DB;
 
 /**
