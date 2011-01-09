@@ -19,7 +19,7 @@ function init()
 	}
 	
 	var headerImage = document.getElementById("articleListHeaderImage");
-	headerImage.onclick = function() { window.location = "${root}/first.do"};	
+	headerImage.onclick = function() { window.location = "${root}"};	
 }
 
 </script> 
@@ -152,7 +152,7 @@ function init()
 		</div>		
 	
 		<div class="footer centerAlign">
-			<hr/>PrjN
+			<hr class="lightColor"/>${footerMsg}
 		</div>	
 	</div>	
 </body>

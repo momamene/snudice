@@ -114,6 +114,7 @@
 					<c:forEach var="board" items="${boardList}">
 						<a href="${root}/board/articleList.do?boardName=${board.boardName}&currPage=0">${board.aliasName}</a>&nbsp;|&nbsp;
 					</c:forEach>
+					<a href="${root}/gameIntro.do">게임소개</a>					
 				</div>				
 				<div id="centerLU">
 					<span>공지사항</span>
@@ -148,7 +149,7 @@
 		</div>		
 		
 		<div class="footer centerAlign">		
-			<hr/>PrjN
+			<hr class="lightColor"/>${footerMsg}
 		</div>			
 	</div>
 </body>

@@ -18,7 +18,7 @@ function init()
 	//event handler 를 추가한다.
 	//header image 클릭시
 	var headerImage = document.getElementById("articleWriteHeaderImage");
-	headerImage.onclick = function() { window.location = "${root}/first.do"};
+	headerImage.onclick = function() { window.location = "${root}"};
 }
 </script>
 <title>글 쓰기</title>
@@ -71,7 +71,7 @@ function init()
 		</div>
 		
 		<div class="footer centerAlign">
-			<hr/>PrjN
+			<hr class="lightColor"/>${footerMsg}
 		</div>
 	</div>
 </body>

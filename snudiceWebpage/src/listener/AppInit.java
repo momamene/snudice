@@ -27,6 +27,10 @@ public class AppInit implements ServletContextListener {
         ServletContext sc = event.getServletContext();
         String root = sc.getInitParameter("root");
         sc.setAttribute("root", root);
+        
+        //footer에 들어갈 메세지 설정
+        String footerMsg = sc.getInitParameter("footerMsg");
+        sc.setAttribute("footerMsg", footerMsg);       
     }
 
 	/**
