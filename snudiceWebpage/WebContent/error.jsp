@@ -45,7 +45,7 @@ function init()
 		</div>
 		
 		<div class="footer centerAlign">
-			<hr/>PrjN
+			<hr class="lightColor"/>${footerMsg}
 		</div>
 	</div>
 </body>

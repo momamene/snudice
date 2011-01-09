@@ -21,7 +21,7 @@ function init()
 	//event handler 를 추가한다.
 	//header image 클릭시
 	var headerImage = document.getElementById("articleViewHeaderImage");
-	headerImage.onclick = function() { window.location = "${root}/first.do"; }
+	headerImage.onclick = function() { window.location = "${root}"; }
 	//댓글 쓰기 버튼
 	var replySubmitButton = document.getElementById("replySubmitButton");
 	replySubmitButton.onclick = replySubmit;
@@ -159,7 +159,7 @@ function replyComplete()
 		</div>	
 			
 		<div class="footer centerAlign">
-			<hr/>PrjN	
+			<hr class="lightColor"/>${footerMsg}
 		</div>
 		
 		<!-- 댓글을 썼다면 자신이 쓴 댓글을 볼 수 있게 focus를 댓글 쓰는 폼에 맞춘다 -->

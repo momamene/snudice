@@ -14,8 +14,12 @@
     <param-name>root</param-name>
     <param-value>/snudiceWebpage</param-value>
   </context-param>
+  <context-param>
+    <param-name>footerMsg</param-name>
+    <param-value>Copyright PrjN All rights reserved</param-value>
+  </context-param>
   <listener>
-  	<listener-class>listener.AppInit</listener-class>
+    <listener-class>listener.AppInit</listener-class>
   </listener>
   <security-role>
     <role-name>admin</role-name>
@@ -166,6 +170,14 @@
     <url-pattern>/logout.do</url-pattern>
   </servlet-mapping>
   <servlet>
+    <servlet-name>gameIntro</servlet-name>
+    <servlet-class>servletMisc.GameIntro</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>gameIntro</servlet-name>
+    <url-pattern>/gameIntro.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
     <servlet-name>articleWriteFormInternalName</servlet-name>
     <servlet-class>servletBoard.ArticleWriteForm</servlet-class>
   </servlet>
@@ -228,6 +240,30 @@
   <servlet-mapping>
     <servlet-name>articleDelete</servlet-name>
     <url-pattern>/board/articleDelete.ajax</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>synopsis</servlet-name>
+    <servlet-class>servletMisc.Synopsis</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>synopsis</servlet-name>
+    <url-pattern>/misc/synopsis.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>gameManual</servlet-name>
+    <servlet-class>servletMisc.GameManual</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>gameManual</servlet-name>
+    <url-pattern>/misc/gameManual.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>charIntro</servlet-name>
+    <servlet-class>servletMisc.CharIntro</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>charIntro</servlet-name>
+    <url-pattern>/misc/charIntro.do</url-pattern>
   </servlet-mapping>
   <filter>
     <filter-name>allRequestFilter</filter-name>

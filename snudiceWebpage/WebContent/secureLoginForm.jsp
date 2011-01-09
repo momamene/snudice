@@ -127,7 +127,7 @@ function mouseOutFunc()
 		</div>
 		
 		<div class="footer centerAlign">
-			<hr class="hr2"/>PrjN
+			<hr class="lightColor marginZero"/>${footerMsg}
 		</div>
 	
 	</div>
