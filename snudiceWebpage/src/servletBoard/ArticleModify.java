@@ -59,7 +59,7 @@ public class ArticleModify extends HttpServlet {
 			return;
 		}		
 		
-		request.setAttribute("articleInfo",article);
+		request.setAttribute("article",article);
 		String nextPage = "/board/articleModify.jsp?boardName="+boardName+"&articleIndex="+articleIndex+"&currPage="+currPage;
 		
 		RequestDispatcher view = request.getRequestDispatcher(nextPage);

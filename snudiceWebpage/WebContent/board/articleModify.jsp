@@ -48,12 +48,12 @@ function init()
 			    		<tr>
 							<td class="articleTitleLabel">제목</td>
 			    			<td class="articleTitleContent" colspan="3">
-			    				<input class="noBorder" type = "text" name = "title">
+			    				<input class="noBorder" type = "text" name = "title" value="${article.title}">
 			    			</td>
 			    		</tr>				
     					<tr>
 			    			<td class="articleTextContent" colspan="4">			    			    			
-			    				<textarea name = "content"></textarea>
+			    				<textarea name = "content">${article.text}</textarea>
 			    			</td>			    			
 			    		</tr>
 						<tr>

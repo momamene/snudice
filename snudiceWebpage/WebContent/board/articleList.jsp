@@ -45,10 +45,17 @@ function init()
 						<td>조회수</td>
 					</tr>
 					
-					<c:forEach var="article" items="${articleList}" varStatus="status">	
+					<c:forEach var="article" items="${articleList}" varStatus="status">
+						<c:set var="tdClassName" value="normal"/>
+						<c:if test="${status.first == true}">
+							<c:set var="tdClassName" value="first"/>							
+						</c:if>
+						<c:if test="${status.last == true}">
+							<c:set var="tdClassName" value="last"/>							
+						</c:if>
 						<tr class="article">
-							<td>${article.articleIndex}</td>
-							<td>								
+							<td class="${tdClassName}">${article.articleIndex}</td>
+							<td class="${tdClassName}">								
 								<c:set var="articleReadLink" value="#"/>								
 								<c:if test="${canRead == true}">
 									<c:set var="articleReadLink" value="${root}/board/articleView.do?boardName=${param.boardName}&amp;articleIndex=${article.articleIndex}&amp;currPage=${param.currPage}"/>
@@ -61,9 +68,9 @@ function init()
 									</c:if>
 								</a>
 							</td>
-							<td>${article.userId}</td>
-							<td>${article.dateTime}</td> 
-							<td>${article.readCount}</td>		
+							<td class="${tdClassName}">${article.userId}</td>
+							<td class="${tdClassName}">${article.dateTime}</td> 
+							<td class="${tdClassName}">${article.readCount}</td>		
 						</tr>
 					</c:forEach>					 
 				</table>
@@ -72,7 +79,7 @@ function init()
 			<c:url var="titleKeywordEncoded" value="${titleKeyword}"/>			
 			<table id="articleListBottom">
 				<tr>
-					<td> 					
+					<td class="prevNextPage"> 					
 						<c:choose>
 							<c:when test="${not empty search}">
 								<c:set var="nextUrl" value="${root}/board/articleSearch.do?titleKeyword=${titleKeywordEncoded}&boardName=${param.boardName}&amp;currPage=${param.currPage}&amp;goPrev=true"/>								
@@ -86,29 +93,29 @@ function init()
 						</a> 
 					</td>			
 						
-					<c:forEach var="pageNumber" items="${pageList}">
-						<td>
-							<c:choose>
-								<c:when test="${not empty search}">
-									<c:set var="nextUrl" value="${root}/board/articleSearch.do?titleKeyword=${titleKeywordEncoded}&boardName=${param.boardName}&amp;currPage=${pageNumber}"/>								
-								</c:when>
-								<c:otherwise>
-									<c:set var="nextUrl" value="${root}/board/articleList.do?boardName=${param.boardName}&amp;currPage=${pageNumber}"/>
-								</c:otherwise>
-							</c:choose>
-										
-							<c:choose>
-								<c:when test="${pageNumber==param.currPage}">
-									<c:set var="formattedPageNumber" value="(${pageNumber})"/>
-								</c:when>
-								<c:otherwise>
-									<c:set var="formattedPageNumber" value="${pageNumber}"/>
-								</c:otherwise>
-							</c:choose>
-							<a href=${nextUrl}>${formattedPageNumber }</a>							
-						</td>
+					<td class="pageNumber">
+					<c:forEach var="pageNumber" items="${pageList}">						
+						<c:choose>
+							<c:when test="${not empty search}">
+								<c:set var="nextUrl" value="${root}/board/articleSearch.do?titleKeyword=${titleKeywordEncoded}&boardName=${param.boardName}&amp;currPage=${pageNumber}"/>								
+							</c:when>
+							<c:otherwise>
+								<c:set var="nextUrl" value="${root}/board/articleList.do?boardName=${param.boardName}&amp;currPage=${pageNumber}"/>
+							</c:otherwise>
+						</c:choose>
+									
+						<c:choose>
+							<c:when test="${pageNumber==param.currPage}">
+								<c:set var="formattedPageNumber" value="(${pageNumber})"/>
+							</c:when>
+							<c:otherwise>
+								<c:set var="formattedPageNumber" value="${pageNumber}"/>
+							</c:otherwise>
+						</c:choose>
+						<a href=${nextUrl}>${formattedPageNumber }</a>					
 					</c:forEach>
-					<td> 
+					</td>
+					<td class="prevNextPage"> 
 						<c:choose>
 							<c:when test="${not empty search}">
 								<c:set var="nextUrl" value="${root}/board/articleSearch.do?titleKeyword=${titleKeywordEncoded}&boardName=${param.boardName}&amp;currPage=${param.currPage}&amp;goNext=true"/>								
@@ -124,24 +131,24 @@ function init()
 				</tr>			
 			
 				<tr>
-					<td colspan="2">현재 페이지 : ${param.currPage}	</td>					
+					<td colspan="3">현재 페이지 : ${param.currPage}	</td>					
 				</tr>  					
 				<tr>
-					<td>
+					<td id="firstList">
 						<a href="${root}/board/articleList.do?boardName=${param.boardName}&amp;currPage=0">처음목록</a>
 					</td>
-					<td>
-						<c:if test="${canWrite == true}">
-							<a href="${root}/board/articleWriteForm.do?boardName=${param.boardName}&amp;currPage=${param.currPage}">글쓰기</a>
-						</c:if>
-					</td>
-					<td>
+					<td id="search">
 						<form method="get" action="${root}/board/articleSearch.do">
 							<span>검색 : </span><input name="titleKeyword" type="text"/>
 							<input type="submit" value="검색"/>
 							<input type="hidden" name="boardName" value="${param.boardName}"/>
 							<input type="hidden" name="currPage" value="0"/>							
 						</form>
+					</td>
+					<td id="articleWrite">
+						<c:if test="${canWrite == true}">
+							<a href="${root}/board/articleWriteForm.do?boardName=${param.boardName}&amp;currPage=${param.currPage}">글쓰기</a>
+						</c:if>
 					</td>										
 				</tr>			
 			</table>
