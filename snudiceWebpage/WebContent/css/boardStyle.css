@@ -35,6 +35,21 @@ hr
 	border : 0px;
 }
 
+hr.hr1
+{
+	width : 200px;
+}
+
+hr.marginZero
+{
+	margin : 0px;
+}
+
+hr.lightColor
+{
+	background-color : #BDC1E0;
+}
+
 .centerAlign { text-align : center;}
 .bodyWrapper { background-color : #E4E4F9; }
 .header,.container,.footer,.center,.left,.right,table,tr,td 
@@ -44,6 +59,15 @@ hr
 	margin : 0px;
 }
 
+table
+{
+	border : 0px;
+	padding : 0px;
+	margin : 0px;	
+}
+
+tr,td { height : 30px; }
+
 /*------------header-------------*/
 .headerImage
 {
@@ -51,7 +75,6 @@ hr
 	background-repeat : no-repeat;	
 	height : 255px;
 }
-
 
 /*----------글 목록 보기-------*/
 table#articleListMain,table#articleListBottom
@@ -97,25 +120,44 @@ table#articleListBottom,table#articleListBottom a
 	resize : none; /* 크롬에서 크기 조절을 못하게 한다. */
 }
 
-
-/*----------글 수정하기---------------*/
-table#articleModifyTable
+/*----------글 수정하기,글쓰기---------------*/
+table.articleWriteModifyTable
 {
-	width : 100%;
+	width : 100%;		
 }
-	
-table#articleModifyTable tr,table#articleModifyTable td
+
+table.articleWriteModifyTable, table.articleWriteModifyTable td
 {
+	border : 2px solid #2C2B70;
 	text-align : center;
 }
 
-/*-------------글쓰기---------------*/
-table#articleWriteTable
+table.articleWriteModifyTable td.boardAliasNameLabel
 {
-	width : 100%;
+	border-bottom : 2px solid #CACADB;
 }
 
-table#articleWriteTable tr,table#articleWriteTable td
+td.boardAliasNameLabel,td.articleWriterLabel,td.articleTitleLabel
 {
-	text-align : center;
+	color : white;
+	background-color : #2C2B70;
+}
+
+td.boardAliasNameLabel {width : 15%;}
+td.boardAliasNameContent {width : 35%;}
+td.articleWriterLabel {width : 15%;}
+td.articleWriterContent {width : 35%;}
+
+td.articleTitleLabel {width : 20%;}
+td.articleTitleContent {width : 80%;}
+td.articleTitleContent input { width: 100%; height:100%;}
+
+td.articleTextContent {width : 100%; height:500px;}
+td.articleTextContent textarea { width: 100%; height:100%;}
+
+table.articleWriteModifyTable input.noBorder,table.articleWriteModifyTable textarea
+{
+	border : 0px;
+	padding : 0px;
+	margin : 0px;	
 }
