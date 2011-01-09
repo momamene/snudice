@@ -12,13 +12,14 @@
 <title>SNUDice Web Page에 오신 것을 환영합니다.</title>
 </head>
 <body>
-	<div class="bodyWrapper">
+	<div class="bodyWrapper centerOfAllWidth">
 		<div class="header">
 			<div id="headerImage"></div>			
 		</div>
 		
 		<div class="container">		
 			<div class="left">
+				<!--  회원가입 Form -->
 				<div id="joinFormWrapper" class="display_none">	
 					<div class="centerAlign">회원가입</div>
 					<hr/>
@@ -45,6 +46,8 @@
 					<input id="joinClose" type="button" value="닫기"/>
 					<div id="joinMsg"></div>
 				</div>
+				
+				<!-- 로그인 Form -->
 				<div id="mainLeftTop">
 					<c:choose>
 						<c:when test="${not empty userId}">

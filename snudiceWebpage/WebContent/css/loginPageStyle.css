@@ -4,19 +4,17 @@
 .left { width : 264px; }
 .center { width : 755px; }
 .right { width : 0px; }
-#mainLeftTop,#mainLeftBottom  { width : 264px; }
+#mainLeftTop,#mainLeftBottom,#mainLeftTop_ { width : 264px; }
 
 /* 큰 영역 position 설정 */
-.bodyWrapper 
-{	
-	/* 중앙 정렬 */
-	position : relative;
-	left : 50%;
-	margin-left : -512px;	
-}
-
 .left { float:left; }
 .center { float:left; margin-left: 5px; }
+.center_
+{
+	position : relative;
+	left : 50%;
+	margin-left : -132px;
+}
 .right { float:left; }
 
 .footer
@@ -30,25 +28,40 @@ a:visited {text-decoration:none;} /* visited link */
 a:hover {text-decoration:none;}   /* mouse over link */
 a:active {text-decoration:none;}  /* selected link */
 
-img { border : 0px; }
+img { border : 0px; padding : 0px; }
+div { border : 0px; padding : 0px; }
 hr
 {	
 	background-color : #262E69;
 	height : 4px;
-	border : 0px;
+	border : 0px;	
 }
 
 hr.hr1
 {
 	width : 200px;
 }
+
+hr.hr2
+{
+	margin : 0px;
+}
 	
 .centerAlign { text-align : center; }
+.clearLeft { clear : left; }
+.centerOfAllWidth
+{	
+	/* 중앙 정렬 */
+	position : relative;
+	left : 50%;
+	margin-left : -512px;
+}
+
 .bodyWrapper { background-color : #E4E4F9; }
 .footer { background-color : white; }
 
 /*----------------header-----------*/
-#headerImage
+#headerImage, #secureLoginFormHeaderImage,#errorHeaderImage
 {
 	background-image : url('/snudiceWebpage/image/mainpage/title.png');
 	background-repeat : no-repeat;	
@@ -60,6 +73,12 @@ hr.hr1
 {
 	background-color : #464D9C;	
 	height : 170px;
+}
+
+#mainLeftTop_
+{
+	background-color : #464D9C;	
+	height : 130px;
 }
 
 #loginFormTitle
@@ -278,4 +297,10 @@ hr.hr1
 	width : 50%;
 	height : 300px;
 	float : left;
+}
+
+/*--------------- secure login form ------------*/
+#secureloginForm
+{
+	
 }

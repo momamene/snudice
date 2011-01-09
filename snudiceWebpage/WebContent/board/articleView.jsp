@@ -16,7 +16,7 @@ function init()
 	//event handler 를 추가한다.
 	//header image 클릭시
 	var headerImage = document.getElementById("articleViewHeaderImage");
-	headerImage.onclick = function() { window.location = "${root}/first.do"};
+	headerImage.onclick = function() { window.location = "${root}/first.do"; }
 	//댓글 쓰기 버튼
 	var replySubmitButton = document.getElementById("replySubmitButton");
 	replySubmitButton.onclick = replySubmit;

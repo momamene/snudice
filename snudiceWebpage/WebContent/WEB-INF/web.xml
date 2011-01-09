@@ -7,7 +7,7 @@
     <auth-method>FORM</auth-method>
     <form-login-config>
       <form-login-page>/secureLoginForm.jsp</form-login-page>
-      <form-error-page>/loginFailed.jsp</form-error-page>
+      <form-error-page>/secureLoginForm.jsp?fail=true</form-error-page>
     </form-login-config>
   </login-config>
   <context-param>
