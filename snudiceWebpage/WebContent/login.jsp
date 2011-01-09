@@ -12,7 +12,7 @@
 <title>SNUDice Web Page에 오신 것을 환영합니다.</title>
 </head>
 <body>
-	<div class="bodyWrapper centerOfAllWidth">
+	<div class="bodyWrapper">
 		<div class="header">
 			<div id="headerImage"></div>			
 		</div>

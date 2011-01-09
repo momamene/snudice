@@ -11,6 +11,11 @@ window.onload = init;
 
 function init()
 {
+	window.onresize = function()
+	{
+		windowAutoResize(1024);
+	}
+	
 	var errorHeaderImage = document.getElementById("errorHeaderImage");
 	errorHeaderImage.onclick = function()
 	{
