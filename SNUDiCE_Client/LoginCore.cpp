@@ -19,7 +19,7 @@
 #define LOGIN_POS_CONNECTBTNY		360
 
 // connect
-#define LOGIN_FILE_BACK				".\\Data\\Login\\login_back.img"
+#define LOGIN_FILE_BACK				".\\Data\\Login\\login_back2.img"
 
 // id, pw edit control
 #define LOGIN_EDIT_SZLENGTH			12			// 사실 바이트 수

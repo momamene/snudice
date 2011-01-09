@@ -1,10 +1,10 @@
 #pragma once
 
-#define BGM_FILE_0		"Data/Sound/snd_bgm1.wav"			// 평상시
-#define BGM_FILE_1		"Data/Sound/snd_bgm2.wav"			// 녹두
-#define BGM_FILE_2		"Data/Sound/snd_bgm3.wav"			// 게임
-#define BGM_FILE_3		"Data/Sound/snd_bgm4.wav"			// 실연
-#define BGM_FILE_4		"Data/Sound/snd_bgm5.wav"			// 사랑
+#define BGM_FILE_0		"Data/Sound/snd_bgm1.mp3"			// 평상시
+#define BGM_FILE_1		"Data/Sound/snd_bgm2.mp3"			// 녹두
+#define BGM_FILE_2		"Data/Sound/snd_bgm3.mp3"			// 게임
+#define BGM_FILE_3		"Data/Sound/snd_bgm4.mp3"			// 실연
+#define BGM_FILE_4		"Data/Sound/snd_bgm5.mp3"			// 사랑
 
 #define EFFECT_FILE_0	"Data/Sound/buff.wav"
 #define EFFECT_FILE_1	"Data/Sound/bus_move.wav"

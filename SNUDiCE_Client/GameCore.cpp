@@ -36,7 +36,7 @@
 #define WARPTICK				500 * 3
 #define WARPFRAME				8
 #define WARPDIST				10
-#define SLEEPTIMEMAX			50000	//최대 잠수 시간:10초 
+
 
 static gGameCore s_GameCore;
 
@@ -90,7 +90,17 @@ void gGameCore::MainLoop()
  	if(gPopUp::GetIF()->isPopUp())
 	{
 		gPopUp::GetIF()->MainLoop();
-//		if(GetTickCount - SLEEPTIMEMAX >= m_turnTime_CoupleAsk) 
+		if(gPopUp::GetIF()->m_ePop == EPOP_COUPLEASK)
+		{
+			if((int)GetTickCount() - SLEEPTIMEMAX/2  >= m_turnTime_CoupleAsk) 
+			{
+				PK_ANSCOUPLE_ASK	ask;
+				ask.bYes = false;
+
+				gServer::GetIF()->Send(PL_ANSCOUPLE_ASK, sizeof(ask), &ask);
+				gPopUp::GetIF()->DoEsc();
+			}
+		}
 		return;
 	}
 
@@ -155,7 +165,8 @@ void gGameCore::MainLoop()
 	gChat::GetIF()->MainLoop();
 	gDice::GetIF()->DiceThrow();
 
-	if(GetTickCount() - m_turnTime_Bus>=SLEEPTIMEMAX && m_bBusSel) {
+	if(GetTickCount() - m_turnTime_Bus>=SLEEPTIMEMAX && m_bBusSel)
+	{
 		PK_BUSMOVESELECT_ASK		ask;
 		gPlayerContainer *gPC = gPlayerContainer::GetIF();
 		int nPos = gPC->m_GPlayerList[ m_nTurn ].nPos;
@@ -940,6 +951,9 @@ void gGameCore::pk_movestart_rep(PK_MOVESTART_REP *rep)
 {
 	gPlayerContainer *gPC = gPlayerContainer::GetIF();
 
+	gUIGame::GetIF()->m_bShowTimeCount = false;
+	gPlaySoundCore::GetIF()->StopEffectSound(EFFECT_FILE_10);
+
 	m_turnTime = 0x7fffffff; m_bMoved = true;
 	if(m_bMoving)
 		return;
@@ -1167,6 +1181,7 @@ void gGameCore::End(bool Abnormal_End)		// 이동 끝남
 void gGameCore::pk_nextturn_rep(PK_NEXTTURN_REP *rep)
 {
 	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
+	gUIGame				*ui = gUIGame::GetIF();
 
 	if(m_bBreak)
 	{
@@ -1203,10 +1218,19 @@ void gGameCore::pk_nextturn_rep(PK_NEXTTURN_REP *rep)
 		m_nTurn		= rep->nNextTurn;
 		m_bMoved	= false;
 
-		gUIGame::GetIF()->m_bItemUsed = false;
+		ui->m_bItemUsed = false;
 //	}
 	int nTempPos = gPlayerContainer::GetIF()->m_GPlayerList[m_nTurn].nPos;
 	ScrollStart(nTempPos);
+
+	if(m_nTurn == gPC->GetMyGPIndex())
+	{
+		ui->m_nYourTurnTimer = GetTickCount();
+		ui->m_bShowYourTurn = true;
+	}
+
+	gUIGame::GetIF()->m_bShowTimeCount = true;
+	gUIGame::GetIF()->m_bDrawedTimeCount = false;
 }
 
 void gGameCore::ScrollStart(int nPos)
@@ -1255,6 +1279,9 @@ void gGameCore::pk_busmovechoose_rep(PK_BUSMOVECHOOSE_REP *rep)
 
 void gGameCore::pk_busmovestart_rep(PK_BUSMOVESTART_REP *rep)
 {
+	gUIGame::GetIF()->m_bShowTimeCount = false;
+	gPlaySoundCore::GetIF()->StopEffectSound(EFFECT_FILE_10);
+
 	gPlayerContainer *gPC = gPlayerContainer::GetIF();
 
 	int  nPos = gPC->m_GPlayerList[m_nTurn].nPos;
@@ -1361,6 +1388,9 @@ bool gGameCore::Restore()
 
 void gGameCore::pk_warpstart_rep(PK_WARPSTART_REP *rep)
 {
+	gUIGame::GetIF()->m_bShowTimeCount = false;
+	gPlaySoundCore::GetIF()->StopEffectSound(EFFECT_FILE_10);
+
 	gPlayerContainer	*pc = gPlayerContainer::GetIF();
 
 	m_warpDest = rep->nDest;
@@ -1406,6 +1436,8 @@ void gGameCore::pk_askcouple_rep(PK_ASKCOUPLE_REP* rep)
 	int		idx = pc->GetGPIndex(rep->szCouple);
 	img = &pc->m_ImgInfo[ pc->m_GPlayerList[idx].ctype ].ImgPic;
 	gPopUp::GetIF()->SetImgPopUp(ECLK_CANCEL, EPOP_COUPLEASK, img, STR_21);
+
+	m_turnTime_CoupleAsk = GetTickCount();
 }
 
 void gGameCore::pk_movestartcouple_rep(PK_MOVESTART_REP *rep)
@@ -1424,4 +1456,13 @@ void gGameCore::Clear(int newTurn)
 	m_turnTime	= GetTickCount();
 	m_bBreak	= false;
 	m_bPrevInNokdu = false;
+
+	// yourturn 이미지
+	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
+	gUIGame				*ui = gUIGame::GetIF();
+	if(m_nTurn == gPC->GetMyGPIndex())
+	{
+		ui->m_bShowYourTurn = true;
+		ui->m_nYourTurnTimer = GetTickCount();
+	}
 }

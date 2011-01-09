@@ -22,6 +22,11 @@
 #include "resource.h"
 #include "PlaySoundCore.h"
 
+#define LOGO1_FILE			".\\Data\\Login\\logo1.img"
+#define LOGO2_FILE			".\\Data\\Login\\logo2.img"
+#define LOGO_SHOWTIME		2000
+
+
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 static gMainWin	s_MainWin;		// for singleton
@@ -103,6 +108,26 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 	if(!m_ImgBack.Load(BACKBUFFERIMG))
 		return false;
 
+	if(!m_ImgLogo1.Load(LOGO1_FILE))
+		return false;
+	if(!m_ImgLogo2.Load(LOGO2_FILE))
+		return false;
+
+	ShowWindow(m_hWnd, nCmdShow);
+
+	// logo
+	m_ImgLogo1.Draw();
+
+	if(m_bFullScreen)
+		m_lpDDPrimary->Flip(NULL, DDFLIP_WAIT);
+	else
+		m_lpDDPrimary->Blt(&m_rcScr, m_lpDDBack, NULL, DDBLT_WAIT, NULL);
+
+	int		nShowLogoTimer = GetTickCount();
+	int		nShowLogoTemp;
+	// end logo
+
+
 	if(!gMouse::GetIF()->SetUp())
 		return false;
 
@@ -123,6 +148,21 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 
 	if(!gSubmitCore::GetIF()->SetUp())
 		return false;
+
+	// logo
+	if( (nShowLogoTemp = GetTickCount() - nShowLogoTimer) < LOGO_SHOWTIME )
+		Sleep(LOGO_SHOWTIME - nShowLogoTemp);
+
+	m_ImgLogo2.Draw();
+
+	if(m_bFullScreen)
+		m_lpDDPrimary->Flip(NULL, DDFLIP_WAIT);
+	else
+		m_lpDDPrimary->Blt(&m_rcScr, m_lpDDBack, NULL, DDBLT_WAIT, NULL);
+
+	nShowLogoTimer = GetTickCount();
+	// end logo
+
 
 	if(!gTopUI::GetIF()->SetUp())
 		return false;
@@ -148,8 +188,6 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 	if(!gUIGame::GetIF()->SetUp())
 		return false;
 
-	ShowWindow(m_hWnd, nCmdShow);
-
 	if(!DisableBeep())
 		return false;
 
@@ -160,8 +198,12 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 	if(!gPlaySoundCore::GetIF()->SetUp())
 		return false;
 
-	gPlaySoundCore::GetIF()->StartBGM(BGM_FILE_0);
+	// logo
+	if( (nShowLogoTemp = GetTickCount() - nShowLogoTimer) < LOGO_SHOWTIME )
+		Sleep(LOGO_SHOWTIME - nShowLogoTemp);
+	// end logo
 
+	gPlaySoundCore::GetIF()->StartBGM(BGM_FILE_0);
 
 	//srand(NULL);
 	return true;
