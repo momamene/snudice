@@ -30,12 +30,16 @@ public class ReplyWrite extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();		
-		String userId = (String)session.getAttribute("userId");
+		String userId = (String)session.getAttribute("userId");		
 		
 		int articleIndex = Integer.parseInt(request.getParameter("articleIndex"));
 		String replyText = request.getParameter("replyText");		
 		
-		DB db = DB.getInstance();
-		db.dbBoard.insertReply(articleIndex,userId,replyText);
+		//댓글 삽입
+		if((Boolean)request.getAttribute("canReply")==true)
+		{
+			DB db = DB.getInstance();
+			db.dbBoard.insertReply(articleIndex,userId,replyText);
+		}
 	}
 }

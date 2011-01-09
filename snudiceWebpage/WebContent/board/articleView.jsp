@@ -144,12 +144,14 @@ function replyComplete()
 						<hr/>
 					</c:forEach>
 					</div>
-			
-					<div id="replyWrite">
-						한번 단 댓글은 수정,삭제가 불가능 합니다. 쓰기 전에 한번 더 생각해 주세요.<br/>					
-						<textarea id="replyWriteText"></textarea>
-						<input id="replySubmitButton" type="button" value="댓글 쓰기">
-					</div>			
+					
+					<c:if test="${canComment == true}">
+						<div id="replyWrite">
+							한번 단 댓글은 수정,삭제가 불가능 합니다. 쓰기 전에 한번 더 생각해 주세요.<br/>					
+							<textarea id="replyWriteText"></textarea>
+							<input id="replySubmitButton" type="button" value="댓글 쓰기">
+						</div>
+					</c:if>			
 				</div>	 	         		
         	</div>
 			

@@ -68,9 +68,10 @@ public class BoardFilter implements Filter {
 		request.setAttribute("canWrite", false);
 		request.setAttribute("canAdmin", false);
 		request.setAttribute("canList", false);
+		request.setAttribute("canComment", false);
 		
 		char[] auth = authString.toCharArray();
-		//auth[0],auth[1],auth[2],auth[3] 는 차례로 read,write,admin,list 권한을 의미
+		//auth[0],auth[1],auth[2],auth[3],auth[4] 는 차례로 read,write,admin,list,comment(댓글) 권한을 의미
 		if(auth[0]!='-')
 			request.setAttribute("canRead", true); //글읽기
 		if(auth[1]!='-')
@@ -79,6 +80,8 @@ public class BoardFilter implements Filter {
 			request.setAttribute("canAdmin", true); //게시판 관리
 		if(auth[3]!='-')
 			request.setAttribute("canList", true); //글목록보기
+		if(auth[4]!='-')
+			request.setAttribute("canComment", true);
 		
 		chain.doFilter(request, response);
 	}
