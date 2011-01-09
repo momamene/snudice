@@ -211,6 +211,18 @@
 #define TEXT_ICON_FILE						".\\Data\\Interface\\icon.img"
 #define ITEM_USER_BOX_FILE					".\\Data\\Interface\\game_carduse.img"
 
+#define TIMER_SHOWTIME						1500
+#define	TIMER_YOURTURN_FILE					".\\Data\\Interface\\yourturn.img"
+#define TIMER_YOURTURN_SIZE_W				255
+#define TIMER_YOURTURN_SIZE_H				36
+#define TIMER_YOURTURN_POS_X				((WNDSIZEW - TIMER_YOURTURN_SIZE_W) / 2)
+#define TIMER_YOURTURN_POS_Y				((WNDSIZEH - TIMER_YOURTURN_SIZE_H) / 2 - 30)
+#define TIMER_NUMBER_FILE					".\\Data\\Interface\\timer.img"
+#define TIMER_NUMBER_SIZE_W					50
+#define	TIMER_NUMBER_SIZE_H					50
+#define TIMER_NUMBER_POS_X					((WNDSIZEW - TIMER_NUMBER_SIZE_W) / 2)
+#define TIMER_NUMBER_POS_Y					((WNDSIZEH - TIMER_NUMBER_SIZE_H) / 2 - 30)
+
 
 static gUIGame s_UIGame;
 
@@ -362,6 +374,11 @@ bool gUIGame::SetUp()
 	if(!m_ImgUI[UIIMG_ICON].Load(TEXT_ICON_FILE))
 		return false;
 	if(!m_ImgUI[UIIMG_USERBOX].Load(ITEM_USER_BOX_FILE))
+		return false;
+
+	if(!m_ImgUI[UIIMG_YOURTURN].Load(TIMER_YOURTURN_FILE))
+		return false;
+	if(!m_ImgUI[UIIMG_TIMER].Load(TIMER_NUMBER_FILE))
 		return false;
 
 
@@ -738,6 +755,47 @@ void gUIGame::Draw()
 			gUtil::Text(SUBINFO_AVGRADE_POS_X, SUBINFO_AVGRADE_POS_Y, szBuf);
 		gUtil::EndText();
 		gUtil::SetDefaultFont();
+	}
+
+	// your turn
+	if(m_bShowYourTurn)
+	{
+		if(GetTickCount() - m_nYourTurnTimer > TIMER_SHOWTIME)
+			m_bShowYourTurn = false;
+		else
+		{
+			m_ImgUI[UIIMG_YOURTURN].Draw(TIMER_YOURTURN_POS_X, TIMER_YOURTURN_POS_Y);
+		}
+	}
+	// time count
+	if(m_bShowTimeCount)
+	{
+		int		termX;
+		if((termX = GetTickCount() - gc->m_turnTime) > SLEEPTIMEMAX - 5000)
+		{
+			if(!m_bDrawedTimeCount)
+			{
+				gPlaySoundCore::GetIF()->PlayEffectSound(EFFECT_FILE_10, true);
+				m_bDrawedTimeCount = true;
+			}
+
+			termX = SLEEPTIMEMAX - termX;
+			termX /= 1000;
+			if(termX >= 0 && termX <= 4)
+			{
+				RECT	rcDest, rcSour;
+				SetRect(&rcDest,
+					TIMER_NUMBER_POS_X,
+					TIMER_NUMBER_POS_Y,
+					TIMER_NUMBER_POS_X + TIMER_NUMBER_SIZE_W,
+					TIMER_NUMBER_POS_Y + TIMER_NUMBER_SIZE_H);
+				SetRect(&rcSour,
+					0, 0, TIMER_NUMBER_SIZE_W, TIMER_NUMBER_SIZE_H);
+
+				OffsetRect(&rcSour, (termX * TIMER_NUMBER_SIZE_W), 0);
+				m_ImgUI[UIIMG_TIMER].Draw(rcDest, rcSour);
+			}
+		}
 	}
 }
 
@@ -1459,6 +1517,9 @@ void gUIGame::DrawTargetButton()
 
 void gUIGame::pk_itemuse_rep(PK_ITEMUSE_REP* rep)
 {
+	gUIGame::GetIF()->m_bShowTimeCount = false;
+	gPlaySoundCore::GetIF()->StopEffectSound(EFFECT_FILE_10);
+
 	gItemContainer		*ic = gItemContainer::GetIF();
 	gPlayerContainer	*pc = gPlayerContainer::GetIF();
 
@@ -2360,4 +2421,6 @@ void gUIGame::Clear()
 {
 	SetRankList();
 	m_bCouple = false;
+	m_bShowYourTurn = false;
+	m_bShowTimeCount = true;
 }

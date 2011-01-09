@@ -12,6 +12,8 @@
 #include "Core.h"
 #include "Image.h"
 
+#define SLEEPTIMEMAX			10000	//최대 잠수 시간:10초 
+
 enum BUSMOVE
 {
 	BUS_COME,
@@ -72,7 +74,7 @@ public:
 	bool		m_bPrevInNokdu;				// 내 플레이어가 녹두에 있었나
 											// 녹두 -> !녹두,  !녹두 -> 녹두 파악 위하여.
 //
-private:
+//private:
 	BUSMOVE		m_busmode;
 	int			m_buspos;			// 버스 도착 장소
 	int			m_turnTime;			// 잠수시간 측정

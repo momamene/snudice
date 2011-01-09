@@ -41,6 +41,9 @@ enum UIIMAGE
 
 	UIIMG_USERBOX,
 
+	UIIMG_YOURTURN,
+	UIIMG_TIMER,
+
 	UIIMG_END,
 };
 
@@ -128,6 +131,13 @@ public:
 
 	bool		m_bCouple;					// true면 커플되는거, false면 깨는 거
 
+	// your turn
+	bool		m_bShowYourTurn;
+	int			m_nYourTurnTimer;
+
+	// time count 5,4,3,2,1
+	bool		m_bShowTimeCount;
+	bool		m_bDrawedTimeCount;
 
 private:
 	RECT		m_rcBarDest, m_rcBarSour;
@@ -162,6 +172,7 @@ public:
 	void		SetTargetButton_InfoChange();				// infochange_rep
 
 	void		Draw_InfoChange();
+
 
 	void		Clear();
 };

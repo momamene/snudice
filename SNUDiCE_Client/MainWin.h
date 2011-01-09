@@ -52,6 +52,9 @@ public:
 	
 	gImage		m_ImgBack;					// 항상 뒤에 출력이미지
 
+	gImage		m_ImgLogo1;					// SNUGDC & SmileGate
+	gImage		m_ImgLogo2;					// Project N
+
 	eCOREMODE	m_eCoreMode;				// 게임이 어떤 모드냐
 
 	// display
