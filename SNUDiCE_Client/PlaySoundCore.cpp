@@ -1,6 +1,7 @@
 #include "PlaySoundCore.h"
 #include "fmod.h"
 #include <windows.h>
+#include "MainWin.h"
 
 #define TRUE 1
 #define FALSE 0
@@ -35,6 +36,9 @@ bool gPlaySoundCore::isBGMLoaded()
 
 void gPlaySoundCore::StartBGM(const char* filename)
 {
+	if(!gMainWin::GetIF()->m_bActive)
+		return;
+
 	if(this->bgmState == BGM_PLAYING || this->bgmState == BGM_PAUSED)
 		StopBGM();
 	
@@ -76,6 +80,9 @@ void gPlaySoundCore::StopBGM()
 
 void gPlaySoundCore::PlayEffectSound(const char* filename, bool bRepeat)
 {
+	if(!gMainWin::GetIF()->m_bActive)
+		return;
+
 	FSOUND_STREAM *effectSoundStream;
 	if(bRepeat)
 	{

@@ -109,15 +109,15 @@ void gGameCore::MainLoop()
 		switch(gPopUp::GetIF()->m_ePop)
 		{
 			//방나가고돌아오기수정
-			case EPOP_ROOMBACK: // 게임 끝:
-				switch(gPopUp::GetIF()->m_eBtnClk)
-				{
-					case ECLK_OK:
-						gMainWin::GetIF()->m_eCoreMode = ECM_ROOM;//클라이언트에서룸상태변경
-						gPlaySoundCore::GetIF()->StartBGM(BGM_FILE_0);
-						break;
-				}
-				break;
+// 			case EPOP_ROOMBACK: // 게임 끝:
+// 				switch(gPopUp::GetIF()->m_eBtnClk)
+// 				{
+// 					case ECLK_OK:
+// 						gMainWin::GetIF()->m_eCoreMode = ECM_ROOM;//클라이언트에서룸상태변경
+// 						gPlaySoundCore::GetIF()->StartBGM(BGM_FILE_0);
+// 						break;
+// 				}
+// 				break;
 				//수정 ; 아직 건들지 않고 있음.
 			case EPOP_DISCONNECT:
 				switch(gPopUp::GetIF()->m_eBtnClk)
@@ -1332,14 +1332,15 @@ void gGameCore::pk_gameplayerinfo_rep(PK_GAMEPLAYERINFO_REP *rep)
 
 void gGameCore::pk_gameend_rep(PK_GAMEEND_REP *rep)
 {
-	char str2[IDLENGTH]={0,};
-	strcpy(str2, rep->szID);
+//	char str2[IDLENGTH]={0,};
+//	strcpy(str2, rep->szID);
 
-	gRoomCore::GetIF()->SendRoomBack();	//방나가고돌아오기수정
+//	gRoomCore::GetIF()->SendRoomBack();	//방나가고돌아오기수정
 //	MessageBox(gMainWin::GetIF()->m_hWnd, "시발", "발시발시", MB_OK);
-	gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_ROOMBACK, str2, STR_17);	//방나가고돌아오기수정
-	m_bMoved	= false;
-	gUIGame::GetIF()->m_bItemUsed = false;
+//	gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_ROOMBACK, str2, STR_17);	//방나가고돌아오기수정
+
+
+	gUIGame::GetIF()->GameEnd();
 }
 
 void gGameCore::pk_exit_rep(PK_EXIT_REP *rep)
@@ -1456,6 +1457,7 @@ void gGameCore::Clear(int newTurn)
 	m_turnTime	= GetTickCount();
 	m_bBreak	= false;
 	m_bPrevInNokdu = false;
+	m_bMoved	= false;
 
 	// yourturn 이미지
 	gPlayerContainer	*gPC = gPlayerContainer::GetIF();

@@ -130,6 +130,17 @@ bool gSubmitCore::SetUp()
 
 void gSubmitCore::MainLoop()
 {
+	if(GetTickCount() - m_nTimeCount > SUBMITTICK)
+		if(!m_bSendTick)
+		{
+			PK_SUBMITCOUNT_ASK	ask;
+
+			strcpy(ask.szID, gPlayerContainer::GetIF()->m_MyPlayer.szID);
+			gServer::GetIF()->Send(PL_SUBMITCOUNT_ASK, sizeof(ask), &ask);
+			m_bSendTick = true;
+		}
+	
+
 	Draw();
 
 	// popup Ã¢ Ã³¸®

@@ -44,6 +44,8 @@ enum UIIMAGE
 	UIIMG_YOURTURN,
 	UIIMG_TIMER,
 
+	UIIMG_RESULT,
+
 	UIIMG_END,
 };
 
@@ -87,6 +89,7 @@ enum UIMODE
 	UIM_ITEMUSEINFO,			// 아이템 사용 정보
 	UIM_INFOCHANGE,				// 수치 변경 정보
 	UIM_BECOUPLE,				// 커플되었다는 정보
+	UIM_RESULT,
 };
 
 // 아이템 사용, 캐릭터 얼굴 버튼
@@ -175,4 +178,6 @@ public:
 
 
 	void		Clear();
+
+	void		GameEnd();
 };
