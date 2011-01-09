@@ -12,7 +12,7 @@
 #include <time.h>
 
 
-#define ENDROUND	2
+#define ENDROUND	10
 
 static gGamePlayerContainer s_GamePlayerContainer;
 
@@ -1403,6 +1403,7 @@ ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, 
 			char *szID_me = gRC->FindPlayerszIDInTheRoom(nInRoomIndex , nRoomIndex) , *szID_partner = gRC->FindPlayerszIDInTheRoom(partnerIndex , nRoomIndex);
 			
 			pk_becouple_rep(nRoomIndex, gPC->GetPlayerFromID(szID_me) ,  gPC->GetPlayerFromID(szID_partner) , true);
+			
 		}	else if (gIC->m_ItemList[ask.nItemID].type == ITEM_LOVE	)	{
 			switch(gIC->m_ItemList[ask.nItemID].target) {
 				case TARGET_MYCOUPLE :		//Â÷±â
@@ -1507,7 +1508,7 @@ void gGamePlayerContainer::pk_warpend_ask (PK_DEFAULT *pk, SOCKET sock)
 
 	ask = *((PK_WARPEND_ASK*)pk->strPacket);
 
-	wsprintf(buf,"[PK_WARPEND_ASK] %s\t %s \n", inet_ntoa(clientAddr.sin_addr), ask.szID);
+	wsprintf(buf,"[PK_WAR7PEND_ASK] %s\t %s \n", inet_ntoa(clientAddr.sin_addr), ask.szID);
 	OutputDebugString(buf);
 
 	int nRoomIndex = gPC->GetCoreFlag(ask.szID);
@@ -1569,12 +1570,10 @@ void gGamePlayerContainer::pk_warpend_ask (PK_DEFAULT *pk, SOCKET sock)
 				OutputDebugString("TY_ITEM\n");
 				getItem(nRoomIndex,m_nTurn[nRoomIndex]);
 				pk_gameplayerinfo_rep(nRoomIndex);
-				pk_nextturn_rep(nRoomIndex);
 			}
 			else {
 				OutputDebugString("TY_NOTHING\n");
 				pk_gameplayerinfo_rep(nRoomIndex);
-				pk_nextturn_rep(nRoomIndex);
 			}
 		}
 	}
@@ -2097,6 +2096,8 @@ void gGamePlayerContainer::pk_becouple_rep(int nRoomIndex , PLAYER player_a , PL
 		wsprintf(buf,"[Match][Room : %d ; %d and %d : %d point] ", nRoomIndex , playerIndex_a , playerIndex_b , LOVEINITPOINT);
 		m_favor[nRoomIndex][playerIndex_a].point[playerIndex_b] = -1;				m_favor[nRoomIndex][playerIndex_a].bYes = CPS_NONE;
 		m_favor[nRoomIndex][playerIndex_b].point[playerIndex_a] = -1;				m_favor[nRoomIndex][playerIndex_b].bYes = CPS_NONE;
+		m_favor[nRoomIndex][playerIndex_b].lvTargetIndex = playerIndex_a;			m_favor[nRoomIndex][playerIndex_a].lvTargetIndex = playerIndex_b;
+
 		m_GamePlayer[nRoomIndex][playerIndex_a].nLove = LOVEINITPOINT ;
 		m_GamePlayer[nRoomIndex][playerIndex_b].nLove = LOVEINITPOINT ;
 		
@@ -2111,21 +2112,20 @@ void gGamePlayerContainer::pk_becouple_rep(int nRoomIndex , PLAYER player_a , PL
 		}
 	}	else	{	//±úÁ³¾îÂ†
 		
-		m_favor[nRoomIndex][playerIndex_a].point[playerIndex_b] = 0;	
-		m_favor[nRoomIndex][playerIndex_b].point[playerIndex_a] = 0;	
+		m_favor[nRoomIndex][playerIndex_a].point[playerIndex_b] = 0;
+		m_favor[nRoomIndex][playerIndex_b].point[playerIndex_a] = 0;
+		m_favor[nRoomIndex][playerIndex_b].lvTargetIndex = -1;			m_favor[nRoomIndex][playerIndex_a].lvTargetIndex = -1;
 		m_GamePlayer[nRoomIndex][playerIndex_a].nLove = -1 ;
 		m_GamePlayer[nRoomIndex][playerIndex_b].nLove = -1 ;
 		
 		strcpy(m_GamePlayer[nRoomIndex][playerIndex_a].szCouple , "");
 		strcpy(m_GamePlayer[nRoomIndex][playerIndex_b].szCouple , "");
 		
-		vector< pair<int,int> > m_userItemList[MAXROOM][ROOMMAXPLAYER];	//		<Item num  , coolTime>
 
 		pair<int, int > element;
 		element.first = COUPLE_BROCKEN_DEBUF_INDEX;
 		element.second = COUPLE_DEBUFFTURN;
 		m_userItemList[nRoomIndex][playerIndex_b].push_back(element);
-		
 	}
 
 		
@@ -2135,7 +2135,7 @@ void gGamePlayerContainer::pk_becouple_rep(int nRoomIndex , PLAYER player_a , PL
 }
 
 //¿©±â¼­´Â ¹¹ÇÏ´Â °ÅÁö?????
-void	gGamePlayerContainer::pk_becoupleend_ask(PK_DEFAULT *pk , SOCKET sock)
+void	gGamePlayerContainer::pk_becoupleend_ask(PK_DEFAULT *pk , SOCKET sock )
 {
 
 	PK_BECOUPLEEND_ASK ask;
@@ -2157,6 +2157,7 @@ void	gGamePlayerContainer::pk_becoupleend_ask(PK_DEFAULT *pk , SOCKET sock)
 	m_bSyncronize[nRoomIndex][nInRoomIndex] = true;
 	if (isbSynAllTrue(nRoomIndex))	{	//µ¿±âÈ­ ²ý
 		PushbSynAllPlayer(nRoomIndex, false);
+		
 		pk_nextturn_rep(nRoomIndex);
 	}
 }
