@@ -4,6 +4,11 @@ var root = "/snudiceWebpage";
 //event handler 추가	
 function initLogin()
 {	
+	window.onresize = function()
+	{
+		windowAutoResize(1024);
+	}	
+	
 	//가입창 열기 버튼	
 	var joinOpen = document.getElementById("joinOpen");
 	joinOpen.onclick = joinOpenFunc;	

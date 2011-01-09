@@ -98,3 +98,54 @@ function enterKeyExec(elementId,callback)
 			callback();
 	}
 }
+
+//window를 최대 너비에 맞게 자동으로 리사이즈 한다.
+//(창을 maxWidth보다 크게 혹은 작거나 했을때의 처리)
+/*
+ * 다음 코드와 함께 사용한다. (css)
+ * .bodyWrapper
+ *	{ 	
+ *	position : relative;
+ *	left : 50%;
+ *	margin-left : -512px;
+ *  }
+ */
+function windowAutoResize(maxWidth)
+{
+	var halfWidth = maxWidth/2;
+	//bodyWrapper 찾기
+	var bodyWrapper = null;
+	var divs = document.getElementsByTagName("div");
+	for(var i=0;i<divs.length;i++)
+	{
+		if(divs[i].className=="bodyWrapper")
+			bodyWrapper = divs[i];
+	}		
+	
+	if(window.innerWidth) //not IE
+	{	
+		if(window.innerWidth < 1024)			
+		{
+			bodyWrapper.style.left = "0px";
+			bodyWrapper.style.margin = "0px";
+		}
+		else
+		{
+			bodyWrapper.style.left = "50%";
+			bodyWrapper.style.margin = "0px 0px 0px "+ -1*halfWidth +"px";
+		}
+	}
+	else //IE
+	{			
+		if(document.documentElement.clientWidth<1024)
+		{
+			bodyWrapper.style.left = "0px";
+			bodyWrapper.style.margin = "0px";
+		}
+		else
+		{
+			bodyWrapper.style.left = "50%";
+			bodyWrapper.style.margin = "0px 0px 0px "+ -1*halfWidth +"px";
+		}
+	}
+}

@@ -7,6 +7,13 @@
 #mainLeftTop,#mainLeftBottom,#mainLeftTop_ { width : 264px; }
 
 /* 큰 영역 position 설정 */
+.bodyWrapper
+{
+	/* 중앙 정렬 */
+	position : relative;
+	left : 50%;
+	margin-left : -512px;
+}
 .left { float:left; }
 .center { float:left; margin-left: 5px; }
 .center_
@@ -49,19 +56,12 @@ hr.hr2
 	
 .centerAlign { text-align : center; }
 .clearLeft { clear : left; }
-.centerOfAllWidth
-{	
-	/* 중앙 정렬 */
-	position : relative;
-	left : 50%;
-	margin-left : -512px;
-}
 
 .bodyWrapper { background-color : #E4E4F9; }
 .footer { background-color : white; }
 
 /*----------------header-----------*/
-#headerImage, #secureLoginFormHeaderImage,#errorHeaderImage
+#headerImage, #secureLoginFormHeaderImage
 {
 	background-image : url('/snudiceWebpage/image/mainpage/title.png');
 	background-repeat : no-repeat;	

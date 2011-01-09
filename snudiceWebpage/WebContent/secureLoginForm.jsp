@@ -13,6 +13,11 @@ window.onload = init;
 
 function init()
 {
+	window.onresize = function()
+	{
+		windowAutoResize(1024);
+	}	
+	
 	//header image 클릭시
 	var secureLoginFormHeaderImage = document.getElementById("secureLoginFormHeaderImage");
 	secureLoginFormHeaderImage.onclick = function() 
@@ -86,7 +91,7 @@ function mouseOutFunc()
 <title>로그인이 필요합니다.</title>
 </head>
 <body>
-	<div class="bodyWrapper centerOfAllWidth">
+	<div class="bodyWrapper">
 		<div class="header">
 			<div id="secureLoginFormHeaderImage"></div>			
 		</div>

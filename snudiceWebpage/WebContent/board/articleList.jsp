@@ -13,6 +13,11 @@ window.onload = init;
 
 function init()
 {
+	window.onresize = function()
+	{
+		windowAutoResize(1024);
+	}
+	
 	var headerImage = document.getElementById("articleListHeaderImage");
 	headerImage.onclick = function() { window.location = "${root}/first.do"};	
 }
