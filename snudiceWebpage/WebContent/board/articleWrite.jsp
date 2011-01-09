@@ -37,29 +37,26 @@ function init()
 					<input type="hidden" name="boardName" value="${param.boardName}"/>
 					<input type="hidden" name="currPage" value="${param.currPage}"/>
 					
-					<table id="articleWriteTable">
+					<table class="articleWriteModifyTable">
 						<tr>
-							<td>ID</td>
-			    			<td>${userId}</td>
+							<td class="boardAliasNameLabel">게시판 이름</td>
+			    			<td class="boardAliasNameContent">${boardAliasName}</td>
+			    			<td class="articleWriterLabel">글쓴이</td>
+			    			<td class="articleWriterContent">${userId}</td>
 			    		</tr>
 			    		<tr>
-							<td>게시판이름</td>
-			    			<td>${param.boardName}</td>
-			    		</tr>
-			    		<tr>
-			     			<td>제목</td>
-			     			<td>
-			     				<input type = "text" name = "title">
-			     			</td>
-			    		</tr>
-			    		<tr>
-			    			<td>내용</td>
-			    			<td>    			
-			    				<textarea name = "content" rows = "8" cols="60"></textarea>
+							<td class="articleTitleLabel">제목</td>
+			    			<td class="articleTitleContent" colspan="3">
+			    				<input class="noBorder" type = "text" name = "title">
 			    			</td>
+			    		</tr>			    	
+			    		<tr>
+			    			<td class="articleTextContent" colspan="4">			    			    			
+			    				<textarea name = "content"></textarea>
+			    			</td>			    			
 			    		</tr>
 						<tr>
-							<td colspan = "2">
+							<td colspan = "4">
 								<input type = "submit" value = "글쓰기">
 							</td>
 			    		</tr>

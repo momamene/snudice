@@ -47,7 +47,12 @@ public class BoardFilter implements Filter {
 		String role = (String)session.getAttribute("role");
 		String boardName = req.getParameter("boardName");		
 		
-		DB db = DB.getInstance();
+		DB db = DB.getInstance();		
+		
+		//게시판 alias name 설정
+		String boardAliasName = db.dbBoard.getBoardAliasName(boardName);
+		request.setAttribute("boardAliasName",boardAliasName);
+		
 		Auth boardAuth = db.dbBoard.getBoardAuth(boardName);		
 		
 		//접근하려는 게시판에 대한 접근 권한 정보를 얻어온다.
