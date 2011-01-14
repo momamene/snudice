@@ -7,6 +7,11 @@
 	<insert id="insertUserRole" parameterClass="beans.UserRole">
 		INSERT INTO user_roles (userId,role)
 		VALUES(#userId:VARCHAR#,#role:VARCHAR#)
+	</insert>
+	
+	<insert id="insertUserScore" parameterClass="String">
+		INSERT INTO userscore (userId,winCount,loseCount)
+		VALUES(#userId:VARCHAR#,0,0)
 	</insert>	
 	
 	<select id="getUserRole" parameterClass="String" resultClass="String">

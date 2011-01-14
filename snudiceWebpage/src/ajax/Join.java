@@ -51,7 +51,7 @@ public class Join extends HttpServlet {
 		else if(joinEmail.length()>Const.emailMaxLen)
 			os.print("emailTooLong");
 		else if(!joinId.matches(Const.validIdRegex))		
-			os.print("invalidId");		
+			os.print("invalidId");			
 		else
 		{
 			DB db = DB.getInstance();

@@ -36,7 +36,7 @@ public class ReplyWrite extends HttpServlet {
 		String replyText = request.getParameter("replyText");		
 		
 		//댓글 삽입
-		if((Boolean)request.getAttribute("canReply")==true)
+		if((Boolean)request.getAttribute("canComment")==true)
 		{
 			DB db = DB.getInstance();
 			db.dbBoard.insertReply(articleIndex,userId,replyText);

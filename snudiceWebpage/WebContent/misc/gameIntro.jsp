@@ -14,10 +14,10 @@ function init()
 	window.onresize = function()
 	{
 		windowAutoResize(1024);
-	}
+	};
 	
 	var headerImage = document.getElementById("gameIntroHeaderImage");
-	headerImage.onclick = function() { window.location = "${root}"};
+	headerImage.onclick = function() { window.location = "${root}"; };
 	
 	var introCenterIframe = document.getElementById("introCenterIframe");
 	

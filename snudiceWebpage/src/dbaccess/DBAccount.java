@@ -88,6 +88,7 @@ public class DBAccount {
 		try {
 			sqlMap.insert("insertUser",newUser);
 			sqlMap.insert("insertUserRole",newUserRole);
+			sqlMap.insert("insertUserScore",userId);
 
 		} catch (Exception e) {			
 			e.printStackTrace();

@@ -122,11 +122,11 @@ hr.lightColor
 
 #loginButton.mouseOut,#loginButton.mouseOver
 {
-	width : 71px;
-	height : 70px;
+	width : 76px;
+	height : 77px;
 	float : left;
 	position : relative;
-	left : 10px;
+	left : 7px;
 }
 
 #loginButton.mouseOut
@@ -138,9 +138,7 @@ hr.lightColor
 #loginButton.mouseOver
 {
 	background-image : url('/snudiceWebpage/image/mainpage/loginMouseOver.png');
-	background-repeat : no-repeat;
-	left : 5px;
-	top : -5px;	
+	background-repeat : no-repeat;	
 }
 
 #login { margin-left : 5px; }
@@ -157,7 +155,7 @@ hr.lightColor
 	width : 120px;
 	height : 20px;
 	background-color : #262E69;
-	border : 2px outset #20275F;
+	border : 2px inset #20275F;
 	color : white;
 }
 

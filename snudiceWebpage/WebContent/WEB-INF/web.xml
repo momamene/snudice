@@ -16,7 +16,8 @@
   </context-param>
   <context-param>
     <param-name>footerMsg</param-name>
-    <param-value>Copyright PrjN All rights reserved</param-value>
+    <param-value>(c) ProjectN, since 2010.<![CDATA[<br/>]]>본 웹페이지는 Firefox, IE7 이하 버젼을 지원하지 않습니다. (크롬이 짱)
+    </param-value>
   </context-param>
   <listener>
     <listener-class>listener.AppInit</listener-class>

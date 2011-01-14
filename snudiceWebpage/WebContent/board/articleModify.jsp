@@ -13,12 +13,12 @@ function init()
 	window.onresize = function()
 	{
 		windowAutoResize(1024);
-	}
+	};
 	
 	//event handler 를 추가한다.
 	//header image 클릭시
 	var headerImage = document.getElementById("articleModifyHeaderImage");
-	headerImage.onclick = function() { window.location = "${root}"};
+	headerImage.onclick = function() { window.location = "${root}";};
 }
 </script>
 

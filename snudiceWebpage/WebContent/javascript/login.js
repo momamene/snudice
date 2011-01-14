@@ -2,12 +2,12 @@ window.onload = initLogin;
 var root = "/snudiceWebpage";
 
 //event handler 추가	
-function initLogin()
-{	
+function initLogin(){	
+	
 	window.onresize = function()
 	{
 		windowAutoResize(1024);
-	}	
+	};	
 	
 	//가입창 열기 버튼	
 	var joinOpen = document.getElementById("joinOpen");
@@ -29,7 +29,7 @@ function initLogin()
 
 	//로그아웃 버튼
 	var logoutWrapper = document.getElementById("logoutWrapper");
-	logoutWrapper.onclick = function() { window.location = "logout.do"; }
+	logoutWrapper.onclick = function() { window.location = "logout.do"; };
 	
 	//손님 로그인 버튼
 	var guestLogin = document.getElementById("guestLogin");
@@ -75,6 +75,8 @@ function joinCloseFunc()
 //회원 가입 요청을 보낸다
 function joinSubmitFunc()
 {	
+	var validPwRegex =new RegExp("([a-z]|[0-9])+");
+	
 	var joinId = document.getElementById("joinId");
 	var joinPw = document.getElementById("joinPw");
 	var joinPwConfirm = document.getElementById("joinPwConfirm");
@@ -115,14 +117,20 @@ function joinSubmitFunc()
 		joinEmail.focus();
 		return;
 	}
-
+	if(!joinPw.value.match(validPwRegex))
+	{
+		joinMsg.innerHTML = "암호는 영문 소문자와 숫자만 가능합니다.";
+		joinPw.focus();
+		return;
+	}	
+	
 	joinMsg.innerHTML = "가입처리중입니다...";
 	joinSubmit.disabled = true;	
 	
 	var url = root+"/join.ajax";	
 	var method = "POST";
 	var param = "joinId="+encodeURIComponent(joinId.value);
-	param += "&joinPw="+encodeURIComponent(joinPw.value);	
+	param += "&joinPw="+encodeURIComponent(MD5(joinPw.value));	
 	param += "&joinEmail="+encodeURIComponent(joinEmail.value);
 	var callback = joinFormRefresh;
 	var async = false;
@@ -155,11 +163,11 @@ function loginFunc()
 	loginMsg.innerHTML = "로그인 중입니다..";
 	
 	var url = root+"/login.ajax";	
-	var method = "POST";
+	var method = "post";
 	var param = "userId="+encodeURIComponent(userId.value);
-	param += "&password="+encodeURIComponent(password.value);	
+	param += "&password="+encodeURIComponent(MD5(password.value));	
 	var callback = loginFormRefresh;
-	var async = false;
+	var async = false;	
 	
 	sendRequest(url,method,param,callback,async);	
 }
@@ -251,7 +259,7 @@ function joinFormRefresh()
 				joinMsg.innerHTML = "id 는 영어 소문자,숫자만 허용됩니다."
 				joinId.focus();
 				joinId.select();
-			}
+			}		
 			else if(request.responseText == "existingUser")
 			{
 				joinMsg.innerHTML = "이미 존재하는 id입니다.";
@@ -279,7 +287,7 @@ function loginFormRefresh()
 		if(request.status == 200)
 		{			
 			if(request.responseText=="loginOK")
-			{
+			{				
 				loginMsg.innerHTML = userId.value + " 님 로그인 하셨습니다.";
 				var loginFormWrapper = document.getElementById("loginFormWrapper");
 				var loginFormTitle = document.getElementById("loginFormTitle");

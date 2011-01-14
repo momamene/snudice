@@ -3,12 +3,8 @@ package utility;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class Encrypt {
-	public static String encrypt(String str) {
-		return(md5(md5(str)));
-	}	
-	
-	private static String md5(String str) {
+public class Encrypt {	
+	public static String md5(String str) {
 		MessageDigest md = null;
 		try
 		{
