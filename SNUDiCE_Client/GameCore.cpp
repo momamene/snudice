@@ -1462,7 +1462,7 @@ void gGameCore::Clear(int newTurn)
 	// yourturn ÀÌ¹ÌÁö
 	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
 	gUIGame				*ui = gUIGame::GetIF();
-	if(m_nTurn == gPC->GetMyGPIndex())
+	if(m_nTurn == gPC->GetMyGPIndex() && gPC->GetGPNum() > 1)
 	{
 		ui->m_bShowYourTurn = true;
 		ui->m_nYourTurnTimer = GetTickCount();
