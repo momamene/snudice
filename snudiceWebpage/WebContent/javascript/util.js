@@ -45,12 +45,15 @@ function sendRequest(url,method,param,callback,async)
 		alert("AJAX 요청 객체를 만들 수 없습니다.");
 		return;
 	}	
-	
-	request.open(method,url,async);
-	request.onreadystatechange = callback;
+
+	request.open(method,url,async);	
 	if(method.toLowerCase()=="post")
-		request.setRequestHeader("Content-type","application/x-www-form-urlencoded");	
-	request.send(param);
+	{
+		request.setRequestHeader("Content-type","application/x-www-form-urlencoded");		
+	}
+
+	request.onreadystatechange = callback;	
+	request.send(param);	
 }
 
 //요청이 완료되면 현재 페이지를 새로고침 한다.
@@ -86,7 +89,7 @@ function createElement(tagName,id,className)
 function enterKeyExec(elementId,callback)
 {
 	var element = document.getElementById(elementId);
-	element.onkeydown = function()
+	element.onkeydown = function(event)
 	{
 		var keynum;
 		if(window.event) //IE			
@@ -96,7 +99,7 @@ function enterKeyExec(elementId,callback)
 		
 		if(keynum==13) //엔터키를 친 경우
 			callback();
-	}
+	};
 }
 
 //window를 최대 너비에 맞게 자동으로 리사이즈 한다.

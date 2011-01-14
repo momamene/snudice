@@ -101,8 +101,6 @@ table#articleListBottom,table#articleListBottom a
 	color : white;	
 }
 
-
-/*----------글 보기---------*/
 tr.article td
 {
 	border : 2px dotted #F2B066;
@@ -120,12 +118,21 @@ tr.article td.last
 	border-bottom : 2px solid #F2B066;
 }
 
+tr.article td.firstLast
+{
+	border-top : 2px solid #F2B066;
+	border-bottom : 2px solid #F2B066;
+}
+
 td.pageNumber { width : 80%; }
 td.prevNextPage { width : 10%; }
 
 td#firstList { width :10%; }
 td#articleWrite {width : 80%; }
 td#search {width : 10%; }
+
+
+/*----------글 보기---------*/
 
 #reply
 {

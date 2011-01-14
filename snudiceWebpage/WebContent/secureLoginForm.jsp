@@ -16,14 +16,14 @@ function init()
 	window.onresize = function()
 	{
 		windowAutoResize(1024);
-	}	
+	};	
 	
 	//header image 클릭시
 	var secureLoginFormHeaderImage = document.getElementById("secureLoginFormHeaderImage");
 	secureLoginFormHeaderImage.onclick = function() 
 	{ 
 		window.location = "${root}";		
-	}
+	};
 	
 	//로그인 버튼
 	var loginButton = document.getElementById("loginButton");
