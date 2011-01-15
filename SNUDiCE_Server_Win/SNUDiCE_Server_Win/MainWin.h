@@ -12,11 +12,15 @@
 #include <windows.h>
 #include <ddraw.h>
 #include "network.h"
+#include <stdio.h>
+
 
 #define	WNDSIZEW		640
 #define WNDSIZEH		480
 #define WNDNAME			"SNU Dice Server"
 #define WNDSTYLE		(WS_CAPTION | WS_SYSMENU)
+
+#define LOG_FILE_NAME	"Log.log"
 
 class gMainWin  
 {
@@ -49,6 +53,8 @@ public:
 private:
 	char		m_szTempReg[128];	
 	
+	FILE		*logFile;
+	
 // ÇÔ¼öµé
 public:
 	bool		MakeListenThread();
@@ -56,9 +62,12 @@ public:
 	void		MainLoop();
 	//void		ExitPlayer(SOCKET client_sock,char* clientID,SOCKADDR_IN clientAddr);
 
+	void		LogWrite(char * buf);
+	
 private:
 	void		SetUpWindow(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow);
 	bool		SetUpWinsock();
+	
 };
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);

@@ -1,4 +1,5 @@
 #include "ChannelContainer.h"
+#include "MainWin.h"
 
 static gChannelContainer s_ChannelContainer;
 
@@ -36,7 +37,7 @@ bool gChannelContainer::Join(char* id)
 {
 	int able = AbleRoomNum();
 	if(able==-1) {
-		OutputDebugString("Join Fail을 내부에서 알립니다. \n");
+		gMainWin::GetIF()->LogWrite("Join Fail을 내부에서 알립니다. \n");
 		return false;
 	}
 	else {
@@ -92,7 +93,7 @@ void gChannelContainer::DeletePlayer(char* id)
 
 			if(strcmp(m_channelArray[i].szUserInCh[j],id)==0) {
 				if(!m_isExisted[i][j]) {
-					OutputDebugString("DeletePlayer 치명적 오류 \n");
+					gMainWin::GetIF()->LogWrite("DeletePlayer 치명적 오류 \n");
 				}
 				else {
 					j++;
@@ -124,17 +125,17 @@ void gChannelContainer::debuger (int channel)
 	char buf[128];
 
 	wsprintf(buf,"debuger channel : %d \n",channel);
-	OutputDebugString(buf);
+	gMainWin::GetIF()->LogWrite(buf);
 	for(int j = 0 ; j < CHANNELUSERMAX ; j++ ) {
 		if(m_isExisted[channel][j]) {
-			OutputDebugString(m_channelArray[channel].szUserInCh[j]);
-			OutputDebugString(" . ");
+			gMainWin::GetIF()->LogWrite(m_channelArray[channel].szUserInCh[j]);
+			gMainWin::GetIF()->LogWrite(" . ");
 		}
 		else{
-			OutputDebugString("/");
+			gMainWin::GetIF()->LogWrite("/");
 		}
 	}
-	OutputDebugString("\n");
+	gMainWin::GetIF()->LogWrite("\n");
 }
 
 void gChannelContainer::fullDebuger () 

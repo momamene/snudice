@@ -8,11 +8,12 @@
 #include "ItemContainer.h"
 #include "ChannelCore.h"
 #include "ChannelContainer.h"
+#include "MysqlDB.h"
 
 #include <time.h>
 
 
-#define ENDROUND	10
+#define ENDROUND	20
 
 static gGamePlayerContainer s_GamePlayerContainer;
 
@@ -150,7 +151,7 @@ void gGamePlayerContainer::pk_movestart_ask(PK_DEFAULT *pk,SOCKET sock)
 	ask = *((PK_MOVESTART_ASK*)pk->strPacket);
 
 	wsprintf(buf,"[PK_MOVESTART_ASK] %s\t message : %s\n", inet_ntoa(clientAddr.sin_addr), ask.szID);
-	OutputDebugString(buf);
+	gMainWin::GetIF()->LogWrite(buf);
 
 	
 	PK_MOVESTART_REP		rep;
@@ -333,7 +334,7 @@ bool gGamePlayerContainer::favorUpFunc(int nRoomIndex , int playerIndex_a, int p
 	}
 	else	
 		wsprintf(buf,"[FavorUp][Room : %d ; index : %d and %d : %d point] ", nRoomIndex , playerIndex_a , playerIndex_b , upPoint);
-	OutputDebugString(buf);
+	gMainWin::GetIF()->LogWrite(buf);
 
 	
 	return false;
@@ -445,7 +446,7 @@ void gGamePlayerContainer::pk_moveend_ask(PK_DEFAULT *pk,SOCKET sock)
 	char				buf [1024];
 
 	wsprintf(buf,"%d %d %d\n",m_GamePlayer[0][0].nPos,000,sock);
-	OutputDebugString(buf);
+	gMainWin::GetIF()->LogWrite(buf);
 	
 	
 	addrLen = sizeof(clientAddr);
@@ -481,18 +482,18 @@ void gGamePlayerContainer::pk_moveend_ask(PK_DEFAULT *pk,SOCKET sock)
 			TILE *aaa= gTC->m_tileMap;
 
 			if(gTC->m_tileMap[ask.nDestPos].tileType==TY_BUS) {
-				OutputDebugString("TY_BUS\n");
+				gMainWin::GetIF()->LogWrite("TY_BUS\n");
 				pk_busmovechoose_rep(nRoomIndex,szTurnID);
 			}
 			else if(gTC->m_tileMap[ask.nDestPos].tileType==TY_CLASS) {
-				OutputDebugString("TY_CLASS\n");
+				gMainWin::GetIF()->LogWrite("TY_CLASS\n");
 				// 수업점수
 				int getAccomplishment = meetGrade ( nRoomIndex , gTC->m_tileMap[ask.nDestPos].flag2 , m_nTurn[nRoomIndex]);
 				int getCoupleAccomplishment = -1;	int partnerIndex = -1;	//커플아니면 -1
 				GradeRankSyncronizer(nRoomIndex);
 
 				if(getAccomplishment!=-1) {
-					OutputDebugString("TY_MySubject\n");
+					gMainWin::GetIF()->LogWrite("TY_MySubject\n");
 					staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],-1);
 				}
 				if (m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nLove != -1)	{	//커플모드
@@ -500,7 +501,7 @@ void gGamePlayerContainer::pk_moveend_ask(PK_DEFAULT *pk,SOCKET sock)
 					getCoupleAccomplishment = meetGrade(nRoomIndex,gTC->m_tileMap[ask.nDestPos].flag2 , partnerIndex);
 					
 					if (getCoupleAccomplishment != -1)	{
-						OutputDebugString("TY_PartnerSubject\n");
+						gMainWin::GetIF()->LogWrite("TY_PartnerSubject\n");
 						staminaConvert(nRoomIndex,partnerIndex,-1);
 					}
 				}
@@ -521,7 +522,7 @@ void gGamePlayerContainer::pk_moveend_ask(PK_DEFAULT *pk,SOCKET sock)
 				pk_gameplayerinfo_rep(nRoomIndex);
 			}
 			else if(gTC->m_tileMap[ask.nDestPos].tileType==TY_DRINK) {
-				OutputDebugString("TY_DRINK\n");
+				gMainWin::GetIF()->LogWrite("TY_DRINK\n");
 				staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],-1);
 				if (m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nLove == -1)	{	//싱글
 					pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex],-1,0);
@@ -535,7 +536,7 @@ void gGamePlayerContainer::pk_moveend_ask(PK_DEFAULT *pk,SOCKET sock)
 //				pk_nextturn_rep(nRoomIndex);
 			}
 			else if(gTC->m_tileMap[ask.nDestPos].tileType==TY_STAMINA) {
-				OutputDebugString("TY_STAMINA\n");
+				gMainWin::GetIF()->LogWrite("TY_STAMINA\n");
 				staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],1);
 				if (m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nLove == -1)	{	//싱글
 					pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex] , 1,0);
@@ -548,7 +549,7 @@ void gGamePlayerContainer::pk_moveend_ask(PK_DEFAULT *pk,SOCKET sock)
 //				pk_nextturn_rep(nRoomIndex);
 			}
 			else if(gTC->m_tileMap[ask.nDestPos].tileType==TY_ITEM) {
-				OutputDebugString("TY_ITEM\n");
+				gMainWin::GetIF()->LogWrite("TY_ITEM\n");
 				getItem(nRoomIndex,m_nTurn[nRoomIndex]);
 				if (m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nLove != -1)		//커플
 					getItem(nRoomIndex,m_favor[nRoomIndex][m_nTurn[nRoomIndex]].lvTargetIndex);
@@ -556,7 +557,7 @@ void gGamePlayerContainer::pk_moveend_ask(PK_DEFAULT *pk,SOCKET sock)
 				pk_nextturn_rep(nRoomIndex);
 			}
 			else {//통과
-				OutputDebugString("TY_NOTHING\n");
+				gMainWin::GetIF()->LogWrite("TY_NOTHING\n");
 				pk_gameplayerinfo_rep(nRoomIndex);
 				pk_nextturn_rep(nRoomIndex);
 			}
@@ -577,7 +578,7 @@ void gGamePlayerContainer::pk_nextturn_rep (int nRoomIndex)
 	NextTurn(nRoomIndex);
 	rep.nNextTurn = m_nTurn[nRoomIndex];
 	wsprintf(buf,"[pk_nextturn_rep] room : %d befTurn : %d nextTurn : %d\n",nRoomIndex,rep.nNowTurn,rep.nNextTurn);
-	OutputDebugString(buf);
+	gMainWin::GetIF()->LogWrite(buf);
 
 	if(m_nRound[nRoomIndex]<ENDROUND)
 		gPC->SendSelect(PL_NEXTTURN_REP,sizeof(rep),&rep,ECM_GAME,nRoomIndex);
@@ -614,7 +615,7 @@ void gGamePlayerContainer::pk_busmoveselect_ask(PK_DEFAULT *pk,SOCKET sock)
 	ask = *((PK_BUSMOVESELECT_ASK*)pk->strPacket);
 
 	wsprintf(buf,"[PK_BUSMOVESELECT_ASK] %s\t message : %s\n", inet_ntoa(clientAddr.sin_addr), ask.szID);
-	OutputDebugString(buf);
+	gMainWin::GetIF()->LogWrite(buf);
 
 	PK_BUSMOVESTART_REP		rep;
 
@@ -653,7 +654,7 @@ void gGamePlayerContainer::pk_busmoveend_ask(PK_DEFAULT *pk,SOCKET sock)
 	ask = *((PK_BUSMOVEEND_ASK*)pk->strPacket);
 
 	wsprintf(buf,"[PK_BUSMOVEEND_ASK] %s\t message : %s\n", inet_ntoa(clientAddr.sin_addr), ask.szID);
-	OutputDebugString(buf);
+	gMainWin::GetIF()->LogWrite(buf);
 
 
 	int nRoomIndex = gPC->GetCoreFlag(ask.szID);
@@ -675,9 +676,9 @@ void gGamePlayerContainer::pk_busmoveend_ask(PK_DEFAULT *pk,SOCKET sock)
 			ask.nDestPos%LINEY,
 			ask.szID,
 			nRoomIndex);
-		OutputDebugString("[pk_moveend_ask] 심각한 Error, 보안 주의 요망, 서버와 클라이언트의 연산 결과가 다름\n");
-		OutputDebugString(buf);
-		OutputDebugString("이 방은 더 이상 동작하지 않습니다.\n");
+		gMainWin::GetIF()->LogWrite("[pk_moveend_ask] 심각한 Error, 보안 주의 요망, 서버와 클라이언트의 연산 결과가 다름\n");
+		gMainWin::GetIF()->LogWrite(buf);
+		gMainWin::GetIF()->LogWrite("이 방은 더 이상 동작하지 않습니다.\n");
 	}
 }
 
@@ -699,7 +700,12 @@ void gGamePlayerContainer::pk_gameend_rep(int nRoomIndex)
 	memset(m_favor[nRoomIndex], 0, sizeof(sFavor) * ROOMMAXPLAYER);
 	memset(m_bSyncronize[nRoomIndex], 0, sizeof(bool) * ROOMMAXPLAYER);
 */	
+	gMysql::GetIF()->scoreCountAdd(rep.szID, true);
+	
 	for (int i=0;i < ROOMMAXPLAYER ; i++)	{
+		if (nWinnerIndex != i && m_isGamePlayer[nRoomIndex][i])	{
+			gMysql::GetIF()->scoreCountAdd(m_GamePlayer[nRoomIndex][i].szID, false);
+		}
 		m_userItemList[nRoomIndex][i].clear();
 	}
 
@@ -879,7 +885,7 @@ int gGamePlayerContainer::WhoIsRankOne(int nRoomIndex)
 		}
 	}
 	wsprintf(buf,"[] %d\n",WinnerIndex);
-	OutputDebugString(buf);
+	gMainWin::GetIF()->LogWrite(buf);
 
 	return WinnerIndex;
 }
@@ -1056,7 +1062,7 @@ void gGamePlayerContainer::pk_itemuse_ask(PK_DEFAULT *pk,SOCKET sock)
 	ask = *((PK_ITEMUSE_ASK*)pk->strPacket);
 
 	wsprintf(buf,"[PK_ITEMUSE_ASK] %s\t itemIndex : %s %d \n", inet_ntoa(clientAddr.sin_addr), ask.szID, ask.nItemID);
-	OutputDebugString(buf);
+	gMainWin::GetIF()->LogWrite(buf);
 
 	PK_ITEMUSE_REP		rep;
 	memset(&rep,0,sizeof(rep));
@@ -1094,7 +1100,7 @@ void gGamePlayerContainer::pk_itemusestart_ask(PK_DEFAULT *pk,SOCKET sock)
 	preAsk = *((PK_ITEMUSESTART_ASK*)pk->strPacket);
 
 	wsprintf(buf,"[PK_ITEMUSESTART_ASK] %s\t %s \n", inet_ntoa(clientAddr.sin_addr), preAsk.szID);
-	OutputDebugString(buf);
+	gMainWin::GetIF()->LogWrite(buf);
 
 	int nRoomIndex = gPC->GetCoreFlag(preAsk.szID);
 	int nPreInRoomIndex = gRC->FindPlayerIndexInTheRoom(preAsk.szID,nRoomIndex);	// 싱크로 체커
@@ -1118,16 +1124,16 @@ void gGamePlayerContainer::pk_itemusestart_ask(PK_DEFAULT *pk,SOCKET sock)
 			// 아니. Move Series가 IUS_NONE 계열.
 		}
 		else if(iuState == IUS_NEXTTURN) {
-			OutputDebugString("IUS_NEXTTURN");
+			gMainWin::GetIF()->LogWrite("IUS_NEXTTURN");
 			pk_nextturn_rep(nRoomIndex);
 		}
 		else if(iuState == IUS_INFOCHANGE) {
-			OutputDebugString("IUS_INFOCHANGE");
+			gMainWin::GetIF()->LogWrite("IUS_INFOCHANGE");
 			pk_infochangeItem_rep(ask);	//asdfad;
 		}
 		else if(iuState == IUS_INVALIDSTATE) {
 			// error 처리
-			OutputDebugString("치명적인 itemuse 오류 \n");
+			gMainWin::GetIF()->LogWrite("치명적인 itemuse 오류 \n");
 		}
 		//gPC->SendSelect(PL_ITEMUSE_REP,sizeof(rep),&rep,ECM_GAME,gPC->GetCoreFlag(ask.szID));
 	}
@@ -1143,7 +1149,7 @@ ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, 
 
 	pushItem(nRoomIndex,nInRoomIndex,ask.nItemID);
 	wsprintf(buf,"itemUse(f) - nItemID : %d ",ask.nItemID);
-	OutputDebugString(buf);
+	gMainWin::GetIF()->LogWrite(buf);
 	
 	pair<int, int > element;
 	
@@ -1153,7 +1159,7 @@ ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, 
 
 		if(gIC->m_ItemList[ask.nItemID].type == ITEM_STAT)
 		{
-			OutputDebugString("type : ITEM_STAT\n");
+			gMainWin::GetIF()->LogWrite("type : ITEM_STAT\n");
 			switch (gIC->m_ItemList[ask.nItemID].target) {
 				
 				case TARGET_ME:
@@ -1210,7 +1216,7 @@ ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, 
 		}
 		else if(gIC->m_ItemList[ask.nItemID].type == ITEM_TOGETHERCLASS)
 		{
-			OutputDebugString("type : ITEM_TOGETHERCLASS\n");
+			gMainWin::GetIF()->LogWrite("type : ITEM_TOGETHERCLASS\n");
 			switch (gIC->m_ItemList[ask.nItemID].target) {
 				case TARGET_OTHER:
 					element.first = ask.nItemID ;
@@ -1225,7 +1231,7 @@ ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, 
 
 	else {
 		if(gIC->m_ItemList[ask.nItemID].type == ITEM_STAMINA) {
-			OutputDebugString("type : ITEM_STAMINA\n");
+			gMainWin::GetIF()->LogWrite("type : ITEM_STAMINA\n");
 
 			switch(gIC->m_ItemList[ask.nItemID].target) {
 				case TARGET_ME:
@@ -1272,7 +1278,7 @@ ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, 
 		}
 		else if(gIC->m_ItemList[ask.nItemID].type == ITEM_NOCLASS)
 		{
-			OutputDebugString("type : ITEM_NOCLASS\n");
+			gMainWin::GetIF()->LogWrite("type : ITEM_NOCLASS\n");
 			switch(gIC->m_ItemList[ask.nItemID].target) {
 				case TARGET_OTHER:
 					element.first = ask.nItemID;
@@ -1285,7 +1291,7 @@ ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, 
 		}
 		else if(gIC->m_ItemList[ask.nItemID].type == ITEM_MOVESELECT)
 		{
-			OutputDebugString("type : ITEM_MOVESELECT\n");
+			gMainWin::GetIF()->LogWrite("type : ITEM_MOVESELECT\n");
 			switch(gIC->m_ItemList[ask.nItemID].target) {
 				case TARGET_ME:
 					if (m_GamePlayer[nRoomIndex][nInRoomIndex].nLove == -1)
@@ -1310,7 +1316,7 @@ ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, 
 		}
 		else if(gIC->m_ItemList[ask.nItemID].type == ITEM_MOVEPLACE)
 		{
-			OutputDebugString("type : ITEM_MOVEPLACE\n");
+			gMainWin::GetIF()->LogWrite("type : ITEM_MOVEPLACE\n");
 
 			switch(gIC->m_ItemList[ask.nItemID].target) {
 				case TARGET_ME:
@@ -1439,14 +1445,14 @@ ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, 
 		return IUS_NONE;
 	}
 	
-	OutputDebugString("itemUse 분류되지 않은 case 오류\n");
+	gMainWin::GetIF()->LogWrite("itemUse 분류되지 않은 case 오류\n");
 	return IUS_INVALIDSTATE;
 }
 
 
 void gGamePlayerContainer::pk_warpstart_rep (int nRoomIndex, int nInRoomIndex, int des)
 {
-	OutputDebugString("pk_warstart_rep(f) \n");
+	gMainWin::GetIF()->LogWrite("pk_warstart_rep(f) \n");
 	PK_WARPSTART_REP	rep;
 
 	gPlayerContainer	*gPC =	gPlayerContainer::GetIF();
@@ -1467,7 +1473,7 @@ void gGamePlayerContainer::pk_warpstart_rep (int nRoomIndex, int nInRoomIndex, i
 
 void gGamePlayerContainer::pk_warpliststart_rep (int nRoomIndex, bool* bInRoomIndex, int* des)
 {
-	OutputDebugString("pk_warliststart_rep(f) \n");
+	gMainWin::GetIF()->LogWrite("pk_warliststart_rep(f) \n");
 	PK_WARPLISTSTART_REP	rep;
 
 	gPlayerContainer	*gPC =	gPlayerContainer::GetIF();
@@ -1509,7 +1515,7 @@ void gGamePlayerContainer::pk_warpend_ask (PK_DEFAULT *pk, SOCKET sock)
 	ask = *((PK_WARPEND_ASK*)pk->strPacket);
 
 	wsprintf(buf,"[PK_WAR7PEND_ASK] %s\t %s \n", inet_ntoa(clientAddr.sin_addr), ask.szID);
-	OutputDebugString(buf);
+	gMainWin::GetIF()->LogWrite(buf);
 
 	int nRoomIndex = gPC->GetCoreFlag(ask.szID);
 	int nInRoomIndex = gRC->FindPlayerIndexInTheRoom(ask.szID,nRoomIndex);
@@ -1524,13 +1530,13 @@ void gGamePlayerContainer::pk_warpend_ask (PK_DEFAULT *pk, SOCKET sock)
 		if(isbSynAllTrue(nRoomIndex)) {	// 모든 워프가 끝나면,,, 버스 사라짐;;
 			PushbSynAllPlayer(nRoomIndex,false); 
 			if(gTC->m_tileMap[ask.nDestPos].tileType==TY_CLASS) {
-				OutputDebugString("TY_CLASS\n");
+				gMainWin::GetIF()->LogWrite("TY_CLASS\n");
 				int getAccomplishment = meetGrade ( nRoomIndex , gTC->m_tileMap[ask.nDestPos].flag2 , m_nTurn[nRoomIndex]);
 				int getCoupleAccomplishment = -1;
 				GradeRankSyncronizer(nRoomIndex);
 
 				if(getAccomplishment!=-1) {	//우히힝 여기서 뻘코딩~!
-					OutputDebugString("TY_MySubject\n");
+					gMainWin::GetIF()->LogWrite("TY_MySubject\n");
 					staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],-1);
 					if (m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nLove == -1)
 						pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex],-1,getAccomplishment);
@@ -1540,7 +1546,7 @@ void gGamePlayerContainer::pk_warpend_ask (PK_DEFAULT *pk, SOCKET sock)
 					getCoupleAccomplishment = meetGrade(nRoomIndex,gTC->m_tileMap[ask.nDestPos].flag2 , partnerIndex);
 
 					if (getCoupleAccomplishment != -1)	{
-						OutputDebugString("TY_PartnerSubject\n");
+						gMainWin::GetIF()->LogWrite("TY_PartnerSubject\n");
 						staminaConvert(nRoomIndex,partnerIndex,-1);
 						if (getAccomplishment != -1)	//수업 같이 듣긔
 							pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex],-1,
@@ -1553,32 +1559,32 @@ void gGamePlayerContainer::pk_warpend_ask (PK_DEFAULT *pk, SOCKET sock)
 				pk_gameplayerinfo_rep(nRoomIndex);
 			}
 			else if(gTC->m_tileMap[ask.nDestPos].tileType==TY_DRINK) {
-				OutputDebugString("TY_DRINK\n");
+				gMainWin::GetIF()->LogWrite("TY_DRINK\n");
 				staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],-1);
 				pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex],-1,0);
 				pk_gameplayerinfo_rep(nRoomIndex);
 				pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex],-1,0);
 			}
 			else if(gTC->m_tileMap[ask.nDestPos].tileType==TY_STAMINA) {
-				OutputDebugString("TY_STAMINA\n");
+				gMainWin::GetIF()->LogWrite("TY_STAMINA\n");
 				staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],1);
 				pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex] , 1,0);
 				pk_gameplayerinfo_rep(nRoomIndex);
 				pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex] , 1,0);
 			}
 			else if(gTC->m_tileMap[ask.nDestPos].tileType==TY_ITEM) {
-				OutputDebugString("TY_ITEM\n");
+				gMainWin::GetIF()->LogWrite("TY_ITEM\n");
 				getItem(nRoomIndex,m_nTurn[nRoomIndex]);
 				pk_gameplayerinfo_rep(nRoomIndex);
 			}
 			else {
-				OutputDebugString("TY_NOTHING\n");
+				gMainWin::GetIF()->LogWrite("TY_NOTHING\n");
 				pk_gameplayerinfo_rep(nRoomIndex);
 			}
 		}
 	}
 	else {
-		OutputDebugString(buf);
+		gMainWin::GetIF()->LogWrite(buf);
 		wsprintf(buf,"server : %d %d , client : %d %d player : %s etc : %d %d\n",
 			(m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nPos)/LINEY,
 			(m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nPos)%LINEY,
@@ -1587,8 +1593,8 @@ void gGamePlayerContainer::pk_warpend_ask (PK_DEFAULT *pk, SOCKET sock)
 			ask.szID,
 			m_nTurn[nRoomIndex],
 			nRoomIndex);
-		OutputDebugString("[pk_warpend_ask] 심각한 Error, 보안 주의 요망, 서버와 클라이언트의 연산 결과가 다름\n");
-		OutputDebugString(buf);		OutputDebugString("이 방은 더 이상 동작하지 않습니다.\n");
+		gMainWin::GetIF()->LogWrite("[pk_warpend_ask] 심각한 Error, 보안 주의 요망, 서버와 클라이언트의 연산 결과가 다름\n");
+		gMainWin::GetIF()->LogWrite(buf);		gMainWin::GetIF()->LogWrite("이 방은 더 이상 동작하지 않습니다.\n");
 	}
 
 }
@@ -1612,7 +1618,7 @@ void gGamePlayerContainer::pk_warplistend_ask (PK_DEFAULT *pk, SOCKET sock)
 	ask = *((PK_WARPLISTEND_ASK*)pk->strPacket);
 
 	wsprintf(buf,"[PK_WARPLISTEND_ASK] %s\t %s \n", inet_ntoa(clientAddr.sin_addr), ask.szID);
-	OutputDebugString(buf);
+	gMainWin::GetIF()->LogWrite(buf);
 
 	int nRoomIndex = gPC->GetCoreFlag(ask.szID);
 	int nInRoomIndex = gRC->FindPlayerIndexInTheRoom(ask.szID,nRoomIndex);
@@ -1622,7 +1628,7 @@ void gGamePlayerContainer::pk_warplistend_ask (PK_DEFAULT *pk, SOCKET sock)
 
 	if(isbSynAllTrue(nRoomIndex)) {	// 모든 워프가 끝나면,,, 버스 사라짐;;
 		PushbSynAllPlayer(nRoomIndex,false); 
-		OutputDebugString("TY_NOTHING\n");
+		gMainWin::GetIF()->LogWrite("TY_NOTHING\n");
 		pk_gameplayerinfo_rep(nRoomIndex);
 		pk_nextturn_rep(nRoomIndex);
 	}
@@ -1633,7 +1639,7 @@ void gGamePlayerContainer::pk_warplistend_ask (PK_DEFAULT *pk, SOCKET sock)
 
 void gGamePlayerContainer::pk_infochangeItem_rep(PK_ITEMUSE_ASK ask)
 {
-	OutputDebugString("pk_infochangeItem_rep(f) \n");
+	gMainWin::GetIF()->LogWrite("pk_infochangeItem_rep(f) \n");
 	gPlayerContainer	*gPC	=	gPlayerContainer::GetIF();
 	gRoomCore			*gRC	=	gRoomCore::GetIF();
 	gItemContainer		*gICt	= gItemContainer::GetIF();
@@ -1822,7 +1828,7 @@ void gGamePlayerContainer::putTargetIntForOther(int nRoomIndex,int nInRoomIndex,
 
 void gGamePlayerContainer::pk_infochangeTile_rep(int nRoomIndex,int nInRoomIndex, int stamina,int accomplishment , int coupleIndex)
 {
-	OutputDebugString("pk_infochangeTile_rep(f) \n");
+	gMainWin::GetIF()->LogWrite("pk_infochangeTile_rep(f) \n");
 	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
 
 	PK_INFOCHANGE_REP	rep;
@@ -1866,7 +1872,7 @@ void gGamePlayerContainer::pk_infochangeend_ask(PK_DEFAULT *pk, SOCKET sock)
 	ask = *((PK_INFOCHANGEEND_ASK*)pk->strPacket);
 
 	wsprintf(buf,"[PK_INFOCHANGEEND_ASK] %s\t message : %s\n", inet_ntoa(clientAddr.sin_addr), ask.szID);
-	OutputDebugString(buf);
+	gMainWin::GetIF()->LogWrite(buf);
 
 	int nRoomIndex = gPCt->GetCoreFlag(ask.szID);
 	int nInRoomIndex = gRC->FindPlayerIndexInTheRoom(ask.szID,nRoomIndex);
@@ -1899,7 +1905,7 @@ void gGamePlayerContainer::pk_exit_ask(char *clientID, SOCKET sock)
 
 
 	wsprintf(buf,"[PK_EXIT_ASK] %s\t message : %s \n", inet_ntoa(clientAddr.sin_addr), clientID);
-	OutputDebugString(buf);
+	gMainWin::GetIF()->LogWrite(buf);
 
 	int nRoomIndex = gPC->GetCoreFlag(clientID);	//어느방?
 	int nInRoomIndex = gRC->FindPlayerIndexInTheRoom(clientID,nRoomIndex);	//몇번인덱스? // 이것은 턴의 단위이다 //이놈(나간녀석) 턴일때 넘어가야함!
@@ -1908,6 +1914,7 @@ void gGamePlayerContainer::pk_exit_ask(char *clientID, SOCKET sock)
 	rep.flag = 0;
 	strcpy(rep.szID , clientID);
 
+	gMysql::GetIF()->scoreCountAdd(rep.szID, false);
 			//남은사람 체크 , 변수만들기 귀찮아서 걍 for문
 
 	switch(gPC->GetMode(clientID))	{
@@ -1985,7 +1992,7 @@ void gGamePlayerContainer::pk_gologin_ask(PK_DEFAULT *pk,SOCKET sock)
 	//	}
 
 	wsprintf(buf,"[PK_GOLOGIN_ASK] %s\t message : %s %d \n", inet_ntoa(clientAddr.sin_addr), ask.szID);
-	OutputDebugString(buf);
+	gMainWin::GetIF()->LogWrite(buf);
 
 
 }
@@ -2080,7 +2087,7 @@ void gGamePlayerContainer::pk_becouple_rep(int nRoomIndex , PLAYER player_a , PL
 	}
 	else	{	
 		//Exception : 게이 / 레즈커플 =ㅅ=;;
-		OutputDebugString("게이탄생 뭐야이거 -ㅅ-;;\n");
+		gMainWin::GetIF()->LogWrite("게이탄생 뭐야이거 -ㅅ-;;\n");
 		return;
 	}
 

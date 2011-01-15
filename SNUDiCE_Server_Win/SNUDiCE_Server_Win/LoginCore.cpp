@@ -31,7 +31,7 @@ void gLoginCore::Put(char* id,char* pw)
 USER* gLoginCore::GetID(char* id)
 {
 
-	return gMysql::GetIF()->get(id);	
+	return gMysql::GetIF()->get(id);
 }
 
 
@@ -104,7 +104,7 @@ void gLoginCore::pk_login_ask(PK_DEFAULT *pk, SOCKET sock)
 	ask = *((PK_LOGIN_ASK*)pk->strPacket);
 
 	sprintf(buf,"[PK_LOGIN_REP] %s\tid : %s\t pw : %s\n", inet_ntoa(clientAddr.sin_addr), ask.szID, ask.szPW);
-	OutputDebugString(buf);
+	gMainWin::GetIF()->LogWrite(buf);
 
 	PK_LOGIN_REP	rep;
 	USER			*user;
@@ -116,8 +116,8 @@ void gLoginCore::pk_login_ask(PK_DEFAULT *pk, SOCKET sock)
 	if(user==NULL) {
 		rep.error = ELE_NOID; 
 	}
-	else { 
-		if(strcmp(user->szPW,ask.szPW)!=0) {
+	else {
+		if(strcmp(user->szPW,ask.szPW)!=0 || ! strcmp("",ask.szPW) ) {
 			rep.error	= ELE_PWERROR;
 		}
 		else {
@@ -137,7 +137,7 @@ void gLoginCore::pk_login_ask(PK_DEFAULT *pk, SOCKET sock)
 					if(finded==-1) {
 						// 만약 finded가 -1이 나온다면 치명적인 오류.
 						// 오류 체킹을 하고 있음.
-						OutputDebugString("aftef USEROVER 치명적인 오류\n");
+						gMainWin::GetIF()->LogWrite("aftef USEROVER 치명적인 오류\n");
 					}
 						gChannelContainer::GetIF()->fullDebuger();	// 1부터 6까지 물어봐야지.
 					// gChannelContainer end

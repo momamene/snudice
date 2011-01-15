@@ -24,7 +24,12 @@ WHERE `userId` = '%s' AND `friendId` = '%s';" //"
 // 이 쿼리문 등은 friend_delete(a,b) (b,a) 이렇게 두번 불러야 한당.
 #define FRIEND_DELETE "DELETE FROM `friend` \
 WHERE `userId` = '%s' AND `friendId` = '%s';" //"
-  
+
+#define USER_WIN_COUNT "UPDATE `userscore` SET `winCount` = `winCount` + 1   \
+WHERE `userId` = '%s' ;"
+
+#define USER_LOSE_COUNT "UPDATE `userscore` SET `loseCount` = `loseCount` + 1   \
+WHERE `userId` = '%s' ;"
 
 #define BLOCK_INSERT "INSERT INTO `block` \
 VALUES ('%s','%s');" //"
@@ -45,6 +50,8 @@ WHERE `userId` = '%s' AND `blockId` = '%s';" //"
 VALUES (\
 NULL , '%s', '%s'\
 );" //"
+
+
 
 class gMysql {
 public:
@@ -91,6 +98,8 @@ public:
 	// 그렇지 않다고 잘 제거하였으면 true 값을 return한다.
 	bool blockDeleteOne(char* userId,char* blockId);
 
+	void scoreCountAdd(char* userId , bool val);	//	val = 1 : winCount추가 , val = 0 : loseCount추가 
+	
 	void release();
 
 	bool isFriendOneExisted(char* userId, char* friendId);

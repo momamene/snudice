@@ -1,7 +1,6 @@
 #pragma once
 #include "network.h"
 
-
 class gSubmitCore
 {
 public:
@@ -24,6 +23,7 @@ public:
 	void			pk_gamestart_rep(int nRoomIndex);
 	void			pk_submit_ask(PK_DEFAULT *pk, SOCKET sock);
 	void			pk_submitready_ask(PK_DEFAULT *pk,SOCKET sock);
+	void			pk_submitcount_ask(PK_DEFAULT *pk,SOCKET sock);	
 	
 	bool			isFinishAllSubmit(int nRoomIndex);
 
@@ -37,9 +37,9 @@ public:
 	// 괜히 이런 짓을 한걸까...
 
 private:
-	bool			putSubject(int nRoomIndex,int nInRoomIndex,int nSubjectIndex);
+	bool			putSubject(int nRoomIndex,int nInRoomIndex,int nSubjectIndex);	//수강
 	void			putSubjectToPlayer(int nRoomIndex, int nInRoomIndex, int nSubjectIndex);
-	bool			pushSubject(int nRoomIndex,int nInRoomIndex,int nSubjectIndex);
+	bool			pushSubject(int nRoomIndex,int nInRoomIndex,int nSubjectIndex);	//취소
 	void			pushSubjectToPlayer(int nRoomIndex,int nInRoomIndex,int nSubjectIndex);
 	bool			isSubjectFull(int nRoomIndex,int nInRoomIndex);
 	bool			isSubjectExisted(int nRoomIndex,int nInRoomIndex,int nSubjectIndex);
