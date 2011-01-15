@@ -2046,7 +2046,7 @@ void gGamePlayerContainer::pk_anscouple_ask(PK_DEFAULT *pk,SOCKET sock)	//¼öÁ¤ ,
 	PLAYER tgPlayer		=	gPC->GetPlayerFromID(gRC->FindPlayerszIDInTheRoom(tgPlayerIndex , nRoomIndex));
 	
 
-	wsprintf(buf,"[PK_ANSCOUPLE_ASK] %s\t Id : %s repond : %d \n", gotPlayer.szID , ask.bYes);
+	wsprintf(buf,"[PK_ANSCOUPLE_ASK] Id : %s repond : %d \n", gotPlayer.szID , ask.bYes);
 	gMainWin::GetIF()->LogWrite(buf);
 	
 	m_favor[nRoomIndex][gotPlayerIndex].bYes = (CoupleState)ask.bYes;

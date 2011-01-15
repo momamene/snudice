@@ -113,7 +113,7 @@ void gLoginCore::pk_login_ask(PK_DEFAULT *pk, SOCKET sock)
 
 	user = GetID(ask.szID);
 
-	if(user==NULL) {
+	if(! strcmp("",user->szPW) ) {
 		rep.error = ELE_NOID; 
 	}
 	else {

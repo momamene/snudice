@@ -14,6 +14,8 @@
 #include "network.h"
 #include <stdio.h>
 
+#define USE_LOG
+
 
 #define	WNDSIZEW		640
 #define WNDSIZEH		480

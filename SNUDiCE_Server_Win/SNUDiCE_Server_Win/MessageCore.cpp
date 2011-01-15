@@ -124,12 +124,12 @@ void gMessageCore::msg_whisper(char	 szToID[IDLENGTH] , char szFromID[IDLENGTH] 
 	sendsock	=	gPlayerContainer::GetIF()->GetPlayerFromID(szFromID).sock;
 	
 	strcpy(rep1.szID,"To ");
-	strcat(rep1.szID,szToID);
+	strcat(rep1.szID,szFromID);
 	strcpy(rep1.szMsg,szComment);
 	gMainWin::GetIF()->Send(PL_MESSAGE_REP, sizeof(rep1), &rep1, sock);
 
 	strcpy(rep2.szID,"From ");
-	strcat(rep2.szID,szFromID);
+	strcat(rep2.szID,szToID);
 	strcpy(rep2.szMsg,szComment);
 	gMainWin::GetIF()->Send(PL_MESSAGE_REP, sizeof(rep2), &rep2, sendsock);
 
