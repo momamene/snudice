@@ -18,7 +18,7 @@ void gTimer::SetUp()
 }
 
 int gTimer::frame()
-{
+{	
 	gMainWin *gmainWin = gMainWin::GetIF();
 	if (!m_on) {
 		int a=1; //gTimer::치명적인 타이머 오류
@@ -32,6 +32,10 @@ int gTimer::frame()
 
 
 void gTimer::frameStart(int cycleMs,int frame) {
+	if(m_on)
+	{
+		int	t = 3;
+	}
 	m_on = true;
 	if(cycleMs > 0 && frame > 0 ){
 		m_cycleMs = cycleMs;

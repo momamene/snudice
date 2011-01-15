@@ -79,7 +79,7 @@ void gGameCore::MainLoop()
 //		if(m_bBusing)			-> DrawBus에서 처리
 //			BusStepOn();
 	}
-	if(m_bScrolling)
+	else if(m_bScrolling)
 		ScrollOn();
 
 	gUIGame::GetIF()->MainLoop();	//쓸데없음...
@@ -925,10 +925,10 @@ void gGameCore::SendMoveAsk()
 //	int				couple = gPC->GetCoupleIndex(m_nTurn);
 
 	// 내 차례가 아님
-	m_turnTime = 0x7fffffff;
 	if(strcmp(gPC->m_MyGamePlayer.szID, gPC->m_GPlayerList[m_nTurn].szID) != 0) {
 		return;
 	}
+	m_turnTime = 0x7fffffff;
 	// 이미 움직였음, 스크롤링 중임
 	if(m_bMoved) //|| m_bScrolling)
 		return;
@@ -1068,13 +1068,14 @@ void gGameCore::StepOn()
 	gTimer				*gt = gTimer::GetIF();
 	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
 
+	int l_frame = gt->frame();
+
 	if(gt->m_turn > 0)
 	{
 		StepEnd();
 	}
 	else
 	{
-		int l_frame = gt->frame();
 		int couple = gPC->GetCoupleIndex(m_nTurn);
 
 //		if(couple == m_nTurn) couple = gPC->GetMyGPIndex();
@@ -1245,13 +1246,14 @@ void gGameCore::ScrollOn()
 	gTimer				*gt = gTimer::GetIF();
 	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
 
+	int l_frame = gt->frame();
+
 	if(gt->m_turn > 0)
 	{
 		ScrollEnd();
 	}
 	else
 	{
-		int l_frame = gt->frame();
 		gMap::GetIF()->posMover(l_frame, gt->m_frame);
 	}	
 }
