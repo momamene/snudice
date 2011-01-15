@@ -184,7 +184,7 @@ function guestLoginFunc()
 	var url = root+"/login.ajax";	
 	var method = "POST";
 	var param = "userId=guest";
-	param += "&password=guest";	
+	param += "&password="+MD5("guest");	
 	var callback = loginFormRefresh;
 	var async = false;
 	

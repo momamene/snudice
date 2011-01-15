@@ -34,15 +34,7 @@
   <security-role>
     <role-name>guest</role-name>
   </security-role>
-  <security-constraint>
-    <web-resource-collection>
-      <web-resource-name>https</web-resource-name>
-      <url-pattern>*.do</url-pattern>
-    </web-resource-collection>
-    <user-data-constraint>
-      <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-    </user-data-constraint>
-  </security-constraint>
+ 
   <security-constraint>
     <display-name>JSP Protection</display-name>
     <web-resource-collection>
@@ -63,9 +55,6 @@
     <auth-constraint>
       <role-name>admin</role-name>
     </auth-constraint>
-    <user-data-constraint>
-      <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-    </user-data-constraint>
   </security-constraint>
   <security-constraint>
     <web-resource-collection>
@@ -81,9 +70,6 @@
       <role-name>member</role-name>
       <role-name>guest</role-name>
     </auth-constraint>
-    <user-data-constraint>
-      <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-    </user-data-constraint>
   </security-constraint>
   <security-constraint>
     <web-resource-collection>
@@ -94,9 +80,6 @@
       <http-method>GET</http-method>
       <http-method>POST</http-method>
     </web-resource-collection>
-    <user-data-constraint>
-      <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-    </user-data-constraint>
   </security-constraint>
   <servlet>
     <servlet-name>adminInternalName</servlet-name>
