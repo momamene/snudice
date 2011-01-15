@@ -647,7 +647,7 @@ void gUIGame::Draw()
 				cardimg->Draw(USEINFO_CARD_POS_X - ITEMCARD_SIZE_W/2, USEINFO_CARD_POS_Y);
 			}
 			break;
-		case UIM_INFOCHANGE:////////////////////////////
+		case UIM_INFOCHANGE:
 			{
 				int nFrame = m_timer.frame();
 
