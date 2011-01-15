@@ -75,7 +75,7 @@ function joinCloseFunc()
 //회원 가입 요청을 보낸다
 function joinSubmitFunc()
 {	
-	var validPwRegex =new RegExp("([a-z]|[0-9])+");
+	var validPwRegex =new RegExp("([a-z]|[A-Z]|[0-9])+");
 	
 	var joinId = document.getElementById("joinId");
 	var joinPw = document.getElementById("joinPw");
@@ -119,7 +119,7 @@ function joinSubmitFunc()
 	}
 	if(!joinPw.value.match(validPwRegex))
 	{
-		joinMsg.innerHTML = "암호는 영문 소문자와 숫자만 가능합니다.";
+		joinMsg.innerHTML = "암호는 영문 알파벳과 숫자만 가능합니다.";
 		joinPw.focus();
 		return;
 	}	
@@ -164,7 +164,7 @@ function loginFunc()
 	
 	var url = root+"/login.ajax";	
 	var method = "post";
-	var param = "userId="+encodeURIComponent(userId.value);
+	var param = "userId="+encodeURIComponent(userId.value);	
 	param += "&password="+encodeURIComponent(MD5(password.value));	
 	
 	var callback = loginFormRefresh;
@@ -257,7 +257,7 @@ function joinFormRefresh()
 			}
 			else if(request.responseText == "invalidId")
 			{
-				joinMsg.innerHTML = "id 는 영어 소문자,숫자만 허용됩니다."
+				joinMsg.innerHTML = "id 는 영문 알파벳,숫자만 허용됩니다.";
 				joinId.focus();
 				joinId.select();
 			}		

@@ -43,7 +43,6 @@ public class DBAccount {
 		{			
 			e.printStackTrace();
 		}		
-		
 		if(userCount==0) //count가 0이면
 			return false;
 		return true;
