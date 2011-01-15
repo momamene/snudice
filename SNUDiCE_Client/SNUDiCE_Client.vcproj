@@ -22,6 +22,7 @@
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="0"
+			ManagedExtensions="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -42,12 +43,12 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS"
-				MinimalRebuild="true"
-				BasicRuntimeChecks="3"
+				MinimalRebuild="false"
+				BasicRuntimeChecks="0"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				DebugInformationFormat="4"
+				DebugInformationFormat="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -63,6 +64,7 @@
 				AdditionalDependencies="ws2_32.lib ddraw.lib dxguid.lib imm32.lib"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
+				AssemblyDebug="1"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
