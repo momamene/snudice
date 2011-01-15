@@ -54,8 +54,8 @@ public class Login extends HttpServlet {
 		{
 			os.print("alreadyLoggined");
 			return;
-		}
-		
+		}		
+
 		DB db = DB.getInstance();
 		boolean isExistingUser = db.dbAccount.isValidUser(userId,Encrypt.md5(password));
 		if(!isExistingUser)		

@@ -111,7 +111,7 @@
 					</div>						
 				</div>
 				<div id="mainLeftBottom">					
-					<div id="clientDownload" onclick="alert('클라 다운시켜!');"></div>					
+					<div id="clientDownload" onclick="alert('클라 다운시켜!');">여기 클라다운 그림드가야함 download.png 임 근데 이름 바꿔야겠음</div>					
 				</div>
 			</div>			
 			<div class="center">			

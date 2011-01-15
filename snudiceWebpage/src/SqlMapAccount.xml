@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 <sqlMap>
-	<select id='countUserWithPassword' parameterClass='beans.User' resultClass='int'>SELECT count(*) FROM user where userId=#userId# and password=#password#</select>
-	<select id='countUser' parameterClass='String' resultClass='int'>SELECT count(*) FROM user where userId=#userId#</select>
-	<select id='countEmail' parameterClass='String' resultClass='int'>SELECT count(*) FROM user where email=#email#</select>	
+	<select id='countUserWithPassword' parameterClass='beans.User' resultClass='Integer'>
+		SELECT COUNT(*) 
+		FROM user 
+		WHERE userId=#userId:VARCHAR# and password=#password:VARCHAR# 
+	</select>
+	
+	<select id='countUser' parameterClass='String' resultClass='int'>SELECT count(*) FROM user where userId=#userId:VARCHAR#</select>
+	<select id='countEmail' parameterClass='String' resultClass='int'>SELECT count(*) FROM user where email=#email:VARCHAR#</select>	
 	<insert id="insertUser" parameterClass="beans.User">INSERT INTO user (userId,password,email) VALUES(#userId:VARCHAR#,#password:VARCHAR#,#email:VARCHAR#)</insert>
 	<insert id="insertUserRole" parameterClass="beans.UserRole">
 		INSERT INTO user_roles (userId,role)

@@ -286,7 +286,8 @@ hr.lightColor
 	display : block;	
 	
 	width : 280px;
-	height : 215px;	
+	height : 215px;
+	z-index : 2;	
 }
 
 #joinFormTable

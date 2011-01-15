@@ -51,9 +51,7 @@ public class Join extends HttpServlet {
 		else if(joinEmail.indexOf(' ')>=0)
 			os.print("emailContainSpace");
 		else if(joinEmail.length()>Const.emailMaxLen)
-			os.print("emailTooLong");
-		else if(!joinId.matches(Const.validIdRegex))		
-			os.print("invalidId");			
+			os.print("emailTooLong");					
 		else
 		{
 			DB db = DB.getInstance();
