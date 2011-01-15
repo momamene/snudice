@@ -226,6 +226,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\md5.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\PopUp.cpp"
 					>
 				</File>
@@ -379,6 +383,10 @@
 				</File>
 				<File
 					RelativePath=".\Edit.h"
+					>
+				</File>
+				<File
+					RelativePath=".\md5.h"
 					>
 				</File>
 				<File

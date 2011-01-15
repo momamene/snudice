@@ -9,6 +9,7 @@
 #include "Dice.h"
 #include "PlayerContainer.h"
 #include "PlaySoundCore.h"
+#include "md5.h"
 
 
 #define LOGIN_FILE_CONNECTBTN		".\\Data\\Login\\connect.img"
@@ -261,6 +262,10 @@ void gLoginCore::SendLogin()
 	
 	strcpy(ask.szID, m_EditID.m_szEdit);
 	strcpy(ask.szPW, m_EditPW.m_szEdit);
+
+//	MDString(ask.szPW, ask.szPW);
+//	MDString(ask.szPW, ask.szPW);
+
 	gServer::GetIF()->Send(PL_LOGIN_ASK, sizeof(ask), &ask);
 }
 
