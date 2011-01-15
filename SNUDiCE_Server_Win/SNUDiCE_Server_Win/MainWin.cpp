@@ -164,12 +164,19 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 
 	//로그파일을 만듭니다.
 	logFile = fopen(LOG_FILE_NAME , "w+");
+
+	for (int i = 0 ; i < MAXROOM ; i++)
+		InitializeCriticalSection(&crit[i]);
 	
 	return true;
 }
 
 void gMainWin::Release()
 {
+	fclose(logFile);
+	for (int i = 0 ; i < MAXROOM ; i++)
+		DeleteCriticalSection(&crit[i]);
+	
 	closesocket(m_listen_sock);
 	WSACleanup();
 
@@ -182,8 +189,6 @@ void gMainWin::Release()
 	gSubmitCore::GetIF()->Release();
 	gGamePlayerContainer::GetIF()->Release();
 	gCharinfo::GetIF()->Release();
-
-	fclose(logFile);
 }
 
 bool gMainWin::MakeListenThread()
@@ -243,109 +248,118 @@ void gMainWin::MainLoop()
 
 void gMainWin::Recv(PK_DEFAULT *pk, SOCKET sock)
 {
-
-	switch(pk->dwProtocol)
+	__try
 	{
-		case PL_LOGIN_ASK:
-			gLoginCore::GetIF()->pk_login_ask(pk, sock);
-			break;
-		case PL_MESSAGE_ASK:
-			gMessageCore::GetIF()->pk_message_ask(pk, sock);
-			break;
-		case PL_CHANNELCHANGE_ASK:
-			gChannelCore::GetIF()->pk_channelchange_ask(pk,sock);
-			break;
-		case PL_ROOMMAKER_ASK:
-			gRoomCore::GetIF()->pk_roommaker_ask(pk,sock);
-			break;
-		case PL_ROOMLIST_ASK:
-			gRoomCore::GetIF()->pk_roomlist_ask(pk,sock);
-			break;
-		case PL_ROOMJOIN_ASK:
-			gRoomCore::GetIF()->pk_roomjoin_ask(pk,sock);
-			break;
-		case PL_ROOMBACK_ASK:
-			gRoomCore::GetIF()->pk_roomback_ask(pk,sock);
-			break;
-		case PL_CHARSELECT_ASK:
-			gRoomCore::GetIF()->pk_charselect_ask(pk,sock);
-			break;
-		case PL_GAMEREADY_ASK:
-			gRoomCore::GetIF()->pk_gameready_ask(pk,sock);
-			break;
-		case PL_GAMESTART_ASK:
-			gRoomCore::GetIF()->pk_gamestart_ask(pk,sock);
-			break;
-		case PL_SUBMIT_ASK:
-			gSubmitCore::GetIF()->pk_submit_ask(pk,sock);
-			break;
-		case PL_SUBMITREADY_ASK:
-			gSubmitCore::GetIF()->pk_submitready_ask(pk,sock);
-			break;
-		case PL_SUBMITCOUNT_ASK :
-			gSubmitCore::GetIF()->pk_submitcount_ask(pk,sock);
-			break;
-		case PL_MOVESTART_ASK:
-			gGamePlayerContainer::GetIF()->pk_movestart_ask(pk,sock);
-			break;
-		case PL_MOVEEND_ASK: case PL_MOVEENDCOUPLE_ASK:
-			gGamePlayerContainer::GetIF()->pk_moveend_ask(pk,sock);
-			break;
-		case PL_BUSMOVESELECT_ASK:
-			gGamePlayerContainer::GetIF()->pk_busmoveselect_ask(pk,sock);
-			break;
-		case PL_BUSMOVEEND_ASK: case PL_BUSMOVEENDCOUPLE_ASK :
-			gGamePlayerContainer::GetIF()->pk_busmoveend_ask(pk,sock);
-			break;
-		case PL_ITEMUSE_ASK:
-			gGamePlayerContainer::GetIF()->pk_itemuse_ask(pk,sock);
-			break;
-		case PL_ITEMUSESTART_ASK:
-			gGamePlayerContainer::GetIF()->pk_itemusestart_ask(pk,sock);
-			break;
-		case PL_INFOCHANGEEND_ASK:
-			gGamePlayerContainer::GetIF()->pk_infochangeend_ask(pk,sock);
-			break;
-			/*
-		case PL_WARPSTART_ASK:
-			gGamePlayerContainer::GetIF()->pk_warpstart_ask(pk,sock);
-			break;
-			*/
-		case PL_WARPEND_ASK:
-			gGamePlayerContainer::GetIF()->pk_warpend_ask(pk,sock);
-			break;
-		case PL_WARPLISTEND_ASK:
-			gGamePlayerContainer::GetIF()->pk_warplistend_ask(pk,sock);
-			break;
 
-		case PL_GOLOGIN_ASK :
-			gGamePlayerContainer::GetIF()->pk_gologin_ask(pk,sock);
-			break;
-/*	서버처리로 대체
-		case PL_WHISPER_ASK:
-			gMessageCore::GetIF()->pk_whisper_ask(pk, sock);
-			break;
-*/
-		case PL_ANSCOUPLE_ASK :
-			gGamePlayerContainer::GetIF()->pk_anscouple_ask(pk,sock);
-			break;
+		switch(pk->dwProtocol)
+		{
+			case PL_LOGIN_ASK:
+				gLoginCore::GetIF()->pk_login_ask(pk, sock);
+				break;
+			case PL_MESSAGE_ASK:
+				gMessageCore::GetIF()->pk_message_ask(pk, sock);
+				break;
+			case PL_CHANNELCHANGE_ASK:
+				gChannelCore::GetIF()->pk_channelchange_ask(pk,sock);
+				break;
+			case PL_ROOMMAKER_ASK:
+				gRoomCore::GetIF()->pk_roommaker_ask(pk,sock);
+				break;
+			case PL_ROOMLIST_ASK:
+				gRoomCore::GetIF()->pk_roomlist_ask(pk,sock);
+				break;
+			case PL_ROOMJOIN_ASK:
+				gRoomCore::GetIF()->pk_roomjoin_ask(pk,sock);
+				break;
+			case PL_ROOMBACK_ASK:
+				gRoomCore::GetIF()->pk_roomback_ask(pk,sock);
+				break;
+			case PL_CHARSELECT_ASK:
+				gRoomCore::GetIF()->pk_charselect_ask(pk,sock);
+				break;
+			case PL_GAMEREADY_ASK:
+				gRoomCore::GetIF()->pk_gameready_ask(pk,sock);
+				break;
+			case PL_GAMESTART_ASK:
+				gRoomCore::GetIF()->pk_gamestart_ask(pk,sock);
+				break;
+			case PL_SUBMIT_ASK:
+				gSubmitCore::GetIF()->pk_submit_ask(pk,sock);
+				break;
+			case PL_SUBMITREADY_ASK:
+				gSubmitCore::GetIF()->pk_submitready_ask(pk,sock);
+				break;
+			case PL_SUBMITCOUNT_ASK :
+				gSubmitCore::GetIF()->pk_submitcount_ask(pk,sock);
+				break;
+			case PL_MOVESTART_ASK:
+				gGamePlayerContainer::GetIF()->pk_movestart_ask(pk,sock);
+				break;
+			case PL_MOVEEND_ASK: case PL_MOVEENDCOUPLE_ASK:
+				gGamePlayerContainer::GetIF()->pk_moveend_ask(pk,sock);
+				break;
+			case PL_BUSMOVESELECT_ASK:
+				gGamePlayerContainer::GetIF()->pk_busmoveselect_ask(pk,sock);
+				break;
+			case PL_BUSMOVEEND_ASK: case PL_BUSMOVEENDCOUPLE_ASK :
+				gGamePlayerContainer::GetIF()->pk_busmoveend_ask(pk,sock);
+				break;
+			case PL_ITEMUSE_ASK:
+				gGamePlayerContainer::GetIF()->pk_itemuse_ask(pk,sock);
+				break;
+			case PL_ITEMUSESTART_ASK:
+				gGamePlayerContainer::GetIF()->pk_itemusestart_ask(pk,sock);
+				break;
+			case PL_INFOCHANGEEND_ASK:
+				gGamePlayerContainer::GetIF()->pk_infochangeend_ask(pk,sock);
+				break;
+				/*
+			case PL_WARPSTART_ASK:
+				gGamePlayerContainer::GetIF()->pk_warpstart_ask(pk,sock);
+				break;
+				*/
+			case PL_WARPEND_ASK:
+				gGamePlayerContainer::GetIF()->pk_warpend_ask(pk,sock);
+				break;
+			case PL_WARPLISTEND_ASK:
+				gGamePlayerContainer::GetIF()->pk_warplistend_ask(pk,sock);
+				break;
 
-		case PL_BECOUPLEEND_ASK :
-			gGamePlayerContainer::GetIF()->pk_becoupleend_ask(pk,sock);
-			break;
-			
-		//친구처리
-		case PL_FRIENDADD_ASK :
-			gPlayerContainer::GetIF()->pk_friendadd_ask(pk, sock);
-			break;
-		case PL_FRIENDDELETE_ASK :
-			gPlayerContainer::GetIF()->pk_frienddelete_ask(pk,sock);
-			break;
-		case PL_FRIENDWHISPER_ASK :
-			gMessageCore::GetIF()->pk_friendwhisper_ask(pk,sock);
-			break;
-		case PL_FRIENDLIST_ASK :
-			gMessageCore::GetIF()->pk_friendlist_ask(pk, sock);
+			case PL_GOLOGIN_ASK :
+				gGamePlayerContainer::GetIF()->pk_gologin_ask(pk,sock);
+				break;
+	/*	서버처리로 대체
+			case PL_WHISPER_ASK:
+				gMessageCore::GetIF()->pk_whisper_ask(pk, sock);
+				break;
+	*/
+			case PL_ANSCOUPLE_ASK :
+				gGamePlayerContainer::GetIF()->pk_anscouple_ask(pk,sock);
+				break;
+
+			case PL_BECOUPLEEND_ASK :
+				gGamePlayerContainer::GetIF()->pk_becoupleend_ask(pk,sock);
+				break;
+				
+			//친구처리
+			case PL_FRIENDADD_ASK :
+				gPlayerContainer::GetIF()->pk_friendadd_ask(pk, sock);
+				break;
+			case PL_FRIENDDELETE_ASK :
+				gPlayerContainer::GetIF()->pk_frienddelete_ask(pk,sock);
+				break;
+			case PL_FRIENDWHISPER_ASK :
+				gMessageCore::GetIF()->pk_friendwhisper_ask(pk,sock);
+				break;
+			case PL_FRIENDLIST_ASK :
+				gMessageCore::GetIF()->pk_friendlist_ask(pk, sock);
+		}
+	}
+	__except(EXCEPTION_EXECUTE_HANDLER)
+	{
+		gMainWin::GetIF()->LogWrite("축|서버폭팔|하");
+		gMainWin::GetIF()->Release();
+		exit(0);
 	}
 
 }
@@ -597,9 +611,6 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	//mw->ExitPlayer(client_sock,clientID,clientAddr);
 
 	mw->UserRelease(client_sock,clientAddr);
-
-
-
 	return 0;
 }
 

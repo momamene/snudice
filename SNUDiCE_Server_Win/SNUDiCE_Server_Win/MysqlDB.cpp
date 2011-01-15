@@ -69,7 +69,7 @@ USER* gMysql::get(char* userId) {
 
 char* gMysql::passwordGet(char* userId) {
 
-	char* password = new char[16];
+	char* password = new char[33];
 	char query[255];
 	sprintf(query,USER_SELECT,userId);
 
@@ -85,7 +85,7 @@ char* gMysql::passwordGet(char* userId) {
 	MYSQL_RES* sql_result = mysql_store_result(m_connection);
 	MYSQL_ROW sql_row = mysql_fetch_row(sql_result);
 	if(sql_row != NULL) {
-		strncpy(password,sql_row[0],16);
+		strncpy(password,sql_row[0],33);
 	}
 	else {
 		strcpy(password,"");

@@ -471,8 +471,11 @@ void gGamePlayerContainer::pk_moveend_ask(PK_DEFAULT *pk,SOCKET sock)
 		pk_gameplayerinfo_rep(nRoomIndex);
 	}
 	if(m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nPos == ask.nDestPos) {
+		
 		m_bSyncronize[nRoomIndex][nInRoomIndex] = true;
 			
+		EnterCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
+		
 		if(isbSynAllTrue(nRoomIndex)) {	// 모든 무브가 끝나면...
 			PushbSynAllPlayer(nRoomIndex,false);
 			if (m_favor[nRoomIndex][m_nTurn[nRoomIndex]].bYes == CPS_PROPOSE)	{	//가는도중 커플수락여부
@@ -562,6 +565,7 @@ void gGamePlayerContainer::pk_moveend_ask(PK_DEFAULT *pk,SOCKET sock)
 				pk_nextturn_rep(nRoomIndex);
 			}
 		}
+		LeaveCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
 	}
 }
 
@@ -662,11 +666,13 @@ void gGamePlayerContainer::pk_busmoveend_ask(PK_DEFAULT *pk,SOCKET sock)
 
 	if(m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nPos == ask.nDestPos) {
 		m_bSyncronize[nRoomIndex][nInRoomIndex] = true;
-
+		
+		EnterCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
 		if(isbSynAllTrue(nRoomIndex)) {
 			PushbSynAllPlayer(nRoomIndex,false);
 			pk_nextturn_rep(nRoomIndex);
 		}
+		LeaveCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
 	}
 	else {
 		wsprintf(buf,"server : %d %d , client : %d %d player : %s room : %d\n",
@@ -1106,6 +1112,8 @@ void gGamePlayerContainer::pk_itemusestart_ask(PK_DEFAULT *pk,SOCKET sock)
 	int nPreInRoomIndex = gRC->FindPlayerIndexInTheRoom(preAsk.szID,nRoomIndex);	// 싱크로 체커
 
 	m_bSyncronize[nRoomIndex][nPreInRoomIndex] = true;
+	EnterCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
+	
 	if(isbSynAllTrue(nRoomIndex)) {
 
 		PK_ITEMUSE_ASK ask = m_struct_itemuse_ask[nRoomIndex];
@@ -1137,6 +1145,7 @@ void gGamePlayerContainer::pk_itemusestart_ask(PK_DEFAULT *pk,SOCKET sock)
 		}
 		//gPC->SendSelect(PL_ITEMUSE_REP,sizeof(rep),&rep,ECM_GAME,gPC->GetCoreFlag(ask.szID));
 	}
+	LeaveCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
 }
 
 ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, int nInRoomIndex, int itemIndex)
@@ -1527,6 +1536,8 @@ void gGamePlayerContainer::pk_warpend_ask (PK_DEFAULT *pk, SOCKET sock)
 	if(m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nPos == ask.nDestPos) {
 		m_bSyncronize[nRoomIndex][nInRoomIndex] = true;
 
+		EnterCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
+
 		if(isbSynAllTrue(nRoomIndex)) {	// 모든 워프가 끝나면,,, 버스 사라짐;;
 			PushbSynAllPlayer(nRoomIndex,false); 
 			if(gTC->m_tileMap[ask.nDestPos].tileType==TY_CLASS) {
@@ -1582,6 +1593,7 @@ void gGamePlayerContainer::pk_warpend_ask (PK_DEFAULT *pk, SOCKET sock)
 				pk_gameplayerinfo_rep(nRoomIndex);
 			}
 		}
+		LeaveCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
 	}
 	else {
 		gMainWin::GetIF()->LogWrite(buf);
@@ -1626,13 +1638,16 @@ void gGamePlayerContainer::pk_warplistend_ask (PK_DEFAULT *pk, SOCKET sock)
 
 	m_bSyncronize[nRoomIndex][nInRoomIndex] = true;
 
+	EnterCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
+
 	if(isbSynAllTrue(nRoomIndex)) {	// 모든 워프가 끝나면,,, 버스 사라짐;;
 		PushbSynAllPlayer(nRoomIndex,false); 
 		gMainWin::GetIF()->LogWrite("TY_NOTHING\n");
 		pk_gameplayerinfo_rep(nRoomIndex);
 		pk_nextturn_rep(nRoomIndex);
 	}
-
+	
+	LeaveCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
 
 }
 
@@ -1879,11 +1894,14 @@ void gGamePlayerContainer::pk_infochangeend_ask(PK_DEFAULT *pk, SOCKET sock)
 
 	m_bSyncronize[nRoomIndex][nInRoomIndex] = true;
 	
+	EnterCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
+
 	if(isbSynAllTrue(nRoomIndex)) {
 		pk_nextturn_rep(nRoomIndex);
 	}
 
-
+	LeaveCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
+	
 }
 
 
@@ -2169,9 +2187,14 @@ void	gGamePlayerContainer::pk_becoupleend_ask(PK_DEFAULT *pk , SOCKET sock )
 	int nInRoomIndex = gRC->FindPlayerIndexInTheRoom(ask.szID , nRoomIndex);
 	
 	m_bSyncronize[nRoomIndex][nInRoomIndex] = true;
+
+	EnterCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
+
 	if (isbSynAllTrue(nRoomIndex))	{	//동기화 끗
 		PushbSynAllPlayer(nRoomIndex, false);
 		
 		pk_nextturn_rep(nRoomIndex);
 	}
+
+	LeaveCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
 }

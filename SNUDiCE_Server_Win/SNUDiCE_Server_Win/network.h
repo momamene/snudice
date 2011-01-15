@@ -152,7 +152,7 @@ struct PK_DEFAULT
 struct USER
 {
 	char		szID[IDLENGTH];
-	char		szPW[IDLENGTH];
+	char		szPW[33];
 };
 
 enum CLASSTYPE
@@ -220,7 +220,7 @@ struct PLAYER
 struct PK_LOGIN_ASK
 {
 	char		szID[IDLENGTH];
-	char		szPW[IDLENGTH];
+	char		szPW[33];
 };
 
 enum LOGIN_ERROR
