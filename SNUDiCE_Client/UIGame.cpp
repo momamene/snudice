@@ -647,7 +647,7 @@ void gUIGame::Draw()
 				cardimg->Draw(USEINFO_CARD_POS_X - ITEMCARD_SIZE_W/2, USEINFO_CARD_POS_Y);
 			}
 			break;
-		case UIM_INFOCHANGE:
+		case UIM_INFOCHANGE:////////////////////////////
 			{
 				int nFrame = m_timer.frame();
 
@@ -766,14 +766,11 @@ void gUIGame::Draw()
 		//sprintf_s(szBuf, ".1f", )
 
 	// result
-		else if(m_uimode == UIM_RESULT)
+		if(m_uimode == UIM_RESULT)
 		{
 			for(i = 0; i < ROOMMAXPLAYER; i++)
 			{
 				if(m_rankIdx[i] == -1)
-					continue;
-
-				if(strlen(gPC->m_GPlayerList[ m_rankIdx[i] ].szID) == 0)
 					continue;
 
 				gUtil::TextOutLine(RESULT_POS_START_X, RESULT_POS_START_Y + i * RESULT_TERM_Y,
@@ -925,7 +922,6 @@ bool gUIGame::OnLButtonDown()
 	//PopUp으로 메뉴 고르는걸 띄울까요?
 	//고르면 주사위 및 다른건 막히는건가? 아니면... 생각할 게 많네여...
 	if(m_BtnUI[UIBTN_MENU].PointInButton(mouse->m_nPosX, mouse->m_nPosY)) {
-		
 		return true;
 	}
 
@@ -1470,6 +1466,9 @@ void gUIGame::OnMouseMove()
 
 void gUIGame::OnRButtonDown()
 {
+	if(m_uimode == UIM_INFOCHANGE)
+		return;
+
 	if(m_uimode == UIM_TARGETSELECT)
 	{
 		m_uimode = UIM_ITEM;
@@ -1787,11 +1786,10 @@ void gUIGame::pk_itemuse_rep(PK_ITEMUSE_REP* rep)
 
 void gUIGame::SetTargetButton_UseInfo()
 {
+	int i,j,k=0;
+
 	int		startx = USEINFO_TARGET_POS_X - TARGET_OUTLINE_SIZE_W - USEINFO_TARGET_TERM_X/2;
 	int		starty = USEINFO_TARGET_POS_Y - TARGET_OUTLINE_SIZE_H*3/2 - USEINFO_TARGET_TERM_Y;
-
-/*
-	int i,j,k=0;
 
 	for(i=0;i<3;i++)
 		for(j=0;j<2;j++) {
@@ -1800,8 +1798,7 @@ void gUIGame::SetTargetButton_UseInfo()
 				startx+ j*(TARGET_OUTLINE_SIZE_W + USEINFO_TARGET_TERM_X) + TARGET_OUTLINE_SIZE_W, starty + i*(TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y) + TARGET_OUTLINE_SIZE_H);
 			k++;
 		}
-*/
-
+/*
 	switch(m_nTargetNum)
 	{
 		case 1:
@@ -2026,6 +2023,7 @@ void gUIGame::SetTargetButton_UseInfo()
 			}
 			break;
 	}
+*/
 }
 
 void gUIGame::pk_infochange_rep(PK_INFOCHANGE_REP *rep)
