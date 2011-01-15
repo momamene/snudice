@@ -12,8 +12,8 @@
 #define WM_SOCKET				WM_USER + 1
 
 #define	WINSOCK_VERSION_2_2		MAKEWORD(2, 2)
-//#define SERVER_IP				"211.169.219.93"		// 蝓膨
-#define SERVER_IP				"211.169.219.86"		// ⑷饕
+#define SERVER_IP				"211.169.219.93"		// 蝓膨
+//#define SERVER_IP				"211.169.219.86"		// ⑷饕
 //#define SERVER_IP				"211.169.219.87"		// 璽敘
 #define SERVER_PORT				9000
 #define BUFFERSIZE				2048
@@ -22,7 +22,7 @@
 
 #define SNUDICE_VERSION			"0.6000"
 
-//#define DEF_SERVER
+#define DEF_SERVER
 
 //天天天天天天天天天天天天天天天天天天天天天天天天天天天天天天天天天天天天天天天天
 //	鱔褐 Щ煎饜屬
@@ -552,7 +552,7 @@ struct PK_GAMEEND_REP
 };
 
 #ifdef DEF_SERVER
-#define ITEMNUM		29 +1			// 
+#define ITEMNUM		29+1			// 
 #else
 #define ITEMNUM		29
 #endif

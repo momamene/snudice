@@ -248,8 +248,10 @@ void gMainWin::MainLoop()
 
 void gMainWin::Recv(PK_DEFAULT *pk, SOCKET sock)
 {
+#ifndef USE_LOG
 	__try
 	{
+#endif
 
 		switch(pk->dwProtocol)
 		{
@@ -354,6 +356,7 @@ void gMainWin::Recv(PK_DEFAULT *pk, SOCKET sock)
 			case PL_FRIENDLIST_ASK :
 				gMessageCore::GetIF()->pk_friendlist_ask(pk, sock);
 		}
+#ifndef USE_LOG
 	}
 	__except(EXCEPTION_EXECUTE_HANDLER)
 	{
@@ -361,6 +364,7 @@ void gMainWin::Recv(PK_DEFAULT *pk, SOCKET sock)
 		gMainWin::GetIF()->Release();
 		exit(0);
 	}
+#endif
 
 }
 
