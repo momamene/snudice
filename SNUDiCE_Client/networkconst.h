@@ -12,8 +12,8 @@
 #define WM_SOCKET				WM_USER + 1
 
 #define	WINSOCK_VERSION_2_2		MAKEWORD(2, 2)
-#define SERVER_IP				"211.169.219.93"		// ½Â¿±
-//#define SERVER_IP				"211.169.219.86"		// ÇöÅ¹
+//#define SERVER_IP				"211.169.219.93"		// ½Â¿±
+#define SERVER_IP				"211.169.219.86"		// ÇöÅ¹
 //#define SERVER_IP				"211.169.219.87"		// Ã¢±Ô
 #define SERVER_PORT				9000
 #define BUFFERSIZE				2048
@@ -152,7 +152,7 @@ struct PK_DEFAULT
 struct USER
 {
 	char		szID[IDLENGTH];
-	char		szPW[IDLENGTH];
+	char		szPW[33];
 };
 
 enum CLASSTYPE
@@ -219,7 +219,7 @@ struct PLAYER
 struct PK_LOGIN_ASK
 {
 	char		szID[IDLENGTH];
-	char		szPW[IDLENGTH];
+	char		szPW[33];
 };
 
 enum LOGIN_ERROR
