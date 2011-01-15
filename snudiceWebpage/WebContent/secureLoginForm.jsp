@@ -7,6 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" type="text/css" href="${root}/css/loginPageStyle.css">
 <script type="text/javascript" src="${root}/javascript/util.js"></script>
+<script type="text/javascript" src="${root}/javascript/md5.js"></script>
 <script type="text/javascript">
 
 window.onload = init;
@@ -70,6 +71,7 @@ function loginFunc()
 
 	loginMsg.innerHTML = "로그인 중입니다..";
 	
+	password.value = MD5(password.value);
 	var secureloginForm = document.getElementById("secureloginForm");
 	secureloginForm.submit();
 }

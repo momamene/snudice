@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import utility.Encrypt;
+
 import constant.Const;
 
 import dbaccess.DB;
@@ -55,7 +57,7 @@ public class Login extends HttpServlet {
 		}
 		
 		DB db = DB.getInstance();
-		boolean isExistingUser = db.dbAccount.isValidUser(userId,password);
+		boolean isExistingUser = db.dbAccount.isValidUser(userId,Encrypt.md5(password));
 		if(!isExistingUser)		
 			os.print("loginFail");		
 		else
@@ -64,7 +66,7 @@ public class Login extends HttpServlet {
 			session.setAttribute("userId", userId);	
 			
 			//secure login	
-			request.login(userId, password);		
+			request.login(userId, password);
 			
 			os.print("loginOK");
 		}		
