@@ -422,10 +422,6 @@ void gGameCore::DrawWarpList()
 
 void gGameCore::DrawBus()
 {
-	int *a=NULL;
-	*a= 0 ;
-
-
 	if(!m_bBusing)
 		return;
 
