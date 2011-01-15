@@ -1,10 +1,10 @@
 @CHARSET "UTF-8";
 /* 큰 영역 size 설정 */
-.header,.bodyWrapper,.footer {	width : 1024px; }
-.left { width : 264px; }
-.center { width : 755px; }
+.header,.bodyWrapper,.footer {	width : 943px; }
+.left { width : 227px; }
+.center { width : 710px; }
 .right { width : 0px; }
-#mainLeftTop,#mainLeftBottom,#mainLeftTop_ { width : 264px; }
+#mainLeftTop,#mainLeftBottom,#mainLeftTop_ { width : 227px; }
 
 /* 큰 영역 position 설정 */
 .bodyWrapper
@@ -39,8 +39,8 @@ img { border : 0px; padding : 0px; }
 div { border : 0px; padding : 0px; }
 hr
 {	
-	background-color : #262E69;
-	height : 4px;
+	background-color : #BCD9EB;
+	height : 2px;
 	border : 0px;	
 }
 
@@ -62,7 +62,7 @@ hr.lightColor
 .centerAlign { text-align : center; }
 .clearLeft { clear : left; }
 
-.bodyWrapper { background-color : #E4E4F9; }
+.bodyWrapper { background-color : white; }
 .footer { background-color : white; }
 
 /*----------------header-----------*/
@@ -70,32 +70,59 @@ hr.lightColor
 {
 	background-image : url('/snudiceWebpage/image/mainpage/title.png');
 	background-repeat : no-repeat;	
-	height : 255px;
+	height : 127px;
+}
+
+/*------------- menu ----------------*/
+#menu
+{
+	width : 100%;
+	height : 100px;
+}
+
+#logoWrapper
+{	
+	width : 180px;
+	height : 90px;
+	opacity:0.7;
+	filter:alpha(opacity=70); /* for IE */
+	margin-top : -30px;
+	background-color : white;
+	position : relative;
+	z-index : 0;
+}
+
+#logo
+{
+	background-image : url('/snudiceWebpage/image/mainpage/logo.png');
+	background-repeat : no-repeat;	
+	width : 172px;
+	height : 78px;
+	margin-top : -70px;
+	margin-left : 10px;	
+	position : relative;
+	z-index : 1;	
 }
 
 /*------------- login form ---------*/
-#mainLeftTop
+#mainLeftTop,#mainLeftTop_ 
 {
-	background-color : #464D9C;	
-	height : 170px;
+	background-image : url('/snudiceWebpage/image/mainpage/loginForm.png');	
+	height : 207px;
+	position : relative;
+	top : 10px;
 }
 
-#mainLeftTop_
-{
-	background-color : #464D9C;	
-	height : 130px;
+#mainLeftTop_ 
+{ 
+	height: 180px; 
 }
 
 #loginFormTitle
-{	
-	/*가로 세로 번짐 색깔*/	
-	color : #CDC783;
-	text-shadow : 2px 2px 1px black;
-	
-	text-align : center;
+{		
 	font-size : 120%;
 	position : relative;
-	top : 5px;	
+	top : 5px;		
 }
 
 #loginFormTitle.invisible
@@ -106,7 +133,9 @@ hr.lightColor
 #loginFormWrapper.visible
 {	
 	display : block;
-	margin-top : 10px;	
+	position : relative;
+	top : 25px;	
+	clear : left;	
 }
 
 #loginFormWrapper.invisible
@@ -117,7 +146,9 @@ hr.lightColor
 #idpw 
 {
 	float : left;	
-	margin-left : 40px;		
+	margin-left : 10px;
+	margin-top : 8px;	
+	color : #677EA0;	
 }
 
 #loginButton.mouseOut,#loginButton.mouseOver
@@ -147,28 +178,35 @@ hr.lightColor
 { 
 	text-align : center; 
 	clear:left;
-	margin-top : 20px;
+	position : relative;
+	top : 10px;	
 }
 
 #userId,#password
 {
-	width : 120px;
-	height : 20px;
-	background-color : #262E69;
-	border : 2px inset #20275F;
-	color : white;
+	width : 100px;
+	height : 22px;
+	background-color : #C3DAFC;
+	border : 2px inset;
+	color : black;
 }
 
 #password { margin-top:5px;}
 
-#loginMsg
+#loginMsg, #loginMsg_
 {
 	color:red;	
 	position : relative;
 	text-align : center; 
 }
 
-#loginMsg.logouted { top : 10px; }
+#loginMsg_
+{
+	top : 30px;
+}
+
+
+#loginMsg.logouted { top : 40px; }
 #loginMsg.loggined { top : 30px; }
 
 #logoutWrapper.invisible 
@@ -190,7 +228,18 @@ hr.lightColor
 	top : 50px;
 }
 
-#joinOpen,#findIdPw { color : #ACB1E6; }
+#guestLogin 
+{
+	background-image : url('/snudiceWebpage/image/mainpage/guestLogin.png');
+	background-repeat : no-repeat;
+	width : 93px;
+	height : 29px;
+	margin-left : 130px;	
+	float : left;
+	margin-top : -23px;
+}
+
+#joinOpen,#findIdPw { color : black; }
 #findIdPw { margin-left : 25px; }
 
 #mainLeftBottom 
@@ -198,6 +247,7 @@ hr.lightColor
 	background-image : url('/snudiceWebpage/image/mainpage/buttonWindow.png');
 	background-repeat : no-repeat;
 	height : 113px;
+	margin-top : 20px;
 }
 
 #gameStart 
@@ -258,18 +308,6 @@ hr.lightColor
 #joinMsg { color : red; }
 
 /*-----------메인 섹션------------*/
-#boardSelect
-{
-	background-image : url('/snudiceWebpage/image/mainpage/menubar.png');
-	background-repeat : repeat;
-	color : white;
-	height : 52px;
-}
-
-#boardSelect a
-{
-	color : white;
-}
 
 #centerLU
 {

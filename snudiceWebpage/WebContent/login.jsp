@@ -18,7 +18,13 @@
 			<div id="headerImage"></div>			
 		</div>
 		
-		<div class="container">		
+		<div class="container">	
+			<!-- menu -->
+			<div id="menu">
+				<div id="logoWrapper"></div>			
+				<div id="logo"></div>				
+			</div>
+								
 			<div class="left">
 				<!--  회원가입 Form -->
 				<div id="joinFormWrapper" class="display_none">	
@@ -59,15 +65,15 @@
 						</c:otherwise>
 					</c:choose>
 					
-					<div id="loginFormTitle" class="${loginFormWrapperClass}">
-						회원로그인
-						<input id="guestLogin" type="button" value="손님로그인"/> 
+					<div id="loginFormTitle" class="${loginFormWrapperClass}">	
+						&nbsp;&nbsp;&nbsp;&nbsp;회원로그인					
+						<div id="guestLogin"></div> 
 					</div>		
 					
 					<div id="loginFormWrapper" class="${loginFormWrapperClass}">									
 						<div id="idpw">
-							<input id="userId" name="userId" type="text"/><br/>
-							<input id="password" name="password" type="password"/>
+							ID&nbsp;&nbsp; <input id="userId" name="userId" type="text"/><br/>
+							PW <input id="password" name="password" type="password"/>
 						</div>					
 						<div id="loginButton" class="mouseOut"></div>
 												
@@ -105,7 +111,6 @@
 					</div>						
 				</div>
 				<div id="mainLeftBottom">					
-					<div id="gameStart" onclick="alert('이건 없애야돼!');"></div>
 					<div id="clientDownload" onclick="alert('클라 다운시켜!');"></div>					
 				</div>
 			</div>			

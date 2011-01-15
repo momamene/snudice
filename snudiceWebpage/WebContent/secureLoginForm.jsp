@@ -53,7 +53,7 @@ function loginFunc()
 {
 	var userId = document.getElementById("userId");
 	var password = document.getElementById("password");
-	var loginMsg = document.getElementById("loginMsg");	
+	var loginMsg = document.getElementById("loginMsg_");	
 
 	//validation
 	if(userId.value=="")
@@ -104,20 +104,20 @@ function mouseOutFunc()
 			<div class="center_">
 				<div id="mainLeftTop_">
 					<div id="loginFormTitle" class="visible">
-						회원로그인
-						<input id="guestLogin" type="button" value="손님로그인"/> 
+						&nbsp;&nbsp;&nbsp;회원로그인
+						<div id="guestLogin"></div> 
 					</div>
 					
 					<div id="loginFormWrapper" class="visible">
 						<form id="secureloginForm" method="POST" action="j_security_check">
 							<div id="idpw">	
-								<input id="userId" type="text" name="j_username"><br/>		
-								<input id="password" type="password" name="j_password"><br/>	
-							</div>		
+								ID&nbsp;&nbsp; <input id="userId" type="text" name="j_username"><br/>		
+								PW <input id="password" type="password" name="j_password"><br/>	
+							</div>							
 							<div id="loginButton" class="mouseOut"></div>
 						</form>	
-					</div>					
-					<div id="loginMsg" class="visible clearLeft">
+					</div>												
+					<div id="loginMsg_" class="visible clearLeft">
 						<c:if test="${not empty param.fail}">
 							로그인 실패!
 						</c:if>
@@ -129,7 +129,7 @@ function mouseOutFunc()
 		</div>
 		
 		<div class="footer centerAlign">
-			<hr class="lightColor marginZero"/>${footerMsg}
+			<hr class="lightColor"/>${footerMsg}
 		</div>
 	
 	</div>

@@ -50,7 +50,7 @@ public class Login extends HttpServlet {
 		String sessionUserId = (String)session.getAttribute("userId");
 		
 		//이미 로그인 된 경우
-		if(sessionUserId!=null && sessionUserId.compareTo(userId)==0)
+		if(sessionUserId!=null)
 		{
 			os.print("alreadyLoggined");
 			return;
@@ -65,7 +65,7 @@ public class Login extends HttpServlet {
 			//session에 userId를 속성으로 지정					
 			session.setAttribute("userId", userId);	
 			
-			//secure login	
+			//secure login				
 			request.login(userId, password);
 			
 			os.print("loginOK");

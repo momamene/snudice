@@ -306,8 +306,7 @@ function loginFormRefresh()
 			}
 			else if(request.responseText=="alreadyLoggined")
 			{
-				loginMsg.innerHTML = "이미 로그인 되어있습니다.";
-				logoutWrapper.className = "visible";
+				loginMsg.innerHTML = "이미 로그인 되어있습니다.<br/>새로고침 해주세요";
 			}			
 		}
 	}	
