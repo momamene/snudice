@@ -73,11 +73,13 @@ bool gGameCore::SetUp()
 void gGameCore::MainLoop()
 {
 	if(m_spacor!=0)
+	{
 		if(m_bMoving)
 			StepOn();
 //		if(m_bBusing)			-> DrawBus에서 처리
 //			BusStepOn();
-	if(m_bScrolling)
+	}
+	else if(m_bScrolling)
 		ScrollOn();
 
 	gUIGame::GetIF()->MainLoop();	//쓸데없음...
@@ -1066,15 +1068,13 @@ void gGameCore::StepOn()
 	gTimer				*gt = gTimer::GetIF();
 	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
 
-
-	int l_frame = gt->frame();
-
 	if(gt->m_turn > 0)
 	{
 		StepEnd();
 	}
 	else
 	{
+		int l_frame = gt->frame();
 		int couple = gPC->GetCoupleIndex(m_nTurn);
 
 //		if(couple == m_nTurn) couple = gPC->GetMyGPIndex();
@@ -1245,15 +1245,13 @@ void gGameCore::ScrollOn()
 	gTimer				*gt = gTimer::GetIF();
 	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
 
-
-	int l_frame = gt->frame();
-
 	if(gt->m_turn > 0)
 	{
 		ScrollEnd();
 	}
 	else
 	{
+		int l_frame = gt->frame();
 		gMap::GetIF()->posMover(l_frame, gt->m_frame);
 	}	
 }
