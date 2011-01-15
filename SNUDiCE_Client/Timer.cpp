@@ -21,11 +21,8 @@ int gTimer::frame()
 {
 	gMainWin *gmainWin = gMainWin::GetIF();
 	if (!m_on) {
-		MessageBox(gmainWin->m_hWnd, "gTimer 치명적 오류 : 적절하지 않은 Timer 사용", "Error", MB_OK);
-		// exception 발생
-		int		*a = NULL;
-		*a = 3;
-		// end exception
+		int a=1; //gTimer::치명적인 타이머 오류
+		a/=0;
 		return -1;
 	}
 	frameSyn();
