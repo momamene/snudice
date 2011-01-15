@@ -46,7 +46,7 @@ void gMessageCore::pk_message_ask(PK_DEFAULT *pk, SOCKET sock)
 	ask = *((PK_MESSAGE_ASK*)pk->strPacket);
 
 	sprintf(buf,"[PK_MESSAGE_ASK] %s\tid : %s\t message : %s\n", inet_ntoa(clientAddr.sin_addr), ask.szID, ask.szMsg);
-	OutputDebugString(buf);
+	gMainWin::GetIF()->LogWrite(buf);
 
 	PK_MESSAGE_REP	rep;
 	eCOREMODE mode;
@@ -68,7 +68,7 @@ void gMessageCore::pk_message_ask(PK_DEFAULT *pk, SOCKET sock)
 	}
 	else {
 		// error
-		OutputDebugString("(f)[pk_message_ask] Error in mode Problem\n");
+		gMainWin::GetIF()->LogWrite("(f)[pk_message_ask] Error in mode Problem\n");
 	}
 }
 
@@ -166,7 +166,7 @@ void gMessageCore::pk_friendwhisper_ask(PK_DEFAULT *pk, SOCKET sock)
 	ask = *((PK_FRIENDWHISPER_ASK*)pk->strPacket);
 
 	sprintf(buf,"[PK_FRIENDWHISPER_ASK] %s\tMYID : %s", inet_ntoa(clientAddr.sin_addr), ask.szMyID);
-	OutputDebugString(buf);
+	gMainWin::GetIF()->LogWrite(buf);
 
 	stringstream ss;
 	PK_MESSAGE_REP rep1,rep2;	//rep1 : º¸³½³ð rep2 : ¹Þ´Â³ð
@@ -227,7 +227,7 @@ void gMessageCore::pk_friendlist_ask(PK_DEFAULT *pk, SOCKET sock)
 	ask = *((PK_FRIENDLIST_ASK*)pk->strPacket);
 
 	sprintf(buf,"[PK_FRIENDWHISPER_ASK] %s\tMYID : %s", inet_ntoa(clientAddr.sin_addr), ask.szMyID);
-	OutputDebugString(buf);
+	gMainWin::GetIF()->LogWrite(buf);
 
 	stringstream ss;
 	

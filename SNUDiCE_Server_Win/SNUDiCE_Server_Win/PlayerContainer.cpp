@@ -401,7 +401,7 @@ void gPlayerContainer::pk_friendadd_ask(PK_DEFAULT *pk, SOCKET sock)
 	ask = *((PK_FRIENDADD_ASK*)pk->strPacket);
 
 	sprintf(buf,"[PK_FRIENDADD_ASK] %s\tMYID : %s\t FRIENDID : %s\n", inet_ntoa(clientAddr.sin_addr), ask.szMyID, ask.szFriendID);
-	OutputDebugString(buf);
+	gMainWin::GetIF()->LogWrite(buf);
 
 	if (strcmp(ask.szFriendID , ask.szMyID) == 0)	{
 		gMessageCore::GetIF()->msg_failMessage(ask.szMyID , "자신을 친구로 둘 수는 없습니다.");
@@ -424,7 +424,7 @@ void gPlayerContainer::pk_frienddelete_ask(PK_DEFAULT *pk, SOCKET sock)
 	ask = *((PK_FRIENDDELETE_ASK*)pk->strPacket);
 
 	sprintf(buf,"[PK_FRIENDDELETE_ASK] %s\tMYID : %s\t FRIENDID : %s\n", inet_ntoa(clientAddr.sin_addr), ask.szMyID, ask.szFriendID);
-	OutputDebugString(buf);
+	gMainWin::GetIF()->LogWrite(buf);
 	
 	gMysql::GetIF()->friendDeleteOne(ask.szMyID , ask.szFriendID);
 

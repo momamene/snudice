@@ -13,8 +13,9 @@ gSubmitCore *gSubmitCore::GetIF()
 
 bool gSubmitCore::SetUp() 
 {
-	for(int i = 0 ; i < MAXROOM ; i++)
+	for(int i = 0 ; i < MAXROOM ; i++)	{
 		m_isValidSubmitSubject[i] = false;
+	}
 	return true;
 }
 
@@ -150,7 +151,7 @@ void gSubmitCore::putFavorsameclass(int nRoomIndex)
 
 					if (gCI->getMale(classtype[playeridx_A])^gCI->getMale(classtype[playeridx_B]))	{
 						wsprintf(buf,"[SameclassFavorup] : %s and %s\n",gGPC->m_GamePlayer[nRoomIndex][playeridx_A].szID , gGPC->m_GamePlayer[nRoomIndex][playeridx_B].szID );
-						OutputDebugString(buf);
+						gMainWin::GetIF()->LogWrite(buf);
 						gGPC->m_favor[nRoomIndex][playeridx_A].point[playeridx_B] += SAMECLASS_FAVORPOINT;
 						gGPC->m_favor[nRoomIndex][playeridx_B].point[playeridx_A] += SAMECLASS_FAVORPOINT;
 					}
@@ -218,7 +219,7 @@ void gSubmitCore::pk_submit_ask(PK_DEFAULT *pk,SOCKET sock)
 	ask = *((PK_SUBMIT_ASK*)pk->strPacket);
 
 	wsprintf(buf,"[PK_SUBMIT_ASK] %s\t player : %s\n", inet_ntoa(clientAddr.sin_addr), ask.szID);
-	OutputDebugString(buf);
+	gMainWin::GetIF()->LogWrite(buf);
 
 	PK_SUBMIT_REP rep;
 
@@ -226,11 +227,11 @@ void gSubmitCore::pk_submit_ask(PK_DEFAULT *pk,SOCKET sock)
 	int nRoomIndex = gPlayerContainer::GetIF()->GetCoreFlag(ask.szID);
 	int nInRoomIndex = gRoomCore::GetIF()->FindPlayerIndexInTheRoom(ask.szID,nRoomIndex);
 	if(m_isFinishSubmitSubject[nRoomIndex][nInRoomIndex]) {
-		OutputDebugString("수강신청 할 수가 없어\n");
+		gMainWin::GetIF()->LogWrite("수강신청 할 수가 없어\n");
 	}
 	else if(ask.bSubmit) {
 		if(!putSubject(nRoomIndex,nInRoomIndex,ask.nSubjectIdx)) {			// 수강신청 실패
-			OutputDebugString("Error지만 괜찮은\n");						// 나중에 잘 되면 지워
+			gMainWin::GetIF()->LogWrite("Error지만 괜찮은\n");						// 나중에 잘 되면 지워
 		}
 		else {
 			memcpy(rep.subject,m_submitSubject[nRoomIndex],sizeof(BYTE)*CLASSNUM*CLASSSEAT);
@@ -239,7 +240,7 @@ void gSubmitCore::pk_submit_ask(PK_DEFAULT *pk,SOCKET sock)
 	}
 	else {
 		if(!isSubjectExisted(nRoomIndex,nInRoomIndex,ask.nSubjectIdx)) {	// 넌 듣지도 않은 걸 취소하려 했어.
-			OutputDebugString("Error2지만 괜찮은\n");						// 나중에 잘 되면 지워
+			gMainWin::GetIF()->LogWrite("Error2지만 괜찮은\n");						// 나중에 잘 되면 지워
 		}
 		else {
 
@@ -266,7 +267,7 @@ void gSubmitCore::pk_submitready_ask(PK_DEFAULT *pk,SOCKET sock)
 	ask = *((PK_SUBMITREADY_ASK*)pk->strPacket);
 
 	wsprintf(buf,"[PK_SUBMITREADY_ASK] %s\t player : %s\n", inet_ntoa(clientAddr.sin_addr), ask.szID);
-	OutputDebugString(buf);
+	gMainWin::GetIF()->LogWrite(buf);
 
 	PK_SUBMITREADY_REP rep;
 	int nRoomIndex = gPlayerContainer::GetIF()->GetCoreFlag(ask.szID);
@@ -284,9 +285,81 @@ void gSubmitCore::pk_submitready_ask(PK_DEFAULT *pk,SOCKET sock)
 	}
 }
 
+//클라이언트 각 한명씩한테 다 오겠군... 즉, 받은 클라이언트에게만 결과를 돌려주면 될듯, 다만 critical section처리 해야할듯;;
+void gSubmitCore::pk_submitcount_ask(PK_DEFAULT *pk,SOCKET sock)
+{
+
+	gPlayerContainer	*gPC	=						gPlayerContainer::GetIF();
+	gGamePlayerContainer			*gGPC	=		gGamePlayerContainer::GetIF();
+	gRoomCore			*gRC	=		gRoomCore::GetIF();
+
+	PK_SUBMITCOUNT_ASK ask;
+
+	SOCKADDR_IN			clientAddr;
+	int					addrLen;
+	char				buf [1024];
+
+	addrLen = sizeof(clientAddr);
+	getpeername(sock, (SOCKADDR*)&clientAddr, &addrLen);
+
+	ask = *((PK_SUBMITCOUNT_ASK*)pk->strPacket);
+
+	wsprintf(buf,"[PK_SUBMITCOUNT_ASK] %s\t player : %s\n", inet_ntoa(clientAddr.sin_addr), ask.szID);
+	gMainWin::GetIF()->LogWrite(buf);
+
+	int nRoomIndex = gPC->GetCoreFlag(ask.szID);
+	int nInRoomIndex = gRC->FindPlayerIndexInTheRoom(ask.szID , nRoomIndex);
+	
+
+	EnterCriticalSection (&crit[nRoomIndex]);
+
+	gGPC->m_bSyncronize[nRoomIndex][nInRoomIndex] = true;
+
+	for(int i = 0 ; i < ROOMMAXPLAYER ; i++)
+		if(gRC->m_rooms[nRoomIndex].szRoomMaxPlayer[i][0] != '\0') // m_isGamePlayer[nRoomIndex][i] == true;
+			if(! gGPC->m_bSyncronize[nRoomIndex][i])	{
+				LeaveCriticalSection (&crit[nRoomIndex]);
+				return ;
+			}
+
+	for(int i = 0 ; i < ROOMMAXPLAYER ; i++)
+		if(gRC->m_rooms[nRoomIndex].szRoomMaxPlayer[i][0] != '\0') // m_isGamePlayer[nRoomIndex][i] == true;
+			gGPC->m_bSyncronize[nRoomIndex][i] = false;
+	
+
+	LeaveCriticalSection (&crit[nRoomIndex]);
+	
+	int i,j,k;
+	int randSubjectIndex;
+
+	int remainSubjectIndex[CLASSNUM];
+	int remainSubjectCount = 0;
+
+	for (k = 0 ; k < ROOMMAXPLAYER ; k++)	{
+		if (gRC->m_rooms[nRoomIndex].szRoomMaxPlayer[k][0] == '\0')
+			continue;
+		for (i=0;i< MAXSUBJECT ; i++)	{
+			for (j=0;j<CLASSNUM ; j++)
+				remainSubjectIndex[j] = true;
+			while(m_submitSubjectPlayer[nRoomIndex][k][i] == AVAILSEAT && remainSubjectCount < CLASSNUM)	{
+				randSubjectIndex = rand()%CLASSNUM;
+				if (!putSubject(nRoomIndex , k , randSubjectIndex))	{	//실패
+					if (remainSubjectIndex[randSubjectIndex])					remainSubjectCount++;
+					remainSubjectIndex[randSubjectIndex] = false;
+				}
+			}
+		}
+
+	}
+	
+	gGamePlayerContainer::GetIF()->pk_maingamestart_rep(nRoomIndex);
+	
+}
+
 
 
 void gSubmitCore::Release()
 {
 		
 }
+

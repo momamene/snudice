@@ -211,6 +211,23 @@ bool gMysql::friendDeleteOne(char* userId, char* friendId) {
 
 }
 
+void gMysql::scoreCountAdd(char* userId, bool val) {
+
+	char query[255];
+	if (val)	{
+		sprintf(query,USER_WIN_COUNT,userId);
+	}	else	{
+		sprintf(query,USER_LOSE_COUNT,userId);
+	}
+	
+	int query_stat = mysql_query(m_connection,query);
+
+	if(query_stat != 0 ) {
+		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+	}
+}
+
+
 
 
 

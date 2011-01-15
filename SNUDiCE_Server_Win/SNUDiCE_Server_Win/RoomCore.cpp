@@ -192,7 +192,7 @@ void gRoomCore::pk_roommaker_ask(PK_DEFAULT *pk, SOCKET sock)
 	ask = *((PK_ROOMMAKER_ASK*)pk->strPacket);
 
 	wsprintf(buf,"[PK_ROOMMAKER_ASK] %s\t message : %s\n", inet_ntoa(clientAddr.sin_addr), ask.room.szRoomName);
-	OutputDebugString(buf);
+	gMainWin::GetIF()->LogWrite(buf);
 
 
 	PK_ROOMMAKER_REP	rep;
@@ -201,10 +201,10 @@ void gRoomCore::pk_roommaker_ask(PK_DEFAULT *pk, SOCKET sock)
 
 	if(FindTheRoom(ask.room.szRoomName)!=-1) {
 		rep.result = ERM_USINGNAME;
-		OutputDebugString("[PK_ROOMMAKER_REP] 중복이네요.\n");
+		gMainWin::GetIF()->LogWrite("[PK_ROOMMAKER_REP] 중복이네요.\n");
 	}
 	else if(emptyRoom == -1) {	// 정적으로 할당된 방이 모두 사용되고 있는 상황
-		OutputDebugString("많이 사랑해주셔서 감사합니다. \n");
+		gMainWin::GetIF()->LogWrite("많이 사랑해주셔서 감사합니다. \n");
 		rep.result = ERM_USINGNAME;
 	}
 	else {
@@ -220,7 +220,7 @@ void gRoomCore::pk_roommaker_ask(PK_DEFAULT *pk, SOCKET sock)
 		rep.room = m_rooms[emptyRoom];
 		FindPlayersFromIDs_RMP(emptyRoom,rep.playerlist);	// 추가 코드
 		wsprintf(buf,"[PK_ROOMMAKER_REP] Index : %d 성공! \n",emptyRoom);
-		OutputDebugString(buf);
+		gMainWin::GetIF()->LogWrite(buf);
 
 		gCC->pk_channelrefresh_rep(befCoreFlag);
 		SendRoomListCauseChange(emptyRoom/MAXROOMFORPAGE);
@@ -249,7 +249,7 @@ void gRoomCore::pk_roomlist_ask(PK_DEFAULT *pk, SOCKET sock)
 	ask = *((PK_ROOMLIST_ASK*)pk->strPacket);
 
 	wsprintf(buf,"[PK_ROOMLIST_ASK] %s\t player : %s\n", inet_ntoa(clientAddr.sin_addr), ask.szID);
-	OutputDebugString(buf);
+	gMainWin::GetIF()->LogWrite(buf);
 
 	if(ask.nPage==0||isRoomInPage(ask.nPage)) {
 		gPC->PutMode(ask.szID,ECM_ROOMJOIN);
@@ -276,7 +276,7 @@ void gRoomCore::pk_charselect_ask(PK_DEFAULT *pk, SOCKET sock)
 	ask = *((PK_CHARSELECT_ASK*)pk->strPacket);
 
 	wsprintf(buf,"[PK_CHARSELECT_ASK] %s\t player : %s\n", inet_ntoa(clientAddr.sin_addr), ask.szID);
-	OutputDebugString(buf);
+	gMainWin::GetIF()->LogWrite(buf);
 
 	int nRoomIndex = gPC->GetCoreFlag(ask.szID);
 	if(nRoomIndex<0) return;
@@ -307,7 +307,7 @@ void gRoomCore::pk_gameready_ask(PK_DEFAULT *pk, SOCKET sock)
 	ask = *((PK_GAMEREADY_ASK*)pk->strPacket);
 
 	wsprintf(buf,"[PK_GAMEREADY_ASK] %s\t player : %s\n", inet_ntoa(clientAddr.sin_addr), ask.szID);
-	OutputDebugString(buf);
+	gMainWin::GetIF()->LogWrite(buf);
 
 
 	gPC->PutBoolReady(ask.szID,ask.bReady);
@@ -335,7 +335,7 @@ void gRoomCore::pk_gamestart_ask(PK_DEFAULT *pk, SOCKET sock)
 	ask = *((PK_GAMESTART_ASK*)pk->strPacket);
 
 	wsprintf(buf,"[PK_GAMESTART_ASK] %s\t player : %s\n", inet_ntoa(clientAddr.sin_addr), ask.szID);
-	OutputDebugString(buf);
+	gMainWin::GetIF()->LogWrite(buf);
 
 	PK_GAMESTART_REP rep;
 
@@ -397,7 +397,7 @@ void gRoomCore::pk_roomjoin_ask(PK_DEFAULT *pk, SOCKET sock)
 	ask = *((PK_ROOMJOIN_ASK*)pk->strPacket);
 
 	wsprintf(buf,"[PK_ROOMJOIN_ASK] %s\t nPage : %d nIdx : %d\n", inet_ntoa(clientAddr.sin_addr), ask.nPage, ask.nIdx);
-	OutputDebugString(buf);
+	gMainWin::GetIF()->LogWrite(buf);
 
 	PK_ROOMJOIN_REP rep;
 	int nRoomIndex;
@@ -444,7 +444,7 @@ void gRoomCore::pk_roomjoin_ask(PK_DEFAULT *pk, SOCKET sock)
 		memcpy(&rep.playerlist,&l_playerlist,sizeof(PLAYER)*ROOMMAXPLAYER);
 
 		wsprintf(buf,"[PK_ROOMJOIN_REP] %s\t \n", inet_ntoa(clientAddr.sin_addr));
-		OutputDebugString(buf);
+		gMainWin::GetIF()->LogWrite(buf);
 		gMainWin::GetIF()->Send(PL_ROOMJOIN_REP, sizeof(rep), &rep, sock);
 
 	}
@@ -471,7 +471,7 @@ void gRoomCore::pk_roomback_ask(PK_DEFAULT *pk, SOCKET sock)
 	ask = *((PK_ROOMBACK_ASK*)pk->strPacket);
 
 	wsprintf(buf,"[PK_ROOMBACK_ASK] %s\n", inet_ntoa(clientAddr.sin_addr) );
-	OutputDebugString(buf);
+	gMainWin::GetIF()->LogWrite(buf);
 
 
 	int nRoomIndex = gPC->GetCoreFlag(ask.szID);	//	방의 index를 획득

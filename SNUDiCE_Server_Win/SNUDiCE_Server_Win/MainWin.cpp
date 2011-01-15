@@ -161,6 +161,10 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 	if(!gCharinfo::GetIF()->SetUp())
 		return false;
 	
+
+	//로그파일을 만듭니다.
+	logFile = fopen(LOG_FILE_NAME , "w+");
+	
 	return true;
 }
 
@@ -179,6 +183,7 @@ void gMainWin::Release()
 	gGamePlayerContainer::GetIF()->Release();
 	gCharinfo::GetIF()->Release();
 
+	fclose(logFile);
 }
 
 bool gMainWin::MakeListenThread()
@@ -190,7 +195,7 @@ bool gMainWin::MakeListenThread()
 	hThread = CreateThread(NULL, 0, Listen, NULL, 0, &dwThreadID);
 
 	if(hThread == NULL) {
-		OutputDebugString("Thread failed\n");
+		gMainWin::GetIF()->LogWrite("Thread failed\n");
 		return false;
 	}
 	else {
@@ -278,6 +283,9 @@ void gMainWin::Recv(PK_DEFAULT *pk, SOCKET sock)
 		case PL_SUBMITREADY_ASK:
 			gSubmitCore::GetIF()->pk_submitready_ask(pk,sock);
 			break;
+		case PL_SUBMITCOUNT_ASK :
+			gSubmitCore::GetIF()->pk_submitcount_ask(pk,sock);
+			break;
 		case PL_MOVESTART_ASK:
 			gGamePlayerContainer::GetIF()->pk_movestart_ask(pk,sock);
 			break;
@@ -340,6 +348,7 @@ void gMainWin::Recv(PK_DEFAULT *pk, SOCKET sock)
 		case PL_FRIENDLIST_ASK :
 			gMessageCore::GetIF()->pk_friendlist_ask(pk, sock);
 	}
+
 }
 
 bool gMainWin::Send(DWORD type, DWORD size, void *buf ,char* szID)
@@ -356,7 +365,7 @@ bool gMainWin::Send(DWORD type, DWORD size, void *buf, SOCKET sock)
 	PK_DEFAULT		pk;
 
 	if(!sock) {
-		OutputDebugString("gMainWin::Send Sock fail error\n");
+		gMainWin::GetIF()->LogWrite("gMainWin::Send Sock fail error\n");
 		return false;
 	}
 	char *temp = (char*)buf;
@@ -384,7 +393,7 @@ bool gMainWin::Send(DWORD type, DWORD size, void *buf, SOCKET sock)
 		fail_count++;
 
 		if(fail_count > 10) {
-			OutputDebugString("gMainWin::Send fail count error\n");
+			gMainWin::GetIF()->LogWrite("gMainWin::Send fail count error\n");
 			return false;
 		}
 	}
@@ -489,7 +498,7 @@ void err_display(char *msg)
 		(LPTSTR)&lpMsgBuf, 0, NULL);
 
 	sprintf(buf,"[%s] %s", msg, (LPCTSTR)lpMsgBuf);
-	OutputDebugString(buf);
+	gMainWin::GetIF()->LogWrite(buf);
 
 	LocalFree(lpMsgBuf);
 	
@@ -511,13 +520,13 @@ void gMainWin::UserRelease(SOCKET client_sock,SOCKADDR_IN clientAddr) {
 		gChannelContainer::GetIF()->DeletePlayer(clientID);
 		gChannelCore::GetIF()->pk_channelrefresh_rep(channel);
 		// sangwoo temp
-		OutputDebugString("refresh for delete\n");
+		gMainWin::GetIF()->LogWrite("refresh for delete\n");
 //		gChannelContainer::GetIF()->fullDebuger();
 		// end
 	}
 	else {
 		// 에러 처리.
-		OutputDebugString("Exception in function ExitPlayer\n");
+		gMainWin::GetIF()->LogWrite("Exception in function ExitPlayer\n");
 	}
 
 	gRoomCore::GetIF()->ExitTheRoom(clientID);
@@ -525,7 +534,7 @@ void gMainWin::UserRelease(SOCKET client_sock,SOCKADDR_IN clientAddr) {
 
 	sprintf(buf,"[TCP Server] Client Exit : IP = %s\t Port = %d\n",
 		inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port));
-	OutputDebugString (buf);
+	gMainWin::GetIF()->LogWrite (buf);
 }
 
 
@@ -555,7 +564,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 		int		fail_count = 0;
 		
 		retVal = recv(client_sock, (char*)&pkDefault, PK_HEADER_SIZE, 0);
-		OutputDebugString("a.");
+		gMainWin::GetIF()->LogWrite("a.");
 		if(retVal == SOCKET_ERROR)	// 임시방편
 			break;
 		//	continue;
@@ -567,7 +576,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 		while(true)
 		{
 			r2 = recv(client_sock, pkDefault.strPacket, pkDefault.dwSize - PK_HEADER_SIZE, 0);
-			OutputDebugString("b\n");
+			gMainWin::GetIF()->LogWrite("b\n");
 			
 			if(r2 != SOCKET_ERROR)
 				r1 += r2;
@@ -613,7 +622,7 @@ DWORD WINAPI Listen(LPVOID prc)
 	MSG		Msg;
 	char	buf[1024];
 
-	OutputDebugString("Server Start\n");
+	gMainWin::GetIF()->LogWrite("Server Start\n");
 
 	while(true)
 	{
@@ -633,16 +642,21 @@ DWORD WINAPI Listen(LPVOID prc)
 		sprintf(buf,"\n[TCP Server] Client Connect : IP = %s\t Port = %d\n",
 			inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port));
 
-		OutputDebugString(buf);
+		gMainWin::GetIF()->LogWrite(buf);
 
 		// make thread
 		hThread = CreateThread(NULL, 0, ProcessClient,
 			(LPVOID)client_sock, 0, &dwThreadID);
 
 		if(hThread == NULL) 
-			OutputDebugString("Thread failed\n");
+			gMainWin::GetIF()->LogWrite("Thread failed\n");
 		else
 			CloseHandle(hThread);
 
 	}
+}
+
+void gMainWin::LogWrite(char * buf)
+{
+	fprintf(logFile , "%s", buf);
 }

@@ -40,13 +40,13 @@ void gChannelCore::pk_channelrefresh_rep (int channel) {
 					(gChannelContainer::GetIF()->m_channelArray[channel].szUserInCh[j],&getSock);
 				
 				if(!bTem) {
-					OutputDebugString("getSocket Error \n");
+					gMainWin::GetIF()->LogWrite("getSocket Error \n");
 				}
 
 				bTemp = gMainWin::GetIF()->Send(PL_CHANNELREFRESH_REP, sizeof(repOther), &repOther, getSock);
 				
 				if(!bTemp) {
-					OutputDebugString("Send Error \n");
+					gMainWin::GetIF()->LogWrite("Send Error \n");
 				}
 		}
 	}
@@ -72,7 +72,7 @@ void gChannelCore::pk_channelchange_ask (PK_DEFAULT *pk, SOCKET sock)
 
 
 	wsprintf(buf,"[PK_CHANNELCHANGE_ASK] %s\tid : %s\t message : %d\n", inet_ntoa(clientAddr.sin_addr), ask.szID, ask.nChannel);
-	OutputDebugString(buf);
+	gMainWin::GetIF()->LogWrite(buf);
 
 	gPlayerContainer *gPC = gPlayerContainer::GetIF();
 	gRoomCore *gRC = gRoomCore::GetIF();
@@ -82,7 +82,7 @@ void gChannelCore::pk_channelchange_ask (PK_DEFAULT *pk, SOCKET sock)
 		case ECM_BATTLENET : 				case ECM_ROOMJOIN :
 			if(channelBefore == -1) {
 				// 에러 처리
-				OutputDebugString("(f)[pk_channelchange_ask] Cannot Find Player Error\n");
+				gMainWin::GetIF()->LogWrite("(f)[pk_channelchange_ask] Cannot Find Player Error\n");
 			}
 			else {
 				if(gChannelContainer::GetIF()->RoomClientNum(ask.nChannel-1)>=CHANNELUSERMAX) {

@@ -95,6 +95,9 @@ public:
 	//È£°¨µµ
 
 
+	void				PushbSynAllPlayer(int nRoomIndex,bool bSyn);
+	bool				isbSynAllTrue(int nRoomIndex);
+
 
 	void		pk_maingamestart_rep(int nRoomIndex);
 	void		pk_movestart_ask(PK_DEFAULT *pk,SOCKET sock);
@@ -152,9 +155,6 @@ private:
 	
 	void				FirstTurn(int nRoomIndex);
 	void				NextTurn(int nRoomIndex);
-
-	void				PushbSynAllPlayer(int nRoomIndex,bool bSyn);
-	bool				isbSynAllTrue(int nRoomIndex);
 
 	int					meetGrade(int nRoomIndex,int subjectIndex ,int nInRoomIndex);  // subjectIndex = flag1
 	int					meetItemCalculator(int nRoomIndex,int nInRoomIndex,int classType,int originalVal);
