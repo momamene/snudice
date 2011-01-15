@@ -79,7 +79,7 @@ void gGameCore::MainLoop()
 //		if(m_bBusing)			-> DrawBus에서 처리
 //			BusStepOn();
 	}
-	else if(m_bScrolling)
+	if(m_bScrolling)
 		ScrollOn();
 
 	gUIGame::GetIF()->MainLoop();	//쓸데없음...
