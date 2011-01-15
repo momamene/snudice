@@ -766,11 +766,14 @@ void gUIGame::Draw()
 		//sprintf_s(szBuf, ".1f", )
 
 	// result
-		if(m_uimode == UIM_RESULT)
+		else if(m_uimode == UIM_RESULT)
 		{
 			for(i = 0; i < ROOMMAXPLAYER; i++)
 			{
 				if(m_rankIdx[i] == -1)
+					continue;
+
+				if(strlen(gPC->m_GPlayerList[ m_rankIdx[i] ].szID) == 0)
 					continue;
 
 				gUtil::TextOutLine(RESULT_POS_START_X, RESULT_POS_START_Y + i * RESULT_TERM_Y,
@@ -1784,10 +1787,11 @@ void gUIGame::pk_itemuse_rep(PK_ITEMUSE_REP* rep)
 
 void gUIGame::SetTargetButton_UseInfo()
 {
-	int i,j,k=0;
-
 	int		startx = USEINFO_TARGET_POS_X - TARGET_OUTLINE_SIZE_W - USEINFO_TARGET_TERM_X/2;
 	int		starty = USEINFO_TARGET_POS_Y - TARGET_OUTLINE_SIZE_H*3/2 - USEINFO_TARGET_TERM_Y;
+
+/*
+	int i,j,k=0;
 
 	for(i=0;i<3;i++)
 		for(j=0;j<2;j++) {
@@ -1796,7 +1800,8 @@ void gUIGame::SetTargetButton_UseInfo()
 				startx+ j*(TARGET_OUTLINE_SIZE_W + USEINFO_TARGET_TERM_X) + TARGET_OUTLINE_SIZE_W, starty + i*(TARGET_OUTLINE_SIZE_H + USEINFO_TARGET_TERM_Y) + TARGET_OUTLINE_SIZE_H);
 			k++;
 		}
-/*
+*/
+
 	switch(m_nTargetNum)
 	{
 		case 1:
@@ -2021,7 +2026,6 @@ void gUIGame::SetTargetButton_UseInfo()
 			}
 			break;
 	}
-*/
 }
 
 void gUIGame::pk_infochange_rep(PK_INFOCHANGE_REP *rep)
