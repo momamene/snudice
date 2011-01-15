@@ -33,6 +33,7 @@ public:
 // 변수들
 public:
 	SOCKET		m_listen_sock;
+	CRITICAL_SECTION crit[MAXROOM];	
 
 	HINSTANCE	m_hInst;
 	HWND		m_hWnd;
@@ -57,6 +58,7 @@ private:
 	
 // 함수들
 public:
+
 	bool		MakeListenThread();
 	int			Run();
 	void		MainLoop();
