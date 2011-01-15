@@ -1514,7 +1514,7 @@ void gGamePlayerContainer::pk_warpend_ask (PK_DEFAULT *pk, SOCKET sock)
 
 	ask = *((PK_WARPEND_ASK*)pk->strPacket);
 
-	wsprintf(buf,"[PK_WAR7PEND_ASK] %s\t %s \n", inet_ntoa(clientAddr.sin_addr), ask.szID);
+	wsprintf(buf,"[PK_WARPEND_ASK] %s\t %s \n", inet_ntoa(clientAddr.sin_addr), ask.szID);
 	gMainWin::GetIF()->LogWrite(buf);
 
 	int nRoomIndex = gPC->GetCoreFlag(ask.szID);
@@ -2028,6 +2028,9 @@ void gGamePlayerContainer::pk_anscouple_ask(PK_DEFAULT *pk,SOCKET sock)	//수정 ,
 	PLAYER tgPlayer		=	gPC->GetPlayerFromID(gRC->FindPlayerszIDInTheRoom(tgPlayerIndex , nRoomIndex));
 	
 
+	wsprintf(buf,"[PK_ANSCOUPLE_ASK] %s\t Id : %s repond : %d \n", gotPlayer.szID , ask.bYes);
+	gMainWin::GetIF()->LogWrite(buf);
+	
 	m_favor[nRoomIndex][gotPlayerIndex].bYes = (CoupleState)ask.bYes;
 	if (m_favor[nRoomIndex][gotPlayerIndex].bYes == CPS_ACCEPT && m_favor[nRoomIndex][tgPlayerIndex].bYes == CPS_ACCEPT)	{	//커플탄생
 		pk_becouple_rep(nRoomIndex , tgPlayer , gotPlayer, true);
@@ -2101,6 +2104,7 @@ void gGamePlayerContainer::pk_becouple_rep(int nRoomIndex , PLAYER player_a , PL
 	if (bCouple)	{
 
 		wsprintf(buf,"[Match][Room : %d ; %d and %d : %d point] ", nRoomIndex , playerIndex_a , playerIndex_b , LOVEINITPOINT);
+		gMainWin::GetIF()->LogWrite(buf);
 		m_favor[nRoomIndex][playerIndex_a].point[playerIndex_b] = -1;				m_favor[nRoomIndex][playerIndex_a].bYes = CPS_NONE;
 		m_favor[nRoomIndex][playerIndex_b].point[playerIndex_a] = -1;				m_favor[nRoomIndex][playerIndex_b].bYes = CPS_NONE;
 		m_favor[nRoomIndex][playerIndex_b].lvTargetIndex = playerIndex_a;			m_favor[nRoomIndex][playerIndex_a].lvTargetIndex = playerIndex_b;
@@ -2154,6 +2158,9 @@ void	gGamePlayerContainer::pk_becoupleend_ask(PK_DEFAULT *pk , SOCKET sock )
 	int					addrLen;
 	char				buf [1024];
 
+	wsprintf(buf,"[PK_BECOUPLEEND_ASK] %s\t message : %s\n", inet_ntoa(clientAddr.sin_addr), ask.szID);
+	gMainWin::GetIF()->LogWrite(buf);
+	
 	addrLen = sizeof(clientAddr);
 	getpeername(sock, (SOCKADDR*)&clientAddr, &addrLen);
 

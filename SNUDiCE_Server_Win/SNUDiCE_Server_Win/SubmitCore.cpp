@@ -285,7 +285,7 @@ void gSubmitCore::pk_submitready_ask(PK_DEFAULT *pk,SOCKET sock)
 	}
 }
 
-//클라이언트 각 한명씩한테 다 오겠군... 즉, 받은 클라이언트에게만 결과를 돌려주면 될듯, 다만 critical section처리 해야할듯;;
+//	모든 이에게 패킷은 오되 하나의 쓰레드만 받아서 일괄처리.
 void gSubmitCore::pk_submitcount_ask(PK_DEFAULT *pk,SOCKET sock)
 {
 
