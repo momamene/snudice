@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import utility.Encrypt;
+
 import constant.Const;
 
 import dbaccess.DB;
@@ -60,8 +62,8 @@ public class Join extends HttpServlet {
 				os.print("existingUser");			
 			else
 			{				
-				//계정 추가
-				db.dbAccount.insertNewUser(joinId,joinPw,joinEmail,"member");	
+				//계정 추가 - md5를 한번 더 적용해서 저장함
+				db.dbAccount.insertNewUser(joinId,Encrypt.md5(joinPw),joinEmail,"member");	
 				os.print("joinOK");
 			}			
 		}		

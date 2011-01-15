@@ -166,6 +166,7 @@ function loginFunc()
 	var method = "post";
 	var param = "userId="+encodeURIComponent(userId.value);
 	param += "&password="+encodeURIComponent(MD5(password.value));	
+	
 	var callback = loginFormRefresh;
 	var async = false;	
 	
