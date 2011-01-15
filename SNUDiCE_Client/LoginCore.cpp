@@ -259,12 +259,15 @@ void gLoginCore::Release()
 void gLoginCore::SendLogin()
 {
 	PK_LOGIN_ASK	ask;
-	
-	strcpy(ask.szID, m_EditID.m_szEdit);
-	strcpy(ask.szPW, m_EditPW.m_szEdit);
 
-//	MDString(ask.szPW, ask.szPW);
-//	MDString(ask.szPW, ask.szPW);
+	char	szTemp[33];
+
+	strcpy(ask.szID, m_EditID.m_szEdit);
+	strcpy(szTemp, m_EditPW.m_szEdit);
+
+	MDString(szTemp, ask.szPW);
+	strcpy(szTemp, ask.szPW);
+	MDString(szTemp, ask.szPW);
 
 	gServer::GetIF()->Send(PL_LOGIN_ASK, sizeof(ask), &ask);
 }

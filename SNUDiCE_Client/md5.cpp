@@ -400,4 +400,5 @@ void MDString (char *inString,char *result)
 	{
 		sprintf(result+di*2,"%02x",digest[di]);
 	}
+	result[32] = '\0';
 }
