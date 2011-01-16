@@ -440,7 +440,6 @@ void gGamePlayerContainer::pk_moveend_ask(PK_DEFAULT *pk,SOCKET sock)
 
 	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
 	gRoomCore			*gRC = gRoomCore::GetIF();
-	gTileContainer		*gTC = gTileContainer::GetIF();
 
 	SOCKADDR_IN			clientAddr;
 	int					addrLen;
@@ -477,92 +476,7 @@ void gGamePlayerContainer::pk_moveend_ask(PK_DEFAULT *pk,SOCKET sock)
 		
 		if(isbSynAllTrue(nRoomIndex)) {	// 모든 무브가 끝나면...
 			PushbSynAllPlayer(nRoomIndex,false);
-			if (m_favor[nRoomIndex][m_nTurn[nRoomIndex]].bYes == CPS_PROPOSE)	{	//가는도중 커플수락여부
-				pk_askcouple_rep(nRoomIndex,m_nTurn[nRoomIndex],m_favor[nRoomIndex][m_nTurn[nRoomIndex]].lvTargetIndex);
-				return;
-			}
-			TILE *aaa= gTC->m_tileMap;
-
-			if(gTC->m_tileMap[ask.nDestPos].tileType==TY_BUS) {
-				gMainWin::GetIF()->LogWrite("TY_BUS\n");
-				pk_busmovechoose_rep(nRoomIndex,szTurnID);
-			}
-			else if(gTC->m_tileMap[ask.nDestPos].tileType==TY_CLASS) {
-				gMainWin::GetIF()->LogWrite("TY_CLASS\n");
-				// 수업점수
-				int getAccomplishment = meetGrade ( nRoomIndex , gTC->m_tileMap[ask.nDestPos].flag2 , m_nTurn[nRoomIndex]);
-				int getCoupleAccomplishment = -1;	int partnerIndex = -1;	//커플아니면 -1
-				GradeRankSyncronizer(nRoomIndex);
-
-				if(getAccomplishment!=-1) {
-					gMainWin::GetIF()->LogWrite("TY_MySubject\n");
-					staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],-1);
-				}
-				if (m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nLove != -1)	{	//커플모드
-					partnerIndex = m_favor[nRoomIndex][m_nTurn[nRoomIndex]].lvTargetIndex;
-					getCoupleAccomplishment = meetGrade(nRoomIndex,gTC->m_tileMap[ask.nDestPos].flag2 , partnerIndex);
-					
-					if (getCoupleAccomplishment != -1)	{
-						gMainWin::GetIF()->LogWrite("TY_PartnerSubject\n");
-						staminaConvert(nRoomIndex,partnerIndex,-1);
-					}
-				}
-				// 수업듣기
-				
-				if (getAccomplishment != -1 && getCoupleAccomplishment != -1)	{ 	//같이 수업 듣기
-					pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex],-1,
-						getCoupleAccomplishment > getAccomplishment ? getCoupleAccomplishment : getAccomplishment, partnerIndex);
-					//둘중 높은사람점수로 (공부시켜주니까 -ㅅ-;;사랑의 힘;;)
-				}	else if (getAccomplishment != -1 && getCoupleAccomplishment == -1)	{	//나만 수업 듣기
-					pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex],-1, getAccomplishment);
-				}	else if (getAccomplishment == -1 && getCoupleAccomplishment != -1)	{	//너만 수업 듣기
-					pk_infochangeTile_rep(nRoomIndex,partnerIndex,-1, getCoupleAccomplishment);
-				}
-				if (getAccomplishment == -1 && getCoupleAccomplishment == -1)	{	//통과
-					pk_nextturn_rep(nRoomIndex);
-				}
-				pk_gameplayerinfo_rep(nRoomIndex);
-			}
-			else if(gTC->m_tileMap[ask.nDestPos].tileType==TY_DRINK) {
-				gMainWin::GetIF()->LogWrite("TY_DRINK\n");
-				staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],-1);
-				if (m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nLove == -1)	{	//싱글
-					pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex],-1,0);
-				} else	{	//커플
-					int partnerIndex = m_favor[nRoomIndex][m_nTurn[nRoomIndex]].lvTargetIndex;
-					staminaConvert(nRoomIndex,partnerIndex,-1);
-					pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex],-1,0 , partnerIndex);
-				}
-
-				pk_gameplayerinfo_rep(nRoomIndex);
-//				pk_nextturn_rep(nRoomIndex);
-			}
-			else if(gTC->m_tileMap[ask.nDestPos].tileType==TY_STAMINA) {
-				gMainWin::GetIF()->LogWrite("TY_STAMINA\n");
-				staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],1);
-				if (m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nLove == -1)	{	//싱글
-					pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex] , 1,0);
-				}	else	{	//커플
-					int partnerIndex = m_favor[nRoomIndex][m_nTurn[nRoomIndex]].lvTargetIndex;
-					staminaConvert(nRoomIndex,partnerIndex,1);
-					pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex] , 1,0 , partnerIndex);
-				}
-				pk_gameplayerinfo_rep(nRoomIndex);
-//				pk_nextturn_rep(nRoomIndex);
-			}
-			else if(gTC->m_tileMap[ask.nDestPos].tileType==TY_ITEM) {
-				gMainWin::GetIF()->LogWrite("TY_ITEM\n");
-				getItem(nRoomIndex,m_nTurn[nRoomIndex]);
-				if (m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nLove != -1)		//커플
-					getItem(nRoomIndex,m_favor[nRoomIndex][m_nTurn[nRoomIndex]].lvTargetIndex);
-				pk_gameplayerinfo_rep(nRoomIndex);
-				pk_nextturn_rep(nRoomIndex);
-			}
-			else {//통과
-				gMainWin::GetIF()->LogWrite("TY_NOTHING\n");
-				pk_gameplayerinfo_rep(nRoomIndex);
-				pk_nextturn_rep(nRoomIndex);
-			}
+			TileProcess(nRoomIndex , nInRoomIndex , ask.nDestPos);
 		}
 #ifdef CRITICAL_SECTION_GOGO
 //		LeaveCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
@@ -1347,7 +1261,8 @@ ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, 
 						memset(desList , 0 , sizeof(desList));
 						int partnerIndex  = m_favor[nRoomIndex][nInRoomIndex].lvTargetIndex;
 						bInRoomIndex[nInRoomIndex] = true;	bInRoomIndex[partnerIndex] = true;
-						desList[nInRoomIndex] = ask.nDestPos;	desList[partnerIndex] = ask.nDestPos;
+						
+						desList[nInRoomIndex] = gIC->m_ItemList[ask.nItemID].nPos;	desList[partnerIndex] = gIC->m_ItemList[ask.nItemID].nPos;
 
 						pk_warpliststart_rep(nRoomIndex , bInRoomIndex ,desList);
 
@@ -1370,7 +1285,7 @@ ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, 
 						memset(desList , 0 , sizeof(desList));
 						int partnerIndex  = m_favor[nRoomIndex][nInRoomIndex].lvTargetIndex;
 						bInRoomIndex[nInRoomIndex] = true;	bInRoomIndex[partnerIndex] = true;
-						desList[nInRoomIndex] = ask.nDestPos;	desList[partnerIndex] = ask.nDestPos;
+						desList[nInRoomIndex] = gIC->m_ItemList[ask.nItemID].nPos;	desList[partnerIndex] = gIC->m_ItemList[ask.nItemID].nPos;
 
 						pk_warpliststart_rep(nRoomIndex , bInRoomIndex ,desList);
 
@@ -1557,59 +1472,7 @@ void gGamePlayerContainer::pk_warpend_ask (PK_DEFAULT *pk, SOCKET sock)
 				pk_nextturn_rep(nRoomIndex);
 				return;
 			}
-			
-			if(gTC->m_tileMap[ask.nDestPos].tileType==TY_CLASS) {
-				gMainWin::GetIF()->LogWrite("TY_CLASS\n");
-				int getAccomplishment = meetGrade ( nRoomIndex , gTC->m_tileMap[ask.nDestPos].flag2 , m_nTurn[nRoomIndex]);
-				int getCoupleAccomplishment = -1;
-				GradeRankSyncronizer(nRoomIndex);
-
-				if(getAccomplishment!=-1) {	//우히힝 여기서 뻘코딩~!
-					gMainWin::GetIF()->LogWrite("TY_MySubject\n");
-					staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],-1);
-					if (m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nLove == -1)
-						pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex],-1,getAccomplishment);
-				}
-				if (m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nLove != -1)	{	//커플모드
-					int partnerIndex = m_favor[nRoomIndex][m_nTurn[nRoomIndex]].lvTargetIndex;
-					getCoupleAccomplishment = meetGrade(nRoomIndex,gTC->m_tileMap[ask.nDestPos].flag2 , partnerIndex);
-
-					if (getCoupleAccomplishment != -1)	{
-						gMainWin::GetIF()->LogWrite("TY_PartnerSubject\n");
-						staminaConvert(nRoomIndex,partnerIndex,-1);
-						if (getAccomplishment != -1)	//수업 같이 듣긔
-							pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex],-1,
-							getCoupleAccomplishment > getAccomplishment ? getCoupleAccomplishment : getAccomplishment, partnerIndex);
-						//둘중 높은사람점수로 (공부시켜주니까 -ㅅ-;;사랑의 힘;;)
-						else
-							pk_infochangeTile_rep(nRoomIndex,partnerIndex,-1, getCoupleAccomplishment);
-					}
-				}
-				pk_gameplayerinfo_rep(nRoomIndex);
-			}
-			else if(gTC->m_tileMap[ask.nDestPos].tileType==TY_DRINK) {
-				gMainWin::GetIF()->LogWrite("TY_DRINK\n");
-				staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],-1);
-				pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex],-1,0);
-				pk_gameplayerinfo_rep(nRoomIndex);
-//				pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex],-1,0);
-			}
-			else if(gTC->m_tileMap[ask.nDestPos].tileType==TY_STAMINA) {
-				gMainWin::GetIF()->LogWrite("TY_STAMINA\n");
-				staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],1);
-				pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex] , 1,0);
-				pk_gameplayerinfo_rep(nRoomIndex);
-//				pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex] , 1,0);
-			}
-			else if(gTC->m_tileMap[ask.nDestPos].tileType==TY_ITEM) {
-				gMainWin::GetIF()->LogWrite("TY_ITEM\n");
-				getItem(nRoomIndex,m_nTurn[nRoomIndex]);
-				pk_gameplayerinfo_rep(nRoomIndex);
-			}
-			else {
-				gMainWin::GetIF()->LogWrite("TY_NOTHING\n");
-				pk_gameplayerinfo_rep(nRoomIndex);
-			}
+			TileProcess(nRoomIndex , m_nTurn[nRoomIndex] , ask.nDestPos);
 		}
 #ifdef CRITICAL_SECTION_GOGO
 		LeaveCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
@@ -1656,17 +1519,23 @@ void gGamePlayerContainer::pk_warplistend_ask (PK_DEFAULT *pk, SOCKET sock)
 	int nInRoomIndex = gRC->FindPlayerIndexInTheRoom(ask.szID,nRoomIndex);
 
 
-	m_bSyncronize[nRoomIndex][nInRoomIndex] = true;
-
 #ifdef CRITICAL_SECTION_GOGO
 	EnterCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
 #endif
 
+	m_bSyncronize[nRoomIndex][nInRoomIndex] = true;
+
 	if(isbSynAllTrue(nRoomIndex)) {	// 모든 워프가 끝나면,,, 버스 사라짐;;
 		PushbSynAllPlayer(nRoomIndex,false); 
-		gMainWin::GetIF()->LogWrite("TY_NOTHING\n");
-		pk_gameplayerinfo_rep(nRoomIndex);
-		pk_nextturn_rep(nRoomIndex);
+		if (ask.nDestPos[nInRoomIndex] != -1 && m_favor[nRoomIndex][nInRoomIndex].lvTargetIndex != -1 )	{	//커플이동입네
+			if (ask.nDestPos [ m_favor[nRoomIndex][nInRoomIndex].lvTargetIndex ] != -1 && ask.nDestPos[nInRoomIndex] == ask.nDestPos [ m_favor[nRoomIndex][nInRoomIndex].lvTargetIndex ])	{
+				TileProcess(nRoomIndex ,nInRoomIndex ,ask.nDestPos[nInRoomIndex]);
+			}
+		}	else	{
+			gMainWin::GetIF()->LogWrite("TY_NOTHING\n");
+			pk_gameplayerinfo_rep(nRoomIndex);
+			pk_nextturn_rep(nRoomIndex);
+		}
 	}
 #ifdef CRITICAL_SECTION_GOGO
 	LeaveCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
@@ -2231,4 +2100,95 @@ void	gGamePlayerContainer::pk_becoupleend_ask(PK_DEFAULT *pk , SOCKET sock )
 #ifdef CRITICAL_SECTION_GOGO
 //	LeaveCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
 #endif
+}
+
+void	gGamePlayerContainer::TileProcess(int nRoomIndex, int nInRoomIndex, int nDestPos)
+{
+	gTileContainer		*gTC = gTileContainer::GetIF();
+	if (m_favor[nRoomIndex][m_nTurn[nRoomIndex]].bYes == CPS_PROPOSE)	{	//가는도중 커플수락여부
+		pk_askcouple_rep(nRoomIndex,m_nTurn[nRoomIndex],m_favor[nRoomIndex][m_nTurn[nRoomIndex]].lvTargetIndex);
+		return;
+	}
+	TILE *aaa= gTC->m_tileMap;
+
+	if(gTC->m_tileMap[nDestPos].tileType==TY_BUS) {
+		gMainWin::GetIF()->LogWrite("TY_BUS\n");
+		pk_busmovechoose_rep(nRoomIndex,m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].szID);
+	}
+	else if(gTC->m_tileMap[nDestPos].tileType==TY_CLASS) {
+		gMainWin::GetIF()->LogWrite("TY_CLASS\n");
+		// 수업점수
+		int getAccomplishment = meetGrade ( nRoomIndex , gTC->m_tileMap[nDestPos].flag2 , m_nTurn[nRoomIndex]);
+		int getCoupleAccomplishment = -1;	int partnerIndex = -1;	//커플아니면 -1
+		GradeRankSyncronizer(nRoomIndex);
+
+		if(getAccomplishment!=-1) {
+			gMainWin::GetIF()->LogWrite("TY_MySubject\n");
+			staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],-1);
+		}
+		if (m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nLove != -1)	{	//커플모드
+			partnerIndex = m_favor[nRoomIndex][m_nTurn[nRoomIndex]].lvTargetIndex;
+			getCoupleAccomplishment = meetGrade(nRoomIndex,gTC->m_tileMap[nDestPos].flag2 , partnerIndex);
+
+			if (getCoupleAccomplishment != -1)	{
+				gMainWin::GetIF()->LogWrite("TY_PartnerSubject\n");
+				staminaConvert(nRoomIndex,partnerIndex,-1);
+			}
+		}
+		// 수업듣기
+
+		if (getAccomplishment != -1 && getCoupleAccomplishment != -1)	{ 	//같이 수업 듣기
+			pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex],-1,
+				getCoupleAccomplishment > getAccomplishment ? getCoupleAccomplishment : getAccomplishment, partnerIndex);
+			//둘중 높은사람점수로 (공부시켜주니까 -ㅅ-;;사랑의 힘;;)
+		}	else if (getAccomplishment != -1 && getCoupleAccomplishment == -1)	{	//나만 수업 듣기
+			pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex],-1, getAccomplishment);
+		}	else if (getAccomplishment == -1 && getCoupleAccomplishment != -1)	{	//너만 수업 듣기
+			pk_infochangeTile_rep(nRoomIndex,partnerIndex,-1, getCoupleAccomplishment);
+		}
+		if (getAccomplishment == -1 && getCoupleAccomplishment == -1)	{	//통과
+			pk_nextturn_rep(nRoomIndex);
+		}
+		pk_gameplayerinfo_rep(nRoomIndex);
+	}
+	else if(gTC->m_tileMap[nDestPos].tileType==TY_DRINK) {
+		gMainWin::GetIF()->LogWrite("TY_DRINK\n");
+		staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],-1);
+		if (m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nLove == -1)	{	//싱글
+			pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex],-1,0);
+		} else	{	//커플
+			int partnerIndex = m_favor[nRoomIndex][m_nTurn[nRoomIndex]].lvTargetIndex;
+			staminaConvert(nRoomIndex,partnerIndex,-1);
+			pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex],-1,0 , partnerIndex);
+		}
+
+		pk_gameplayerinfo_rep(nRoomIndex);
+		//				pk_nextturn_rep(nRoomIndex);
+	}
+	else if(gTC->m_tileMap[nDestPos].tileType==TY_STAMINA) {
+		gMainWin::GetIF()->LogWrite("TY_STAMINA\n");
+		staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],1);
+		if (m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nLove == -1)	{	//싱글
+			pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex] , 1,0);
+		}	else	{	//커플
+			int partnerIndex = m_favor[nRoomIndex][m_nTurn[nRoomIndex]].lvTargetIndex;
+			staminaConvert(nRoomIndex,partnerIndex,1);
+			pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex] , 1,0 , partnerIndex);
+		}
+		pk_gameplayerinfo_rep(nRoomIndex);
+		//				pk_nextturn_rep(nRoomIndex);
+	}
+	else if(gTC->m_tileMap[nDestPos].tileType==TY_ITEM) {
+		gMainWin::GetIF()->LogWrite("TY_ITEM\n");
+		getItem(nRoomIndex,m_nTurn[nRoomIndex]);
+		if (m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nLove != -1)		//커플
+			getItem(nRoomIndex,m_favor[nRoomIndex][m_nTurn[nRoomIndex]].lvTargetIndex);
+		pk_gameplayerinfo_rep(nRoomIndex);
+		pk_nextturn_rep(nRoomIndex);
+	}
+	else {//통과
+		gMainWin::GetIF()->LogWrite("TY_NOTHING\n");
+		pk_gameplayerinfo_rep(nRoomIndex);
+		pk_nextturn_rep(nRoomIndex);
+	}
 }

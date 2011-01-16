@@ -30,6 +30,7 @@ void gMysql::init() {
 		return;
 	}
 
+	mysql_query(m_connection, "SET NAMES euckr");
 }
 
 void gMysql::release() {
@@ -75,7 +76,7 @@ char* gMysql::passwordGet(char* userId) {
 
 	// sql의 성공 실패를...
 	// query_stat 이 0이 아니면 error인가보다.
-	int query_stat = mysql_query(m_connection,query);
+	int query_stat = mysql_query(m_connection, (TCHAR*)query);
 	if(query_stat != 0) {
 		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
 		return NULL;

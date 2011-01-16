@@ -128,7 +128,6 @@ public:
 	void		pk_itemusestart_ask(PK_DEFAULT *pk,SOCKET sock);
 	void		pk_infochangeItem_rep(PK_ITEMUSE_ASK ask);								//item사용시 수치변경
 	void		pk_infochangeTile_rep(int nRoomIndex, int nInRoomIndex , int stamina,int accomplishment , int coupleIndex = -1);	// coupleIndex가 -1이면 한사람, -1이 아니면 커플인덱스값
-
 	void		pk_infochangeend_ask(PK_DEFAULT *pk, SOCKET sock);
 
 
@@ -136,7 +135,6 @@ public:
 	void		pk_becoupleend_ask(PK_DEFAULT *pk , SOCKET sock );
 
 	void		pk_askcouple_rep( int nRoomIndex , int playerIndex_a, int playerIndex_b);	//	 a, b : 플레이어의 인덱스값	
-
 	void		pk_becouple_rep (int nRoomIndex , PLAYER player_a , PLAYER player_b , bool bCouple);
 
 	bool		SetUp();
@@ -183,6 +181,6 @@ private:
 	bool				favorUpFunc ( int nRoomIndex , int playerIndex_a, int playerIndex_b , int upPoint = CROSS_FAVORPOINT);	//	 a, b : 플레이어의 인덱스값	
 			// 리턴값 : 지나가다 만날 때 커플신청이면 true
 
+	void				TileProcess(int nRoomIndex, int nInRoomIndex , int nDestPos);
 	
 };
-
