@@ -437,6 +437,7 @@ bool gGamePlayerContainer::isNokduFromPosByHardCoded(int nPos)
 void gGamePlayerContainer::pk_moveend_ask(PK_DEFAULT *pk,SOCKET sock)
 {
 	PK_MOVEEND_ASK		ask;		//from client
+
 	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
 	gRoomCore			*gRC = gRoomCore::GetIF();
 	gTileContainer		*gTC = gTileContainer::GetIF();
@@ -463,18 +464,16 @@ void gGamePlayerContainer::pk_moveend_ask(PK_DEFAULT *pk,SOCKET sock)
 	char szTurnID[IDLENGTH];
 	strcpy(szTurnID,m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].szID);
 
-	if (m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nLove > -1)	//커플 디버깅용
-		nRoomIndex = nRoomIndex;
-
 	if(m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nPos != ask.nDestPos)
 	{
 		pk_gameplayerinfo_rep(nRoomIndex);
 	}
-	if(m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nPos == ask.nDestPos) {
-		
+  	if(m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nPos == ask.nDestPos) {
+	
+#ifdef CRITICAL_SECTION_GOGO
+//		EnterCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
+#endif
 		m_bSyncronize[nRoomIndex][nInRoomIndex] = true;
-			
-		EnterCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
 		
 		if(isbSynAllTrue(nRoomIndex)) {	// 모든 무브가 끝나면...
 			PushbSynAllPlayer(nRoomIndex,false);
@@ -565,7 +564,9 @@ void gGamePlayerContainer::pk_moveend_ask(PK_DEFAULT *pk,SOCKET sock)
 				pk_nextturn_rep(nRoomIndex);
 			}
 		}
-		LeaveCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
+#ifdef CRITICAL_SECTION_GOGO
+//		LeaveCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
+#endif
 	}
 }
 
@@ -665,14 +666,18 @@ void gGamePlayerContainer::pk_busmoveend_ask(PK_DEFAULT *pk,SOCKET sock)
 	int nInRoomIndex = gRC->FindPlayerIndexInTheRoom(ask.szID,nRoomIndex);
 
 	if(m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nPos == ask.nDestPos) {
-		m_bSyncronize[nRoomIndex][nInRoomIndex] = true;
-		
+#ifdef CRITICAL_SECTION_GOGO
 		EnterCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
+#endif
+		m_bSyncronize[nRoomIndex][nInRoomIndex] = true;
+
 		if(isbSynAllTrue(nRoomIndex)) {
 			PushbSynAllPlayer(nRoomIndex,false);
 			pk_nextturn_rep(nRoomIndex);
 		}
+#ifdef CRITICAL_SECTION_GOGO
 		LeaveCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
+#endif
 	}
 	else {
 		wsprintf(buf,"server : %d %d , client : %d %d player : %s room : %d\n",
@@ -890,7 +895,7 @@ int gGamePlayerContainer::WhoIsRankOne(int nRoomIndex)
 			}
 		}
 	}
-	wsprintf(buf,"[] %d\n",WinnerIndex);
+	wsprintf(buf,"[WinnerIndex] %d\n",WinnerIndex);
 	gMainWin::GetIF()->LogWrite(buf);
 
 	return WinnerIndex;
@@ -1112,8 +1117,10 @@ void gGamePlayerContainer::pk_itemusestart_ask(PK_DEFAULT *pk,SOCKET sock)
 	int nPreInRoomIndex = gRC->FindPlayerIndexInTheRoom(preAsk.szID,nRoomIndex);	// 싱크로 체커
 
 	m_bSyncronize[nRoomIndex][nPreInRoomIndex] = true;
+#ifdef CRITICAL_SECTION_GOGO
 	EnterCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
-	
+#endif
+
 	if(isbSynAllTrue(nRoomIndex)) {
 
 		PK_ITEMUSE_ASK ask = m_struct_itemuse_ask[nRoomIndex];
@@ -1145,7 +1152,9 @@ void gGamePlayerContainer::pk_itemusestart_ask(PK_DEFAULT *pk,SOCKET sock)
 		}
 		//gPC->SendSelect(PL_ITEMUSE_REP,sizeof(rep),&rep,ECM_GAME,gPC->GetCoreFlag(ask.szID));
 	}
+#ifdef CRITICAL_SECTION_GOGO
 	LeaveCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
+#endif
 }
 
 ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, int nInRoomIndex, int itemIndex)
@@ -1534,12 +1543,21 @@ void gGamePlayerContainer::pk_warpend_ask (PK_DEFAULT *pk, SOCKET sock)
 
 
 	if(m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nPos == ask.nDestPos) {
+
+#ifdef CRITICAL_SECTION_GOGO
+		EnterCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
+#endif
+
 		m_bSyncronize[nRoomIndex][nInRoomIndex] = true;
 
-		EnterCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
-
 		if(isbSynAllTrue(nRoomIndex)) {	// 모든 워프가 끝나면,,, 버스 사라짐;;
-			PushbSynAllPlayer(nRoomIndex,false); 
+			PushbSynAllPlayer(nRoomIndex,false);
+			if (m_favor[nRoomIndex][m_nTurn[nRoomIndex]].bYes == CPS_ACCEPT)	{	// 커플되서 워프로달려갈때 아무일도 안하고 종료시키기.
+				m_favor[nRoomIndex][m_nTurn[nRoomIndex]].bYes = CPS_NONE ; 
+				pk_nextturn_rep(nRoomIndex);
+				return;
+			}
+			
 			if(gTC->m_tileMap[ask.nDestPos].tileType==TY_CLASS) {
 				gMainWin::GetIF()->LogWrite("TY_CLASS\n");
 				int getAccomplishment = meetGrade ( nRoomIndex , gTC->m_tileMap[ask.nDestPos].flag2 , m_nTurn[nRoomIndex]);
@@ -1574,14 +1592,14 @@ void gGamePlayerContainer::pk_warpend_ask (PK_DEFAULT *pk, SOCKET sock)
 				staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],-1);
 				pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex],-1,0);
 				pk_gameplayerinfo_rep(nRoomIndex);
-				pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex],-1,0);
+//				pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex],-1,0);
 			}
 			else if(gTC->m_tileMap[ask.nDestPos].tileType==TY_STAMINA) {
 				gMainWin::GetIF()->LogWrite("TY_STAMINA\n");
 				staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],1);
 				pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex] , 1,0);
 				pk_gameplayerinfo_rep(nRoomIndex);
-				pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex] , 1,0);
+//				pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex] , 1,0);
 			}
 			else if(gTC->m_tileMap[ask.nDestPos].tileType==TY_ITEM) {
 				gMainWin::GetIF()->LogWrite("TY_ITEM\n");
@@ -1593,7 +1611,9 @@ void gGamePlayerContainer::pk_warpend_ask (PK_DEFAULT *pk, SOCKET sock)
 				pk_gameplayerinfo_rep(nRoomIndex);
 			}
 		}
+#ifdef CRITICAL_SECTION_GOGO
 		LeaveCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
+#endif
 	}
 	else {
 		gMainWin::GetIF()->LogWrite(buf);
@@ -1638,7 +1658,9 @@ void gGamePlayerContainer::pk_warplistend_ask (PK_DEFAULT *pk, SOCKET sock)
 
 	m_bSyncronize[nRoomIndex][nInRoomIndex] = true;
 
+#ifdef CRITICAL_SECTION_GOGO
 	EnterCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
+#endif
 
 	if(isbSynAllTrue(nRoomIndex)) {	// 모든 워프가 끝나면,,, 버스 사라짐;;
 		PushbSynAllPlayer(nRoomIndex,false); 
@@ -1646,9 +1668,9 @@ void gGamePlayerContainer::pk_warplistend_ask (PK_DEFAULT *pk, SOCKET sock)
 		pk_gameplayerinfo_rep(nRoomIndex);
 		pk_nextturn_rep(nRoomIndex);
 	}
-	
+#ifdef CRITICAL_SECTION_GOGO
 	LeaveCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
-
+#endif
 }
 
 
@@ -1892,16 +1914,18 @@ void gGamePlayerContainer::pk_infochangeend_ask(PK_DEFAULT *pk, SOCKET sock)
 	int nRoomIndex = gPCt->GetCoreFlag(ask.szID);
 	int nInRoomIndex = gRC->FindPlayerIndexInTheRoom(ask.szID,nRoomIndex);
 
+#ifdef CRITICAL_SECTION_GOGO
+//	EnterCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
+#endif	
+
 	m_bSyncronize[nRoomIndex][nInRoomIndex] = true;
 	
-	EnterCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
-
 	if(isbSynAllTrue(nRoomIndex)) {
 		pk_nextturn_rep(nRoomIndex);
 	}
-
-	LeaveCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
-	
+#ifdef CRITICAL_SECTION_GOGO
+//	LeaveCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
+#endif	
 }
 
 
@@ -1932,7 +1956,7 @@ void gGamePlayerContainer::pk_exit_ask(char *clientID, SOCKET sock)
 	rep.flag = 0;
 	strcpy(rep.szID , clientID);
 
-	gMysql::GetIF()->scoreCountAdd(rep.szID, false);
+	gMysql::GetIF()->scoreCountAdd(clientID, false);
 			//남은사람 체크 , 변수만들기 귀찮아서 걍 for문
 
 	switch(gPC->GetMode(clientID))	{
@@ -2123,8 +2147,10 @@ void gGamePlayerContainer::pk_becouple_rep(int nRoomIndex , PLAYER player_a , PL
 
 		wsprintf(buf,"[Match][Room : %d ; %d and %d : %d point] ", nRoomIndex , playerIndex_a , playerIndex_b , LOVEINITPOINT);
 		gMainWin::GetIF()->LogWrite(buf);
-		m_favor[nRoomIndex][playerIndex_a].point[playerIndex_b] = -1;				m_favor[nRoomIndex][playerIndex_a].bYes = CPS_NONE;
-		m_favor[nRoomIndex][playerIndex_b].point[playerIndex_a] = -1;				m_favor[nRoomIndex][playerIndex_b].bYes = CPS_NONE;
+		m_favor[nRoomIndex][playerIndex_a].point[playerIndex_b] = -1;
+		m_favor[nRoomIndex][playerIndex_a].bYes = CPS_NONE;
+		m_favor[nRoomIndex][playerIndex_b].point[playerIndex_a] = -1;
+		m_favor[nRoomIndex][playerIndex_b].bYes = CPS_NONE;
 		m_favor[nRoomIndex][playerIndex_b].lvTargetIndex = playerIndex_a;			m_favor[nRoomIndex][playerIndex_a].lvTargetIndex = playerIndex_b;
 
 		m_GamePlayer[nRoomIndex][playerIndex_a].nLove = LOVEINITPOINT ;
@@ -2136,8 +2162,11 @@ void gGamePlayerContainer::pk_becouple_rep(int nRoomIndex , PLAYER player_a , PL
 
 		if (m_GamePlayer[nRoomIndex][playerIndex_a].nPos != m_GamePlayer[nRoomIndex][playerIndex_b].nPos )	{	//달려가주기
 			pk_warpstart_rep(nRoomIndex , playerIndex_a , m_GamePlayer[nRoomIndex][playerIndex_b].nPos );
+			m_favor[nRoomIndex][playerIndex_a].bYes = CPS_ACCEPT;
 //			m_isNokdu[nRoomIndex][playerIndex_a] = 
-			pk_gameplayerinfo_rep(nRoomIndex);
+//			pk_gameplayerinfo_rep(nRoomIndex);
+		}	else	{
+			pk_nextturn_rep(nRoomIndex);
 		}
 	}	else	{	//깨졌어혛
 		
@@ -2155,6 +2184,8 @@ void gGamePlayerContainer::pk_becouple_rep(int nRoomIndex , PLAYER player_a , PL
 		element.first = COUPLE_BROCKEN_DEBUF_INDEX;
 		element.second = COUPLE_DEBUFFTURN;
 		m_userItemList[nRoomIndex][playerIndex_b].push_back(element);
+
+		pk_nextturn_rep(nRoomIndex);
 	}
 
 		
@@ -2176,9 +2207,6 @@ void	gGamePlayerContainer::pk_becoupleend_ask(PK_DEFAULT *pk , SOCKET sock )
 	int					addrLen;
 	char				buf [1024];
 
-	wsprintf(buf,"[PK_BECOUPLEEND_ASK] %s\t message : %s\n", inet_ntoa(clientAddr.sin_addr), ask.szID);
-	gMainWin::GetIF()->LogWrite(buf);
-	
 	addrLen = sizeof(clientAddr);
 	getpeername(sock, (SOCKADDR*)&clientAddr, &addrLen);
 
@@ -2186,15 +2214,21 @@ void	gGamePlayerContainer::pk_becoupleend_ask(PK_DEFAULT *pk , SOCKET sock )
 	int nRoomIndex = gPC->GetPlayerFromID(ask.szID).nCoreFlag;
 	int nInRoomIndex = gRC->FindPlayerIndexInTheRoom(ask.szID , nRoomIndex);
 	
-	m_bSyncronize[nRoomIndex][nInRoomIndex] = true;
+	wsprintf(buf,"[PK_BECOUPLEEND_ASK] %s\t message : %s\n", inet_ntoa(clientAddr.sin_addr), ask.szID);
+	gMainWin::GetIF()->LogWrite(buf);
 
-	EnterCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
+#ifdef CRITICAL_SECTION_GOGO
+//	EnterCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
+#endif
+
+	m_bSyncronize[nRoomIndex][nInRoomIndex] = true;
 
 	if (isbSynAllTrue(nRoomIndex))	{	//동기화 끗
 		PushbSynAllPlayer(nRoomIndex, false);
 		
-		pk_nextturn_rep(nRoomIndex);
+//		pk_nextturn_rep(nRoomIndex);
 	}
-
-	LeaveCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
+#ifdef CRITICAL_SECTION_GOGO
+//	LeaveCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
+#endif
 }

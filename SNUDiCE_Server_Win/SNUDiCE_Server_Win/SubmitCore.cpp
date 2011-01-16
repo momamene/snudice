@@ -175,12 +175,15 @@ bool gSubmitCore::putSubject(int nRoomIndex,int nInRoomIndex,int nSubjectIndex)
 			continue;
 		}
 		else if(m_submitSubject[nRoomIndex][nSubjectIndex][i]==AVAILSEAT) {
+#ifdef CRITICAL_SECTION_GOGO
 			EnterCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);	//공유자원 침범방지!
-			
+#endif			
 			m_submitSubject[nRoomIndex][nSubjectIndex][i] = nInRoomIndex;
 			putSubjectToPlayer(nRoomIndex,nInRoomIndex,nSubjectIndex);
 			
+#ifdef CRITICAL_SECTION_GOGO
 			LeaveCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
+#endif
 			return true;
 		}
 	}
@@ -307,16 +310,19 @@ void gSubmitCore::pk_submitcount_ask(PK_DEFAULT *pk,SOCKET sock)
 
 	int nRoomIndex = gPC->GetCoreFlag(ask.szID);
 	int nInRoomIndex = gRC->FindPlayerIndexInTheRoom(ask.szID , nRoomIndex);
-	
 
+//#ifdef  CRITICAL_SECTION_GOGO
 	EnterCriticalSection (&gMainWin::GetIF()->crit[nRoomIndex]);
+//#endif
 
 	gGPC->m_bSyncronize[nRoomIndex][nInRoomIndex] = true;
 
 	for(int i = 0 ; i < ROOMMAXPLAYER ; i++)
 		if(gRC->m_rooms[nRoomIndex].szRoomMaxPlayer[i][0] != '\0') // m_isGamePlayer[nRoomIndex][i] == true;
 			if(! gGPC->m_bSyncronize[nRoomIndex][i])	{
+//#ifdef  CRITICAL_SECTION_GOGO
 				LeaveCriticalSection (&gMainWin::GetIF()->crit[nRoomIndex]);
+//#endif
 				return ;
 			}
 
@@ -324,9 +330,10 @@ void gSubmitCore::pk_submitcount_ask(PK_DEFAULT *pk,SOCKET sock)
 		if(gRC->m_rooms[nRoomIndex].szRoomMaxPlayer[i][0] != '\0') // m_isGamePlayer[nRoomIndex][i] == true;
 			gGPC->m_bSyncronize[nRoomIndex][i] = false;
 	
-
+//#ifdef  CRITICAL_SECTION_GOGO
 	LeaveCriticalSection (&gMainWin::GetIF()->crit[nRoomIndex]);
-	
+//#endif
+
 	int i,j,k;
 	int randSubjectIndex;
 

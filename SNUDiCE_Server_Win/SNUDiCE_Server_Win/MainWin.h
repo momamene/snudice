@@ -24,6 +24,8 @@
 
 #define LOG_FILE_NAME	"Log.log"
 
+//#define CRITICAL_SECTION_GOGO
+
 class gMainWin  
 {
 public:
