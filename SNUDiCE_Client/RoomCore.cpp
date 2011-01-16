@@ -1594,6 +1594,10 @@ void gRoomCore::OnLButtonDown_Join()
 				m_bEnteringPass = true;
 				return;
 			}
+			else if(m_Room[m_nSelected].isGaming)
+				return;
+			else if(m_Room[m_nSelected].nNowPlayer == m_Room[m_nSelected].nMaxPlayer)
+				return;
 			else
 			{
 				SendRoomJoin();
