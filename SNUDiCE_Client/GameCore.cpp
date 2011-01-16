@@ -922,6 +922,7 @@ bool gGameCore::PreTransMsg(MSG &msg)
 void gGameCore::SendMoveAsk()
 {
 	gPlayerContainer *gPC = gPlayerContainer::GetIF();
+	gUIGame *ui = gUIGame::GetIF();
 //	int				couple = gPC->GetCoupleIndex(m_nTurn);
 
 	// 내 차례가 아님
@@ -929,10 +930,11 @@ void gGameCore::SendMoveAsk()
 		return;
 	}
 	m_turnTime = 0x7fffffff;
+
 	// 이미 움직였음, 스크롤링 중임
 	if(m_bMoved) //|| m_bScrolling)
 		return;
-	if(gUIGame::GetIF()->m_bItemUsed)
+	if(ui->m_uimode == UIM_RESULT || ui->m_bItemUsed)
 		return;
 
 	PK_MOVESTART_ASK		ask;
@@ -1026,6 +1028,7 @@ void gGameCore::pk_movestart_rep(PK_MOVESTART_REP *rep)
 
 void gGameCore::Start(int spacor)
 {
+	//성관계
 	m_spacor = spacor;
 	//gMap::GetIF()->posSpacor();
 	gTimer::GetIF()->frameStart(400, 60);
@@ -1068,6 +1071,7 @@ void gGameCore::StepOn()
 	gTimer				*gt = gTimer::GetIF();
 	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
 
+	if(!gTimer::GetIF()->m_on)	gTimer::GetIF()->frameStart(400, 60); ///sung
 	int l_frame = gt->frame();
 
 	if(gt->m_turn > 0)
@@ -1221,6 +1225,7 @@ void gGameCore::pk_nextturn_rep(PK_NEXTTURN_REP *rep)
 
 		ui->m_bItemUsed = false;
 //	}
+	m_bMoving = false;
 	int nTempPos = gPlayerContainer::GetIF()->m_GPlayerList[m_nTurn].nPos;
 	ScrollStart(nTempPos);
 
@@ -1246,6 +1251,8 @@ void gGameCore::ScrollOn()
 	gTimer				*gt = gTimer::GetIF();
 	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
 
+	if(!(gTimer::GetIF()->m_on))	gTimer::GetIF()->frameStart(1000,60);
+
 	int l_frame = gt->frame();
 
 	if(gt->m_turn > 0)
@@ -1262,6 +1269,7 @@ void gGameCore::ScrollEnd()
 {
 	m_bScrolling = false;
 	gMap::GetIF()->posStoper();
+	gTimer::GetIF()->frameEnd();
 }
 
 void gGameCore::pk_busmovechoose_rep(PK_BUSMOVECHOOSE_REP *rep)
@@ -1339,7 +1347,7 @@ void gGameCore::pk_gameend_rep(PK_GAMEEND_REP *rep)
 //	MessageBox(gMainWin::GetIF()->m_hWnd, "시발", "발시발시", MB_OK);
 //	gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_ROOMBACK, str2, STR_17);	//방나가고돌아오기수정
 
-
+	SetUp();
 	gUIGame::GetIF()->GameEnd();
 }
 

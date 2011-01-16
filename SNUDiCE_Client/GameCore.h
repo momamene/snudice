@@ -12,7 +12,7 @@
 #include "Core.h"
 #include "Image.h"
 
-#define SLEEPTIMEMAX			10000	//최대 잠수 시간:10초 
+#define SLEEPTIMEMAX			20000	//최대 잠수 시간:10초 
 
 enum BUSMOVE
 {
