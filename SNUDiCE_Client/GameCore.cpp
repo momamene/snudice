@@ -613,6 +613,7 @@ void gGameCore::DrawBus()
 				{
 					sound->PlayEffectSound(EFFECT_FILE_1);
 
+					gTimer::GetIF()->frameEnd();
 					gTimer::GetIF()->frameStart(BUSMOVETICK, BUSMOVEFRAME + 1);
 					m_curframe = 0;	
 					m_busmode = BUS_COME2;
@@ -962,6 +963,9 @@ void gGameCore::pk_movestart_rep(PK_MOVESTART_REP *rep)
 	if(m_bMoving)
 		return;
 
+	if(m_bScrolling)
+		ScrollEnd();
+
 	if(rep->Dice4_1 == 0 && rep->Dice4_2 == 0
 		&& rep->Dice6_1 == 0 && rep->Dice6_2 == 0)
 	{
@@ -1031,6 +1035,7 @@ void gGameCore::Start(int spacor)
 	//성관계
 	m_spacor = spacor;
 	//gMap::GetIF()->posSpacor();
+	gTimer::GetIF()->frameEnd();
 	gTimer::GetIF()->frameStart(400, 60);
 	StepStart();
 }
@@ -1071,7 +1076,13 @@ void gGameCore::StepOn()
 	gTimer				*gt = gTimer::GetIF();
 	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
 
-	if(!gTimer::GetIF()->m_on)	gTimer::GetIF()->frameStart(400, 60); ///sung
+	//if(!gTimer::GetIF()->m_on)	gTimer::GetIF()->frameStart(400, 60); ///sung
+	if(!gt->m_on)
+	{
+		StepEnd();
+		return;
+
+	}
 	int l_frame = gt->frame();
 
 	if(gt->m_turn > 0)
@@ -1251,7 +1262,11 @@ void gGameCore::ScrollOn()
 	gTimer				*gt = gTimer::GetIF();
 	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
 
-	if(!(gTimer::GetIF()->m_on))	gTimer::GetIF()->frameStart(1000,60);
+	if(!gt->m_on)
+	{
+		ScrollEnd();
+		return;
+	}
 
 	int l_frame = gt->frame();
 
@@ -1347,7 +1362,7 @@ void gGameCore::pk_gameend_rep(PK_GAMEEND_REP *rep)
 //	MessageBox(gMainWin::GetIF()->m_hWnd, "시발", "발시발시", MB_OK);
 //	gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_ROOMBACK, str2, STR_17);	//방나가고돌아오기수정
 
-	SetUp();
+//	SetUp();
 	gUIGame::GetIF()->GameEnd();
 }
 

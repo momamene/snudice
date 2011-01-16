@@ -99,7 +99,7 @@ bool gServer::Send(WORD type, WORD size, void *buf)
 
 	while(true)
 	{
-		r2 = send(s_sock, (char*)&m_pkDefault, m_pkDefault.dwSize, 0);
+		r2 = send(s_sock, (char*)&m_pkDefault + r1, m_pkDefault.dwSize - r1, 0);
 
 		if(r2 != SOCKET_ERROR)
 			r1 += r2;
@@ -160,7 +160,7 @@ void gServer::ReadPacket()
 
 	while(true)
 	{
-		r2 = recv(s_sock, m_pkDefault.strPacket, m_pkDefault.dwSize - PK_HEADER_SIZE, 0);
+		r2 = recv(s_sock, (char*)&m_pkDefault + r1, m_pkDefault.dwSize - r1, 0);
 
 		if(r2 != SOCKET_ERROR)
 			r1 += r2;

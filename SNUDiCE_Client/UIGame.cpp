@@ -773,6 +773,9 @@ void gUIGame::Draw()
 				if(m_rankIdx[i] == -1)
 					continue;
 
+				if(strlen(gPC->m_GPlayerList[ m_rankIdx[i] ].szID) == 0)
+					continue;
+
 				gUtil::TextOutLine(RESULT_POS_START_X, RESULT_POS_START_Y + i * RESULT_TERM_Y,
 								gPC->m_GPlayerList[ m_rankIdx[i] ].szID);
 
@@ -783,10 +786,10 @@ void gUIGame::Draw()
 				gUtil::TextOutLine(RESULT_POS_START_X + RESULT_TERM_X * 2, RESULT_POS_START_Y + i * RESULT_TERM_Y, szBuf);
 			}
 
-			int		nFrame = gTimer::GetIF()->frame();
+			int		nFrame = m_timer.frame();
 			if(nFrame >= 1)
 			{
-				gTimer::GetIF()->frameEnd();
+				m_timer.frameEnd();
 				gRoomCore::GetIF()->SendRoomBack();	//방나가고돌아오기수정
 			}
 		}
@@ -2480,5 +2483,5 @@ void gUIGame::GameEnd()
 	m_bShowTimeCount = false;
 	gPlaySoundCore::GetIF()->StopEffectSound(EFFECT_FILE_10);
 	m_uimode = UIM_RESULT;
-	gTimer::GetIF()->frameStart(RESULT_SHOWTIME, 2);
+	m_timer.frameStart(RESULT_SHOWTIME, 2);
 }

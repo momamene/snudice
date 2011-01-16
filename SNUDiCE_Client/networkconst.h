@@ -20,7 +20,7 @@
 
 #define PK_HEADER_SIZE			4
 
-#define SNUDICE_VERSION			"0.9000"
+#define SNUDICE_VERSION			"0.9002"
 
 //#define DEF_SERVER
 
