@@ -279,12 +279,15 @@ void gRoomCore::pk_charselect_ask(PK_DEFAULT *pk, SOCKET sock)
 	int nRoomIndex = gPC->GetCoreFlag(ask.szID);
 	if(nRoomIndex<0) return;
 	else if(!gPC->isClasstypeExistedInRoom(nRoomIndex,ask.classtype)) {
+#ifdef CRITICAL_SECTION_GOGO
 		EnterCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
-	
+#endif	
 		gPC->PutClassType(ask.szID,ask.classtype);
 		SendRoomRefreshCauseChange(nRoomIndex);
 
+#ifdef CRITICAL_SECTION_GOGO
 		LeaveCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
+#endif
 	}
 }
 

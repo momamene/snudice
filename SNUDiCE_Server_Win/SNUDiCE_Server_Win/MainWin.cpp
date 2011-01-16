@@ -399,7 +399,7 @@ bool gMainWin::Send(DWORD type, DWORD size, void *buf, SOCKET sock)
 
 	while(true)
 	{
-		r2 = send(sock, (char*)&pk, pk.dwSize, 0);
+		r2 = send(sock, (char*)&pk + r1, pk.dwSize - r1, 0);
 
 		if(r2 != SOCKET_ERROR)
 			r1 += r2;
@@ -592,7 +592,7 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 
 		while(true)
 		{
-			r2 = recv(client_sock, pkDefault.strPacket, pkDefault.dwSize - PK_HEADER_SIZE, 0);
+			r2 = recv(client_sock, (char*)&pkDefault + r1, pkDefault.dwSize - r1, 0);
 			gMainWin::GetIF()->LogWrite("b\n");
 			
 			if(r2 != SOCKET_ERROR)
