@@ -44,7 +44,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 			fprintf(fp,"\n");
 			fprintf(fp,"High up the call stack, Method: {%s}\n", sf->GetMethod()->ToString() );
 			fprintf(fp,"High up the call stack, Line Number: {%s}\n", sf->GetFileLineNumber().ToString() );
-
 		}
 		fclose(fp);
 		
