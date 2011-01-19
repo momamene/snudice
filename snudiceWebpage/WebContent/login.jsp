@@ -14,148 +14,154 @@
 </head>
 <body>
 	<div class="bodyWrapper">
-		<div class="header">
-			<div id="headerImage"></div>			
+		<div class="backgroundUp"></div>
+		<div class="header">					
+			<div id="headerImage"></div>				
 		</div>
 		
-		<div class="container">	
+		<div class="container">		
 			<!-- menu -->
 			<div id="menu">
-				<div id="logoWrapper"></div>			
+				<div id="logoWrapper"></div>					
 				<div id="logo"></div>				
-			</div>
-								
-			<div class="left">
-				<!--  회원가입 Form -->
-				<div id="joinFormWrapper" class="display_none">	
-					<div class="centerAlign">회원가입</div>
-					<hr/>
-					<table id="joinFormTable">
-						<tr>
-							<td class="label">ID</td>
-							<td><input id="joinId" type="text" name="id"/></td>
-						</tr>
-						<tr>
-							<td class="label">PW</td>
-							<td><input id="joinPw" type="password" name="pw"/></td>
-						</tr>
-						<tr>
-							<td class="label">PW확인</td>
-							<td><input id="joinPwConfirm" type="password" name="pwConfirm"/></td>
-						</tr>
-						<tr>
-							<td class="label">email</td>
-							<td><input id="joinEmail" type="text" name="email"/></td>
-						</tr>
-					</table>								
+			</div>			
 				
-					<input id="joinSubmit" type="submit" value="가입하기"/>					
-					<input id="joinClose" type="button" value="닫기"/>
-					<div id="joinMsg"></div>
-				</div>
-				
-				<!-- 로그인 Form -->
-				<div id="mainLeftTop">
-					<c:choose>
-						<c:when test="${not empty userId}">
-							<c:set var="loginFormWrapperClass" value="invisible"/>	
-						</c:when>
-						<c:otherwise>
-							<c:set var="loginFormWrapperClass" value="visible"/>	
-						</c:otherwise>
-					</c:choose>
+			<div class="containerTop"></div>		
+			<div class="leftCenterRightWrapper">				
+				<div class="left">
+					<!--  회원가입 Form -->
+					<div id="joinFormWrapper" class="display_none">	
+						<div class="centerAlign">회원가입</div>
+						<hr/>
+						<table id="joinFormTable">
+							<tr>
+								<td class="label">ID</td>
+								<td><input id="joinId" type="text" name="id"/></td>
+							</tr>
+							<tr>
+								<td class="label">PW</td>
+								<td><input id="joinPw" type="password" name="pw"/></td>
+							</tr>
+							<tr>
+								<td class="label">PW확인</td>
+								<td><input id="joinPwConfirm" type="password" name="pwConfirm"/></td>
+							</tr>
+							<tr>
+								<td class="label">email</td>
+								<td><input id="joinEmail" type="text" name="email"/></td>
+							</tr>
+						</table>								
 					
-					<div id="loginFormTitle" class="${loginFormWrapperClass}">	
-						&nbsp;&nbsp;&nbsp;&nbsp;회원로그인					
-						<div id="guestLogin"></div> 
-					</div>		
-					
-					<div id="loginFormWrapper" class="${loginFormWrapperClass}">									
-						<div id="idpw">
-							ID&nbsp;&nbsp; <input id="userId" name="userId" type="text"/><br/>
-							PW <input id="password" name="password" type="password"/>
-						</div>					
-						<div id="loginButton" class="mouseOut"></div>
-												
-						<div id="loginHelp">
-							<hr class="hr1"/>												
-							<a id="joinOpen" href="#">회원가입</a>							
-							<a id="findIdPw" href="#">ID/PW찾기</a>
-						</div>						
+						<input id="joinSubmit" type="submit" value="가입하기"/>					
+						<input id="joinClose" type="button" value="닫기"/>
+						<div id="joinMsg"></div>
 					</div>
-					<c:choose>
-						<c:when test="${not empty userId}">
-							<c:set var="loginMsgClass" value="loggined"/>
-						</c:when>	
-						<c:otherwise>
-							<c:set var="loginMsgClass" value="logouted"/>
-						</c:otherwise>											
-					</c:choose>	
 					
-					<div id="loginMsg" class="${loginMsgClass}">
+					<!-- 로그인 Form -->
+					<div id="mainLeftTop">
 						<c:choose>
 							<c:when test="${not empty userId}">
-								${userId} 님 로그인 하셨습니다.
-							</c:when>												
+								<c:set var="loginFormWrapperClass" value="invisible"/>	
+							</c:when>
+							<c:otherwise>
+								<c:set var="loginFormWrapperClass" value="visible"/>	
+							</c:otherwise>
+						</c:choose>
+						
+						<div id="loginFormTitle" class="${loginFormWrapperClass}">	
+							&nbsp;&nbsp;&nbsp;&nbsp;회원로그인					
+							<div id="guestLogin"></div> 
+						</div>		
+						
+						<div id="loginFormWrapper" class="${loginFormWrapperClass}">									
+							<div id="idpw">
+								ID&nbsp;&nbsp; <input id="userId" name="userId" type="text"/><br/>
+								PW <input id="password" name="password" type="password"/>
+							</div>					
+							<div id="loginButton" class="mouseOut"></div>
+													
+							<div id="loginHelp">
+								<hr class="hr1"/>												
+								<a id="joinOpen" href="#">회원가입</a>							
+								<a id="findIdPw" href="#">ID/PW찾기</a>
+							</div>						
+						</div>
+						<c:choose>
+							<c:when test="${not empty userId}">
+								<c:set var="loginMsgClass" value="loggined"/>
+							</c:when>	
+							<c:otherwise>
+								<c:set var="loginMsgClass" value="logouted"/>
+							</c:otherwise>											
 						</c:choose>	
+						
+						<div id="loginMsg" class="${loginMsgClass}">
+							<c:choose>
+								<c:when test="${not empty userId}">
+									${userId} 님 로그인 하셨습니다.
+								</c:when>												
+							</c:choose>	
+						</div>
+						<c:choose>
+							<c:when test="${not empty userId}">
+								<c:set var="logoutWrapperClass" value="visible"/>		
+							</c:when>
+							<c:otherwise>
+								<c:set var="logoutWrapperClass" value="invisible"/>		
+							</c:otherwise>
+						</c:choose>			
+						<div id="logoutWrapper" class="${logoutWrapperClass}">				
+						</div>						
 					</div>
-					<c:choose>
-						<c:when test="${not empty userId}">
-							<c:set var="logoutWrapperClass" value="visible"/>		
-						</c:when>
-						<c:otherwise>
-							<c:set var="logoutWrapperClass" value="invisible"/>		
-						</c:otherwise>
-					</c:choose>			
-					<div id="logoutWrapper" class="${logoutWrapperClass}">				
-					</div>						
-				</div>
-				<div id="mainLeftBottom">					
-					<div id="clientDownload" onclick="alert('클라 다운시켜!');">여기 클라다운 그림드가야함 download.png 임 근데 이름 바꿔야겠음</div>					
-				</div>
-			</div>			
-			<div class="center">			
-				<div id="boardSelect">
-					<br/>
-					<c:forEach var="board" items="${boardList}">
-						<a href="${root}/board/articleList.do?boardName=${board.boardName}&currPage=0">${board.aliasName}</a>&nbsp;|&nbsp;
-					</c:forEach>
-					<a href="${root}/gameIntro.do">게임소개</a>					
-				</div>				
-				<div id="centerLU">
-					<span>공지사항</span>
-					<hr/>			
-					<c:forEach var="article" items="${noticeList}">
-						<a href="${root}/board/articleView.do?boardName=${noticeBoardName}&articleIndex=${article.articleIndex}&currPage=0">${article.title}</a><br/>						
-					</c:forEach>				
-				</div>
-				<div id="centerRU">
-					<span>이벤트</span>
-					<hr/>			
-					<c:forEach var="article" items="${eventList}">
-						<a href="${root}/board/articleView.do?boardName=${eventBoardName}&articleIndex=${article.articleIndex}&currPage=0">${article.title}</a><br/>						
-					</c:forEach>
-				</div>
-				<div id="centerLD">
-					<span>개발자노트</span>
-					<hr/>			
-					<c:forEach var="article" items="${devNoteList}">
-						<a href="${root}/board/articleView.do?boardName=${devNoteBoardName}&articleIndex=${article.articleIndex}&currPage=0">${article.title}</a><br/>						
-					</c:forEach>
-				</div>				
-				<div id="centerRD">
-					<span>업데이트</span>
-					<hr/>			
-					<c:forEach var="article" items="${updateList}">
-						<a href="${root}/board/articleView.do?boardName=${updateBoardName}&articleIndex=${article.articleIndex}&currPage=0">${article.title}</a><br/>						
-					</c:forEach>
+					<div id="mainLeftBottom">
+						<a href="${root}/setupFile/SNUDiCE_setup.exe">클라다운</a>										
+					</div>
 				</div>			
+				<div class="center">			
+					<div id="boardSelect">
+						<br/>
+						<c:forEach var="board" items="${boardList}">
+							<a href="${root}/board/articleList.do?boardName=${board.boardName}&currPage=0">${board.aliasName}</a>&nbsp;|&nbsp;
+						</c:forEach>
+						<a href="${root}/gameIntro.do">게임소개</a>					
+					</div>				
+					<div id="centerLU">
+						<span>공지사항</span>
+						<hr/>			
+						<c:forEach var="article" items="${noticeList}">
+							<a href="${root}/board/articleView.do?boardName=${noticeBoardName}&articleIndex=${article.articleIndex}&currPage=0">${article.title}</a><br/>						
+						</c:forEach>				
+					</div>
+					<div id="centerRU">
+						<span>이벤트</span>
+						<hr/>			
+						<c:forEach var="article" items="${eventList}">
+							<a href="${root}/board/articleView.do?boardName=${eventBoardName}&articleIndex=${article.articleIndex}&currPage=0">${article.title}</a><br/>						
+						</c:forEach>
+					</div>
+					<div id="centerLD">
+						<span>개발자노트</span>
+						<hr/>			
+						<c:forEach var="article" items="${devNoteList}">
+							<a href="${root}/board/articleView.do?boardName=${devNoteBoardName}&articleIndex=${article.articleIndex}&currPage=0">${article.title}</a><br/>						
+						</c:forEach>
+					</div>				
+					<div id="centerRD">
+						<span>업데이트</span>
+						<hr/>			
+						<c:forEach var="article" items="${updateList}">
+							<a href="${root}/board/articleView.do?boardName=${updateBoardName}&articleIndex=${article.articleIndex}&currPage=0">${article.title}</a><br/>						
+						</c:forEach>
+					</div>			
+				</div>
+				<div class="right">&nbsp;</div>					
 			</div>
-			<div class="right">&nbsp;</div>				
+			<div class="containerBottom"></div>						
 		</div>		
 		
+		<div class="backgroundDown"></div>
 		<div class="footer centerAlign">		
-			<hr class="lightColor"/>${footerMsg}
+			${footerMsg}
 		</div>			
 	</div>
 </body>
