@@ -296,7 +296,10 @@ function loginFormRefresh()
 				loginMsg.className = "loggined";
 				loginFormWrapper.className = "invisible";
 				loginFormTitle.className = "invisible";
-				logoutWrapper.className = "visible";				
+				logoutWrapper.className = "visible";
+				
+				var mainLeftTop = document.getElementById("mainLeftTop");
+				mainLeftTop.className = "loggined";
 			}
 			else if(request.responseText=="loginFail")
 			{				

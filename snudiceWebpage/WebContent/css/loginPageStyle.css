@@ -19,7 +19,7 @@
 .center 
 { 
 	float:left; 
-	margin-left: 5px; 
+	margin-left: 10px; 
 	width : 680px;
 }
 
@@ -184,20 +184,23 @@ hr.lightColor
 }
 
 /*------------- login form ---------*/
-#mainLeftTop,#mainLeftBottom,#mainLeftTop_ { width : 227px; }
+#mainLeftTop,#mainLeftBottom,#mainLeftTop_ { width : 229px; }
+#mainLeftTop.loggined
+{
+	background-image : url('/snudiceWebpage/image/mainpage/loginFormLoggined.png');	
+	background-repeat : repeat-y;
+}
 
 #mainLeftTop,#mainLeftTop_ 
 {
 	background-image : url('/snudiceWebpage/image/mainpage/loginForm.png');	
+	background-repeat : no-repeat;
 	height : 207px;
 	position : relative;
 	top : 10px;
 }
 
-#mainLeftTop_ 
-{ 
-	height: 180px; 
-}
+#mainLeftTop_ { height: 180px; }
 
 #loginFormTitle
 {		
@@ -238,7 +241,7 @@ hr.lightColor
 	height : 77px;
 	float : left;
 	position : relative;
-	left : 7px;
+	left : 7px;	
 }
 
 #loginButton.mouseOut
@@ -250,7 +253,8 @@ hr.lightColor
 #loginButton.mouseOver
 {
 	background-image : url('/snudiceWebpage/image/mainpage/loginMouseOver.png');
-	background-repeat : no-repeat;	
+	background-repeat : no-repeat;
+	cursor : pointer;	
 }
 
 #login { margin-left : 5px; }
@@ -272,7 +276,12 @@ hr.lightColor
 	color : black;
 }
 
-#password { margin-top:5px;}
+#userId {margin-left: 19px; }
+#password 
+{
+	margin-left : 10px; 
+	margin-top:5px;
+}
 
 #loginMsg, #loginMsg_
 {
@@ -307,6 +316,7 @@ hr.lightColor
 	left : 50%;
 	margin-left : -34px;
 	top : 50px;
+	cursor : pointer;
 }
 
 #guestLogin 
@@ -318,6 +328,7 @@ hr.lightColor
 	margin-left : 130px;	
 	float : left;
 	margin-top : -23px;
+	cursor : pointer;
 }
 
 #joinOpen,#findIdPw { color : black; }
@@ -325,11 +336,14 @@ hr.lightColor
 
 #mainLeftBottom 
 {
-	background-image : url('/snudiceWebpage/image/mainpage/buttonWindow.png');
+	background-image : url('/snudiceWebpage/image/mainpage/clientDownload.png');
 	background-repeat : no-repeat;
 	height : 113px;
 	margin-top : 20px;
-}
+	font-size: 200%;
+	text-align : center;
+	padding-top : 15px;
+}	
 
 #gameStart 
 {
@@ -378,7 +392,20 @@ hr.lightColor
 	margin-top : 5px;
 }
 
-#joinSubmit,#joinMsg,#joinFormTable { margin-left:30px; }
+#joinMsg,#joinFormTable { margin-left:30px; }
+#joinSubmit 
+{
+	margin-left: 100px;
+	margin-right : 20px;
+}
+#joinSubmit,#joinClose
+{
+	background-color : #D0DCE4;
+	border : 1px solid #9B9C9B;
+	padding : 5px;
+	margin-top : 10px;
+	cursor : pointer;
+}
 #joinFormTable
 {	
 	margin-top : 25px;
@@ -386,16 +413,23 @@ hr.lightColor
 
 #joinFormTable td.label { padding-right : 20px; }
 #joinFormTable td { padding-bottom : 10px; }
-#joinFormTable input { height : 20px; }
+#joinFormTable input 
+{ 
+	height : 20px;
+	border-color: black; 
+}
 
 #joinId { width : 120px; }
 #joinPw { width : 120px; }
 #joinPwConfirm { width : 120px; }
 #joinEmail { width : 180px; }
 
-#joinMsg { color : red; }
-
-
+#joinMsg 
+{ 
+	color : red;
+	height : 30px; 
+	margin-bottom : 5px;
+}
 
 /*-----------메인 섹션------------*/
 

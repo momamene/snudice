@@ -51,22 +51,24 @@
 							</tr>
 						</table>								
 					
-						<input id="joinSubmit" type="submit" value="가입하기"/>					
-						<input id="joinClose" type="button" value="닫기"/>
 						<div id="joinMsg"></div>
+						<span id="joinSubmit">가입하기</span>					
+						<span id="joinClose">닫기</span>						
 					</div>
 					
 					<!-- 로그인 Form -->
-					<div id="mainLeftTop">
-						<c:choose>
-							<c:when test="${not empty userId}">
-								<c:set var="loginFormWrapperClass" value="invisible"/>	
-							</c:when>
-							<c:otherwise>
-								<c:set var="loginFormWrapperClass" value="visible"/>	
-							</c:otherwise>
-						</c:choose>
-						
+					<c:choose>
+						<c:when test="${not empty userId}">
+							<c:set var="loginFormWrapperClass" value="invisible"/>	
+							<c:set var="mainLeftTopClass" value="loggined"/>
+						</c:when>
+						<c:otherwise>
+							<c:set var="loginFormWrapperClass" value="visible"/>	
+							<c:set var="mainLeftTopClass" value="logouted"/>
+						</c:otherwise>
+					</c:choose>
+					
+					<div id="mainLeftTop" class="${mainLeftTopClass}">						
 						<div id="loginFormTitle" class="${loginFormWrapperClass}">	
 							&nbsp;&nbsp;회원로그인					
 							<div id="guestLogin"></div> 
@@ -74,8 +76,8 @@
 						
 						<div id="loginFormWrapper" class="${loginFormWrapperClass}">									
 							<div id="idpw">
-								ID&nbsp;&nbsp; <input id="userId" name="userId" type="text"/><br/>
-								PW <input id="password" name="password" type="password"/>
+								ID<input id="userId" name="userId" type="text"/><br/>
+								PW<input id="password" name="password" type="password"/>
 							</div>					
 							<div id="loginButton" class="mouseOut"></div>
 													
@@ -112,8 +114,8 @@
 						<div id="logoutWrapper" class="${logoutWrapperClass}">				
 						</div>						
 					</div>
-					<div id="mainLeftBottom">
-						<a href="${root}/setupFile/SNUDiCE_setup.exe">클라다운</a>										
+					<div id="mainLeftBottom">						
+						<a href="${root}/setupFile/SNUDiCE_setup.exe">게임 다운로드</a>										
 					</div>
 				</div>			
 				<div class="center">			
