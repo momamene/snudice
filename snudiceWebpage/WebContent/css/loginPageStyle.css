@@ -75,14 +75,13 @@
 	height : 21px;
 	position : relative;
 	left : 22px;	
-	z-index : 3;
+	z-index : 1;
 }
 
 .containerTop
 {
 	background-image : url('/snudiceWebpage/image/mainpage/containerTop.png');
-	background-repeat : no-repeat;
-	position : relative;
+	background-repeat : no-repeat;	
 	top : -76px;		
 }
 
@@ -182,6 +181,36 @@ hr.lightColor
 	left: 40px;
 	top : 2px;	
 }
+
+#menu1 { margin-left : 40px; }
+#menu2,#menu3,#menu4,#menu5 { margin-left : 10px; }
+
+#menu1,#menu2,#menu3,#menu4,#menu5
+{
+	background-image : url('/snudiceWebpage/image/mainpage/menuBackground.png');
+	background-repeat : no-repeat;
+	float : left;
+	width : 132px;
+	height : 32px;
+	position : relative;
+	z-index : 2;
+	top : -56px;
+	text-align : center;
+	padding-top : 5px;
+	font-weight: bold;	
+}
+
+.menuDropDownWrapper
+{
+	position : relative;
+	top : 10px;
+	z-index : 4;
+}
+
+#menuWrapper .invisible { visibility : hidden; }
+#menuWrapper .visible { visibility : visible; }
+
+#notice,#update { cursor : pointer; }
 
 /*------------- login form ---------*/
 #mainLeftTop,#mainLeftBottom,#mainLeftTop_ { width : 229px; }

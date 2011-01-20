@@ -23,7 +23,20 @@
 			<!-- menu -->
 			<div id="menu">
 				<div id="logoWrapper"></div>					
-				<div id="logo"></div>				
+				<div id="logo"></div>
+				<div id="menuWrapper">
+					<div id="menu1">
+						소식
+						<div id="menu1DropDown" class="menuDropDownWrapper invisible">
+							<div id="notice">공지사항</div>
+							<div id="update">업데이트</div>							
+						</div>
+					</div>
+					<div id="menu2">게임소개</div>
+					<div id="menu3">PrjN</div>
+					<div id="menu4">게시판</div>
+					<div id="menu5">자료실</div>
+				</div>				
 			</div>			
 				
 			<div class="containerTop"></div>		

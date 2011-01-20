@@ -34,6 +34,17 @@ function initLogin(){
 	//손님 로그인 버튼
 	var guestLogin = document.getElementById("guestLogin");
 	guestLogin.onclick = guestLoginFunc;
+	
+	//메뉴	
+	var menu1 = document.getElementById("menu1");
+	menu1.onmouseover = function() {
+		var menu1DropDown = document.getElementById("menu1DropDown");
+		menu1DropDown.className = "menuDropDownWrapper visible"; 
+	};
+	menu1.onmouseout = function() {
+		var menu1DropDown = document.getElementById("menu1DropDown");
+		menu1DropDown.className = "menuDropDownWrapper invisible"; 
+	};
 }
 
 ////////////////////ajax 요청을 하는 event handler/////////////////////
