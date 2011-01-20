@@ -29,10 +29,9 @@
 			<div class="containerTop"></div>		
 			<div class="leftCenterRightWrapper">				
 				<div class="left">
-					<!--  회원가입 Form -->
+					<!--  회원가입 Form -->					
 					<div id="joinFormWrapper" class="display_none">	
-						<div class="centerAlign">회원가입</div>
-						<hr/>
+						<div id="joinTitle">회원가입</div>																
 						<table id="joinFormTable">
 							<tr>
 								<td class="label">ID</td>
@@ -69,7 +68,7 @@
 						</c:choose>
 						
 						<div id="loginFormTitle" class="${loginFormWrapperClass}">	
-							&nbsp;&nbsp;&nbsp;&nbsp;회원로그인					
+							&nbsp;&nbsp;회원로그인					
 							<div id="guestLogin"></div> 
 						</div>		
 						
