@@ -7,11 +7,12 @@
 	position : relative;
 	left : 50%;
 	margin-left : -512px;
+	font-family : "맑은 고딕","Franklin Gothic M";
 }
 .left 
 {
 	 width : 227px; 
-	 margin-left:50px;
+	 margin-left:15px;
 	 float:left;
 }
 
@@ -42,10 +43,10 @@
 	margin-left:22px;
 	margin-right:22px;	
 	margin-top:-80px;
-	padding-top : 60px;	
+	padding-top : 30px;	
 	
 	position : relative;
-	top : 18px;
+	top : 3px;
 	z-index : 1;	
 	
 	background-image : url('/snudiceWebpage/image/mainpage/containerMiddle.png');
@@ -54,7 +55,7 @@
 
 .header,.footer {	width : 1025px; }
 
-.footer { clear : left; position : relative; top:-100px;}
+.footer { clear : left; position : relative; top:-200px;}
 
 .backgroundDown
 {
@@ -82,14 +83,14 @@
 	background-image : url('/snudiceWebpage/image/mainpage/containerTop.png');
 	background-repeat : no-repeat;
 	position : relative;
-	top : -61px;		
+	top : -76px;		
 }
 
 .containerBottom
 {
 	background-image : url('/snudiceWebpage/image/mainpage/containerBottom.png');
 	background-repeat : no-repeat;
-	top : 18px;
+	top : 3px;
 }
 
 /*----------------공통 적용 사항-----------*/
@@ -165,21 +166,21 @@ hr.lightColor
 	height : 78px;	
 	position : relative;
 	top : 10px;
-	left : 80px;
-	z-index : 2;	
+	left : 70px;
+	z-index : 4;	
 }
 
 #logoWrapper
 {
-	background-color : white;
+	background-image : url('/snudiceWebpage/image/mainpage/logoWrapper.png');
+	background-repeat : no-repeat;
 	position : relative;
-	z-index : 1;
+	z-index : 4;
 	height : 100px;
 	width : 230px;
 	float : left;
 	left: 40px;
-	opacity:0.80;
-	filter:alpha(opacity=80); /* for IE */
+	top : 2px;	
 }
 
 /*------------- login form ---------*/
@@ -357,36 +358,44 @@ hr.lightColor
 /*---------------join form-----------*/
 #joinFormWrapper.display_none {	display : none; }
 #joinFormWrapper.display_block
-{
-	background-color : #464D9C;
-	color : white;
+{	
+	background-image : url('/snudiceWebpage/image/mainpage/joinForm.png');
+	background-repeat : no-repeat;	
+	
 	position : absolute;
-	left : 30px;
+	left : 10px;
 	top : 30px;
 	display : block;	
 	
-	width : 280px;
-	height : 215px;
+	width : 348px;
+	height : 284px;
 	z-index : 2;	
 }
 
-#joinFormTable
+#joinTitle
 {
-	margin-left : 5px;
+	margin-left : 40px;
 	margin-top : 5px;
 }
 
-#joinFormTable td.label
-{
-	text-align : center;
+#joinSubmit,#joinMsg,#joinFormTable { margin-left:30px; }
+#joinFormTable
+{	
+	margin-top : 25px;
 }
+
+#joinFormTable td.label { padding-right : 20px; }
+#joinFormTable td { padding-bottom : 10px; }
+#joinFormTable input { height : 20px; }
 
 #joinId { width : 120px; }
 #joinPw { width : 120px; }
 #joinPwConfirm { width : 120px; }
-#joinemail { width : 140px; }
+#joinEmail { width : 180px; }
 
 #joinMsg { color : red; }
+
+
 
 /*-----------메인 섹션------------*/
 

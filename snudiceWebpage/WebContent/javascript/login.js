@@ -12,9 +12,9 @@ function initLogin(){
 	//가입창 열기 버튼	
 	var joinOpen = document.getElementById("joinOpen");
 	joinOpen.onclick = joinOpenFunc;	
-	//가입창  버튼
+	//가입창 닫기 버튼
 	var joinCloseButton = document.getElementById("joinClose");
-	joinCloseButton.onclick = joinCloseFunc;
+	joinCloseButton.onclick = joinCloseFunc;	
 	//가입하기 버튼
 	var joinSubmit = document.getElementById("joinSubmit");
 	joinSubmit.onclick = joinSubmitFunc;
