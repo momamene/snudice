@@ -235,6 +235,12 @@
 #define RESULT_TERM_Y						22
 #define RESULT_SHOWTIME						10000
 
+#define MAP_BTN_MAP_FILE					".\\Data\\Interface\\game_btn_map.img"
+#define MAP_BTN_MAP_SIZE_W					30
+#define MAP_BTN_MAP_SIZE_H					30
+#define MAP_BTN_MAP_POS_X					340
+#define MAP_BTN_MAP_POS_Y					0
+
 
 static gUIGame s_UIGame;
 
@@ -396,6 +402,17 @@ bool gUIGame::SetUp()
 	if(!m_ImgUI[UIIMG_RESULT].Load(RESULT_FILE))
 		return false;
 
+	// map
+	SetRect(&rcDest,
+		MAP_BTN_MAP_POS_X,
+		MAP_BTN_MAP_POS_Y,
+		MAP_BTN_MAP_POS_X + MAP_BTN_MAP_SIZE_W,
+		MAP_BTN_MAP_POS_Y + MAP_BTN_MAP_SIZE_H );
+	if(!m_BtnUI[UIBTN_MAPBTN].SetUp(MAP_BTN_MAP_FILE, false, rcDest))
+		return false;
+	memcpy(&m_rcPos[UIT_MAPBTN], &rcDest, sizeof(RECT));
+
+
 	m_uimode = UIM_NONE;
 	m_bTargetByMove = false;
 	m_timer.SetUp();
@@ -420,75 +437,77 @@ void gUIGame::Draw()
 	int		i;
 
 	// maptooltip
-	POINT	ptMouse;
-	ptMouse.x = gMouse::GetIF()->m_nPosX;
-	ptMouse.y = gMouse::GetIF()->m_nPosY;
-	if(!IsUIRange(ptMouse.x, ptMouse.y))
+	if(m_uimode != UIM_MAP)
 	{
-		if(!gChat::GetIF()->PointInUI(ptMouse.x, ptMouse.y))
+		POINT	ptMouse;
+		ptMouse.x = gMouse::GetIF()->m_nPosX;
+		ptMouse.y = gMouse::GetIF()->m_nPosY;
+		if(!IsUIRange(ptMouse.x, ptMouse.y))
 		{
-			int		nToolTipPos = map->viewabsToCon(ptMouse);
-			gTile	*tile = &map->tileMap[nToolTipPos];
-			if(tile->tileType != TY_NONE)
+			if(!gChat::GetIF()->PointInUI(ptMouse.x, ptMouse.y))
 			{
-				ptMouse.x += MAPTOOLTIP_TERM_MOUSE;
-				ptMouse.y += MAPTOOLTIP_TERM_MOUSE;
-				if(ptMouse.x + MAPTOOLTIP_SIZE_W > WNDSIZEW)
-					ptMouse.x = WNDSIZEW - MAPTOOLTIP_SIZE_W;
-				if(ptMouse.y + MAPTOOLTIP_SIZE_H > CHAT_POS_Y)
-					ptMouse.y = CHAT_POS_Y - MAPTOOLTIP_SIZE_H;
-
-				m_ImgUI[UIIMG_MAPTOOLTIP].Draw(ptMouse.x, ptMouse.y);
-
-				int		textPosX = ptMouse.x + MAPTOOLTIP_TEXT_X;
-				int		textPosY = ptMouse.y + MAPTOOLTIP_TEXT_Y;
-				gUtil::BeginText();
-				if(tile->subject)
+				int		nToolTipPos = map->viewabsToCon(ptMouse);
+				gTile	*tile = &map->tileMap[nToolTipPos];
+				if(tile->tileType != TY_NONE)
 				{
-					gUtil::Text(textPosX, textPosY, tile->subject);
-					textPosY += MAPTOOLTIP_TEXT_TERM_Y;
-				}
-				if(tile->college)
-				{
-					gUtil::Text(textPosX, textPosY, tile->college);
-					//textPosY += MAPTOOLTIP_TEXT_TERM_Y;
-				}
-				if(tile->building)
-				{
-					gUtil::Text(textPosX + MAPTOOLTIP_TEXT_TERM_X, textPosY, tile->building);
-				}
-				gUtil::EndText();
+					ptMouse.x += MAPTOOLTIP_TERM_MOUSE;
+					ptMouse.y += MAPTOOLTIP_TERM_MOUSE;
+					if(ptMouse.x + MAPTOOLTIP_SIZE_W > WNDSIZEW)
+						ptMouse.x = WNDSIZEW - MAPTOOLTIP_SIZE_W;
+					if(ptMouse.y + MAPTOOLTIP_SIZE_H > CHAT_POS_Y)
+						ptMouse.y = CHAT_POS_Y - MAPTOOLTIP_SIZE_H;
 
-				if(tile->tileType == TY_CLASS)
-				{
-					gSubmitCore	*submit = gSubmitCore::GetIF();
+					m_ImgUI[UIIMG_MAPTOOLTIP].Draw(ptMouse.x, ptMouse.y);
 
-					RECT	rcDest, rcSour;
-
-					SetRect(&rcDest,
-						ptMouse.x + MAPTOOLTIP_IMG_POS_X,
-						ptMouse.y + MAPTOOLTIP_IMG_POS_Y,
-						ptMouse.x + MAPTOOLTIP_IMG_POS_X + MAPTOOLTIP_IMG_SIZE_W,
-						ptMouse.y + MAPTOOLTIP_IMG_POS_Y + MAPTOOLTIP_IMG_SIZE_H);
-
-					for(i = 0; i < CLASSSEAT; i++)
+					int		textPosX = ptMouse.x + MAPTOOLTIP_TEXT_X;
+					int		textPosY = ptMouse.y + MAPTOOLTIP_TEXT_Y;
+					gUtil::BeginText();
+					if(tile->subject)
 					{
-						BYTE	subject = submit->m_subject[tile->flag2][i];
-						if(subject != NOSEAT && subject != AVAILSEAT)
-						{
-							gImage	*img = &gPC->m_ImgInfo[ gPC->m_GPlayerList[ subject ].ctype ].ImgPic;
-							SetRect(&rcSour,
-									0, 0, img->m_nWidth, img->m_nHeight);
+						gUtil::Text(textPosX, textPosY, tile->subject);
+						textPosY += MAPTOOLTIP_TEXT_TERM_Y;
+					}
+					if(tile->college)
+					{
+						gUtil::Text(textPosX, textPosY, tile->college);
+						//textPosY += MAPTOOLTIP_TEXT_TERM_Y;
+					}
+					if(tile->building)
+					{
+						gUtil::Text(textPosX + MAPTOOLTIP_TEXT_TERM_X, textPosY, tile->building);
+					}
+					gUtil::EndText();
 
-							img->Draw(rcDest, rcSour);
-							OffsetRect(&rcDest, (MAPTOOLTIP_IMG_SIZE_W + MAPTOOLTIP_IMG_TERM_X), 0);
+					if(tile->tileType == TY_CLASS)
+					{
+						gSubmitCore	*submit = gSubmitCore::GetIF();
+
+						RECT	rcDest, rcSour;
+
+						SetRect(&rcDest,
+							ptMouse.x + MAPTOOLTIP_IMG_POS_X,
+							ptMouse.y + MAPTOOLTIP_IMG_POS_Y,
+							ptMouse.x + MAPTOOLTIP_IMG_POS_X + MAPTOOLTIP_IMG_SIZE_W,
+							ptMouse.y + MAPTOOLTIP_IMG_POS_Y + MAPTOOLTIP_IMG_SIZE_H);
+
+						for(i = 0; i < CLASSSEAT; i++)
+						{
+							BYTE	subject = submit->m_subject[tile->flag2][i];
+							if(subject != NOSEAT && subject != AVAILSEAT)
+							{
+								gImage	*img = &gPC->m_ImgInfo[ gPC->m_GPlayerList[ subject ].ctype ].ImgPic;
+								SetRect(&rcSour,
+										0, 0, img->m_nWidth, img->m_nHeight);
+
+								img->Draw(rcDest, rcSour);
+								OffsetRect(&rcDest, (MAPTOOLTIP_IMG_SIZE_W + MAPTOOLTIP_IMG_TERM_X), 0);
+							}
 						}
 					}
 				}
 			}
 		}
 	}
-
 
 	gChat::GetIF()->Draw();
 
@@ -522,6 +541,7 @@ void gUIGame::Draw()
 		m_ImgUI[UIIMG_SUBINFO].Draw(SUBINFO_POS_X, SUBINFO_POS_Y);
 		m_BtnUI[UIBTN_ITEMCARD].Draw();
 		m_BtnUI[UIBTN_SUBJECT].Draw();
+		m_BtnUI[UIBTN_MAPBTN].Draw();
 
 		// 연애
 		//if(strlen(gPC->m_MyGamePlayer.szCouple) != 0)
@@ -768,6 +788,7 @@ void gUIGame::Draw()
 	// result
 		if(m_uimode == UIM_RESULT)
 		{
+			int			nLineCount = 0;
 			for(i = 0; i < ROOMMAXPLAYER; i++)
 			{
 				if(m_rankIdx[i] == -1)
@@ -776,14 +797,16 @@ void gUIGame::Draw()
 				if(strlen(gPC->m_GPlayerList[ m_rankIdx[i] ].szID) == 0)
 					continue;
 
-				gUtil::TextOutLine(RESULT_POS_START_X, RESULT_POS_START_Y + i * RESULT_TERM_Y,
+				gUtil::TextOutLine(RESULT_POS_START_X, RESULT_POS_START_Y + nLineCount * RESULT_TERM_Y,
 								gPC->m_GPlayerList[ m_rankIdx[i] ].szID);
 
 				sprintf_s(szBuf, "%.1f", gPC->m_GPlayerList[ m_rankIdx[i] ].fAvGrade);
-				gUtil::TextOutLine(RESULT_POS_START_X + RESULT_TERM_X, RESULT_POS_START_Y + i * RESULT_TERM_Y, szBuf);
+				gUtil::TextOutLine(RESULT_POS_START_X + RESULT_TERM_X, RESULT_POS_START_Y + nLineCount * RESULT_TERM_Y, szBuf);
 
 				wsprintf(szBuf, "%d", gPC->m_GPlayerList[ m_rankIdx[i] ].nRank);
-				gUtil::TextOutLine(RESULT_POS_START_X + RESULT_TERM_X * 2, RESULT_POS_START_Y + i * RESULT_TERM_Y, szBuf);
+				gUtil::TextOutLine(RESULT_POS_START_X + RESULT_TERM_X * 2, RESULT_POS_START_Y + nLineCount * RESULT_TERM_Y, szBuf);
+
+				nLineCount++;
 			}
 
 			int		nFrame = m_timer.frame();
@@ -803,6 +826,12 @@ void gUIGame::Draw()
 			gUtil::Text(SUBINFO_AVGRADE_POS_X, SUBINFO_AVGRADE_POS_Y, szBuf);
 		gUtil::EndText();
 		gUtil::SetDefaultFont();
+	}
+
+	// map
+	if(m_uimode == UIM_MAP)
+	{
+		map->DrawMap();
 	}
 
 	// your turn
@@ -924,7 +953,13 @@ bool gUIGame::OnLButtonDown()
 	//MENU module 추가합시당....당....
 	//PopUp으로 메뉴 고르는걸 띄울까요?
 	//고르면 주사위 및 다른건 막히는건가? 아니면... 생각할 게 많네여...
-	if(m_BtnUI[UIBTN_MENU].PointInButton(mouse->m_nPosX, mouse->m_nPosY)) {
+	if(m_BtnUI[UIBTN_MENU].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+	{
+		return true;
+	}
+	if(m_BtnUI[UIBTN_MAPBTN].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+	{
+		m_uimode = UIM_MAP;
 		return true;
 	}
 

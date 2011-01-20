@@ -111,6 +111,8 @@ public:
 	void	MainLoop();
 	void	Draw();				// 그리는 함수
 
+	void	DrawMap();			// 전체맵
+
 	// Draw Position set colony
 	void	posSetter(int xSpacePos, int ySpacePos);
 	void	posSpacor(bool isNokdu=false);		// space를 누르면 해당 위치로 이동하고, 캐릭터의 이동을 잡아주는 등의 함수

@@ -61,6 +61,8 @@ enum UIBTN
 
 	UIBTN_DICE,
 
+	UIBTN_MAPBTN,		
+
 	UIBTN_END,
 };
 
@@ -74,6 +76,7 @@ enum UITYPE
 	UIT_ITEM,
 	UIT_MENU,
 	UIT_DICE,
+	UIT_MAPBTN,
 	UIT_END,
 };
 
@@ -89,6 +92,7 @@ enum UIMODE
 	UIM_ITEMUSEINFO,			// 아이템 사용 정보
 	UIM_INFOCHANGE,				// 수치 변경 정보
 	UIM_BECOUPLE,				// 커플되었다는 정보
+	UIM_MAP,
 	UIM_RESULT,
 };
 
