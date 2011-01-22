@@ -46,6 +46,9 @@ enum UIIMAGE
 
 	UIIMG_RESULT,
 
+	UIIMG_MAPBACK,
+	UIIMG_MAPBG,
+
 	UIIMG_END,
 };
 
@@ -77,6 +80,7 @@ enum UITYPE
 	UIT_MENU,
 	UIT_DICE,
 	UIT_MAPBTN,
+	UIT_MAP,
 	UIT_END,
 };
 
@@ -145,6 +149,9 @@ public:
 	// time count 5,4,3,2,1
 	bool		m_bShowTimeCount;
 	bool		m_bDrawedTimeCount;
+
+	// map
+	int			m_nCharSelected;
 
 private:
 	RECT		m_rcBarDest, m_rcBarSour;

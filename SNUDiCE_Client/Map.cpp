@@ -478,7 +478,7 @@ void gMap::Draw()
 
 void gMap::DrawMap()
 {
-	DrawHexagon(200, 60, 6, true);
+	DrawHexagon(250, 105, 6, true);
 }
 
 // 2. Draw Line End
