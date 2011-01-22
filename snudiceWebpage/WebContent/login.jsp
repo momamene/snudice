@@ -32,10 +32,35 @@
 							<div id="update">업데이트</div>							
 						</div>
 					</div>
-					<div id="menu2">게임소개</div>
-					<div id="menu3">PrjN</div>
-					<div id="menu4">게시판</div>
-					<div id="menu5">자료실</div>
+					<div id="menu2">
+						게임소개
+						<div id="menu2DropDown" class="menuDropDownWrapper invisible">
+							<div id="synopsis">시놉시스</div>
+							<div id="playGuide">게임방법</div>
+							<div id="character">캐릭터</div>
+							<div id="card">카드</div>							
+						</div>
+					</div>
+					<div id="menu3">
+						PrjN
+						<div id="menu3DropDown" class="menuDropDownWrapper invisible">
+							<div id="teamIntro">팀소개</div>													
+						</div>
+					</div>
+					<div id="menu4">
+						게시판
+						<div id="menu4DropDown" class="menuDropDownWrapper invisible">
+							<div id="freeBoard">자유게시판</div>												
+						</div>
+					</div>
+					<div id="menu5">
+						자료실
+						<div id="menu5DropDown" class="menuDropDownWrapper invisible">
+							<div id="gameDownload">게임 다운로드</div>
+							<div id="wallPaper">월페이퍼</div>	
+							<div id="screenShot">스크린샷</div>							
+						</div>
+					</div>
 				</div>				
 			</div>			
 				
@@ -174,7 +199,7 @@
 		</div>		
 		
 		<div class="backgroundDown"></div>
-		<div class="footer centerAlign">		
+		<div class="footer">		
 			${footerMsg}
 		</div>			
 	</div>
