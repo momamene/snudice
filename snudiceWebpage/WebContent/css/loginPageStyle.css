@@ -55,7 +55,13 @@
 
 .header,.footer {	width : 1025px; }
 
-.footer { clear : left; position : relative; top:-200px;}
+.footer 
+{ 
+	clear : left; 
+	position : relative; 
+	top:-200px;
+	text-align : center;
+}
 
 .backgroundDown
 {
@@ -113,18 +119,6 @@ hr.hr1
 	width : 200px;
 }
 
-hr.marginZero
-{
-	margin : 0px;
-}
-
-hr.lightColor
-{
-	background-color : #BDC1E0;
-}
-	
-.centerAlign { text-align : center; }
-.clearLeft { clear : left; }
 
 .bodyWrapper { background-color : white; }
 
@@ -184,6 +178,51 @@ hr.lightColor
 
 #menu1 { margin-left : 40px; }
 #menu2,#menu3,#menu4,#menu5 { margin-left : 10px; }
+#menu1DropDown.visible
+{
+	background-image : url('/snudiceWebpage/image/mainpage/menu2Line.png');
+	background-repeat : no-repeat;
+	margin-top : -36px;
+	padding-top : 36px;	
+	height : 90px;
+}
+
+#menu2DropDown.visible
+{
+	background-image : url('/snudiceWebpage/image/mainpage/menu4Line.png');
+	background-repeat : no-repeat;
+	margin-top : -36px;
+	padding-top : 36px;	
+	height : 132px;
+}
+
+#menu3DropDown.visible
+{
+	background-image : url('/snudiceWebpage/image/mainpage/menu1Line.png');
+	background-repeat : no-repeat;
+	margin-top : -36px;
+	padding-top : 36px;	
+	height : 64px;
+}
+
+#menu4DropDown.visible
+{
+	background-image : url('/snudiceWebpage/image/mainpage/menu1Line.png');
+	background-repeat : no-repeat;
+	margin-top : -36px;
+	padding-top : 36px;	
+	height : 64px;
+}
+
+#menu5DropDown.visible
+{
+	background-image : url('/snudiceWebpage/image/mainpage/menu3Line.png');
+	background-repeat : no-repeat;
+	margin-top : -36px;
+	padding-top : 36px;	
+	height : 109px;
+}
+
 
 #menu1,#menu2,#menu3,#menu4,#menu5
 {
@@ -210,7 +249,7 @@ hr.lightColor
 #menuWrapper .invisible { visibility : hidden; }
 #menuWrapper .visible { visibility : visible; }
 
-#notice,#update { cursor : pointer; }
+#notice,#update,#synopsis,#playGuide,#character,#card,#teamIntro,#freeBoard,#gameDownload,#wallPaper,#screenShot { cursor : pointer; }
 
 /*------------- login form ---------*/
 #mainLeftTop,#mainLeftBottom,#mainLeftTop_ { width : 229px; }
