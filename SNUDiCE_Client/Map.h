@@ -131,7 +131,7 @@ public:
 	// return 값은 양수일경우 녹두를 거치지 않는 경우, 음수일경우 녹두를 뺑뺑이하는 경우
 	// 값은 움직여야 하는 값을 의미한다. 1은 한칸, 0은 0칸, -3은 3칸인데 녹두를 만나면 뺑뺑이.
 
-	void	DrawHexagon(int x0,int y0,int n,bool boolo=false);	
+	void	DrawHexagon(int x0,int y0,int n, int playerIdx, bool boolo=false);	
 	// 특정 좌표에 n의 비율로 나누어서 육각형들을 뿌려줌.
 	// boolo 필요 없을 것 같은데, boolo setting해두면 막혔을 때, 타일이 쪼그라들음
 
@@ -166,7 +166,7 @@ private:
 
 	// Draw의 떨거지
 	
-	void	DrawHexagonOne(int x0,int y0,int i,int j,int n,bool boolo,int type=0);	// 0은 기본 1은 선택된 표시
+	void	DrawHexagonOne(int x0,int y0,int i,int j,int n, int playerIdx, bool boolo,int type=0);	// 0은 기본 1은 선택된 표시
 	void	DrawHexagonSubmitOne(int x0, int y0, int i, int j, int n, int classtype, int statetype);
 	void	DrawHexagonMinimapOne(int x0, int y0, int i, int j, int n, int classtype, int statetype);
 };

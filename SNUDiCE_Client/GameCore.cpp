@@ -1049,6 +1049,7 @@ void gGameCore::Start(int spacor,int conPosX, int conPosY)
 	{
 		gPlaySoundCore::GetIF()->PlayEffectSound(EFFECT_FILE_11, true);
 		gPlaySoundCore::GetIF()->PlayEffectSound(EFFECT_FILE_12, true);
+		gPC->m_moveFoot[couple] = 1;
 	}
 	else
 	{
@@ -1057,6 +1058,7 @@ void gGameCore::Start(int spacor,int conPosX, int conPosY)
 		else
 			gPlaySoundCore::GetIF()->PlayEffectSound(EFFECT_FILE_12, true);
 	}
+	gPC->m_moveFoot[m_nTurn] = 1;
 
 	gMap::GetIF()->posSetter(conPosX,conPosY);
 	Start(spacor);

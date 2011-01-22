@@ -10,6 +10,7 @@
 #include "Chat.h"
 #include "stringconst.h"
 #include "PlaySoundCore.h"
+#include "UIGame.h"
 
 #define ROOM_FILE_BACK				".\\Data\\Room\\room_back.img"
 
@@ -335,6 +336,8 @@ void gRoomCore::Release()
 void gRoomCore::OnLButtonDown()
 {
 	if(!gServer::GetIF()->m_bConnect)	// 서버랑 연결 안되었으면 입력 막자
+		return;
+	if(m_bStartCount)
 		return;
 
 	gTopUI		*top = gTopUI::GetIF();
@@ -1149,6 +1152,8 @@ void gRoomCore::Draw_Join()
 
 bool gRoomCore::SetUp_Room()
 {
+	m_bStartCount = false;
+
 	if(!m_ImgBack[ERM_ROOM].Load(ROOM_FILE_ROOM_BACK))
 		return false;
 
@@ -1500,6 +1505,26 @@ void gRoomCore::Draw_Room()
 		gUtil::EndText();
 	}
 	gTopUI::GetIF()->Draw_Option();
+
+	// Count
+	if(m_bStartCount)
+	{
+		int		termX;
+		if((termX = GetTickCount() - m_nStartTimer) > 5000)
+		{
+			gPlaySoundCore::GetIF()->StopEffectSound(EFFECT_FILE_10);
+			gMainWin::GetIF()->m_eCoreMode = ECM_SUBMIT;
+			m_bStartCount = false;
+			gSubmitCore::GetIF()->m_bCount = false;
+		}
+		else
+		{
+			termX = 5000 - termX;
+			termX /= 1000;
+			if(termX >= 0 && termX <= 4)
+				gUIGame::GetIF()->DrawTimerImage(termX);
+		}
+	}
 }
 
 
@@ -1915,7 +1940,7 @@ void gRoomCore::pk_gamestart_rep(PK_GAMESTART_REP *rep)
 			gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_15, STR_15_2);
 			break;
 		case EGS_SUCCESS:
-			gMainWin::GetIF()->m_eCoreMode = ECM_SUBMIT;
+			StartCount();
 			gSubmitCore::GetIF()->SetSubject((BYTE*)rep->subject);
 			gSubmitCore::GetIF()->m_nTimeCount = GetTickCount();
 			gSubmitCore::GetIF()->m_bSendTick = false;
@@ -1992,4 +2017,11 @@ bool gRoomCore::Restore()
 		return false;
 
 	return true;
+}
+
+void gRoomCore::StartCount()
+{
+	gPlaySoundCore::GetIF()->PlayEffectSound(EFFECT_FILE_10, true);
+	m_nStartTimer = GetTickCount();
+	m_bStartCount = TRUE;
 }

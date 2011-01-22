@@ -48,6 +48,9 @@ enum UIIMAGE
 
 	UIIMG_MAPBACK,
 	UIIMG_MAPBG,
+	UIIMG_MAPPLAYER,
+	UIIMG_MAPPLAYEROUT,
+	UIIMG_MAPPLAYERBAR,		// Ã¼·Â¹Ù
 
 	UIIMG_END,
 };
@@ -187,6 +190,7 @@ public:
 
 	void		Draw_InfoChange();
 
+	void		DrawTimerImage(int n);
 
 	void		Clear();
 

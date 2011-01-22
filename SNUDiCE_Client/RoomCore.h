@@ -151,6 +151,10 @@ public:
 	gImage		m_ImgReady;
 	gImage		m_ImgCrown;
 
+private:
+	bool		m_bStartCount;
+	int			m_nStartTimer;
+
 public:
 	// overridng from Core 인터페이스
 	bool		SetUp();
@@ -208,4 +212,5 @@ public:
 	void		OnLButtonUp_Room();
 	void		OnRButtonDown_Room();
 
+	void		StartCount();					// 수강신청모드넘어가기전 5초 카운트
 };

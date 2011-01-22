@@ -253,6 +253,23 @@
 #define MAP_BG_POS_X						250
 #define MAP_BG_POS_Y						(MAP_BACK_POS_Y + (MAP_BACK_SIZE_H - MAP_BG_SIZE_H) / 2)
 
+#define MAP_PLAYER_FILE						".\\Data\\Interface\\game_map_player.img"
+#define MAP_PLAYER_SIZE_W					190
+#define MAP_PLAYER_SIZE_H					45
+#define MAP_PLAYER_POS_X					(MAP_BACK_POS_X + 20)
+#define MAP_PLAYER_POS_Y					(MAP_BACK_POS_Y + 30)
+#define MAP_PLAYER_TERM_Y					6
+
+#define MAP_PLAYEROUT_FILE					".\\Data\\Interface\\game_map_playeroutline.img"
+#define MAP_PLAYEROUT_SIZE_W				196
+#define MAP_PLAYEROUT_SIZE_H				51
+
+#define MAP_PLAYERBAR_FILE					".\\Data\\Interface\\game_map_playerbar.img"
+#define MAP_PLAYERBAR_SIZE_W				94
+#define MAP_PLAYERBAR_SIZE_H				2
+#define MAP_PLAYERBAR_POS_X					40
+#define MAP_PLAYERBAR_POS_Y					38
+
 // 전체맵 보기에서, 과목 점수(평점) 띄워줄 좌표.. 하드코딩 우왕 ㅋ
 static POINT s_ptPosGrade[CLASSNUM] = 
 {
@@ -450,7 +467,7 @@ bool gUIGame::SetUp()
 		return false;
 	memcpy(&m_rcPos[UIT_MAPBTN], &rcDest, sizeof(RECT));
 
-	// mapback
+	//	mapback
 	if(!m_ImgUI[UIIMG_MAPBACK].Load(MAP_BACK_FILE))
 		return false;
 	SetRect(&m_rcPos[UIT_MAP],
@@ -459,10 +476,17 @@ bool gUIGame::SetUp()
 		MAP_BACK_POS_X + MAP_BACK_SIZE_W,
 		MAP_BACK_POS_Y + MAP_BACK_SIZE_H);
 
-	// mapbg
+	//	mapbg
 	if(!m_ImgUI[UIIMG_MAPBG].Load(MAP_BG_FILE))
 		return false;
 
+	//	map player, outline
+	if(!m_ImgUI[UIIMG_MAPPLAYER].Load(MAP_PLAYER_FILE))
+		return false;
+	if(!m_ImgUI[UIIMG_MAPPLAYEROUT].Load(MAP_PLAYEROUT_FILE))
+		return false;
+	if(!m_ImgUI[UIIMG_MAPPLAYERBAR].Load(MAP_PLAYERBAR_FILE))
+		return false;
 
 	m_uimode = UIM_NONE;
 	m_bTargetByMove = false;
@@ -498,60 +522,63 @@ void gUIGame::Draw()
 			if(!gChat::GetIF()->PointInUI(ptMouse.x, ptMouse.y))
 			{
 				int		nToolTipPos = map->viewabsToCon(ptMouse);
-				gTile	*tile = &map->tileMap[nToolTipPos];
-				if(tile->tileType != TY_NONE)
+				if(nToolTipPos < LINEX*LINEY)
 				{
-					ptMouse.x += MAPTOOLTIP_TERM_MOUSE;
-					ptMouse.y += MAPTOOLTIP_TERM_MOUSE;
-					if(ptMouse.x + MAPTOOLTIP_SIZE_W > WNDSIZEW)
-						ptMouse.x = WNDSIZEW - MAPTOOLTIP_SIZE_W;
-					if(ptMouse.y + MAPTOOLTIP_SIZE_H > CHAT_POS_Y)
-						ptMouse.y = CHAT_POS_Y - MAPTOOLTIP_SIZE_H;
-
-					m_ImgUI[UIIMG_MAPTOOLTIP].Draw(ptMouse.x, ptMouse.y);
-
-					int		textPosX = ptMouse.x + MAPTOOLTIP_TEXT_X;
-					int		textPosY = ptMouse.y + MAPTOOLTIP_TEXT_Y;
-					gUtil::BeginText();
-					if(tile->subject)
+					gTile	*tile = &map->tileMap[nToolTipPos];
+					if(tile->tileType != TY_NONE)
 					{
-						gUtil::Text(textPosX, textPosY, tile->subject);
-						textPosY += MAPTOOLTIP_TEXT_TERM_Y;
-					}
-					if(tile->college)
-					{
-						gUtil::Text(textPosX, textPosY, tile->college);
-						//textPosY += MAPTOOLTIP_TEXT_TERM_Y;
-					}
-					if(tile->building)
-					{
-						gUtil::Text(textPosX + MAPTOOLTIP_TEXT_TERM_X, textPosY, tile->building);
-					}
-					gUtil::EndText();
+						ptMouse.x += MAPTOOLTIP_TERM_MOUSE;
+						ptMouse.y += MAPTOOLTIP_TERM_MOUSE;
+						if(ptMouse.x + MAPTOOLTIP_SIZE_W > WNDSIZEW)
+							ptMouse.x = WNDSIZEW - MAPTOOLTIP_SIZE_W;
+						if(ptMouse.y + MAPTOOLTIP_SIZE_H > CHAT_POS_Y)
+							ptMouse.y = CHAT_POS_Y - MAPTOOLTIP_SIZE_H;
 
-					if(tile->tileType == TY_CLASS)
-					{
-						gSubmitCore	*submit = gSubmitCore::GetIF();
+						m_ImgUI[UIIMG_MAPTOOLTIP].Draw(ptMouse.x, ptMouse.y);
 
-						RECT	rcDest, rcSour;
-
-						SetRect(&rcDest,
-							ptMouse.x + MAPTOOLTIP_IMG_POS_X,
-							ptMouse.y + MAPTOOLTIP_IMG_POS_Y,
-							ptMouse.x + MAPTOOLTIP_IMG_POS_X + MAPTOOLTIP_IMG_SIZE_W,
-							ptMouse.y + MAPTOOLTIP_IMG_POS_Y + MAPTOOLTIP_IMG_SIZE_H);
-
-						for(i = 0; i < CLASSSEAT; i++)
+						int		textPosX = ptMouse.x + MAPTOOLTIP_TEXT_X;
+						int		textPosY = ptMouse.y + MAPTOOLTIP_TEXT_Y;
+						gUtil::BeginText();
+						if(tile->subject)
 						{
-							BYTE	subject = submit->m_subject[tile->flag2][i];
-							if(subject != NOSEAT && subject != AVAILSEAT)
-							{
-								gImage	*img = &gPC->m_ImgInfo[ gPC->m_GPlayerList[ subject ].ctype ].ImgPic;
-								SetRect(&rcSour,
-										0, 0, img->m_nWidth, img->m_nHeight);
+							gUtil::Text(textPosX, textPosY, tile->subject);
+							textPosY += MAPTOOLTIP_TEXT_TERM_Y;
+						}
+						if(tile->college)
+						{
+							gUtil::Text(textPosX, textPosY, tile->college);
+							//textPosY += MAPTOOLTIP_TEXT_TERM_Y;
+						}
+						if(tile->building)
+						{
+							gUtil::Text(textPosX + MAPTOOLTIP_TEXT_TERM_X, textPosY, tile->building);
+						}
+						gUtil::EndText();
 
-								img->Draw(rcDest, rcSour);
-								OffsetRect(&rcDest, (MAPTOOLTIP_IMG_SIZE_W + MAPTOOLTIP_IMG_TERM_X), 0);
+						if(tile->tileType == TY_CLASS)
+						{
+							gSubmitCore	*submit = gSubmitCore::GetIF();
+
+							RECT	rcDest, rcSour;
+
+							SetRect(&rcDest,
+								ptMouse.x + MAPTOOLTIP_IMG_POS_X,
+								ptMouse.y + MAPTOOLTIP_IMG_POS_Y,
+								ptMouse.x + MAPTOOLTIP_IMG_POS_X + MAPTOOLTIP_IMG_SIZE_W,
+								ptMouse.y + MAPTOOLTIP_IMG_POS_Y + MAPTOOLTIP_IMG_SIZE_H);
+
+							for(i = 0; i < CLASSSEAT; i++)
+							{
+								BYTE	subject = submit->m_subject[tile->flag2][i];
+								if(subject != NOSEAT && subject != AVAILSEAT)
+								{
+									gImage	*img = &gPC->m_ImgInfo[ gPC->m_GPlayerList[ subject ].ctype ].ImgPic;
+									SetRect(&rcSour,
+											0, 0, img->m_nWidth, img->m_nHeight);
+
+									img->Draw(rcDest, rcSour);
+									OffsetRect(&rcDest, (MAPTOOLTIP_IMG_SIZE_W + MAPTOOLTIP_IMG_TERM_X), 0);
+								}
 							}
 						}
 					}
@@ -886,15 +913,67 @@ void gUIGame::Draw()
 		m_ImgUI[UIIMG_MAPBG].Draw(MAP_BG_POS_X, MAP_BG_POS_Y);
 		map->DrawMap();
 
-		// grade
-		GAMEPLAYER	*gp = &gPC->m_GPlayerList[m_nCharSelected];
+		// player info
+		int		nPlayerCount = 0;
+		for(i = 0; i < ROOMMAXPLAYER; i++)
+		{
+			if(strlen(gPC->m_GPlayerList[i].szID) == 0)
+				continue;
+
+			int		nYPos = MAP_PLAYER_POS_Y + (MAP_PLAYER_SIZE_H + MAP_PLAYER_TERM_Y) * nPlayerCount;
+			m_ImgUI[UIIMG_MAPPLAYER].Draw(MAP_PLAYER_POS_X, nYPos);
+			gImage*	pic = &gPC->m_ImgInfo[ gPC->m_GPlayerList[i].ctype ].ImgPic;
+			RECT		rcDest = {	MAP_PLAYER_POS_X + 6,
+									nYPos + 7,
+									MAP_PLAYER_POS_X + 6 + 28,
+									nYPos + 7 + 32 };
+			RECT		rcSour = {0, 0, pic->m_nWidth, pic->m_nHeight};
+			pic->Draw(rcDest, rcSour);
+
+			if(i == m_nCharSelected)
+				m_ImgUI[UIIMG_MAPPLAYEROUT].Draw(MAP_PLAYER_POS_X - 3, nYPos - 3);
+
+			rcSour.left		= 0;
+			rcSour.top		= 0;
+			rcSour.right	= MAP_PLAYERBAR_SIZE_W * gPC->m_GPlayerList[i].nStamina / 10;
+			rcSour.bottom	= rcSour.top + MAP_PLAYERBAR_SIZE_H;
+
+			rcDest = rcSour;
+			OffsetRect(&rcDest, MAP_PLAYER_POS_X + MAP_PLAYERBAR_POS_X, nYPos + MAP_PLAYERBAR_POS_Y);
+			m_ImgUI[UIIMG_MAPPLAYERBAR].Draw(rcDest, rcSour);
+
+			nPlayerCount++;
+		}
+
 
 		gUtil::BeginText();
+		// grade
+		GAMEPLAYER	*gp = &gPC->m_GPlayerList[m_nCharSelected];
 		for(i = 0; i < MAXSUBJECT; i++)
 		{	
 			sprintf_s(szBuf, "%.1f", gp->fGrade[i]);
 			gUtil::TextOutLine(s_ptPosGrade[ gp->bySubIdx[i] ].x, s_ptPosGrade[ gp->bySubIdx[i] ].y, szBuf);
 		}
+		nPlayerCount = 0;
+		for(i = 0; i < ROOMMAXPLAYER; i++)
+		{
+			if(strlen(gPC->m_GPlayerList[i].szID) == 0)
+				continue;
+
+			int		nYPos = MAP_PLAYER_POS_Y + (MAP_PLAYER_SIZE_H + MAP_PLAYER_TERM_Y) * nPlayerCount;
+
+			gUtil::Text(MAP_PLAYER_POS_X + 43, nYPos + 5, gPC->m_GPlayerList[i].szID);
+			
+			sprintf(szBuf, "%d", gPC->m_GPlayerList[i].nLang);
+			gUtil::Text(MAP_PLAYER_POS_X + 59, nYPos + 20, szBuf);
+			sprintf(szBuf, "%d", gPC->m_GPlayerList[i].nMath);
+			gUtil::Text(MAP_PLAYER_POS_X + 90, nYPos + 20, szBuf);
+			sprintf(szBuf, "%d", gPC->m_GPlayerList[i].nArt);
+			gUtil::Text(MAP_PLAYER_POS_X + 122, nYPos + 20, szBuf);
+			nPlayerCount++;
+		}
+
+		// stat
 		gUtil::EndText();
 
 		// maptooltip
@@ -1242,102 +1321,28 @@ bool gUIGame::OnLButtonDown()
 				}
 			}
 		break;
-	case UIM_TARGETSELECT:
-		{
-			POINT		pt;
-			pt.x = mouse->m_nPosX;
-			pt.y = mouse->m_nPosY;
-
-			int		nPos = map->viewabsToCon(pt);
-			int		numchar = gPC->GetCharNumPos(nPos);
-
-			if(gPC->m_MyGamePlayer.nPos == nPos)
-				numchar--;
-
-			if(numchar <= 0)
-				break;
-			else if(numchar == 1)
+		case UIM_TARGETSELECT:
 			{
-				GAMEPLAYER	*target = gPC->GetPlayerByPos(nPos);
+				POINT		pt;
+				pt.x = mouse->m_nPosX;
+				pt.y = mouse->m_nPosY;
 
-				if(m_bTargetByMove)
+				int		nPos = map->viewabsToCon(pt);
+				int		numchar = gPC->GetCharNumPos(nPos);
+
+				if(gPC->m_MyGamePlayer.nPos == nPos)
+					numchar--;
+
+				if(numchar <= 0)
+					break;
+				else if(numchar == 1)
 				{
-					strcpy(m_szTarget, target->szID);
-					m_uimode = UIM_PLACESELECT;
-				}
-				else
-				{
-					ITEMCARD	*item = &gItemContainer::GetIF()->m_ItemList[ m_nItemID ];
-					switch(item->target)
-					{
-						case TARGET_OTHERSEX:
-							{
-								// 동성
-								if(gPC->m_CharInfo[target->ctype].bMale == gPC->m_CharInfo[gPC->m_MyGamePlayer.ctype].bMale)
-								{
-									gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_22);
-									return true;
-								}
-								if(item->type == ITEM_DASH || item->type == ITEM_POWERDASH)
-								{
-									// 이미 대상은 커플임
-									if(strlen(target->szCouple) != 0)
-									{
-										gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_23);
-										return true;
-									}
-								}
-							}
-							break;
-						case TARGET_OTHERCOUPLE:
-							{
-								// 내 커플 선택
-								if(m_bCouple && strcmp(target->szID, gPC->m_MyGamePlayer.szCouple) == 0)
-								{
-									gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_26);
-									return true;
-								}
-								// 상대가 커플이 아님
-								if(!m_bCouple || strlen(target->szCouple) == 0)
-								{
-									gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_27);
-									return true;
-								}
-							}
-							break;
-					}
+					GAMEPLAYER	*target = gPC->GetPlayerByPos(nPos);
 
-					PK_ITEMUSE_ASK		ask;
-					ask.nItemID	= m_nItemID;
-					strcpy(ask.szID, gPC->m_MyPlayer.szID);
-					strcpy(ask.szTarget, target->szID);
-
-					gServer::GetIF()->Send(PL_ITEMUSE_ASK, sizeof(ask), &ask);
-					m_uimode = UIM_NONE;
-					m_bItemUsed = true;
-				}
-			}
-			else
-			{
-				m_uimode = UIM_TARGETSELECT_MULTI;
-				SetTargetButton(nPos, numchar);
-			}
-		}
-		break;
-	case UIM_TARGETSELECT_MULTI:
-		{
-			int		i;
-
-			for(i = 0; i < m_nTargetNum; i++)
-			{
-				if(gUtil::PointInRect(mouse->m_nPosX, mouse->m_nPosY, m_target[i].rcPos))
-				{
 					if(m_bTargetByMove)
 					{
-						strcpy(m_szTarget, gPC->m_GPlayerList[ m_target[i].idx ].szID);
+						strcpy(m_szTarget, target->szID);
 						m_uimode = UIM_PLACESELECT;
-
-						break;
 					}
 					else
 					{
@@ -1347,8 +1352,7 @@ bool gUIGame::OnLButtonDown()
 							case TARGET_OTHERSEX:
 								{
 									// 동성
-									if(gPC->m_CharInfo[ gPC->m_GPlayerList[ m_target[i].idx ].ctype ].bMale
-											== gPC->m_CharInfo[ gPC->m_MyGamePlayer.ctype ].bMale)
+									if(gPC->m_CharInfo[target->ctype].bMale == gPC->m_CharInfo[gPC->m_MyGamePlayer.ctype].bMale)
 									{
 										gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_22);
 										return true;
@@ -1356,7 +1360,7 @@ bool gUIGame::OnLButtonDown()
 									if(item->type == ITEM_DASH || item->type == ITEM_POWERDASH)
 									{
 										// 이미 대상은 커플임
-										if(strlen(gPC->m_GPlayerList[m_target[i].idx].szCouple) != 0)
+										if(strlen(target->szCouple) != 0)
 										{
 											gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_23);
 											return true;
@@ -1367,13 +1371,13 @@ bool gUIGame::OnLButtonDown()
 							case TARGET_OTHERCOUPLE:
 								{
 									// 내 커플 선택
-									if(m_bCouple && strcmp(gPC->m_GPlayerList [m_target[i].idx ].szID, gPC->m_MyGamePlayer.szCouple) == 0)
+									if(m_bCouple && strcmp(target->szID, gPC->m_MyGamePlayer.szCouple) == 0)
 									{
 										gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_26);
 										return true;
 									}
 									// 상대가 커플이 아님
-									if(strlen(gPC->m_GPlayerList[m_target[i].idx].szCouple) == 0)
+									if(!m_bCouple || strlen(target->szCouple) == 0)
 									{
 										gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_27);
 										return true;
@@ -1383,80 +1387,181 @@ bool gUIGame::OnLButtonDown()
 						}
 
 						PK_ITEMUSE_ASK		ask;
-
-						strcpy(ask.szID, gPC->m_MyGamePlayer.szID);
-						strcpy(ask.szTarget, gPC->m_GPlayerList[ m_target[i].idx ].szID);
-						ask.nItemID = m_nItemID;
+						ask.nItemID	= m_nItemID;
+						strcpy(ask.szID, gPC->m_MyPlayer.szID);
+						strcpy(ask.szTarget, target->szID);
 
 						gServer::GetIF()->Send(PL_ITEMUSE_ASK, sizeof(ask), &ask);
 						m_uimode = UIM_NONE;
 						m_bItemUsed = true;
-						break;
+					}
+				}
+				else
+				{
+					m_uimode = UIM_TARGETSELECT_MULTI;
+					SetTargetButton(nPos, numchar);
+				}
+			}
+			break;
+		case UIM_TARGETSELECT_MULTI:
+			{
+				int		i;
+
+				for(i = 0; i < m_nTargetNum; i++)
+				{
+					if(gUtil::PointInRect(mouse->m_nPosX, mouse->m_nPosY, m_target[i].rcPos))
+					{
+						if(m_bTargetByMove)
+						{
+							strcpy(m_szTarget, gPC->m_GPlayerList[ m_target[i].idx ].szID);
+							m_uimode = UIM_PLACESELECT;
+
+							break;
+						}
+						else
+						{
+							ITEMCARD	*item = &gItemContainer::GetIF()->m_ItemList[ m_nItemID ];
+							switch(item->target)
+							{
+								case TARGET_OTHERSEX:
+									{
+										// 동성
+										if(gPC->m_CharInfo[ gPC->m_GPlayerList[ m_target[i].idx ].ctype ].bMale
+												== gPC->m_CharInfo[ gPC->m_MyGamePlayer.ctype ].bMale)
+										{
+											gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_22);
+											return true;
+										}
+										if(item->type == ITEM_DASH || item->type == ITEM_POWERDASH)
+										{
+											// 이미 대상은 커플임
+											if(strlen(gPC->m_GPlayerList[m_target[i].idx].szCouple) != 0)
+											{
+												gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_23);
+												return true;
+											}
+										}
+									}
+									break;
+								case TARGET_OTHERCOUPLE:
+									{
+										// 내 커플 선택
+										if(m_bCouple && strcmp(gPC->m_GPlayerList [m_target[i].idx ].szID, gPC->m_MyGamePlayer.szCouple) == 0)
+										{
+											gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_26);
+											return true;
+										}
+										// 상대가 커플이 아님
+										if(strlen(gPC->m_GPlayerList[m_target[i].idx].szCouple) == 0)
+										{
+											gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_27);
+											return true;
+										}
+									}
+									break;
+							}
+
+							PK_ITEMUSE_ASK		ask;
+
+							strcpy(ask.szID, gPC->m_MyGamePlayer.szID);
+							strcpy(ask.szTarget, gPC->m_GPlayerList[ m_target[i].idx ].szID);
+							ask.nItemID = m_nItemID;
+
+							gServer::GetIF()->Send(PL_ITEMUSE_ASK, sizeof(ask), &ask);
+							m_uimode = UIM_NONE;
+							m_bItemUsed = true;
+							break;
+						}
 					}
 				}
 			}
-		}
-		break;
-	case UIM_PLACESELECT:
-		{
-			PK_ITEMUSE_ASK		ask;
-
-			POINT	pt;
-			pt.x = mouse->m_nPosX;
-			pt.y = mouse->m_nPosY;
-
-			int		nPos = map->viewabsToCon(pt);
-			if(map->tileMap[nPos].tileType != TY_NONE)
+			break;
+		case UIM_PLACESELECT:
 			{
-				strcpy(ask.szID, gPC->m_MyGamePlayer.szID);
-				ask.nStartPos	= gPC->m_MyGamePlayer.nPos;
-				ask.nDestPos	= nPos;
-				if(m_bTargetByMove)
+				PK_ITEMUSE_ASK		ask;
+
+				POINT	pt;
+				pt.x = mouse->m_nPosX;
+				pt.y = mouse->m_nPosY;
+
+				int		nPos = map->viewabsToCon(pt);
+				if(map->tileMap[nPos].tileType != TY_NONE)
 				{
-					strcpy(ask.szTarget, m_szTarget);
-					m_bTargetByMove = false;
+					strcpy(ask.szID, gPC->m_MyGamePlayer.szID);
+					ask.nStartPos	= gPC->m_MyGamePlayer.nPos;
+					ask.nDestPos	= nPos;
+					if(m_bTargetByMove)
+					{
+						strcpy(ask.szTarget, m_szTarget);
+						m_bTargetByMove = false;
+					}
+					ask.nItemID = m_nItemID;
+					gServer::GetIF()->Send(PL_ITEMUSE_ASK, sizeof(ask), &ask);
+					m_uimode = UIM_NONE;
+					m_bItemUsed = true;
 				}
-				ask.nItemID = m_nItemID;
-				gServer::GetIF()->Send(PL_ITEMUSE_ASK, sizeof(ask), &ask);
-				m_uimode = UIM_NONE;
-				m_bItemUsed = true;
 			}
-		}
-		break;
-	case UIM_SUGANG:				// 수강현황 모드
-		{
-			if(m_BtnUI[UIBTN_SUBPREV].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+			break;
+		case UIM_SUGANG:				// 수강현황 모드
 			{
-				while(true)
+				if(m_BtnUI[UIBTN_SUBPREV].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 				{
-					m_nSubSel--;
-					if(m_nSubSel < 0)
-						m_nSubSel = ROOMMAXPLAYER - 1;
+					while(true)
+					{
+						m_nSubSel--;
+						if(m_nSubSel < 0)
+							m_nSubSel = ROOMMAXPLAYER - 1;
 
-					if(strlen(gPC->m_GPlayerList[m_nSubSel].szID) == 0)
+						if(strlen(gPC->m_GPlayerList[m_nSubSel].szID) == 0)
+							continue;
+
+						break;
+					}
+					return true;
+				}
+				if(m_BtnUI[UIBTN_SUBNEXT].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+				{
+					while(true)
+					{
+						m_nSubSel++;
+						if(m_nSubSel >= ROOMMAXPLAYER)
+							m_nSubSel = 0;
+
+						if(strlen(gPC->m_GPlayerList[m_nSubSel].szID) == 0)
+							continue;
+
+						break;
+					}
+					return true;
+				}
+			}
+			break;
+		case UIM_MAP:
+			{
+				// player info
+				int		i;
+				int		nPlayerCount = 0;
+				for(i = 0; i < ROOMMAXPLAYER; i++)
+				{
+					if(strlen(gPC->m_GPlayerList[i].szID) == 0)
 						continue;
 
-					break;
-				}
-				return true;
-			}
-			if(m_BtnUI[UIBTN_SUBNEXT].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
-			{
-				while(true)
-				{
-					m_nSubSel++;
-					if(m_nSubSel >= ROOMMAXPLAYER)
-						m_nSubSel = 0;
+					int		nYPos = MAP_PLAYER_POS_Y + (MAP_PLAYER_SIZE_H + MAP_PLAYER_TERM_Y) * nPlayerCount;
 
-					if(strlen(gPC->m_GPlayerList[m_nSubSel].szID) == 0)
-						continue;
+					RECT	rcPos = {	MAP_PLAYER_POS_X,
+										nYPos,
+										MAP_PLAYER_POS_X + MAP_PLAYER_SIZE_W,
+										nYPos + MAP_PLAYER_SIZE_H};
 
-					break;
+					if(gUtil::PointInRect(mouse->m_nPosX, mouse->m_nPosY, rcPos))
+					{
+						m_nCharSelected = i;
+						break;
+					}
+					nPlayerCount++;
 				}
-				return true;
 			}
-		}
-		break;
+			break;
 	}
 
 	return false;
@@ -2675,4 +2780,19 @@ void gUIGame::GameEnd()
 	gPlaySoundCore::GetIF()->StopEffectSound(EFFECT_FILE_10);
 	m_uimode = UIM_RESULT;
 	m_timer.frameStart(RESULT_SHOWTIME, 2);
+}
+
+void gUIGame::DrawTimerImage(int n)
+{
+	RECT	rcDest, rcSour;
+	SetRect(&rcDest,
+		TIMER_NUMBER_POS_X,
+		TIMER_NUMBER_POS_Y,
+		TIMER_NUMBER_POS_X + TIMER_NUMBER_SIZE_W,
+		TIMER_NUMBER_POS_Y + TIMER_NUMBER_SIZE_H);
+	SetRect(&rcSour,
+		0, 0, TIMER_NUMBER_SIZE_W, TIMER_NUMBER_SIZE_H);
+
+	OffsetRect(&rcSour, (n * TIMER_NUMBER_SIZE_W), 0);
+	m_ImgUI[UIIMG_TIMER].Draw(rcDest, rcSour);
 }

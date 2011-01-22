@@ -40,6 +40,7 @@ public:
 
 	bool			m_bSendTick;
 	int				m_nTimeCount;
+	bool			m_bCount;
 
 	BYTE			m_subject[CLASSNUM][CLASSSEAT];
 

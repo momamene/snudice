@@ -77,6 +77,8 @@ gSubmitCore::~gSubmitCore(void)
 
 bool gSubmitCore::SetUp()
 {
+	m_bCount = false;
+
 	if(!m_ImgBack.Load(SUB_FILE_BACK))
 		return false;
 
@@ -130,17 +132,6 @@ bool gSubmitCore::SetUp()
 
 void gSubmitCore::MainLoop()
 {
-	if(GetTickCount() - m_nTimeCount > SUBMITTICK)
-		if(!m_bSendTick)
-		{
-			PK_SUBMITCOUNT_ASK	ask;
-
-			strcpy(ask.szID, gPlayerContainer::GetIF()->m_MyPlayer.szID);
-			gServer::GetIF()->Send(PL_SUBMITCOUNT_ASK, sizeof(ask), &ask);
-			m_bSendTick = true;
-		}
-	
-
 	Draw();
 
 	// popup Ã¢ Ã³¸®
@@ -259,6 +250,36 @@ void gSubmitCore::Draw()
 		}
 
 	gUtil::EndText();
+
+	int		termX = GetTickCount() - m_nTimeCount;
+
+	if(termX > SUBMITTICK)
+	{
+		if(!m_bSendTick)
+		{
+			PK_SUBMITCOUNT_ASK	ask;
+
+			strcpy(ask.szID, gPlayerContainer::GetIF()->m_MyPlayer.szID);
+			gServer::GetIF()->Send(PL_SUBMITCOUNT_ASK, sizeof(ask), &ask);
+			m_bSendTick = true;
+			gPlaySoundCore::GetIF()->StopEffectSound(EFFECT_FILE_10);
+		}
+	}
+	else
+	{
+		if(termX > SUBMITTICK - 5000)
+		{
+			if(!m_bCount)
+			{
+				gPlaySoundCore::GetIF()->PlayEffectSound(EFFECT_FILE_10, true);
+				m_bCount = true;
+			}
+			termX = SUBMITTICK - termX;
+			termX /= 1000;
+			if(termX >= 0 && termX <= 4)
+				gUIGame::GetIF()->DrawTimerImage(termX);
+		}
+	}
 }
 
 void gSubmitCore::Release()

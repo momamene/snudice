@@ -13,6 +13,8 @@ using namespace std;
 #define CHARIMGDATAFILE		".\\Data\\charimgdata.dat"
 #define CHARDESCRIPTFILE	".\\Data\\chardescript.dat"
 
+#define MOTIONTICK			300
+
 gPlayerContainer s_PlayerContainer;
 
 gPlayerContainer *gPlayerContainer::GetIF()
@@ -161,6 +163,10 @@ bool gPlayerContainer::SetUp()
 	memset(m_nAbsDrawlineY,0,sizeof(int)*ROOMMAXPLAYER);
 	memset(m_moveFoot,0,sizeof(int)*ROOMMAXPLAYER);
 	memset(m_movePosition,0,sizeof(int)*ROOMMAXPLAYER);
+	memset(m_signMotion, 1, sizeof(bool) * ROOMMAXPLAYER);
+
+	m_nTimer = 0;
+	m_bMotionChange = false;
 
 	int		i;
 
@@ -178,10 +184,7 @@ void gPlayerContainer::Clear()
 	memset(m_moveFoot,0,sizeof(int)*ROOMMAXPLAYER);
 	memset(m_movePosition,0,sizeof(int)*ROOMMAXPLAYER);
 
-	int		i;
-
-	for(i = 0; i < ROOMMAXPLAYER; i++)
-		m_moveFoot[i] = 1;
+	FootClear();
 
 	m_nNoDraw = -1;
 	m_nNoDraw2 = -1;
@@ -310,8 +313,17 @@ void gPlayerContainer::SetGPList(GAMEPLAYER *list)
 
 void gPlayerContainer::MainLoop()
 {
+	if(GetTickCount() - m_nTimer > MOTIONTICK)
+	{
+		m_bMotionChange = true;
+		m_nTimer = GetTickCount();
+	}
+
 	gMap::GetIF()->Edge();
 	Draw();
+
+	m_bMotionChange = false;
+
 }
 ///////////2010. 12. 17
 using namespace std;
@@ -349,6 +361,34 @@ void gPlayerContainer::Draw()
 					-gmap->m_nAbsDrawlineY + m_nAbsDrawlineY[i] - FULLY ,
 					-gmap->m_nAbsDrawlineX + m_nAbsDrawlineX[i] + 15 + 70 ,
 					-gmap->m_nAbsDrawlineY + m_nAbsDrawlineY[i] - FULLY + 130 );
+
+
+				if(m_bMotionChange)
+				{
+					if(m_moveFoot[i] >= 3)
+					{
+						if(m_signMotion[i])
+						{
+							m_moveFoot[i]++;
+							if(m_moveFoot[i] >= 6)
+							{
+								m_moveFoot[i] -= 2;
+								m_signMotion[i] = false;
+							}
+						}
+						else
+						{
+							m_moveFoot[i]--;
+							if(m_moveFoot[i] <= 2)
+							{
+								m_moveFoot[i] += 2;
+								m_signMotion[i] = true;
+							}
+						}
+					}
+				}
+
+
 				SetRect(&rcImg, 
 					m_moveFoot[i]*70,
 					m_movePosition[i]*130,
@@ -372,8 +412,16 @@ void gPlayerContainer::Draw()
 
 void gPlayerContainer::MainLoop_Busing(gImage *bus, RECT *rcDest, RECT *rcSour, int turn)
 {
+	if(GetTickCount() - m_nTimer > MOTIONTICK)
+	{
+		m_bMotionChange = true;
+		m_nTimer = GetTickCount();
+	}
+
 	gMap::GetIF()->Edge();
 	Draw_Busing(bus, rcDest, rcSour, turn);
+
+	m_bMotionChange = false;
 }
 
 void gPlayerContainer::Draw_Busing(gImage *bus, RECT *rcDest, RECT *rcSour, int turn)
@@ -399,6 +447,32 @@ void gPlayerContainer::Draw_Busing(gImage *bus, RECT *rcDest, RECT *rcSour, int 
 					-gmap->m_nAbsDrawlineY + m_nAbsDrawlineY[i] - FULLY ,
 					-gmap->m_nAbsDrawlineX + m_nAbsDrawlineX[i] + 15 + 70 ,
 					-gmap->m_nAbsDrawlineY + m_nAbsDrawlineY[i] - FULLY + 130 );
+
+				if(m_bMotionChange)
+				{
+					if(m_moveFoot[i] >= 3)
+					{
+						if(m_signMotion[i])
+						{
+							m_moveFoot[i]++;
+							if(m_moveFoot[i] >= 6)
+							{
+								m_moveFoot[i] -= 2;
+								m_signMotion[i] = false;
+							}
+						}
+						else
+						{
+							m_moveFoot[i]--;
+							if(m_moveFoot[i] <= 2)
+							{
+								m_moveFoot[i] += 2;
+								m_signMotion[i] = true;
+							}
+						}
+					}
+				}
+
 				SetRect(&rcImg, 
 					m_moveFoot[i]*70,
 					m_movePosition[i]*130,
@@ -434,14 +508,30 @@ void gPlayerContainer::Draw_Busing(gImage *bus, RECT *rcDest, RECT *rcSour, int 
 
 void gPlayerContainer::MainLoop_Warp(int charidx, int dY)
 {
+	if(GetTickCount() - m_nTimer > MOTIONTICK)
+	{
+		m_bMotionChange = true;
+		m_nTimer = GetTickCount();
+	}
+
 	gMap::GetIF()->Edge();
 	Draw_Warp(charidx, dY);
+
+	m_bMotionChange = false;
 }
 
 void gPlayerContainer::MainLoop_WarpList(int *dest, bool drawAll, int dY)
 {
+	if(GetTickCount() - m_nTimer > MOTIONTICK)
+	{
+		m_bMotionChange = true;
+		m_nTimer = GetTickCount();
+	}
+
 	gMap::GetIF()->Edge();
 	Draw_WarpList(dest, drawAll, dY);
+
+	m_bMotionChange = false;
 }
 
 void gPlayerContainer::Draw_Warp(int charidx, int dY)
@@ -469,6 +559,31 @@ void gPlayerContainer::Draw_Warp(int charidx, int dY)
 				if(i == charidx)
 					OffsetRect(&rcScr, 0, dY);
 
+				if(m_bMotionChange)
+				{
+					if(m_moveFoot[i] >= 3)
+					{
+						if(m_signMotion[i])
+						{
+							m_moveFoot[i]++;
+							if(m_moveFoot[i] >= 6)
+							{
+								m_moveFoot[i] -= 2;
+								m_signMotion[i] = false;
+							}
+						}
+						else
+						{
+							m_moveFoot[i]--;
+							if(m_moveFoot[i] <= 2)
+							{
+								m_moveFoot[i] += 2;
+								m_signMotion[i] = true;
+							}
+						}
+					}
+				}
+				
 				SetRect(&rcImg, 
 					m_moveFoot[i]*70,
 					m_movePosition[i]*130,
@@ -513,6 +628,31 @@ void gPlayerContainer::Draw_WarpList(int *dest, bool drawAll, int dY)
 
 				if(dest[i] != -1)
 					OffsetRect(&rcScr, 0, dY);
+
+				if(m_bMotionChange)
+				{
+					if(m_moveFoot[i] >= 3)
+					{
+						if(m_signMotion[i])
+						{
+							m_moveFoot[i]++;
+							if(m_moveFoot[i] >= 6)
+							{
+								m_moveFoot[i] -= 2;
+								m_signMotion[i] = false;
+							}
+						}
+						else
+						{
+							m_moveFoot[i]--;
+							if(m_moveFoot[i] <= 2)
+							{
+								m_moveFoot[i] += 2;
+								m_signMotion[i] = true;
+							}
+						}
+					}
+				}
 
 				SetRect(&rcImg, 
 					m_moveFoot[i]*70,
@@ -675,7 +815,7 @@ void gPlayerContainer::FootClear()
 	int		i;
 
 	for(i = 0; i < ROOMMAXPLAYER; i++)
-		m_moveFoot[i] = 1;
+		m_moveFoot[i] = 4;
 }
 
 int	gPlayerContainer::GetGPIndex(char* id)
