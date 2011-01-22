@@ -241,6 +241,43 @@
 #define MAP_BTN_MAP_POS_X					340
 #define MAP_BTN_MAP_POS_Y					0
 
+#define MAP_BACK_FILE						".\\Data\\Interface\\game_mapback.img"
+#define MAP_BACK_SIZE_W						640
+#define MAP_BACK_SIZE_H						360
+#define MAP_BACK_POS_X						0
+#define MAP_BACK_POS_Y						((WNDSIZEH - MAP_BACK_SIZE_H) / 2)
+
+#define MAP_BG_FILE							".\\Data\\Interface\\game_mapbg.img"
+#define MAP_BG_SIZE_W						375
+#define MAP_BG_SIZE_H						272
+#define MAP_BG_POS_X						250
+#define MAP_BG_POS_Y						(MAP_BACK_POS_Y + (MAP_BACK_SIZE_H - MAP_BG_SIZE_H) / 2)
+
+// 전체맵 보기에서, 과목 점수(평점) 띄워줄 좌표.. 하드코딩 우왕 ㅋ
+static POINT s_ptPosGrade[CLASSNUM] = 
+{
+	// 언어
+	{ 346, 272	},		// 사회과학대학			16동	심리학개론
+	{ 358, 248	},		// 법과대학				17동	법의학
+	{ 385, 223	},		// 인문대학				1동		대학국어
+	{ 424, 184	},		// 사범대학				11동	교육과정
+	{ 398, 177	},		// 인문대학				7동		미학과 예술론
+	{ 335, 231	},		// 생활과학대학			222동	생활과학의 이해
+	{ 316, 268	},		// 경영대학				58동	국제경영
+	// 수리
+	{ 432, 247	},		// 자연과학대학			11동	미적분학
+	{ 477, 262 	},		// 자연과학대학			500동	화학실험
+	{ 502, 248	},		// 농업생명과학대학		200동	농업과환경
+	{ 527, 218	},		// 공과대학				37동	건축이론
+	{ 516, 171	},		// 공과대학				302동	논리설계실험
+	{ 461, 192	},		// 약학대학				29동	약물치료학
+	{ 309, 211	},		// 수의과대학			85동	수의외과학
+	// 예술
+	{ 360, 198	},		// 음악대학				54동	음악학개론
+	{ 356, 221	},		// 미술대학				49동	색채학
+	{ 288, 242	},		// 사범대학				71동	댄스스포츠
+	{ 299, 289	},		// 미술대학				151동	미술관탐방
+};
 
 static gUIGame s_UIGame;
 
@@ -403,6 +440,7 @@ bool gUIGame::SetUp()
 		return false;
 
 	// map
+	//	map btn
 	SetRect(&rcDest,
 		MAP_BTN_MAP_POS_X,
 		MAP_BTN_MAP_POS_Y,
@@ -411,6 +449,19 @@ bool gUIGame::SetUp()
 	if(!m_BtnUI[UIBTN_MAPBTN].SetUp(MAP_BTN_MAP_FILE, false, rcDest))
 		return false;
 	memcpy(&m_rcPos[UIT_MAPBTN], &rcDest, sizeof(RECT));
+
+	// mapback
+	if(!m_ImgUI[UIIMG_MAPBACK].Load(MAP_BACK_FILE))
+		return false;
+	SetRect(&m_rcPos[UIT_MAP],
+		MAP_BACK_POS_X,
+		MAP_BACK_POS_Y,
+		MAP_BACK_POS_X + MAP_BACK_SIZE_W,
+		MAP_BACK_POS_Y + MAP_BACK_SIZE_H);
+
+	// mapbg
+	if(!m_ImgUI[UIIMG_MAPBG].Load(MAP_BG_FILE))
+		return false;
 
 
 	m_uimode = UIM_NONE;
@@ -831,7 +882,103 @@ void gUIGame::Draw()
 	// map
 	if(m_uimode == UIM_MAP)
 	{
+		m_ImgUI[UIIMG_MAPBACK].Draw(MAP_BACK_POS_X, MAP_BACK_POS_Y);
+		m_ImgUI[UIIMG_MAPBG].Draw(MAP_BG_POS_X, MAP_BG_POS_Y);
 		map->DrawMap();
+
+		// grade
+		GAMEPLAYER	*gp = &gPC->m_GPlayerList[m_nCharSelected];
+
+		gUtil::BeginText();
+		for(i = 0; i < MAXSUBJECT; i++)
+		{	
+			sprintf_s(szBuf, "%.1f", gp->fGrade[i]);
+			gUtil::TextOutLine(s_ptPosGrade[ gp->bySubIdx[i] ].x, s_ptPosGrade[ gp->bySubIdx[i] ].y, szBuf);
+		}
+		gUtil::EndText();
+
+		// maptooltip
+		POINT	ptMouse, ptDraw;
+		ptMouse.x = gMouse::GetIF()->m_nPosX;
+		ptMouse.y = gMouse::GetIF()->m_nPosY;
+		ptDraw = ptMouse;
+
+		if(gUtil::PointInRect(ptMouse.x, ptMouse.y, m_rcPos[UIT_MAP]))
+		{
+			RECT		rcMap = {	MAP_BG_POS_X,
+									MAP_BG_POS_Y,
+									MAP_BG_POS_X + MAP_BG_SIZE_W,
+									MAP_BG_POS_Y + MAP_BG_SIZE_H };
+
+			if(gUtil::PointInRect(ptMouse.x, ptMouse.y, rcMap))
+			{
+				ptMouse.x -= MAP_BG_POS_X;
+				ptMouse.y -= MAP_BG_POS_Y;
+				ptMouse.x *= 6;
+				ptMouse.y *= 6;
+
+				POINT	ptCon = map->absToCon(ptMouse);
+				int		nToolTipPos = ptCon.x * LINEY + ptCon.y;
+				gTile	*tile = &map->tileMap[nToolTipPos];
+				if(tile->tileType != TY_NONE)
+				{
+					ptDraw.x += MAPTOOLTIP_TERM_MOUSE;
+					ptDraw.y += MAPTOOLTIP_TERM_MOUSE;
+					if(ptDraw.x + MAPTOOLTIP_SIZE_W > WNDSIZEW)
+						ptDraw.x = WNDSIZEW - MAPTOOLTIP_SIZE_W;
+					if(ptDraw.y + MAPTOOLTIP_SIZE_H > CHAT_POS_Y)
+						ptDraw.y = CHAT_POS_Y - MAPTOOLTIP_SIZE_H;
+
+					m_ImgUI[UIIMG_MAPTOOLTIP].Draw(ptDraw.x, ptDraw.y);
+
+					int		textPosX = ptDraw.x + MAPTOOLTIP_TEXT_X;
+					int		textPosY = ptDraw.y + MAPTOOLTIP_TEXT_Y;
+					gUtil::BeginText();
+					if(tile->subject)
+					{
+						gUtil::Text(textPosX, textPosY, tile->subject);
+						textPosY += MAPTOOLTIP_TEXT_TERM_Y;
+					}
+					if(tile->college)
+					{
+						gUtil::Text(textPosX, textPosY, tile->college);
+						//textPosY += MAPTOOLTIP_TEXT_TERM_Y;
+					}
+					if(tile->building)
+					{
+						gUtil::Text(textPosX + MAPTOOLTIP_TEXT_TERM_X, textPosY, tile->building);
+					}
+					gUtil::EndText();
+
+					if(tile->tileType == TY_CLASS)
+					{
+						gSubmitCore	*submit = gSubmitCore::GetIF();
+
+						RECT	rcDest, rcSour;
+
+						SetRect(&rcDest,
+							ptDraw.x + MAPTOOLTIP_IMG_POS_X,
+							ptDraw.y + MAPTOOLTIP_IMG_POS_Y,
+							ptDraw.x + MAPTOOLTIP_IMG_POS_X + MAPTOOLTIP_IMG_SIZE_W,
+							ptDraw.y + MAPTOOLTIP_IMG_POS_Y + MAPTOOLTIP_IMG_SIZE_H);
+
+						for(i = 0; i < CLASSSEAT; i++)
+						{
+							BYTE	subject = submit->m_subject[tile->flag2][i];
+							if(subject != NOSEAT && subject != AVAILSEAT)
+							{
+								gImage	*img = &gPC->m_ImgInfo[ gPC->m_GPlayerList[ subject ].ctype ].ImgPic;
+								SetRect(&rcSour,
+									0, 0, img->m_nWidth, img->m_nHeight);
+
+								img->Draw(rcDest, rcSour);
+								OffsetRect(&rcDest, (MAPTOOLTIP_IMG_SIZE_W + MAPTOOLTIP_IMG_TERM_X), 0);
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	// your turn
@@ -959,7 +1106,13 @@ bool gUIGame::OnLButtonDown()
 	}
 	if(m_BtnUI[UIBTN_MAPBTN].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 	{
-		m_uimode = UIM_MAP;
+		if(m_uimode)
+			m_uimode = UIM_NONE;
+		else
+		{
+			m_uimode = UIM_MAP;
+			m_nCharSelected = gPC->GetMyPIndex();
+		}
 		return true;
 	}
 
@@ -1536,6 +1689,9 @@ bool gUIGame::IsUIRange(int x, int y)
 	for(i = 0; i < UIT_END; i++)
 	{
 		if( i == UIT_SUBWND && m_uimode != UIM_SUGANG )
+			continue;
+
+		if(i == UIT_MAP && m_uimode != UIM_MAP)
 			continue;
 
 		if(gUtil::PointInRect(x, y, m_rcPos[i]))
