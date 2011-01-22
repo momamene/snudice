@@ -56,7 +56,9 @@
 					<div id="menu5">
 						자료실
 						<div id="menu5DropDown" class="menuDropDownWrapper invisible">
-							<div id="gameDownload">게임 다운로드</div>
+							<div id="gameDownload">	
+								<a href="${root}/setupFile/SNUDiCE_setup.exe">게임 다운로드</a>										
+							</div>
 							<div id="wallPaper">월페이퍼</div>	
 							<div id="screenShot">스크린샷</div>							
 						</div>
@@ -120,7 +122,7 @@
 							<div id="loginButton" class="mouseOut"></div>
 													
 							<div id="loginHelp">
-								<hr class="hr1"/>												
+								<hr/>												
 								<a id="joinOpen" href="#">회원가입</a>							
 								<a id="findIdPw" href="#">ID/PW찾기</a>
 							</div>						
@@ -163,35 +165,43 @@
 							<a href="${root}/board/articleList.do?boardName=${board.boardName}&currPage=0">${board.aliasName}</a>&nbsp;|&nbsp;
 						</c:forEach>
 						<a href="${root}/gameIntro.do">게임소개</a>					
-					</div>				
-					<div id="centerLU">
-						<span>공지사항</span>
-						<hr/>			
-						<c:forEach var="article" items="${noticeList}">
-							<a href="${root}/board/articleView.do?boardName=${noticeBoardName}&articleIndex=${article.articleIndex}&currPage=0">${article.title}</a><br/>						
-						</c:forEach>				
 					</div>
-					<div id="centerRU">
-						<span>이벤트</span>
-						<hr/>			
-						<c:forEach var="article" items="${eventList}">
-							<a href="${root}/board/articleView.do?boardName=${eventBoardName}&articleIndex=${article.articleIndex}&currPage=0">${article.title}</a><br/>						
-						</c:forEach>
-					</div>
-					<div id="centerLD">
-						<span>개발자노트</span>
-						<hr/>			
-						<c:forEach var="article" items="${devNoteList}">
-							<a href="${root}/board/articleView.do?boardName=${devNoteBoardName}&articleIndex=${article.articleIndex}&currPage=0">${article.title}</a><br/>						
-						</c:forEach>
-					</div>				
-					<div id="centerRD">
-						<span>업데이트</span>
-						<hr/>			
-						<c:forEach var="article" items="${updateList}">
-							<a href="${root}/board/articleView.do?boardName=${updateBoardName}&articleIndex=${article.articleIndex}&currPage=0">${article.title}</a><br/>						
-						</c:forEach>
-					</div>			
+					<div id="centerL">
+						<div id="centerLU">
+							<span class="title">공지사항</span>
+							<span class="centerLMore">더보기</span>
+							<img src="${root}/image/mainpage/more.png"/>
+							<hr/>			
+							<c:forEach var="article" items="${noticeList}">
+								<a href="${root}/board/articleView.do?boardName=${noticeBoardName}&articleIndex=${article.articleIndex}&currPage=0">${article.title}</a><br/>						
+							</c:forEach>				
+						</div>
+						<div id="centerLD">							
+							<span class="title">업데이트</span>
+							<span class="centerLMore">더보기</span>
+							<img src="${root}/image/mainpage/more.png"/>
+							<hr/>			
+							<c:forEach var="article" items="${devNoteList}">
+								<a href="${root}/board/articleView.do?boardName=${devNoteBoardName}&articleIndex=${article.articleIndex}&currPage=0">${article.title}</a><br/>						
+							</c:forEach>
+						</div>						
+					</div>					
+					<div id="centerR">	
+						<div id="centerRU">
+							<span class="title">게임 가이드</span>							
+							<hr/>			
+							<c:forEach var="article" items="${noticeList}">
+								<a href="${root}/board/articleView.do?boardName=${noticeBoardName}&articleIndex=${article.articleIndex}&currPage=0">${article.title}</a><br/>						
+							</c:forEach>				
+						</div>
+						<div id="centerRD">							
+							<span class="title">팀소개</span>
+							<hr/>			
+							<c:forEach var="article" items="${devNoteList}">
+								<a href="${root}/board/articleView.do?boardName=${devNoteBoardName}&articleIndex=${article.articleIndex}&currPage=0">${article.title}</a><br/>						
+							</c:forEach>
+						</div>	
+					</div>						
 				</div>
 				<div class="right">&nbsp;</div>					
 			</div>

@@ -20,7 +20,7 @@
 { 
 	float:left; 
 	margin-left: 10px; 
-	width : 680px;
+	width : 720px;
 }
 
 .center_
@@ -111,14 +111,9 @@ hr
 {	
 	background-color : #BCD9EB;
 	height : 2px;
-	border : 0px;	
+	border : 0px;
+	width : 95%;	
 }
-
-hr.hr1
-{
-	width : 200px;
-}
-
 
 .bodyWrapper { background-color : white; }
 
@@ -500,38 +495,43 @@ hr.hr1
 }
 
 /*-----------메인 섹션------------*/
-
-#centerLU
-{
-	background-color : #67ABC9;
-	width : 50%;
-	height : 300px;
-	float : left;
+span.title { font-weight : bold; }
+span.centerLMore 
+{ 
+	margin-left : 280px;
+	position : relative;
+	top : -5px;
 }
 
-#centerRU
+#centerL,#centerR { float: left; }
+#centerL { width : 450px; }
+
+#centerLU,#centerLD
 {
-	background-color : #CEDFFF;
-	width : 50%;
-	height : 300px;
-	float: left;
+	background-image : url('/snudiceWebpage/image/mainpage/mainCenterL.png');
+	background-repeat : no-repeat;
 }
 
-#centerLD
+#centerLU {	height : 252px; }
+#centerLD 
 {
-	background-color : #C1D6F4;
-	width : 50%;
-	height : 300px;
-	float : left;	
+	margin-top : 10px;	
+	height : 252px; 
 }
 
-#centerRD
+#centerR
 {
-	background-color : #FFFFFF;	
-	width : 50%;
-	height : 300px;
-	float : left;
+	margin-left: 10px;
+	background-image : url('/snudiceWebpage/image/mainpage/mainCenterR.png');
+	background-repeat : no-repeat;
+	width : 240px;
+	height : 550px;		
 }
+
+#centerRU,#centerRD { height : 50%; }
+
+#centerLU,#centerLD,#centerRU,#centerRD { padding : 10px; }
+
 
 /*----------- 게임 소개 ---------------*/
 #introLeft
