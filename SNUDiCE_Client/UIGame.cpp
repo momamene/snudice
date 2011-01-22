@@ -242,15 +242,15 @@
 #define MAP_BTN_MAP_POS_Y					0
 
 #define MAP_BACK_FILE						".\\Data\\Interface\\game_mapback.img"
-#define MAP_BACK_SIZE_W						640
+#define MAP_BACK_SIZE_W						622
 #define MAP_BACK_SIZE_H						360
-#define MAP_BACK_POS_X						0
+#define MAP_BACK_POS_X						((WNDSIZEW - MAP_BACK_SIZE_W) / 2)
 #define MAP_BACK_POS_Y						((WNDSIZEH - MAP_BACK_SIZE_H) / 2)
 
 #define MAP_BG_FILE							".\\Data\\Interface\\game_mapbg.img"
 #define MAP_BG_SIZE_W						375
 #define MAP_BG_SIZE_H						272
-#define MAP_BG_POS_X						250
+#define MAP_BG_POS_X						235
 #define MAP_BG_POS_Y						(MAP_BACK_POS_Y + (MAP_BACK_SIZE_H - MAP_BG_SIZE_H) / 2)
 
 #define MAP_PLAYER_FILE						".\\Data\\Interface\\game_map_player.img"
@@ -270,30 +270,37 @@
 #define MAP_PLAYERBAR_POS_X					40
 #define MAP_PLAYERBAR_POS_Y					38
 
+#define MAP_PLAYERLOVE_FILE					".\\Data\\Interface\\game_map_love.img"
+#define MAP_PLAYERLOVE_SIZE_W				12
+#define MAP_PLAYERLOVE_SIZE_H				10
+#define MAP_PLAYERLOVE_POS_X				(MAP_PLAYER_POS_X + 176)
+#define MAP_PLAYERLOVE_POS_Y				6
+#define MAP_PLAYERLOVE_TERM_Y				3
+
 // 전체맵 보기에서, 과목 점수(평점) 띄워줄 좌표.. 하드코딩 우왕 ㅋ
 static POINT s_ptPosGrade[CLASSNUM] = 
 {
 	// 언어
-	{ 346, 272	},		// 사회과학대학			16동	심리학개론
-	{ 358, 248	},		// 법과대학				17동	법의학
-	{ 385, 223	},		// 인문대학				1동		대학국어
-	{ 424, 184	},		// 사범대학				11동	교육과정
-	{ 398, 177	},		// 인문대학				7동		미학과 예술론
-	{ 335, 231	},		// 생활과학대학			222동	생활과학의 이해
-	{ 316, 268	},		// 경영대학				58동	국제경영
+	{ 331, 272	},		// 사회과학대학			16동	심리학개론
+	{ 343, 248	},		// 법과대학				17동	법의학
+	{ 370, 223	},		// 인문대학				1동		대학국어
+	{ 409, 184	},		// 사범대학				11동	교육과정
+	{ 383, 177	},		// 인문대학				7동		미학과 예술론
+	{ 320, 231	},		// 생활과학대학			222동	생활과학의 이해
+	{ 301, 268	},		// 경영대학				58동	국제경영
 	// 수리
-	{ 432, 247	},		// 자연과학대학			11동	미적분학
-	{ 477, 262 	},		// 자연과학대학			500동	화학실험
-	{ 502, 248	},		// 농업생명과학대학		200동	농업과환경
-	{ 527, 218	},		// 공과대학				37동	건축이론
-	{ 516, 171	},		// 공과대학				302동	논리설계실험
-	{ 461, 192	},		// 약학대학				29동	약물치료학
-	{ 309, 211	},		// 수의과대학			85동	수의외과학
+	{ 417, 247	},		// 자연과학대학			11동	미적분학
+	{ 462, 262 	},		// 자연과학대학			500동	화학실험
+	{ 487, 248	},		// 농업생명과학대학		200동	농업과환경
+	{ 512, 218	},		// 공과대학				37동	건축이론
+	{ 501, 171	},		// 공과대학				302동	논리설계실험
+	{ 446, 192	},		// 약학대학				29동	약물치료학
+	{ 294, 211	},		// 수의과대학			85동	수의외과학
 	// 예술
-	{ 360, 198	},		// 음악대학				54동	음악학개론
-	{ 356, 221	},		// 미술대학				49동	색채학
-	{ 288, 242	},		// 사범대학				71동	댄스스포츠
-	{ 299, 289	},		// 미술대학				151동	미술관탐방
+	{ 345, 198	},		// 음악대학				54동	음악학개론
+	{ 341, 221	},		// 미술대학				49동	색채학
+	{ 273, 242	},		// 사범대학				71동	댄스스포츠
+	{ 284, 289	},		// 미술대학				151동	미술관탐방
 };
 
 static gUIGame s_UIGame;
@@ -486,6 +493,8 @@ bool gUIGame::SetUp()
 	if(!m_ImgUI[UIIMG_MAPPLAYEROUT].Load(MAP_PLAYEROUT_FILE))
 		return false;
 	if(!m_ImgUI[UIIMG_MAPPLAYERBAR].Load(MAP_PLAYERBAR_FILE))
+		return false;
+	if(!m_ImgUI[UIIMG_MAPLOVE].Load(MAP_PLAYERLOVE_FILE))
 		return false;
 
 	m_uimode = UIM_NONE;
@@ -929,6 +938,33 @@ void gUIGame::Draw()
 									nYPos + 7 + 32 };
 			RECT		rcSour = {0, 0, pic->m_nWidth, pic->m_nHeight};
 			pic->Draw(rcDest, rcSour);
+
+			int		couple = gPC->GetCoupleIndex(i);
+			if(couple != -1)
+			{
+				OffsetRect(&rcDest, 138, 0);
+				pic = &gPC->m_ImgInfo[ gPC->m_GPlayerList[couple].ctype ].ImgPic;
+				pic->Draw(rcDest, rcSour);
+
+				SetRect(&rcDest,
+						MAP_PLAYERLOVE_POS_X,
+						nYPos + MAP_PLAYERLOVE_POS_Y,
+						MAP_PLAYERLOVE_POS_X + MAP_PLAYERLOVE_SIZE_W,
+						nYPos + MAP_PLAYERLOVE_POS_Y + MAP_PLAYERLOVE_SIZE_H );
+				SetRect(&rcSour, 0, 0, MAP_PLAYERLOVE_SIZE_W, MAP_PLAYERLOVE_SIZE_H);
+				int nLoveCount;
+				for(nLoveCount = 0; nLoveCount < gPC->m_GPlayerList[i].nLove; nLoveCount++)
+				{
+					m_ImgUI[UIIMG_MAPLOVE].Draw(rcDest, rcSour);
+					OffsetRect(&rcDest, 0, MAP_PLAYERLOVE_TERM_Y + MAP_PLAYERLOVE_SIZE_H);
+				}
+				OffsetRect(&rcSour, MAP_PLAYERLOVE_SIZE_W, 0);
+				for(; nLoveCount < 3; nLoveCount++)
+				{
+					m_ImgUI[UIIMG_MAPLOVE].Draw(rcDest, rcSour);
+					OffsetRect(&rcDest, 0, MAP_PLAYERLOVE_TERM_Y + MAP_PLAYERLOVE_SIZE_H);
+				}
+			}
 
 			if(i == m_nCharSelected)
 				m_ImgUI[UIIMG_MAPPLAYEROUT].Draw(MAP_PLAYER_POS_X - 3, nYPos - 3);

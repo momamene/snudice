@@ -5,6 +5,7 @@
 #include "SubmitCore.h"
 #include "PlayerContainer.h"
 #include "UIGame.h"
+#include "GameCore.h"
 
 #define TILENUM				9
 
@@ -26,6 +27,8 @@
 //#define TILE_TITLE_IMG		".\\Data\\Map\\title.img"
 
 #define TILE_SMALLTILE		".\\Data\\Map\\smallmapchip.img"
+
+#define BUSGLOWTICK			600
 
 void gTile::init(int xo,int yo)
 {
@@ -252,7 +255,25 @@ void gMap::DrawHexagonOne(int x0, int y0, int i, int j, int n, int playerIdx, bo
 		m_ImgTile[  k + tileMap[i * LINEY + j].flag1  ].Draw(a, b, boolo);
 	}
 	else
+	{
+		if(k == TY_BUS && n == 1)
+		{
+			static int	bustick		= GetTickCount();
+			static bool	bGlow		= false;
+			if(gGameCore::GetIF()->m_bBusSel)
+			{
+				if(GetTickCount() - bustick > BUSGLOWTICK)
+				{
+					bGlow = !bGlow;
+					bustick = GetTickCount();
+				}
+
+				if(bGlow)
+					OffsetRect(&b, FULLX, 0);
+			}
+		}
 		m_ImgTile[k].Draw(a, b, boolo);
+	}
 }
 
 void gMap::DrawHexagon(int x0, int y0, int n, int playerIdx, bool boolo)
@@ -493,7 +514,7 @@ void gMap::Draw()
 
 void gMap::DrawMap()
 {
-	DrawHexagon(250, 105, 6, gUIGame::GetIF()->m_nCharSelected, true);
+	DrawHexagon(235, 105, 6, gUIGame::GetIF()->m_nCharSelected, true);
 }
 
 // 2. Draw Line End
