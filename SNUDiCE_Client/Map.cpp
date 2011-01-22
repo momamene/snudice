@@ -4,6 +4,7 @@
 #include "Chat.h"
 #include "SubmitCore.h"
 #include "PlayerContainer.h"
+#include "UIGame.h"
 
 #define TILENUM				9
 
@@ -186,9 +187,10 @@ void gMap::Load()
 
 // 2. Draw Line Start
 
-void gMap::DrawHexagonOne(int x0, int y0, int i, int j, int n, bool boolo, int type)
+void gMap::DrawHexagonOne(int x0, int y0, int i, int j, int n, int playerIdx, bool boolo, int type)
 {
 //	gGameCore *gameCore = gGameCore::GetIF();
+	gPlayerContainer	*pc = gPlayerContainer::GetIF();
 	
 	int		k;
 	RECT	a;
@@ -235,12 +237,25 @@ void gMap::DrawHexagonOne(int x0, int y0, int i, int j, int n, bool boolo, int t
 		SetRect(&b, FULLX, 0, FULLX * 2, FULLY);
 	
 	if(k == TY_CLASS)
+	{
+		if(strlen(pc->m_GPlayerList[playerIdx].szID) != 0)
+		{
+			for(int c = 0; c < MAXSUBJECT; c++)
+			{
+				if(tileMap[i * LINEY + j].flag2 == pc->m_GPlayerList[playerIdx].bySubIdx[c])
+				{
+					OffsetRect(&b, FULLX, 0);
+					break;
+				}
+			}
+		}
 		m_ImgTile[  k + tileMap[i * LINEY + j].flag1  ].Draw(a, b, boolo);
+	}
 	else
 		m_ImgTile[k].Draw(a, b, boolo);
 }
 
-void gMap::DrawHexagon(int x0, int y0, int n, bool boolo)
+void gMap::DrawHexagon(int x0, int y0, int n, int playerIdx, bool boolo)
 {
 	int i, j;
 
@@ -249,7 +264,7 @@ void gMap::DrawHexagon(int x0, int y0, int n, bool boolo)
 	{ 
 		for(j = 0 ; j < LINEY ; j++)
 		{
-			DrawHexagonOne(x0, y0, i, j, n, boolo);
+			DrawHexagonOne(x0, y0, i, j, n, playerIdx, boolo);
 		}
 	}
 }
@@ -472,13 +487,13 @@ void gMap::Draw()
 
 	m_ImgMapBG.Draw(rcDest, rcSour, false);
 	
-	DrawHexagon(0, 0, n);	
+	DrawHexagon(0, 0, n, gPlayerContainer::GetIF()->GetMyGPIndex());
 
 }
 
 void gMap::DrawMap()
 {
-	DrawHexagon(250, 105, 6, true);
+	DrawHexagon(250, 105, 6, gUIGame::GetIF()->m_nCharSelected, true);
 }
 
 // 2. Draw Line End
