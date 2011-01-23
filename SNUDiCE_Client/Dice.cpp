@@ -3,6 +3,8 @@
 #include "PlayerContainer.h"
 #include "Map.h"
 #include "PlaySoundCore.h"
+#include "UIGame.h"
+#include "stringconst.h"
 
 static gDice s_Dice;
 
@@ -105,6 +107,8 @@ void gDice::DiceThrow()
 		int ntPos = gPC->m_GPlayerList[gGameCore::GetIF()->m_nTurn].nPos;
 		gGameCore::GetIF()->m_bScrolling = false;
 		gGameCore::GetIF()->Start(m_spacor,ntPos/LINEY,ntPos%LINEY);
+
+		sprintf_s(gUIGame::GetIF()->m_szStatusMsg, STR_30, gPC->m_GPlayerList[gGameCore::GetIF()->m_nTurn].szID, m_spacor);
 
 		return;
 	}

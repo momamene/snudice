@@ -2,8 +2,9 @@
 #include "Util.h"
 #include "MainWin.h"
 
-#define UTIL_DEFAULT_FONT		"µ¸¿ò"
+#define UTIL_DEFAULT_FONT		"±¼¸²"
 #define UTIL_DEFAULT_FONTSIZE	12
+#define UTIL_DEFAULT_WEIGHT		0
 
 HDC			s_hdc;
 HFONT		s_font;
@@ -12,13 +13,14 @@ int			s_nSize			= UTIL_DEFAULT_FONTSIZE;
 char		s_szFont[32]	= UTIL_DEFAULT_FONT;
 COLORREF	s_color			= UTIL_COLOR_BLACK;
 COLORREF	s_colorOutline	= UTIL_COLOR_WHITE;
+int			s_weight		= UTIL_DEFAULT_WEIGHT;
 
 void gUtil::BeginText()
 {
 	gMainWin::GetIF()->m_lpDDBack->GetDC(&s_hdc);
 	SetBkMode(s_hdc, TRANSPARENT);
 	SetTextColor(s_hdc, s_color);
-	s_font = CreateFont(s_nSize, 0, 0, 0, 0, 0, 0, 0, HANGUL_CHARSET, 0, 0, 0,
+	s_font = CreateFont(s_nSize, 0, 0, 0, s_weight, 0, 0, 0, HANGUL_CHARSET, 0, 0, 0,
 			VARIABLE_PITCH | FF_ROMAN, s_szFont);
 	s_ofont = (HFONT)SelectObject(s_hdc, s_font);
 }
@@ -140,9 +142,10 @@ void gUtil::DebugMsg(char *msg)
 
 void gUtil::SetDefaultFont()
 {
-	s_nSize = UTIL_DEFAULT_FONTSIZE;
+	s_nSize		= UTIL_DEFAULT_FONTSIZE;
 	strcpy(s_szFont, UTIL_DEFAULT_FONT);
-	s_color = UTIL_COLOR_BLACK;
+	s_color		= UTIL_COLOR_BLACK;
+	s_weight	= UTIL_DEFAULT_FONTSIZE;
 }
 
 void gUtil::SetColor(COLORREF ref)
@@ -172,4 +175,9 @@ int gUtil::TextLength(char *sz)
 		return length;
 	}
 	return -1;
+}
+
+void gUtil::SetFontWeight(int weight)
+{
+	s_weight = weight;
 }

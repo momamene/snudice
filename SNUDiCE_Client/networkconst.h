@@ -20,7 +20,9 @@
 
 #define PK_HEADER_SIZE			4
 
-#define SNUDICE_VERSION			"0.9002"
+#define SNUDICE_VERSION			"0.9112"
+
+#define ENDROUND				30
 
 //#define DEF_SERVER
 
@@ -503,6 +505,7 @@ struct PK_NEXTTURN_REP
 {
 	int			nNowTurn;			// 현재 턴
 	int			nNextTurn;			// 다음 턴
+	int			nNowTurnGame;		// 현재 몇턴 진행됬나(게임에서)
 };
 
 struct PK_BUSMOVECHOOSE_REP			// 이동한 칸이 버스다. 이동할 곳 찍어라 라고 서버가 보내주는 패킷(해당 플레이어만)

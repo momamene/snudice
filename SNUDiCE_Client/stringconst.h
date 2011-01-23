@@ -48,3 +48,11 @@
 #define STR_25			"당신은 솔로입니다"
 #define STR_26			"다른 커플을 선택하세요"
 #define STR_27			"그 사람은 솔로입니다"
+
+#define	STR_28			"주사위를 굴리세요!!"
+#define STR_29			"%s님 차례입니다."
+#define STR_30			"%s님이 %d칸 이동합니다!"
+#define STR_31			"이동할 버스정류장을 선택하세요!"
+#define STR_32			"상대방을 선택하세요!"
+#define STR_33			"이동할 장소를 선택하세요!"
+#define STR_34			"%d/%d 턴"

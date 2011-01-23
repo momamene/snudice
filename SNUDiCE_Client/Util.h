@@ -21,6 +21,7 @@ public:
 	static void SetDefaultFont();
 	static void SetColor(COLORREF ref);
 	static void SetOutLineColor(COLORREF ref);
+	static void SetFontWeight(int weight);
 	static void BeginText();
 	static void Text(int x, int y, char *str, bool newline = false, int lineterm = 20);			// lineterm -> 엔터칠때 얼마나 내려가나
 	static void TextOutLine(int x, int y, char *str, bool newline = false, int lineterm = 20);	// 외곽선.
