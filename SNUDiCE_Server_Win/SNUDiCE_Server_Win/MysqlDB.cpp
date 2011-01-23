@@ -62,8 +62,15 @@ void gMysql::put(char* id,char* pw) {
 
 USER* gMysql::get(char* userId) {
 	USER *user = new USER;
+	char*	pass;
 	strcpy(user->szID , userId);
-	strcpy(user->szPW , passwordGet(userId));
+
+	pass = passwordGet(userId);
+	if(pass)
+	{
+		strcpy(user->szPW, pass);
+		delete pass;
+	}
 
 	return user;
 }
@@ -79,6 +86,7 @@ char* gMysql::passwordGet(char* userId) {
 	int query_stat = mysql_query(m_connection, (TCHAR*)query);
 	if(query_stat != 0) {
 		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		delete password;
 		return NULL;
 	}
 

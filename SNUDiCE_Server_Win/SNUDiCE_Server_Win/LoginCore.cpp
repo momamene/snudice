@@ -162,6 +162,8 @@ void gLoginCore::pk_login_ask(PK_DEFAULT *pk, SOCKET sock)
 		}
 	}
 
+	delete user;
+
 	gMainWin::GetIF()->Send(PL_LOGIN_REP, sizeof(rep), &rep, sock);
 	if(rep.error==ELE_SUCCESS)
 		gChannelCore::GetIF()->pk_channelrefresh_rep(rep.channel.nChannelNum-1);

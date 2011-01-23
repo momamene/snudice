@@ -12,8 +12,8 @@
 #define WM_SOCKET				WM_USER + 1
 
 #define	WINSOCK_VERSION_2_2		MAKEWORD(2, 2)
-//#define SERVER_IP				"211.169.219.93"		// 승엽
-#define SERVER_IP				"211.169.219.86"		// 현탁
+#define SERVER_IP				"211.169.219.93"		// 승엽
+//#define SERVER_IP				"211.169.219.86"		// 현탁
 //#define SERVER_IP				"211.169.219.87"		// 창규
 #define SERVER_PORT				9000
 #define BUFFERSIZE				2048
@@ -23,6 +23,8 @@
 #define SNUDICE_VERSION			"0.6000"
 
 #define DEF_SERVER
+
+#define ENDROUND	30
 
 //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 //	통신 프로토콜
@@ -504,6 +506,7 @@ struct PK_NEXTTURN_REP
 {
 	int			nNowTurn;			// 현재 턴
 	int			nNextTurn;			// 다음 턴
+	int			nNowTurnGame;		// 현재 몇턴 진행됬나(게임에서)
 };
 
 struct PK_BUSMOVECHOOSE_REP			// 이동한 칸이 버스다. 이동할 곳 찍어라 라고 서버가 보내주는 패킷(해당 플레이어만)

@@ -11,6 +11,8 @@
 
 #define LOVEINITPOINT 3
 
+#define RANDSTANDITEMGET
+
 using namespace std;
 enum ItemUseState {
 	IUS_NONE,
@@ -33,6 +35,26 @@ enum CoupleState {
 	CPS_PROPOSE,
 };
 
+
+enum GAMESTATE {	//	이 상태에서 나가면 쉣
+	GS_COUPLESTAND = -2,
+	GS_STAND ,
+	
+	GS_BUS,
+	GS_WARP,
+	GS_WARPLIST,
+	GS_WALK,
+
+	GS_COUPLEBUS,
+	GS_COUPLEWALK,
+
+//	GS_DICE,	//서버에서는 GS_WALK랑 파악 불가 
+	GS_RESULT,
+	
+	GS_COUPLEASK,
+};
+
+
 //수정, 호감도구조체
 struct sFavor 
 {
@@ -52,7 +74,9 @@ public:
 	gCharinfo	m_CharInfo;
 
 	GAMEPLAYER	m_GamePlayer[MAXROOM][ROOMMAXPLAYER];
-	bool		m_isGamePlayer[MAXROOM][ROOMMAXPLAYER];		
+	bool		m_isGamePlayer[MAXROOM][ROOMMAXPLAYER];
+	GAMESTATE	m_GameState[MAXROOM][ROOMMAXPLAYER];
+	
 	// 깜빡 잊고 호환시키지 않는...
 	// 그래도 잘 사용될 수 있는 거니 호환시키도록 하자.
 	// (아냐 이거 잘 사용되는 거임)
@@ -94,9 +118,10 @@ public:
 	sFavor m_favor[MAXROOM][ROOMMAXPLAYER];
 	//호감도
 
+	void		setState(GAMESTATE eState, char *szID);
 
-	void				PushbSynAllPlayer(int nRoomIndex,bool bSyn);
-	bool				isbSynAllTrue(int nRoomIndex);
+	void		PushbSynAllPlayer(int nRoomIndex,bool bSyn);
+	bool		isbSynAllTrue(int nRoomIndex);
 
 
 	void		pk_maingamestart_rep(int nRoomIndex);
@@ -148,6 +173,9 @@ public:
 	void				debuger_turn(char* szID);
 
 private:
+	PK_BECOUPLE_REP		temp_becouple_rep;	//레알 하드코딩 ㅇㅇ // 커플성사될때 warpend 기다릴때까지 잡는 값....
+	int					isWhoCouple;		//커플숫자카운트
+	
 	int					delLovePoint[MAXROOM];
 	int					m_rmWalk[MAXROOM];	//remain walk
 	

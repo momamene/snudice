@@ -210,6 +210,8 @@ void gMessageCore::pk_friendwhisper_ask(PK_DEFAULT *pk, SOCKET sock)
 		friendid [0] = 0;
 	
 	} while (ss);
+
+	delete userFriendList;
 }
 
 void gMessageCore::pk_friendlist_ask(PK_DEFAULT *pk, SOCKET sock)
