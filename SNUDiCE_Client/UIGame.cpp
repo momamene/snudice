@@ -159,7 +159,7 @@
 
 // turn, rank 같이 표시
 #define TURN_START_X						530
-#define TURN_START_Y						80
+#define TURN_START_Y						75
 #define TURN_TERM_Y							20
 
 #define TURN_CROWN_FILE						".\\Data\\Interface\\game_crown.img"
@@ -276,6 +276,16 @@
 #define MAP_PLAYERLOVE_POS_X				(MAP_PLAYER_POS_X + 176)
 #define MAP_PLAYERLOVE_POS_Y				6
 #define MAP_PLAYERLOVE_TERM_Y				3
+
+#define STATUSMSG_POS_X						35
+#define STATUSMSG_POS_Y						330
+#define STATUSMSG_FONTSIZE					15
+#define STATUSMSG_FONTWEIGHT				1000
+
+#define TURNINFO_POS_X						560
+#define TURNINFO_POS_Y						40
+#define TURNINFO_FONTSIZE					18
+#define TURNINFO_FONTWEIGHT					1000
 
 // 전체맵 보기에서, 과목 점수(평점) 띄워줄 좌표.. 하드코딩 우왕 ㅋ
 static POINT s_ptPosGrade[CLASSNUM] = 
@@ -697,6 +707,25 @@ void gUIGame::Draw()
 			nTurnCount++;
 		}
 
+		if(strlen(m_szStatusMsg) != 0)
+		{
+			gUtil::SetSize(STATUSMSG_FONTSIZE);
+			gUtil::SetFontWeight(STATUSMSG_FONTWEIGHT);
+			gUtil::BeginText();
+				gUtil::TextOutLine(STATUSMSG_POS_X, STATUSMSG_POS_Y, m_szStatusMsg);
+			gUtil::EndText();
+			gUtil::SetDefaultFont();
+		}
+
+		// left turn
+		gUtil::SetSize(TURNINFO_FONTSIZE);
+		gUtil::SetFontWeight(TURNINFO_FONTWEIGHT);
+		gUtil::BeginText();
+			sprintf_s(szBuf, STR_34, gGameCore::GetIF()->m_nGameTurn + 1, ENDROUND);
+			gUtil::TextOutLine(TURNINFO_POS_X, TURNINFO_POS_Y, szBuf);
+		gUtil::EndText();
+		gUtil::SetDefaultFont();
+
 	// show always end
 
 	switch(m_uimode)
@@ -792,7 +821,7 @@ void gUIGame::Draw()
 				SetRect(&rcSour,
 					0, 0, COUPLE_LOVE_SIZE_W, COUPLE_LOVE_SIZE_H);
 
-				if(!m_bCouple)
+				if(!m_bBeCouple)
 					OffsetRect(&rcSour, COUPLE_LOVE_SIZE_W * 2, 0);
 
 				m_ImgUI[UIIMG_LOVE].Draw(rcDest, rcSour);
@@ -1161,7 +1190,8 @@ bool gUIGame::OnLButtonDown()
 
 
 	if(m_uimode == UIM_INFOCHANGE
-		|| m_uimode == UIM_ITEMUSEINFO)
+		|| m_uimode == UIM_ITEMUSEINFO
+		|| m_uimode == UIM_RESULT)
 		return false;
 	
 	if(gUtil::PointInRect(mouse->m_nPosX, mouse->m_nPosY, m_rcPos[UIT_MINIMAPBACK]))
@@ -1193,7 +1223,9 @@ bool gUIGame::OnLButtonDown()
 			m_uimode	= UIM_SUGANG;
 		}
 		else
+		{
 			m_uimode	= UIM_NONE;
+		}
 
 		return true;
 	}
@@ -1207,7 +1239,15 @@ bool gUIGame::OnLButtonDown()
 				gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_20);
 		}
 		else
+		{
 			m_uimode	= UIM_NONE;
+			if(m_uimode == UIM_TARGETSELECT
+				|| m_uimode == UIM_TARGETSELECT_MULTI
+				|| m_uimode == UIM_PLACESELECT)
+			{
+				m_szStatusMsg[0] = NULL;
+			}
+		}
 
 		return true;
 	}
@@ -1270,6 +1310,8 @@ bool gUIGame::OnLButtonDown()
 									{
 										m_nItemID	= ItemIdx;
 										m_uimode	= UIM_TARGETSELECT;
+										
+										sprintf_s(m_szStatusMsg, STR_32);
 									}
 									else
 									{
@@ -1288,6 +1330,8 @@ bool gUIGame::OnLButtonDown()
 										m_nItemID	= ItemIdx;
 										m_uimode	= UIM_TARGETSELECT;
 										m_bTargetByMove = true;
+
+										sprintf_s(m_szStatusMsg, STR_32);
 									}
 									else
 									{
@@ -1306,11 +1350,15 @@ bool gUIGame::OnLButtonDown()
 										m_nItemID	= ItemIdx;
 										m_uimode	= UIM_TARGETSELECT;
 										m_bTargetByMove = true;
+
+										sprintf_s(m_szStatusMsg, STR_32);
 									}
 									else
 									{
 										m_nItemID	= ItemIdx;
 										m_uimode	= UIM_PLACESELECT;
+
+										sprintf_s(m_szStatusMsg, STR_33);
 									}
 								}
 								break;
@@ -1326,6 +1374,8 @@ bool gUIGame::OnLButtonDown()
 									}
 									m_nItemID	= ItemIdx;
 									m_uimode	= UIM_TARGETSELECT;
+
+									sprintf_s(m_szStatusMsg, STR_32);
 								}
 								break;
 							case ITEM_LOVE:
@@ -1334,6 +1384,8 @@ bool gUIGame::OnLButtonDown()
 									{
 										m_nItemID	= ItemIdx;
 										m_uimode	= UIM_TARGETSELECT;
+
+										sprintf_s(m_szStatusMsg, STR_32);
 									}
 									else
 									{
@@ -1379,6 +1431,8 @@ bool gUIGame::OnLButtonDown()
 					{
 						strcpy(m_szTarget, target->szID);
 						m_uimode = UIM_PLACESELECT;
+
+						sprintf_s(m_szStatusMsg, STR_33);
 					}
 					else
 					{
@@ -1451,6 +1505,8 @@ bool gUIGame::OnLButtonDown()
 						{
 							strcpy(m_szTarget, gPC->m_GPlayerList[ m_target[i].idx ].szID);
 							m_uimode = UIM_PLACESELECT;
+
+							sprintf_s(m_szStatusMsg, STR_33);
 
 							break;
 						}
@@ -1804,19 +1860,31 @@ void gUIGame::OnRButtonDown()
 	if(m_uimode == UIM_TARGETSELECT)
 	{
 		m_uimode = UIM_ITEM;
+
+		m_szStatusMsg[0] = NULL;
 		return;
 	}
 	if(m_uimode == UIM_TARGETSELECT_MULTI)
 	{
 		m_uimode = UIM_TARGETSELECT;
+		
+		sprintf_s(m_szStatusMsg, STR_32);
 		return;
 	}
 	if(m_uimode == UIM_PLACESELECT)
 	{
 		if(m_bTargetByMove)
+		{
 			m_uimode = UIM_TARGETSELECT;
+
+			sprintf_s(m_szStatusMsg, STR_32);
+		}
 		else
+		{
 			m_uimode = UIM_ITEM;
+
+			m_szStatusMsg[0] = NULL;
+		}
 		return;
 	}
 	if(m_uimode != UIM_NONE && !m_bItemUsed)
@@ -2783,8 +2851,10 @@ void gUIGame::pk_becouple_rep(PK_BECOUPLE_REP *rep)
 	m_timer.frameStart(BECOUPLE_TICK, 2);
 	m_uimode = UIM_BECOUPLE;
 
+	m_bBeCouple = rep->bCouple;
+
 	int Me = pc->GetMyGPIndex();
-	if(Me==m_target[0].idx || Me==m_target[1].idx)
+	if(Me == m_target[0].idx || Me == m_target[1].idx)
 	{
 		m_bCouple = rep->bCouple;
 		if(rep->bCouple)

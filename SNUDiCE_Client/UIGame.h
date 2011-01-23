@@ -144,7 +144,8 @@ public:
 
 	gTimer		m_timer;					// 카드 사용 정보, info
 
-	bool		m_bCouple;					// true면 커플되는거, false면 깨는 거
+	bool		m_bCouple;					// 내가 커플이냐
+	bool		m_bBeCouple;				// true면 커플되는거, false면 깨는 거
 
 	// your turn
 	bool		m_bShowYourTurn;
@@ -156,6 +157,8 @@ public:
 
 	// map
 	int			m_nCharSelected;
+
+	char		m_szStatusMsg[128];
 
 private:
 	RECT		m_rcBarDest, m_rcBarSour;

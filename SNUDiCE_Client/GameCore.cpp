@@ -1201,6 +1201,8 @@ void gGameCore::pk_nextturn_rep(PK_NEXTTURN_REP *rep)
 	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
 	gUIGame				*ui = gUIGame::GetIF();
 
+	m_nGameTurn = rep->nNowTurnGame;
+
 	if(m_bBreak)
 	{
 		if(m_nTurn == gPC->GetMyGPIndex())
@@ -1250,6 +1252,12 @@ void gGameCore::pk_nextturn_rep(PK_NEXTTURN_REP *rep)
 
 	gUIGame::GetIF()->m_bShowTimeCount = true;
 	gUIGame::GetIF()->m_bDrawedTimeCount = false;
+
+	if(m_nTurn == gPC->GetMyGPIndex())
+		sprintf_s(gUIGame::GetIF()->m_szStatusMsg, STR_28);
+	else
+		sprintf_s(gUIGame::GetIF()->m_szStatusMsg, STR_29, gPC->m_GPlayerList[m_nTurn].szID);
+
 }
 
 void gGameCore::ScrollStart(int nPos)
@@ -1294,10 +1302,15 @@ void gGameCore::pk_busmovechoose_rep(PK_BUSMOVECHOOSE_REP *rep)
 	if(m_bBusSel)
 		return;
 
-	if(m_nTurn == rep->nNowTurn) {
+	if(m_nTurn == rep->nNowTurn)
+	{
 		m_bBusSel = true;
 		m_turnTime_Bus = GetTickCount();
+
+		sprintf_s(gUIGame::GetIF()->m_szStatusMsg, STR_31);
 	}
+	else
+		gUIGame::GetIF()->m_szStatusMsg[0] = NULL;
 }
 
 // 상우의  주요 작업 부분 시작
@@ -1478,6 +1491,7 @@ void gGameCore::pk_busmovestartcouple_rep(PK_BUSMOVESTART_REP *rep)
 
 void gGameCore::Clear(int newTurn)
 {
+	m_nGameTurn = 0;
 	m_nTurn		= newTurn;
 	m_turnTime	= GetTickCount();
 	m_bBreak	= false;
@@ -1491,5 +1505,10 @@ void gGameCore::Clear(int newTurn)
 	{
 		ui->m_bShowYourTurn = true;
 		ui->m_nYourTurnTimer = GetTickCount();
+		strcpy(ui->m_szStatusMsg, STR_28);
+	}
+	else
+	{
+		sprintf_s(ui->m_szStatusMsg, STR_29, gPC->m_GPlayerList[m_nTurn].szID);
 	}
 }

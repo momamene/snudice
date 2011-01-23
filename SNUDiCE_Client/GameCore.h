@@ -52,6 +52,8 @@ public:
 
 public:
 	int			m_nTurn;		// 누구 턴
+	int			m_nGameTurn;	// 전체적으로 몇 턴 지났냐.
+
 	int			m_spacor;
 	bool		m_bMoved;		// 해당 턴에 움직엿냐, 즉 movestart_ask 보냇으면 true
 	bool		m_bMoving;		// 움직이는 중이냐
