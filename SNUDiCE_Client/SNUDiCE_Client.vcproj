@@ -65,6 +65,7 @@
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
+				GenerateMapFile="true"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -139,6 +140,7 @@
 				AdditionalDependencies="ws2_32.lib ddraw.lib dxguid.lib imm32.lib"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
+				GenerateMapFile="true"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -175,6 +177,10 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
+			<File
+				RelativePath=".\CrashHandler.cpp"
+				>
+			</File>
 			<File
 				RelativePath=".\Image.cpp"
 				>
@@ -321,6 +327,10 @@
 			>
 			<File
 				RelativePath=".\const.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CrashHandler.h"
 				>
 			</File>
 			<File
