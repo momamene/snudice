@@ -40,7 +40,7 @@ bool gCharinfo::SetUp()
 					strcpy(m_CharInfo[nIndex].szCollege, szTemp);
 					break;
 				case 2: // 성별
-					if( strcmp(szTemp, "남") == 0 && nIndex != 12)	//심영ㅋㅋㅋ
+					if( strcmp(szTemp, "남") == 0 ) //&& nIndex != 12)	//심영ㅋㅋㅋ
 						m_CharInfo[nIndex].bMale = true;
 					else
 						m_CharInfo[nIndex].bMale = false;
