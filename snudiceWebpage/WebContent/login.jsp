@@ -50,7 +50,9 @@
 					<div id="menu4">
 						게시판
 						<div id="menu4DropDown" class="menuDropDownWrapper invisible">
-							<div id="freeBoard">자유게시판</div>												
+							<div id="freeBoard">
+								<a href="${root}/board/articleList.do?boardName=free&currPage=0">자유게시판</a>
+							</div>												
 						</div>
 					</div>
 					<div id="menu5">
@@ -158,7 +160,8 @@
 						<a href="${root}/setupFile/SNUDiCE_setup.exe">게임 다운로드</a>										
 					</div>
 				</div>			
-				<div class="center">			
+				<div class="center">	
+					<!--  	
 					<div id="boardSelect">
 						<br/>
 						<c:forEach var="board" items="${boardList}">
@@ -166,6 +169,7 @@
 						</c:forEach>
 						<a href="${root}/gameIntro.do">게임소개</a>					
 					</div>
+					-->	
 					<div id="centerL">
 						<div id="centerLU">
 							<span class="title">공지사항</span>

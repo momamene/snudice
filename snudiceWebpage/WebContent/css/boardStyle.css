@@ -1,23 +1,48 @@
 @CHARSET "UTF-8";
 
-/* 큰 영역 size 설정 */
-.header,.bodyWrapper,.footer {	width : 1024px; }
-.left { width : 0px; }
-.center { width : 1024px; }
-.right { width : 0px; }
-
-/* 큰 영역 position 설정 */
-.bodyWrapper 
-{	
+.bodyWrapper
+{
+	width : 1025px; 
 	/* 중앙 정렬 */
 	position : relative;
 	left : 50%;
-	margin-left : -512px;	
+	margin-left : -512px;
+	font-family : "맑은 고딕","Franklin Gothic M";
+}
+.left 
+{	 
+	width : 0px;
+	float : left;
 }
 
-.left { float:left; }
-.center { float:left; }
-.right { float:left; }
+.center 
+{ 
+	float:left; 
+	margin-left: 10px; 
+	width : 1025px;
+}
+
+.center_
+{
+	position : relative;
+	left : 50%;
+	margin-left : -132px;
+}
+
+.right 
+{ 
+	float:left;
+	width : 0px; 
+	margin-right:50px; 
+}
+
+.header,.footer {	width : 1025px; }
+
+.footer 
+{ 
+	clear : left; 	
+	text-align : center;
+}
 
 /*----------------공통 적용 사항-----------*/
 a:link {text-decoration:none;}    /* unvisited link */
