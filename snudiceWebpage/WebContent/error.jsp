@@ -30,6 +30,7 @@ function init()
 </head>
 <body>
 	<div class="bodyWrapper centerOfAllWidth">
+		<div class="backgroundUp"></div>
 		<div class="header">
 			<div id="errorHeaderImage"></div>
 		</div>

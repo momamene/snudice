@@ -41,7 +41,21 @@
 .footer 
 { 
 	clear : left; 	
-	text-align : center;
+	text-align : center;	
+	position : relative;
+	top:-200px;
+}
+
+.backgroundDown
+{
+	background-image : url('/snudiceWebpage/image/mainpage/backgroundDown.png');
+	background-repeat : no-repeat;	
+	width : 1025px;
+	height : 284px;
+	clear: left;
+	position : relative;	
+	z-index : -1;
+	top : -150px;
 }
 
 /*----------------공통 적용 사항-----------*/
@@ -55,28 +69,11 @@ div { border : 0px; padding : 0px; }
 
 hr
 {	
-	background-color : #262E69;
+	background-color : #BCD9EB;
 	height : 4px;
 	border : 0px;
 }
 
-hr.hr1
-{
-	width : 200px;
-}
-
-hr.marginZero
-{
-	margin : 0px;
-}
-
-hr.lightColor
-{
-	background-color : #BDC1E0;
-}
-
-.centerAlign { text-align : center;}
-.bodyWrapper { background-color : #E4E4F9; }
 .header,.container,.footer,.center,.left,.right,table,tr,td 
 {
 	border : 0px;
@@ -98,7 +95,20 @@ tr,td { height : 30px; }
 {
 	background-image : url('/snudiceWebpage/image/mainpage/title.png');
 	background-repeat : no-repeat;	
-	height : 255px;
+	height : 127px;
+	z-index : 0;
+	position : relative;
+	margin-top : -270px;	
+	left : 50px;
+}
+
+.backgroundUp
+{
+	background-image : url('/snudiceWebpage/image/mainpage/backgroundUp.png');
+	background-repeat : no-repeat;
+	height : 284px;	
+	z-index : -1;	
+	position : relative;
 }
 
 /*----------글 목록 보기-------*/
