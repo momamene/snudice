@@ -4,6 +4,8 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="icon" href="${root}/favicon.ico" type="image/x-icon"/>
+<link rel="shortcut icon" href="${root}/favicon.ico" type="image/x-icon"/>
 <link rel="stylesheet" type="text/css" href="${root}/css/boardStyle.css"/>
 <script type="text/javascript">
 window.onload = init;
