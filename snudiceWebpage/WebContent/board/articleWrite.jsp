@@ -27,6 +27,7 @@ function init()
 </head>
 <body>    
 	<div class="bodyWrapper">
+		<div class="backgroundUp"></div>
 		<div class="header">
 			<div id="articleWriteHeaderImage" class="headerImage"></div>
 		</div>
@@ -69,8 +70,9 @@ function init()
 			<div class="right"></div>
 		</div>
 		
-		<div class="footer centerAlign">
-			<hr class="lightColor"/>${footerMsg}
+		<div class="backgroundDown"></div>
+		<div class="footer">
+			${footerMsg}
 		</div>
 	</div>
 </body>

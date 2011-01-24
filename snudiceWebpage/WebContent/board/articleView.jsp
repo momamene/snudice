@@ -93,6 +93,7 @@ function replyComplete()
 </head>
 <body>
 	<div class="bodyWrapper">
+		<div class="backgroundUp"></div>
 		<div class="header">
 			<div id="articleViewHeaderImage" class="headerImage"></div>
 		</div>
@@ -160,8 +161,9 @@ function replyComplete()
         	<div class="right"></div>
 		</div>	
 			
-		<div class="footer centerAlign">
-			<hr class="lightColor"/>${footerMsg}
+		<div class="backgroundDown"></div>
+		<div class="footer">
+			${footerMsg}
 		</div>
 		
 		<!-- 댓글을 썼다면 자신이 쓴 댓글을 볼 수 있게 focus를 댓글 쓰는 폼에 맞춘다 -->
