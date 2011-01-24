@@ -5,6 +5,8 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="icon" href="${root}/favicon.ico" type="image/x-icon">
+<link rel="shortcut icon" href="${root}/favicon.ico" type="image/x-icon">  
 <link rel="stylesheet" type="text/css" href="${root}/css/loginPageStyle.css">
 <script type="text/javascript" src="${root}/javascript/util.js"></script>
 <script type="text/javascript" src="${root}/javascript/md5.js"></script> 
