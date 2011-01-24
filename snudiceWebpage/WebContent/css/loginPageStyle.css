@@ -23,12 +23,6 @@
 	width : 720px;
 }
 
-.center_
-{
-	position : relative;
-	left : 50%;
-	margin-left : -132px;
-}
 .right 
 { 
 	float:left;
@@ -118,7 +112,7 @@ hr
 .bodyWrapper { background-color : white; }
 
 /*----------------header-----------*/
-#headerImage, #secureLoginFormHeaderImage,#gameIntroHeaderImage
+#headerImage, #gameIntroHeaderImage
 {
 	background-image : url('/snudiceWebpage/image/mainpage/title.png');
 	background-repeat : no-repeat;	
@@ -247,14 +241,14 @@ hr
 #notice,#update,#synopsis,#playGuide,#character,#card,#teamIntro,#freeBoard,#gameDownload,#wallPaper,#screenShot { cursor : pointer; }
 
 /*------------- login form ---------*/
-#mainLeftTop,#mainLeftBottom,#mainLeftTop_ { width : 229px; }
+#mainLeftTop,#mainLeftBottom { width : 229px; }
 #mainLeftTop.loggined
 {
 	background-image : url('/snudiceWebpage/image/mainpage/loginFormLoggined.png');	
 	background-repeat : repeat-y;
 }
 
-#mainLeftTop,#mainLeftTop_ 
+#mainLeftTop
 {
 	background-image : url('/snudiceWebpage/image/mainpage/loginForm.png');	
 	background-repeat : no-repeat;
@@ -262,8 +256,6 @@ hr
 	position : relative;
 	top : 10px;
 }
-
-#mainLeftTop_ { height: 180px; }
 
 #loginFormTitle
 {		
@@ -346,18 +338,12 @@ hr
 	margin-top:5px;
 }
 
-#loginMsg, #loginMsg_
+#loginMsg
 {
 	color:red;	
 	position : relative;
 	text-align : center; 
 }
-
-#loginMsg_
-{
-	top : 30px;
-}
-
 
 #loginMsg.logouted { top : 40px; }
 #loginMsg.loggined { top : 30px; }

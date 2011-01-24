@@ -1,0 +1,135 @@
+@CHARSET "UTF-8";
+
+.bodyWrapper
+{
+	width : 1025px; 
+	/* 중앙 정렬 */
+	position : relative;
+	left : 50%;
+	margin-left : -512px;
+	font-family : "맑은 고딕","Franklin Gothic M";
+}
+
+.left { width : 0px; }
+.right { width : 0px; }
+
+
+.center
+{
+	position : relative;
+	left : 50%;
+	margin-left : -132px;
+}
+
+.header,.footer {	width : 1025px; }
+
+.footer 
+{ 
+	clear : left; 
+	position : relative; 
+	top : 20px;	
+	text-align : center;
+}
+
+#secureLoginFormHeaderImage
+{
+	background-image : url('/snudiceWebpage/image/mainpage/title.png');
+	background-repeat : no-repeat;	
+	height : 127px;
+	z-index : 1;
+	position : relative;		
+	left : 50px;
+}
+
+
+#mainLeftTop
+{
+	background-image : url('/snudiceWebpage/image/mainpage/loginForm.png');	
+	background-repeat : no-repeat;
+	width : 229px;
+	height : 180px;
+	position : relative;
+	top : 10px;
+}
+
+#loginFormWrapper
+{	
+	display : block;
+	position : relative;
+	top : 25px;	
+	clear : left;	
+}
+
+#loginFormTitle
+{		
+	font-size : 120%;
+	position : relative;
+	top : 5px;		
+}
+
+#guestLogin 
+{
+	background-image : url('/snudiceWebpage/image/mainpage/guestLogin.png');
+	background-repeat : no-repeat;
+	width : 93px;
+	height : 29px;
+	margin-left : 130px;	
+	float : left;
+	margin-top : -23px;
+	cursor : pointer;
+}
+
+
+#loginMsg
+{
+	color:red;	
+	position : relative;
+	top: 30px;
+	text-align : center; 
+}
+
+#idpw 
+{
+	float : left;	
+	margin-left : 10px;
+	margin-top : 8px;	
+	color : #677EA0;	
+}
+
+#userId,#password
+{
+	width : 100px;
+	height : 22px;
+	background-color : #C3DAFC;
+	border : 2px inset;
+	color : black;
+}
+
+#userId {margin-left: 19px; }
+#password 
+{
+	margin-left : 10px; 
+	margin-top:5px;
+}
+
+#loginButton.mouseOut,#loginButton.mouseOver
+{
+	width : 76px;
+	height : 77px;
+	float : left;
+	position : relative;
+	left : 7px;	
+}
+
+#loginButton.mouseOut
+{
+	background-image : url('/snudiceWebpage/image/mainpage/login.png');	
+	background-repeat : no-repeat;	
+}
+
+#loginButton.mouseOver
+{
+	background-image : url('/snudiceWebpage/image/mainpage/loginMouseOver.png');
+	background-repeat : no-repeat;
+	cursor : pointer;	
+}

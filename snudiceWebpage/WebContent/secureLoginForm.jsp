@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" type="text/css" href="${root}/css/loginPageStyle.css">
+<link rel="stylesheet" type="text/css" href="${root}/css/secureLoginForm.css">
 <script type="text/javascript" src="${root}/javascript/util.js"></script>
 <script type="text/javascript" src="${root}/javascript/md5.js"></script>
 <script type="text/javascript">
@@ -38,6 +38,13 @@ function init()
 	//손님 로그인 버튼
 	var guestLogin = document.getElementById("guestLogin");
 	guestLogin.onclick = guestLoginFunc;
+	
+	//로그인 실패시
+	if("${param.fail}"!="")
+	{
+		var userId = document.getElementById("userId");
+		userId.focus();
+	}
 }
 
 function guestLoginFunc()
@@ -53,7 +60,7 @@ function loginFunc()
 {
 	var userId = document.getElementById("userId");
 	var password = document.getElementById("password");
-	var loginMsg = document.getElementById("loginMsg_");	
+	var loginMsg = document.getElementById("loginMsg");	
 
 	//validation
 	if(userId.value=="")
@@ -101,25 +108,25 @@ function mouseOutFunc()
 		<div class="container">	
 			<div class="left"></div>
 					
-			<div class="center_">
-				<div id="mainLeftTop_">
+			<div class="center">
+				<div id="mainLeftTop">
 					<div id="loginFormTitle" class="visible">
 						&nbsp;&nbsp;&nbsp;회원로그인
 						<div id="guestLogin"></div> 
 					</div>
 					
-					<div id="loginFormWrapper" class="visible">
+					<div id="loginFormWrapper">
 						<form id="secureloginForm" method="POST" action="j_security_check">
 							<div id="idpw">	
-								ID&nbsp;&nbsp; <input id="userId" type="text" name="j_username"><br/>		
-								PW <input id="password" type="password" name="j_password"><br/>	
+								ID<input id="userId" type="text" name="j_username"><br/>		
+								PW<input id="password" type="password" name="j_password"><br/>	
 							</div>							
 							<div id="loginButton" class="mouseOut"></div>
 						</form>	
 					</div>												
-					<div id="loginMsg_" class="visible clearLeft">
+					<div id="loginMsg" class="visible clearLeft">
 						<c:if test="${not empty param.fail}">
-							로그인 실패!
+							로그인 실패!							
 						</c:if>
 					</div>
 				</div>	
@@ -128,8 +135,8 @@ function mouseOutFunc()
 			<div class="right"></div>
 		</div>
 		
-		<div class="footer centerAlign">
-			<hr class="lightColor"/>${footerMsg}
+		<div class="footer">
+			${footerMsg}
 		</div>
 	
 	</div>

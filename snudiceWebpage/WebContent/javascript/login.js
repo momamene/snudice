@@ -125,9 +125,7 @@ function joinCloseFunc()
 
 //회원 가입 요청을 보낸다
 function joinSubmitFunc()
-{	
-	var validPwRegex =new RegExp("([a-z]|[A-Z]|[0-9])+");
-	
+{		
 	var joinId = document.getElementById("joinId");
 	var joinPw = document.getElementById("joinPw");
 	var joinPwConfirm = document.getElementById("joinPwConfirm");
@@ -167,8 +165,9 @@ function joinSubmitFunc()
 		joinMsg.innerHTML = "email을 입력해주세요";
 		joinEmail.focus();
 		return;
-	}
-	if(!joinPw.value.match(validPwRegex))
+	}		
+
+	if(!regexMatch(joinPw.value,"([a-z]|[A-Z]|[0-9])+"))
 	{
 		joinMsg.innerHTML = "암호는 영문 알파벳과 숫자만 가능합니다.";
 		joinPw.focus();

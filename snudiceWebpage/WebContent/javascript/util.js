@@ -152,3 +152,22 @@ function windowAutoResize(maxWidth)
 		}
 	}
 }
+
+
+//주어진 string이 regex에 일치하는지 확인한다. (case sensitive)
+function regexMatch(str,regex)
+{
+	var validRegex =new RegExp(regex);
+	
+	var regexMatchArr = str.match(validRegex);
+	if(regexMatchArr==null)
+		return false;
+	
+	for(var i=0;i<regexMatchArr.length;i++)
+	{
+		if(regexMatchArr[i]==str)		
+			return true;		
+	}
+	
+	return false;	
+}
