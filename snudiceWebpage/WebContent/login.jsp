@@ -28,8 +28,12 @@
 					<div id="menu1">
 						소식
 						<div id="menu1DropDown" class="menuDropDownWrapper invisible">
-							<div id="notice">공지사항</div>
-							<div id="update">업데이트</div>							
+							<div id="notice">								
+								<a href="${root}/board/articleList.do?boardName=${noticeBoardName}&currPage=0">${noticeBoardAliasName}</a>								
+							</div>
+							<div id="update">								
+								<a href="${root}/board/articleList.do?boardName=${updateBoardName}&currPage=0">${updateBoardAliasName}</a>							
+							</div>							
 						</div>
 					</div>
 					<div id="menu2">
@@ -51,7 +55,7 @@
 						게시판
 						<div id="menu4DropDown" class="menuDropDownWrapper invisible">
 							<div id="freeBoard">
-								<a href="${root}/board/articleList.do?boardName=free&currPage=0">자유게시판</a>
+								<a href="${root}/board/articleList.do?boardName=${freeBoardName}&currPage=0">${freeBoardAliasName}</a>
 							</div>												
 						</div>
 					</div>
@@ -161,49 +165,44 @@
 					</div>
 				</div>			
 				<div class="center">	
-					<!--  	
-					<div id="boardSelect">
-						<br/>
-						<c:forEach var="board" items="${boardList}">
-							<a href="${root}/board/articleList.do?boardName=${board.boardName}&currPage=0">${board.aliasName}</a>&nbsp;|&nbsp;
-						</c:forEach>
-						<a href="${root}/gameIntro.do">게임소개</a>					
-					</div>
-					-->	
 					<div id="centerL">
 						<div id="centerLU">
-							<span class="title">공지사항</span>
-							<span class="centerLMore">더보기</span>
-							<img src="${root}/image/mainpage/more.png"/>
+							<span class="title">${noticeBoardAliasName}</span>
+							<a href="${root}/board/articleList.do?boardName=${noticeBoardName}&currPage=0">
+								<span class="centerLMore">더보기</span>
+								<img src="${root}/image/mainpage/more.png"/>
+							</a>
 							<hr/>			
 							<c:forEach var="article" items="${noticeList}">
-								<a href="${root}/board/articleView.do?boardName=${noticeBoardName}&articleIndex=${article.articleIndex}&currPage=0">${article.title}</a><br/>						
+								<img src="${root}/image/mainpage/noticeIcon.png"/>
+								<span class="articleIcon">
+									<a href="${root}/board/articleView.do?boardName=${noticeBoardName}&articleIndex=${article.articleIndex}&currPage=0">${article.title}</a><br/>
+								</span>						
 							</c:forEach>				
 						</div>
 						<div id="centerLD">							
-							<span class="title">업데이트</span>
-							<span class="centerLMore">더보기</span>
-							<img src="${root}/image/mainpage/more.png"/>
+							<span class="title">${updateBoardAliasName}</span>
+							<a href="${root}/board/articleList.do?boardName=${updateBoardName}&currPage=0">							
+								<span class="centerLMore">더보기</span>
+								<img src="${root}/image/mainpage/more.png"/>
+							</a>
 							<hr/>			
-							<c:forEach var="article" items="${devNoteList}">
-								<a href="${root}/board/articleView.do?boardName=${devNoteBoardName}&articleIndex=${article.articleIndex}&currPage=0">${article.title}</a><br/>						
+							<c:forEach var="article" items="${updateList}">
+								<img src="${root}/image/mainpage/updateIcon.png"/>
+								<span class="articleIcon">
+									<a href="${root}/board/articleView.do?boardName=${updateBoardName}&articleIndex=${article.articleIndex}&currPage=0">${article.title}</a><br/>
+								</span>							
 							</c:forEach>
 						</div>						
 					</div>					
 					<div id="centerR">	
 						<div id="centerRU">
 							<span class="title">게임 가이드</span>							
-							<hr/>			
-							<c:forEach var="article" items="${noticeList}">
-								<a href="${root}/board/articleView.do?boardName=${noticeBoardName}&articleIndex=${article.articleIndex}&currPage=0">${article.title}</a><br/>						
-							</c:forEach>				
+							<hr/>											
 						</div>
 						<div id="centerRD">							
 							<span class="title">팀소개</span>
-							<hr/>			
-							<c:forEach var="article" items="${devNoteList}">
-								<a href="${root}/board/articleView.do?boardName=${devNoteBoardName}&articleIndex=${article.articleIndex}&currPage=0">${article.title}</a><br/>						
-							</c:forEach>
+							<hr/>							
 						</div>	
 					</div>						
 				</div>
