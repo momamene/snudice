@@ -103,8 +103,9 @@ function mouseOutFunc()
 </head>
 <body>
 	<div class="bodyWrapper">
+		<div class="backgroundUp"></div>
 		<div class="header">
-			<div id="secureLoginFormHeaderImage"></div>			
+			<div id="secureLoginFormHeaderImage" class="headerImage"></div>			
 		</div>
 		
 		<div class="container">	
@@ -130,14 +131,18 @@ function mouseOutFunc()
 						<c:if test="${not empty param.fail}">
 							로그인 실패!							
 						</c:if>
-					</div>
-				</div>	
+					</div>					
+				</div>				
+				<span id="secureloginNotice" class="noticeMsg">
+					*주의 : 영문,숫자 이외의 문자를 포함한 id는 메인 페이지에서 로그인해야 합니다.
+				</span>
 			</div>
 			
 			<div class="right"></div>
 		</div>
 		
-		<div class="footer">
+		<div class="backgroundDown"></div>
+		<div class="footer">			
 			${footerMsg}
 		</div>
 	
