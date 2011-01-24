@@ -482,12 +482,15 @@ hr
 
 /*-----------메인 섹션------------*/
 span.title { font-weight : bold; }
-span.centerLMore 
-{ 
-	margin-left : 280px;
+span.centerLMore,span.articleIcon 
+{ 	
 	position : relative;
 	top : -5px;
 }
+
+span.centerLMore { margin-left : 280px; }
+
+.center a { margin-top : -5px; }
 
 #centerL,#centerR { float: left; }
 #centerL { width : 450px; }
