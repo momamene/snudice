@@ -1,5 +1,7 @@
 @CHARSET "UTF-8";
 
+span.noticeMsg { color: red; }
+
 .bodyWrapper
 {
 	width : 1025px; 
@@ -26,21 +28,41 @@
 .footer 
 { 
 	clear : left; 
-	position : relative; 
-	top : 20px;	
+	position : relative; 	
 	text-align : center;
+	top:-60px;
 }
 
-#secureLoginFormHeaderImage
+.backgroundDown
+{
+	background-image : url('/snudiceWebpage/image/mainpage/backgroundDown.png');
+	background-repeat : no-repeat;	
+	width : 1025px;
+	height : 284px;
+	clear: left;
+	position : relative;	
+	z-index : -1;	
+}
+
+.headerImage
 {
 	background-image : url('/snudiceWebpage/image/mainpage/title.png');
 	background-repeat : no-repeat;	
 	height : 127px;
-	z-index : 1;
-	position : relative;		
+	z-index : 0;
+	position : relative;
+	margin-top : -270px;	
 	left : 50px;
 }
 
+.backgroundUp
+{
+	background-image : url('/snudiceWebpage/image/mainpage/backgroundUp.png');
+	background-repeat : no-repeat;
+	height : 284px;	
+	z-index : -1;	
+	position : relative;
+}
 
 #mainLeftTop
 {
@@ -49,7 +71,7 @@
 	width : 229px;
 	height : 180px;
 	position : relative;
-	top : 10px;
+	top : 30px;
 }
 
 #loginFormWrapper
@@ -86,6 +108,13 @@
 	position : relative;
 	top: 30px;
 	text-align : center; 
+}
+
+#secureloginNotice
+{
+	position : relative;
+	top : 30px;
+	margin-left : -150px;
 }
 
 #idpw 
