@@ -131,7 +131,7 @@
 													
 							<div id="loginHelp">
 								<hr/>												
-								<a id="joinOpen" href="#">회원가입</a>							
+								<a id="joinOpen" href="#">빠른 회원가입</a>							
 								<a id="findIdPw" href="#">ID/PW찾기</a>
 							</div>						
 						</div>
