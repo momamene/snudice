@@ -1376,7 +1376,7 @@ void gRoomCore::Draw_Room()
 			x = WAIT_POS_CHARBACK_X + (i % 4) * (WAIT_TERM_CHARBACK_X + WAIT_SIZE_CHARBACK_W) + WAIT_TERM_CHARNAMEBACK_X;
 			y = WAIT_POS_CHARBACK_Y + (i / 4) * (WAIT_TERM_CHARBACK_Y + WAIT_SIZE_CHARBACK_H) + WAIT_TERM_CHARNAMEBACK_Y;
 
-			gUtil::Text(x, y, room->szRoomMaxPlayer[i]);
+			gUtil::TextOutLine(x, y, room->szRoomMaxPlayer[i]);
 		}
 	}
 	gUtil::EndText();
