@@ -103,7 +103,12 @@ void gGameCore::MainLoop()
 				gPopUp::GetIF()->DoEsc();
 			}
 		}
-		return;
+		if(strcmp(gPopUp::GetIF()->m_szLine1, STR_20) == 0)
+		{
+
+		}
+		else
+			return;
 	}
 
 	if(gPopUp::GetIF()->m_bReturn)
@@ -935,7 +940,7 @@ void gGameCore::SendMoveAsk()
 	// 이미 움직였음, 스크롤링 중임
 	if(m_bMoved) //|| m_bScrolling)
 		return;
-	if(ui->m_uimode == UIM_RESULT || ui->m_bItemUsed)
+	if(ui->m_drawmode == DM_RESULT || ui->m_bItemUsed)
 		return;
 
 	PK_MOVESTART_ASK		ask;

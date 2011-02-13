@@ -416,6 +416,7 @@ void gSubmitCore::pk_maingametart_rep(PK_MAINGAMESTART_REP *rep)
 	gMainWin::GetIF()->m_eCoreMode	= ECM_GAME;
 	gChat::GetIF()->MsgStackClear();
 	gUIGame::GetIF()->Clear();
+	gPlaySoundCore::GetIF()->StopEffectSound(EFFECT_FILE_10);
 	gPlaySoundCore::GetIF()->StartBGM(BGM_FILE_2);
 	gGameCore::GetIF()->Clear(rep->nTurn);
 }

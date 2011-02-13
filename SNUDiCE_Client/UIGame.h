@@ -97,11 +97,16 @@ enum UIMODE
 	UIM_TARGETSELECT_MULTI,		// 대상 선택한 후, 여러명일 때
 	UIM_PLACESELECT,			// 이동 장소 선택
 	UIM_SUGANG,					// 수강편람
-	UIM_ITEMUSEINFO,			// 아이템 사용 정보
-	UIM_INFOCHANGE,				// 수치 변경 정보
-	UIM_BECOUPLE,				// 커플되었다는 정보
 	UIM_MAP,
-	UIM_RESULT,
+};
+
+enum DRAWMODE
+{
+	DM_NONE,
+	DM_ITEMUSEINFO,				// 아이템 사용 정보
+	DM_INFOCHANGE,				// 수치 변경 정보
+	DM_BECOUPLE,				// 커플되었다는 정보
+	DM_RESULT,
 };
 
 // 아이템 사용, 캐릭터 얼굴 버튼
@@ -126,6 +131,7 @@ public:
 	RECT		m_rcPos[UIT_END];
 
 	UIMODE		m_uimode;
+	DRAWMODE	m_drawmode;
 	// 수강편람
 	int			m_nSubSel;					// 수강편람 누구 보고있나
 
@@ -163,6 +169,11 @@ public:
 private:
 	RECT		m_rcBarDest, m_rcBarSour;
 	int			m_rankIdx[ROOMMAXPLAYER];	// 랭킹인덱스
+
+private:
+	void		DrawMapToolTip();
+	void		DrawShowAlways();			// 항상 출력
+	void		DrawUIMapMode();			// UIM_MAP
 
 public:
 	void		pk_itemuse_rep(PK_ITEMUSE_REP* rep);
