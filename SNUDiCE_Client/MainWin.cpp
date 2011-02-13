@@ -509,7 +509,7 @@ bool gMainWin::SetUpDirect()
 		memset(&ddsd, 0, sizeof(DDSURFACEDESC));
 		ddsd.dwSize				= sizeof(DDSURFACEDESC);
 		ddsd.dwFlags			= DDSD_CAPS | DDSD_BACKBUFFERCOUNT;
-		ddsd.ddsCaps.dwCaps		= DDSCAPS_PRIMARYSURFACE | DDSCAPS_FLIP | DDSCAPS_COMPLEX | DDSCAPS_VIDEOMEMORY;
+		ddsd.ddsCaps.dwCaps		= DDSCAPS_PRIMARYSURFACE | DDSCAPS_FLIP | DDSCAPS_COMPLEX | DDSCAPS_SYSTEMMEMORY; //DDSCAPS_VIDEOMEMORY;
 		ddsd.dwBackBufferCount	= 1;
 		
 		if(FAILED(m_lpDD->CreateSurface(&ddsd, &m_lpDDPrimary, NULL)))
@@ -550,7 +550,7 @@ bool gMainWin::SetUpDirect()
 		memset(&ddsd, 0, sizeof(ddsd));
 		ddsd.dwSize			= sizeof(ddsd);
 		ddsd.dwFlags		= DDSD_CAPS | DDSD_WIDTH | DDSD_HEIGHT;
-		ddsd.ddsCaps.dwCaps	= DDSCAPS_OFFSCREENPLAIN | DDSCAPS_VIDEOMEMORY;//DDSCAPS_SYSTEMMEMORY; //DDSCAPS_VIDEOMEMORY
+		ddsd.ddsCaps.dwCaps	= DDSCAPS_OFFSCREENPLAIN | DDSCAPS_SYSTEMMEMORY; //DDSCAPS_VIDEOMEMORY
 		ddsd.dwWidth		= WNDSIZEW;
 		ddsd.dwHeight		= WNDSIZEH;
 		
