@@ -1191,7 +1191,8 @@ bool gUIGame::OnLButtonDown()
 
 	if(m_uimode == UIM_INFOCHANGE
 		|| m_uimode == UIM_ITEMUSEINFO
-		|| m_uimode == UIM_RESULT)
+		|| m_uimode == UIM_RESULT
+		|| m_uimode == UIM_BECOUPLE)
 		return false;
 	
 	if(gUtil::PointInRect(mouse->m_nPosX, mouse->m_nPosY, m_rcPos[UIT_MINIMAPBACK]))
@@ -1854,7 +1855,10 @@ void gUIGame::OnMouseMove()
 
 void gUIGame::OnRButtonDown()
 {
-	if(m_uimode == UIM_INFOCHANGE)
+	if(m_uimode == UIM_INFOCHANGE
+		|| m_uimode == UIM_ITEMUSEINFO
+		|| m_uimode == UIM_BECOUPLE
+		|| m_uimode == UIM_RESULT)
 		return;
 
 	if(m_uimode == UIM_TARGETSELECT)
