@@ -96,8 +96,20 @@ void gMessageCore::command(char* str,char* szID) {
 	ss >> szStr2;
 
 	if(strcmp(szStr1,"w")==0)	{
-		ss >> szStr3;
-		msg_whisper(szID , szStr2 , szStr3);
+		if (!strcmp(szStr2 , szID))	{	//지가 지한테 귓말 -ㅅ-;
+			msg_failMessage(szID , "물리적인 이유로 자신에게 귓속말을 할 수 없습니다.");
+		}
+		else	{
+			char szStr4[1024] = {0,};
+			do 
+			{
+				ss >> szStr3;
+				strcat(szStr4 , szStr3);
+				strcat(szStr4 , " ");
+			} while (strcmp(szStr3 , ""));
+			strcat(szStr4 , szStr3);
+			msg_whisper(szID , szStr2 , szStr4);
+		}
 		return;
 	}
 #ifdef GAMEPLAY_DEBUGER

@@ -355,6 +355,11 @@ void gMainWin::Recv(PK_DEFAULT *pk, SOCKET sock)
 				break;
 			case PL_FRIENDLIST_ASK :
 				gMessageCore::GetIF()->pk_friendlist_ask(pk, sock);
+				break;
+			//
+			case PL_GETPLAYERINFO_ASK :
+				gPlayerContainer::GetIF()->pk_getplayerinfo_ask(pk , sock);
+				break;
 		}
 #ifndef USE_LOG
 	}

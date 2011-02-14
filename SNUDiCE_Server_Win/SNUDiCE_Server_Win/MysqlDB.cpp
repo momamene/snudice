@@ -362,3 +362,33 @@ bool gMysql::blockDeleteOne(char* userId, char* blockId) {
 }
 
 
+
+int gMysql::getScoreCount(char* userId , bool val) {
+
+	int returnValue = -1;
+	char query[255];
+	if (val)
+		sprintf(query,USER_WINCOUNT_SELECT,userId);
+	else
+		sprintf(query,USER_LOSECOUNT_SELECT,userId);
+
+	// sql의 성공 실패를...
+	// query_stat 이 0이 아니면 error인가보다.
+	int query_stat = mysql_query(m_connection, (TCHAR*)query);
+	if(query_stat != 0) {
+		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		return -1;
+	}
+
+	// 쿼리 결과를 받아서 password를 받는 부분,
+	MYSQL_RES* sql_result = mysql_store_result(m_connection);
+	MYSQL_ROW sql_row = mysql_fetch_row(sql_result);
+
+	if(sql_row == NULL) {
+		fprintf(stderr,"getScoreCount() : null error");
+	}
+	else {
+		returnValue = atoi(sql_row[0]);
+	}
+	return returnValue;
+}

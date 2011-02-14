@@ -32,6 +32,12 @@ WHERE `userId` = '%s' ;"
 #define USER_LOSE_COUNT "UPDATE `userscore` SET `loseCount` = `loseCount` + 1   \
 WHERE `userId` = '%s' ;"
 
+#define USER_WINCOUNT_SELECT "SELECT `winCount` FROM `userscore` \
+WHERE userId = '%s';" 
+
+#define USER_LOSECOUNT_SELECT "SELECT `loseCount` FROM `userscore` \
+WHERE userId = '%s';" 
+
 #define BLOCK_INSERT "INSERT INTO `block` \
 VALUES ('%s','%s');" //"
 
@@ -100,6 +106,7 @@ public:
 	bool blockDeleteOne(char* userId,char* blockId);
 
 	void scoreCountAdd(char* userId , bool val);	//	val = 1 : winCount추가 , val = 0 : loseCount추가 
+	int	 getScoreCount(char* userId , bool val);				//	val = 1 : get winCount , val = 0 : get loseCount 
 	
 	void release();
 

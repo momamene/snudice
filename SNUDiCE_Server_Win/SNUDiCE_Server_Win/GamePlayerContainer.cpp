@@ -276,7 +276,7 @@ int gGamePlayerContainer::putFavorCross(int nRoomIndex, int nInRoomIndex, int nP
 		
 		iPos =  gTC->destination(nPos,dest);
 		if (iPos == 109)	{	//정문을 지나면
-			getItem(nRoomIndex , nInRoomIndex);	//아이템 주기
+			pk_getItem_rep(nRoomIndex , nInRoomIndex);	//아이템 주기
 			pk_gameplayerinfo_rep(nRoomIndex);
 		}
 		for (int j = 0 ; j < ROOMMAXPLAYER ; j++)	{
@@ -383,7 +383,7 @@ void gGamePlayerContainer::debuger_card(int nIndex,char* szID) {
 	// 잘못된 nIndex 값
 
 	
-	getItem(nRoomIndex,m_nTurn[nRoomIndex],nIndex);
+	pk_getItem_rep(nRoomIndex,m_nTurn[nRoomIndex],nIndex);
 	pk_gameplayerinfo_rep(nRoomIndex);
 }
 
@@ -514,7 +514,7 @@ void gGamePlayerContainer::pk_nextturn_rep (int nRoomIndex)
 
 #ifdef RANDSTANDITEMGET
 	if (rand()%10 < 1)	{// 10%의 확률로 아이템을 get
-		getItem(nRoomIndex , m_nTurn[nRoomIndex] );
+		pk_getItem_rep(nRoomIndex , m_nTurn[nRoomIndex] );
 		pk_gameplayerinfo_rep(nRoomIndex);
 	}
 #endif
@@ -697,13 +697,13 @@ void gGamePlayerContainer::pk_subGameplayerinfo_rep(int nRoomIndex,PK_GAMEPLAYER
 		for (; j != m_userItemList[nRoomIndex][i].end() ; ++j)	{
 			itemNum = j->first;
 			itemCoolTime = j->second;
-			if(gIC->m_ItemList[itemNum].nMulti>0 && itemCoolTime > 0) {
+			if(gIC->m_ItemList[itemNum].nMulti>0 && itemCoolTime%10 > 0) {
 				rep->list[i].nLang *= gIC->m_ItemList[itemNum].nMulti;
 				rep->list[i].nMath *= gIC->m_ItemList[itemNum].nMulti;
 				rep->list[i].nArt *= gIC->m_ItemList[itemNum].nMulti;
 			}
 			if((gIC->m_ItemList[itemNum].nLang != 0 || gIC->m_ItemList[itemNum].nMath != 0 || gIC->m_ItemList[itemNum].nArt != 0)
-				&& itemCoolTime > 0) {
+				&& itemCoolTime%10 > 0) {
 					rep->list[i].nLang += gIC->m_ItemList[itemNum].nLang;
 					rep->list[i].nMath += gIC->m_ItemList[itemNum].nMath;
 					rep->list[i].nArt += gIC->m_ItemList[itemNum].nArt;
@@ -743,17 +743,21 @@ int gGamePlayerContainer::meetGrade(int nRoomIndex,int subjectIndex ,int nInRoom
 				for (; j != m_userItemList[nRoomIndex][nInRoomIndex].end() ; ++j)	{
 					itemNum = j->first ;
 					itemCoolTime = j->second ; 
-					if(gICt->m_ItemList[itemNum].type == ITEM_NOCLASS &&
-						itemCoolTime > 0) {
-							itemCoolTime = 0;
+					if(gICt->m_ItemList[itemNum].type == ITEM_NOCLASS &&	//오늘휴강아이템적용
+						itemCoolTime%10 > 0) {
+							j->second = 0;
 							resultMIC = 0;
-							break;
 					}
-					if (gICt->m_ItemList[itemNum].type == ITEM_TOGETHERCLASS &&
-						itemCoolTime > 0
+					if (gICt->m_ItemList[itemNum].type == ITEM_TOGETHERCLASS &&	//대출아이템적용
+						itemCoolTime%10 > 0
 						)	{
-							m_nSubjectCount[nRoomIndex][nInRoomIndex]
-							[itemCoolTime / 100] += resultMIC;
+ 							int daechulIndex = itemCoolTime / 100;
+							for (int k = 0 ; k < MAXSUBJECT ; k++)	{
+								if (m_GamePlayer[nRoomIndex][daechulIndex].bySubIdx[k] == subjectIndex)	{
+									m_nSubjectCount[nRoomIndex][daechulIndex][k] += resultMIC;
+									break;
+								}
+							}
 					}
 				}
 				if(resultMIC == 0) break;
@@ -779,7 +783,7 @@ int gGamePlayerContainer::meetItemCalculator(int nRoomIndex,int nInRoomIndex,int
 	for (; i != m_userItemList[nRoomIndex][nInRoomIndex].end() ; ++i)	{
 		itemNum = i->first ;
 		itemCoolTime = i->second ; 
-		if (itemCoolTime > 0)	{
+		if (itemCoolTime%10 > 0)	{
 			if (gIC->m_ItemList[itemNum].nMulti > 0)	{
 				originalVal *= gIC->m_ItemList[itemNum].nMulti;
 			}
@@ -888,29 +892,42 @@ void gGamePlayerContainer::NextTurn(int nRoomIndex)
 /// 카드 private 아이템 함수
 //////////////////////////////////////////////////////////////////////////
 
-void gGamePlayerContainer::getItem(int nRoomIndex,int nInRoomIndex,int nItemID)
+void gGamePlayerContainer::pk_getItem_rep(int nRoomIndex,int nInRoomIndex,int nItemID)
 {
-	const int couplePriotiyHigh[3] = {23, 25 , 26};
-	const int soloPriotiyHigh[5] = {21, 22 , 24, 27, 28};
-
+	static const int couplePriotiyHigh[3] = {23, 25 , 26};
+	static const int soloPriotiyHigh[5] = {21, 22 , 24, 27, 28};
+	
+	int itemIndex;
 	for(int i = 0 ; i < MAXITEMNUM ; i++)
 	{
 		if(m_GamePlayer[nRoomIndex][nInRoomIndex].nItem[i] == -1) {
-			if (nItemID >= 0) m_GamePlayer[nRoomIndex][nInRoomIndex].nItem[i] = nItemID;
+			if (nItemID >= 0)	{
+				m_GamePlayer[nRoomIndex][nInRoomIndex].nItem[i] = nItemID;
+				itemIndex = nItemID;
+			}
 			else	{
-				if (rand() % 10 > 4 && isWhoCouple)	{	//높은 우선순위 확률 40%
-					if (m_GamePlayer[nRoomIndex][nInRoomIndex].nLove == -1)	//솔로?
-						m_GamePlayer[nRoomIndex][nInRoomIndex].nItem[i] = soloPriotiyHigh[ rand() % 5];
-					else
-						m_GamePlayer[nRoomIndex][nInRoomIndex].nItem[i] = couplePriotiyHigh[ rand() % 3];
-				}	else	{	// 노말 아이템
-					m_GamePlayer[nRoomIndex][nInRoomIndex].nItem[i] = rand() % (21);	// 노말아이템
+				if (rand() % 10 > 4 && isWhoCouple)	{	//높은 우선순위 확률 50%
+					if (m_GamePlayer[nRoomIndex][nInRoomIndex].nLove == -1)	{	//솔로?
+						itemIndex = soloPriotiyHigh[ rand() % 5];
+						m_GamePlayer[nRoomIndex][nInRoomIndex].nItem[i] = itemIndex;
+
+					}
+					else	{
+						itemIndex = couplePriotiyHigh[ rand() % 3];
+						m_GamePlayer[nRoomIndex][nInRoomIndex].nItem[i] = itemIndex;
+					}
+				}	else	{	// 노말 아이템	
+					itemIndex = rand() % (21);
+					m_GamePlayer[nRoomIndex][nInRoomIndex].nItem[i] = itemIndex;	// 노말아이템
 				}
 
 			}
 			break;
 		}
 	}
+	PK_GETITEM_REP rep;
+	rep.nItemID = itemIndex;
+	gMainWin::GetIF()->Send(PL_GETITEM_REP,sizeof(PK_GETITEM_REP),&rep,gRoomCore::GetIF()->FindPlayerszIDInTheRoom(nRoomIndex , nInRoomIndex));
 }
 
 void gGamePlayerContainer::pushItem(int nRoomIndex,int nInRoomIndex,int nItemID)
@@ -947,7 +964,7 @@ void gGamePlayerContainer::releaseItemGlobal(int nRoomIndex)
 					if(itemCoolTime %100 == 0)
 						j->second--;
 				}
-				else if(itemCoolTime > 0) 
+				else if(itemCoolTime%10 > 0) 
 					j->second--;
 
 				if (j->second == 0)	{	//CoolTime이 0인 item 항을 제거
@@ -1193,13 +1210,13 @@ ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, 
 		}
 		else if(gIC->m_ItemList[ask.nItemID].type == ITEM_TOGETHERCLASS)
 		{
-			gMainWin::GetIF()->LogWrite("type : ITEM_TOGETHERCLASS\n");
+			gMainWin::GetIF()->LogWrite("type : ITEM_TOGETHERCLASS\n");	//대출아이템획득
 			switch (gIC->m_ItemList[ask.nItemID].target) {
 				case TARGET_OTHER:
 					element.first = ask.nItemID ;
-					element.second = gIC->m_ItemList[ask.nItemID].nExistTurn + gRC->FindPlayerIndexInTheRoom(ask.szTarget,nRoomIndex)*100;
+					element.second = gIC->m_ItemList[ask.nItemID].nExistTurn + nInRoomIndex*100; //	A0B -> A : 아이템을 먹인 대상
 
-					m_userItemList[nRoomIndex][nInRoomIndex].push_back(element);
+					m_userItemList[nRoomIndex][gRC->FindPlayerIndexInTheRoom(ask.szTarget,nRoomIndex)].push_back(element);	//대상에게 아이템을 먹이는게 최적.
 					break;
 			}
 			return IUS_NEXTTURN;
@@ -1314,28 +1331,27 @@ ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, 
 						delete desList;						delete bInRoomIndex;
 					}
 					break;
-				case TARGET_OTHER:
-					//					bool barrInRoomIndex[ROOMMAXPLAYER];
-					//					putTargetTrueForOther(nRoomIndex,nInRoomIndex,barrInRoomIndex,TARGET_OTHER);
-					//					int narrDes[ROOMMAXPLAYER];
-					//					putTargetIntForOther(nRoomIndex,nInRoomIndex,narrDes,TARGET_OTHER,gIC->m_ItemList[ask.nItemID].nPos);
-					//					pk_warpliststart_rep(nRoomIndex,m_isGamePlayer[nRoomIndex],narrDes);
-
-					if (m_GamePlayer[nRoomIndex][nInRoomIndex].nLove == -1)
-						pk_warpstart_rep(nRoomIndex,nInRoomIndex,	gIC->m_ItemList[ask.nItemID].nPos	);
+				case TARGET_OTHER:	{//아이템선배의호출획득	
+					int targetIndex = gRC->FindPlayerIndexInTheRoom(ask.szTarget,nRoomIndex);
+					movePlayer(nRoomIndex , targetIndex , gIC->m_ItemList[ask.nItemID].nPos , MPS_WARP);
+					if (m_GamePlayer[nRoomIndex][targetIndex].nLove == -1)		{//솔로?	
+						pk_warpstart_rep(nRoomIndex, targetIndex,	gIC->m_ItemList[ask.nItemID].nPos	);
+					}
 					else	{
 						bool *bInRoomIndex = new bool[ROOMMAXPLAYER];
 						int *desList  = new int[ROOMMAXPLAYER];
 						memset(bInRoomIndex , 0 , sizeof(bInRoomIndex));
 						memset(desList , 0 , sizeof(desList));
-						int partnerIndex  = m_favor[nRoomIndex][nInRoomIndex].lvTargetIndex;
-						bInRoomIndex[nInRoomIndex] = true;	bInRoomIndex[partnerIndex] = true;
-						desList[nInRoomIndex] = gIC->m_ItemList[ask.nItemID].nPos;	desList[partnerIndex] = gIC->m_ItemList[ask.nItemID].nPos;
+						int partnerIndex  = m_favor[nRoomIndex][targetIndex].lvTargetIndex;
+						movePlayer(nRoomIndex , partnerIndex , gIC->m_ItemList[ask.nItemID].nPos , MPS_WARP);
+						bInRoomIndex[targetIndex] = true;	bInRoomIndex[partnerIndex] = true;
+						desList[targetIndex] = gIC->m_ItemList[ask.nItemID].nPos;	desList[partnerIndex] = gIC->m_ItemList[ask.nItemID].nPos;
 
 						pk_warpliststart_rep(nRoomIndex , bInRoomIndex ,desList);
 
 						delete desList;						delete bInRoomIndex;
 					}
+				}
 					break;
 				case TARGET_ALLEXCEPTME :
 					bool *bInRoomIndex = new bool[ROOMMAXPLAYER];
@@ -1413,7 +1429,7 @@ ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, 
 							char *szID_me = gRC->FindPlayerszIDInTheRoom(playerIndex_a , nRoomIndex) , *szID_partner = gRC->FindPlayerszIDInTheRoom(playerIndex_b , nRoomIndex);
 							pk_becouple_rep(nRoomIndex, gPC->GetPlayerFromID(szID_me) ,  gPC->GetPlayerFromID(szID_partner) , false);
 						}	else	{
-							pk_nextturn_rep(nRoomIndex);
+//							pk_nextturn_rep(nRoomIndex);
 						}
 					}
 
@@ -1507,7 +1523,7 @@ void gGamePlayerContainer::pk_warpend_ask (PK_DEFAULT *pk, SOCKET sock)
 	else
 		setState(GS_COUPLESTAND , m_GamePlayer[nRoomIndex][nInRoomIndex].szID);
 
-	if(m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nPos == ask.nDestPos) {
+	if(1)	{	//남을 움직이게 할 수도 있다. 왼쪽 조건을 제거함.	//if(m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nPos == ask.nDestPos) {
 
 #ifdef CRITICAL_SECTION_GOGO
 		EnterCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
@@ -1523,7 +1539,9 @@ void gGamePlayerContainer::pk_warpend_ask (PK_DEFAULT *pk, SOCKET sock)
 				pk_gameplayerinfo_rep(nRoomIndex);
 				return;
 			}
-			TileProcess(nRoomIndex , m_nTurn[nRoomIndex] , ask.nDestPos);
+			if (m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nPos == ask.nDestPos && ask.nDestPos != 55) 	//자기턴에 워프된 경우. & po하드코딩wer
+				TileProcess(nRoomIndex , m_nTurn[nRoomIndex] , ask.nDestPos);
+			else pk_nextturn_rep(nRoomIndex);
 		}
 #ifdef CRITICAL_SECTION_GOGO
 		LeaveCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
@@ -1582,8 +1600,9 @@ void gGamePlayerContainer::pk_warplistend_ask (PK_DEFAULT *pk, SOCKET sock)
 
 	if(isbSynAllTrue(nRoomIndex)) {	// 모든 워프가 끝나면,,, 버스 사라짐;;
 		PushbSynAllPlayer(nRoomIndex,false); 
-		if (ask.nDestPos[nInRoomIndex] != -1 && m_favor[nRoomIndex][nInRoomIndex].lvTargetIndex != -1 )	{	//커플이동입네
-			if (ask.nDestPos [ m_favor[nRoomIndex][nInRoomIndex].lvTargetIndex ] != -1 && ask.nDestPos[nInRoomIndex] == ask.nDestPos [ m_favor[nRoomIndex][nInRoomIndex].lvTargetIndex ])	{
+		if (ask.nDestPos[ m_nTurn[nRoomIndex] ] != -1 && m_favor[nRoomIndex][ m_nTurn[nRoomIndex] ].lvTargetIndex != -1 )	{	//커플이동입네
+			//커플의 위치
+			if (ask.nDestPos [ m_favor[nRoomIndex][ m_nTurn[nRoomIndex] ].lvTargetIndex ] != -1 && ask.nDestPos[ m_nTurn[nRoomIndex] ] == ask.nDestPos [ m_favor[nRoomIndex][ m_nTurn[nRoomIndex] ].lvTargetIndex ])	{
 				TileProcess(nRoomIndex ,nInRoomIndex ,ask.nDestPos[nInRoomIndex]);
 			}
 		}	else	{
@@ -1812,6 +1831,26 @@ void gGamePlayerContainer::pk_infochangeTile_rep(int nRoomIndex,int nInRoomIndex
 		rep.info[partnerIndex].nArt = 0;
 		rep.info[partnerIndex].nStamina = stamina;
 		rep.info[partnerIndex].nGrade = accomplishment;
+	}
+
+	//대출아이템적용
+	vector< pair<int,int> > :: iterator j = m_userItemList[nRoomIndex][nInRoomIndex].begin();
+
+	int itemCoolTime , itemNum;
+
+	for (; j != m_userItemList[nRoomIndex][nInRoomIndex].end() ; ++j)	{
+		itemNum = j->first ;
+		itemCoolTime = j->second ; 
+		if (gItemContainer::GetIF()->m_ItemList[itemNum].type == ITEM_TOGETHERCLASS &&	//대출아이템적용
+			itemCoolTime%10 > 0
+			)	{
+				rep.info[itemCoolTime / 100].nLang = 0;
+				rep.info[itemCoolTime / 100].nMath = 0;
+				rep.info[itemCoolTime / 100].nArt = 0;
+				rep.info[itemCoolTime / 100].nStamina = stamina;
+				rep.info[itemCoolTime / 100].nGrade = accomplishment;
+				strcpy(rep.info[itemCoolTime / 100].szID,m_GamePlayer[nRoomIndex][itemCoolTime / 100].szID);
+		}
 	}
 
 	PushbSynAllPlayer(nRoomIndex,false);
@@ -2261,9 +2300,9 @@ void	gGamePlayerContainer::TileProcess(int nRoomIndex, int nInRoomIndex, int nDe
 	}
 	else if(gTC->m_tileMap[nDestPos].tileType==TY_ITEM) {
 		gMainWin::GetIF()->LogWrite("TY_ITEM\n");
-		getItem(nRoomIndex,m_nTurn[nRoomIndex]);
+		pk_getItem_rep(nRoomIndex,m_nTurn[nRoomIndex]);
 		if (m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nLove != -1)		//커플
-			getItem(nRoomIndex,m_favor[nRoomIndex][m_nTurn[nRoomIndex]].lvTargetIndex);
+			pk_getItem_rep(nRoomIndex,m_favor[nRoomIndex][m_nTurn[nRoomIndex]].lvTargetIndex);
 		pk_gameplayerinfo_rep(nRoomIndex);
 		pk_nextturn_rep(nRoomIndex);
 	}

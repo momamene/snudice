@@ -120,6 +120,10 @@ enum ePROTOCOL
 
 	PL_BUSMOVESTARTCOUPLE_REP,	// 버스타고 이동. 커플모드
 	PL_BUSMOVEENDCOUPLE_ASK,
+
+	PL_GETPLAYERINFO_ASK,
+	PL_GETPLAYERINFO_REP,
+	PL_GETITEM_REP,
 };
 
 enum eCOREMODE
@@ -718,5 +722,25 @@ struct PK_BECOUPLEEND_ASK
 	char		szID[IDLENGTH];
 };
 
+struct PK_GETPLAYERINFO_ASK
+{
+	char  szID[IDLENGTH];     
+	char  szTarget[IDLENGTH];    // 원하는 놈의 정보
+};
+
+struct PK_GETPLAYERINFO_REP
+{
+	char  szTarget[IDLENGTH];    // 원하는 놈의 정보
+	int   nWin;
+	int   nLose;
+};
+
+struct PK_GETITEM_REP
+{
+	int   nItemID;
+};
+
+
 #define COUPLE_DEBUFFTURN      5
 #define COUPLE_MINUS_STAT      -5
+

@@ -48,7 +48,7 @@ public:
 	
 	void			pk_friendadd_ask(PK_DEFAULT *pk, SOCKET sock);
 	void			pk_frienddelete_ask(PK_DEFAULT *pk, SOCKET sock);
-	
+	void			pk_getplayerinfo_ask(PK_DEFAULT *pk, SOCKET sock);
 	
 	bool			isExistedPlayer(char* id);
 	bool			FindSocketFromID(char* id, SOCKET* getSock);
