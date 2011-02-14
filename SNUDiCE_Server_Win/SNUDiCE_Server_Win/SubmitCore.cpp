@@ -356,6 +356,9 @@ void gSubmitCore::pk_submitcount_ask(PK_DEFAULT *pk,SOCKET sock)
 		}
 
 	}
+	PK_SUBMIT_REP rep;
+	memcpy(rep.subject,m_submitSubject[nRoomIndex],sizeof(BYTE)*CLASSNUM*CLASSSEAT);
+	gPC->SendSelect(PL_SUBMIT_REP,sizeof(PK_SUBMIT_REP),&rep,ECM_SUBMIT,nRoomIndex);
 	
 	gGamePlayerContainer::GetIF()->pk_maingamestart_rep(nRoomIndex);
 	

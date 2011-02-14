@@ -59,8 +59,8 @@ bool gPlayerContainer::isExistedPlayer(char* id)
 		it != m_PlayerList.end(); it++)
 	{
 		temp = *it;
-
-		if(strcmp(temp->szID, id) == 0)
+		
+		if(stricmp(temp->szID, id) == 0)
 			return true;
 	}
 	return false;
@@ -430,3 +430,29 @@ void gPlayerContainer::pk_frienddelete_ask(PK_DEFAULT *pk, SOCKET sock)
 
 }
 
+void gPlayerContainer::pk_getplayerinfo_ask(PK_DEFAULT *pk, SOCKET sock)
+{
+	PK_GETPLAYERINFO_ASK	ask;
+
+	// for print
+	SOCKADDR_IN			clientAddr;
+	int					addrLen;
+	char				buf [1024];
+
+	addrLen = sizeof(clientAddr);
+	getpeername(sock, (SOCKADDR*)&clientAddr, &addrLen);
+
+	ask = *((PK_GETPLAYERINFO_ASK*)pk->strPacket);
+
+	sprintf(buf,"[PK_GETPLAYERINFO_ASK] %s\tMYID : %s\t TARGETID : %s\n", inet_ntoa(clientAddr.sin_addr), ask.szID, ask.szTarget);
+	gMainWin::GetIF()->LogWrite(buf);
+
+	PK_GETPLAYERINFO_REP	rep;
+
+	strcpy(rep.szTarget , ask.szTarget);
+	rep.nLose = gMysql::GetIF()->getScoreCount(ask.szTarget , 0);
+	rep.nWin = gMysql::GetIF()->getScoreCount(ask.szTarget , true);
+	
+	gMainWin::GetIF()->Send(PL_GETPLAYERINFO_REP , sizeof(PK_GETPLAYERINFO_REP) , &rep , ask.szID);
+	
+}

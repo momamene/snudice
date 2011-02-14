@@ -189,7 +189,7 @@ private:
 
 	int					staminaConvert(int nRoomIndex,int nInRoomIndex,int nPlusMinus);
 	int					WhoIsRankOne(int nRoomIndex);
-	void				getItem(int nRoomIndex, int nInRoomIndex,int nItemID = -1);
+	void				pk_getItem_rep(int nRoomIndex, int nInRoomIndex,int nItemID = -1);
 	void				pushItem(int nRoomIndex, int nInRoomIndex,int nItemID);
 	void				releaseItemGlobal(int nRoomIndex);
 	ItemUseState		itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, int nInRoomIndex, int itemIndex);

@@ -186,10 +186,6 @@
 				RelativePath=".\reference.h"
 				>
 			</File>
-			<File
-				RelativePath=".\SubmitCore.cpp"
-				>
-			</File>
 			<Filter
 				Name="Container"
 				>
@@ -243,6 +239,10 @@
 				</File>
 				<File
 					RelativePath=".\RoomCore.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\SubmitCore.cpp"
 					>
 				</File>
 			</Filter>
