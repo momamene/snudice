@@ -17,11 +17,8 @@
 <title>SNUDice Web Page에 오신 것을 환영합니다.</title>
 </head>
 <body>	
-	<div class="bodyWrapper">
-		<div class="backgroundUp"></div>
-		<div class="header">					
-			<div id="headerImage"></div>				
-		</div>
+	<div class="bodyWrapper">		
+		<jsp:include page="/reuseModule/headerModule.jsp"/>
 		
 		<div class="container">		
 			<!-- menu -->

@@ -15,10 +15,7 @@
 </head>
 <body> 
 	<div class="bodyWrapper"> 
-		<div class="backgroundUp"></div>
-		<div class="header">
-			<div class="headerImage"></div>
-		</div>
+		<jsp:include page="/reuseModule/headerModule.jsp"/>
 	 
 		<div class="container">
 			<div class="left"></div>
