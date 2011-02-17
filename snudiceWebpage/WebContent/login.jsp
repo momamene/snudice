@@ -10,11 +10,13 @@
 <link rel="stylesheet" type="text/css" href="${root}/css/loginPageStyle.css">
 <script type="text/javascript" src="${root}/javascript/util.js"></script>
 <script type="text/javascript" src="${root}/javascript/md5.js"></script> 
-<script type="text/javascript" src="${root}/javascript/login.js"></script>
+<script type="text/javascript"> 
+<jsp:include page="/javascript/login.jsp"/>
+</script>
 
 <title>SNUDice Web Page에 오신 것을 환영합니다.</title>
 </head>
-<body>
+<body>	
 	<div class="bodyWrapper">
 		<div class="backgroundUp"></div>
 		<div class="header">					
@@ -58,7 +60,7 @@
 						<div id="menu4DropDown" class="menuDropDownWrapper invisible">
 							<div id="freeBoard">
 								<a href="${root}/board/articleList.do?boardName=${freeBoardName}&currPage=0">${freeBoardAliasName}</a>
-							</div>												
+							</div>																		
 						</div>
 					</div>
 					<div id="menu5">
@@ -166,7 +168,7 @@
 						<a href="${root}/setupFile/SNUDiCE_setup.exe">게임 다운로드</a>										
 					</div>
 				</div>			
-				<div class="center">	
+				<div id="centerContent" class="center">	
 					<div id="centerL">
 						<div id="centerLU">
 							<span class="title">${noticeBoardAliasName}</span>

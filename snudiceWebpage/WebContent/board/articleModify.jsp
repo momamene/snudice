@@ -8,21 +8,8 @@
 <link rel="shortcut icon" href="${root}/favicon.ico" type="image/x-icon"/>
 <link rel="stylesheet" type="text/css" href="${root}/css/boardStyle.css"/>
 <script type="text/javascript">
-window.onload = init;
-
-function init()
-{
-	window.onresize = function()
-	{
-		windowAutoResize(1024);
-	};
-	
-	//event handler 를 추가한다.
-	//header image 클릭시
-	var headerImage = document.getElementById("articleModifyHeaderImage");
-	headerImage.onclick = function() { window.location = "${root}";};
-}
-</script>
+<jsp:include page="/javascript/header.jsp"/>
+</script> 
 
 <title>글 수정하기</title>
 </head>
@@ -30,7 +17,7 @@ function init()
 	<div class="bodyWrapper"> 
 		<div class="backgroundUp"></div>
 		<div class="header">
-			<div id="articleModifyHeaderImage" class="headerImage"></div>
+			<div class="headerImage"></div>
 		</div>
 	 
 		<div class="container">
