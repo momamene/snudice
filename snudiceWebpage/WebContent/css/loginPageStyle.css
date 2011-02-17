@@ -112,7 +112,7 @@ hr
 .bodyWrapper { background-color : white; }
 
 /*----------------header-----------*/
-#headerImage, #gameIntroHeaderImage
+.headerImage
 {
 	background-image : url('/snudiceWebpage/image/mainpage/title.png');
 	background-repeat : no-repeat;	
