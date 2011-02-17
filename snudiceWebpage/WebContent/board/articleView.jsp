@@ -156,10 +156,7 @@ function replyComplete()
         	<div class="right"></div>
 		</div>	
 			
-		<div class="backgroundDown"></div>
-		<div class="footer">
-			${footerMsg}
-		</div>
+		<jsp:include page="/reuseModule/footerModule.jsp"/>
 		
 		<!-- 댓글을 썼다면 자신이 쓴 댓글을 볼 수 있게 focus를 댓글 쓰는 폼에 맞춘다 -->
 		<c:if test="${param.replySubmit == 'yes' }">

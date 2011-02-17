@@ -147,10 +147,7 @@
 			<div class="right"></div>
 		</div>		
 	
-		<div class="backgroundDown"></div>
-		<div class="footer">
-			${footerMsg}
-		</div>	
+		<jsp:include page="/reuseModule/footerModule.jsp"/>
 	</div>	
 </body>
 </html>
