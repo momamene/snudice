@@ -1,5 +1,6 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
 window.onload = initLogin;
-var root = "/snudiceWebpage";
 
 //event handler 추가	
 function initLogin(){	
@@ -177,7 +178,7 @@ function joinSubmitFunc()
 	joinMsg.innerHTML = "가입처리중입니다...";
 	joinSubmit.disabled = true;	
 	
-	var url = root+"/join.ajax";	
+	var url = "${root}/join.ajax";	
 	var method = "POST";
 	var param = "joinId="+encodeURIComponent(joinId.value);
 	param += "&joinPw="+encodeURIComponent(MD5(joinPw.value));	
@@ -212,7 +213,7 @@ function loginFunc()
 
 	loginMsg.innerHTML = "로그인 중입니다..";
 	
-	var url = root+"/login.ajax";	
+	var url = "${root}/login.ajax";	
 	var method = "post";
 	var param = "userId="+encodeURIComponent(userId.value);	
 	param += "&password="+encodeURIComponent(MD5(password.value));	
@@ -231,7 +232,7 @@ function guestLoginFunc()
 	var loginMsg = document.getElementById("loginMsg");	
 	loginMsg.innerHTML = "로그인 중입니다..";
 	
-	var url = root+"/login.ajax";	
+	var url = "${root}/login.ajax";	
 	var method = "POST";
 	var param = "userId=guest";
 	param += "&password="+MD5("guest");	

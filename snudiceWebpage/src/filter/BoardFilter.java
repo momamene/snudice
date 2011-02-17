@@ -13,6 +13,8 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import utility.Util;
+
 import beans.Auth;
 
 import dbaccess.DB;
@@ -47,7 +49,7 @@ public class BoardFilter implements Filter {
 		String role = (String)session.getAttribute("role");
 		String boardName = req.getParameter("boardName");		
 		
-		DB db = DB.getInstance();		
+		DB db = DB.getInstance();			
 		
 		//게시판 alias name 설정
 		String boardAliasName = db.dbBoard.getBoardAliasName(boardName);

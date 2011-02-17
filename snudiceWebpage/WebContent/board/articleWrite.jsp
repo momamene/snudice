@@ -8,28 +8,16 @@
 <link rel="shortcut icon" href="${root}/favicon.ico" type="image/x-icon"/>
 <link rel="stylesheet" type="text/css" href="${root}/css/boardStyle.css"/>
 <script type="text/javascript">
-window.onload = init;
+<jsp:include page="/javascript/header.jsp"/>
+</script> 
 
-function init()
-{
-	window.onresize = function()
-	{
-		windowAutoResize(1024);
-	};
-	
-	//event handler 를 추가한다.
-	//header image 클릭시
-	var headerImage = document.getElementById("articleWriteHeaderImage");
-	headerImage.onclick = function() { window.location = "${root}"; };
-}
-</script>
 <title>글 쓰기</title>
 </head>
 <body>    
 	<div class="bodyWrapper">
 		<div class="backgroundUp"></div>
 		<div class="header">
-			<div id="articleWriteHeaderImage" class="headerImage"></div>
+			<div class="headerImage"></div>
 		</div>
 		
 		<div class="container">
