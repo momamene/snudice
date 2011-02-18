@@ -1,6 +1,8 @@
 package dbaccess;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import beans.User;
 import beans.UserRole;
@@ -33,7 +35,7 @@ public class DBAccount {
 	
 	//user id, password를 검사한다.
 	public boolean isValidUser(String userId,String password) {
-		User user = new User(userId,password,null);
+		User user = new User(userId,password,null,null,null,null);
 		
 		Integer userCount = null;
 		try {			
@@ -43,47 +45,90 @@ public class DBAccount {
 		{			
 			e.printStackTrace();
 		}		
-		if(userCount==0) //count가 0이면
+		if(userCount==0) 
 			return false;
 		return true;
 	}	
 	
-	//user가 존재하는지를 검사한다.
+	//user가 존재하는지를 검사한다. (가입된 사람, 가입대기중인 사람 모두 체크)
 	public boolean isExistingUser(String userId) {		
 		Integer userCount = null;
+		Integer userCount2 = null;
 		try {			
 			userCount = (Integer)sqlMap.queryForObject("countUser",userId);	
+			userCount2 = (Integer)sqlMap.queryForObject("countUser2",userId);
 		}
 		catch(Exception e)
 		{			
 			e.printStackTrace();
 		}		
 		
-		if(userCount==0) //count가 0이면
+		if(userCount==0 && userCount2==0) 
 			return false;
 		return true;
-	}
+	}	
 	
-	//email이 존재하는지를 검사한다.
-	public boolean isExistingEmail(String email) {		
-		Integer emailCount = null;
+	//nickname이 존재하는지를 검사한다. (가입된 사람, 가입대기중인 사람 모두 체크)
+	public boolean isExistingNickname(String nickname) {
+		Integer nicknameCount = null;
+		Integer nicknameCount2 = null;
 		try {			
-			emailCount = (Integer)sqlMap.queryForObject("countEmail",email);	
+			nicknameCount = (Integer)sqlMap.queryForObject("countNickname",nickname);
+			nicknameCount2 = (Integer)sqlMap.queryForObject("countNickname2",nickname);
 		}
 		catch(Exception e)
 		{			
 			e.printStackTrace();
 		}		
 		
-		if(emailCount==0) //count가 0이면
+		if(nicknameCount==0 && nicknameCount2==0) 
 			return false;
 		return true;
 	}
 
+	//새로운 user를 가입 대기상태로 만든다. 
+	public void insertNotActivatedUser(String userId, String password,String email,String nickname,String comment,String activationCode,String role) {
+		User newUser = new User(userId,password,email,nickname,comment,activationCode,role);
+		try {
+			sqlMap.insert("insertNotActivatedUser",newUser);			
+		} catch (Exception e) {			
+			e.printStackTrace();
+		}
+	}
+	
+	//가입 대기 상태인 user의 정보를 얻어온다.
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public User getNotActivatedUser(String userId,String activationCode) {
+		List<User> result = null;
+		try {	
+			Map m = new HashMap();
+			m.put("userId", userId);
+			m.put("activationCode",activationCode);
+			
+			result = (List<User>)sqlMap.queryForList("getNotActivatedUser",m);
+		} catch (Exception e) {			
+			e.printStackTrace();
+		}
+		
+		if(result.size()==0)		
+			throw new RuntimeException("getNotActivatedUser():잘못된 유저정보");
+		
+		return result.get(0);
+	}
+	
+	//가입 대기상태인 유저를 삭제한다.
+	public void deleteNotActivatedUser(String userId) {
+		try {
+			sqlMap.delete("deleteNotActivatedUser",userId);			
+		} catch (Exception e) {			
+			e.printStackTrace();
+		}
+	}
+	
 	//새로운 user를 추가한다.
-	public void insertNewUser(String userId, String password,String email,String role) {	
-		User newUser = new User(userId,password,email);
-		UserRole newUserRole = new UserRole(userId,role);
+	public void insertNewUser(User newUser) {	
+		String userId = newUser.getUserId();
+		UserRole newUserRole = new UserRole(userId,newUser.getRole());
 		try {
 			sqlMap.insert("insertUser",newUser);
 			sqlMap.insert("insertUserRole",newUserRole);

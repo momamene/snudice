@@ -93,8 +93,20 @@
 								<td><input id="joinPwConfirm" type="password" name="pwConfirm"/></td>
 							</tr>
 							<tr>
-								<td class="label">email</td>
+								<td class="label">email<br/>
+									<span class="noticeMsg">(인증시 사용됨)</span>								
+								</td>
 								<td><input id="joinEmail" type="text" name="email"/></td>
+							</tr>
+							<tr>
+								<td class="label">별명<br/>
+									<span class="noticeMsg">(게임상에 보여짐)</span>
+								</td>
+								<td><input id="joinNickname" type="text" name="nickname"/></td>
+							</tr>
+							<tr>
+								<td class="label">자기소개</td>
+								<td><input id="joinComment" type="text" name="comment"/></td>
 							</tr>
 						</table>								
 					

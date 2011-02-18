@@ -457,11 +457,11 @@ hr
 }
 #joinFormTable
 {	
-	margin-top : 25px;
+	margin-top : 15px;
 }
 
 #joinFormTable td.label { padding-right : 20px; }
-#joinFormTable td { padding-bottom : 10px; }
+#joinFormTable td { padding-bottom : 4px; }
 #joinFormTable input 
 { 
 	height : 20px;
@@ -478,6 +478,12 @@ hr
 	color : red;
 	height : 30px; 
 	margin-bottom : 5px;
+}
+
+span.noticeMsg
+{
+	color : red;
+	font-weight : bold;
 }
 
 /*-----------메인 섹션------------*/

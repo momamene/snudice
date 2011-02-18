@@ -11,22 +11,16 @@
 <script type="text/javascript" src="${root}/javascript/util.js"></script>
 <script type="text/javascript" src="${root}/javascript/md5.js"></script>
 <script type="text/javascript">
+<jsp:include page="/javascript/header.jsp"/>
+</script>  
+<script type="text/javascript">
 
+<!-- 앞에서 include 한 내용의 일부는 덮어써진다. -->
 window.onload = init;
 
 function init()
-{
-	window.onresize = function()
-	{
-		windowAutoResize(1024);
-	};	
-	
-	//header image 클릭시
-	var secureLoginFormHeaderImage = document.getElementById("secureLoginFormHeaderImage");
-	secureLoginFormHeaderImage.onclick = function() 
-	{ 
-		window.location = "${root}";		
-	};
+{	
+	initHeader();
 	
 	//로그인 버튼
 	var loginButton = document.getElementById("loginButton");
@@ -103,10 +97,7 @@ function mouseOutFunc()
 </head>
 <body>
 	<div class="bodyWrapper">
-		<div class="backgroundUp"></div>
-		<div class="header">
-			<div id="secureLoginFormHeaderImage" class="headerImage"></div>			
-		</div>
+		<jsp:include page="/reuseModule/headerModule.jsp"/>
 		
 		<div class="container">	
 			<div class="left"></div>
@@ -133,18 +124,12 @@ function mouseOutFunc()
 						</c:if>
 					</div>					
 				</div>				
-				<span id="secureloginNotice" class="noticeMsg">
-					*주의 : 영문,숫자 이외의 문자를 포함한 id는 메인 페이지에서 로그인해야 합니다.
-				</span>
 			</div>
 			
 			<div class="right"></div>
 		</div>
 		
-		<div class="backgroundDown"></div>
-		<div class="footer">			
-			${footerMsg}
-		</div>
+		<jsp:include page="/reuseModule/footerModule.jsp"/>
 	
 	</div>
 </body>

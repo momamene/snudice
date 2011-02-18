@@ -3,6 +3,7 @@ package utility;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.Random;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -70,5 +71,24 @@ public class Util {
 	public static Object getServletContextAttr(HttpServletRequest request,String attrName) {
 		ServletContext sc = request.getServletContext();
 		return sc.getAttribute(attrName);
+	}
+	
+	//String의 byte수를 계산한다. 아스키코드 값이 128이상인 것은 2바이트로 취급한다.
+	public static int getByteCnt(String s) {
+		int result = 0;
+		for(int i=0;i<s.length();i++)
+		{
+			if(s.charAt(i)<128)
+				result += 1;
+			else
+				result += 2;
+		}
+		return result;
+	}
+
+	//email 인증에 사용할 activation code를 만든다.
+	public static String getActivationCode() {
+		Random r = new Random(System.currentTimeMillis());		
+		return Encrypt.md5(Long.toString(r.nextLong()));		
 	}
 }
