@@ -6,9 +6,51 @@
 		WHERE userId=#userId:VARCHAR# and password=#password:VARCHAR# 
 	</select>
 	
-	<select id='countUser' parameterClass='String' resultClass='int'>SELECT count(*) FROM user where userId=#userId:VARCHAR#</select>
-	<select id='countEmail' parameterClass='String' resultClass='int'>SELECT count(*) FROM user where email=#email:VARCHAR#</select>	
-	<insert id="insertUser" parameterClass="beans.User">INSERT INTO user (userId,password,email) VALUES(#userId:VARCHAR#,#password:VARCHAR#,#email:VARCHAR#)</insert>
+	<select id='countUser' parameterClass='String' resultClass='int'>
+		SELECT COUNT(*) 
+		FROM user 
+		WHERE userId=#userId:VARCHAR#
+	</select>
+	
+	<select id='countUser2' parameterClass='String' resultClass='int'>
+		SELECT COUNT(*) 
+		FROM join_wait 
+		WHERE userId=#userId:VARCHAR#
+	</select>	
+	
+	<select id='countNickname' parameterClass='String' resultClass='int'>
+		SELECT COUNT(*) 
+		FROM user 
+		WHERE nickname=#nickname:VARCHAR#
+	</select>
+	
+	<select id='countNickname2' parameterClass='String' resultClass='int'>
+		SELECT COUNT(*) 
+		FROM join_wait 
+		WHERE nickname=#nickname:VARCHAR#
+	</select>
+	
+	<insert id="insertNotActivatedUser" parameterClass="beans.User">
+		INSERT INTO join_wait (userId,password,email,nickname,comment,activationCode,role) 
+		VALUES(#userId:VARCHAR#,#password:VARCHAR#,#email:VARCHAR#,#nickname:VARBINARY#,#comment:VARCHAR#,#activationCode:VARCHAR#,#role:VARCHAR#)
+	</insert>
+	
+	<select id="getNotActivatedUser" parameterClass="HashMap" resultClass="beans.User">
+		SELECT *
+		FROM join_wait
+		WHERE userId=#userId:VARCHAR# AND activationCode=#activationCode:VARCHAR#
+	</select>
+	
+	<delete id="deleteNotActivatedUser" parameterClass="String">
+		DELETE FROM join_wait
+		WHERE userId=#userId:VARCHAR#
+	</delete>
+		
+	<insert id="insertUser" parameterClass="beans.User">
+		INSERT INTO user (userId,password,email,nickname,comment) 
+		VALUES(#userId:VARCHAR#,#password:VARCHAR#,#email:VARCHAR#,#nickname:VARBINARY#,#comment:VARCHAR#)
+	</insert>
+	
 	<insert id="insertUserRole" parameterClass="beans.UserRole">
 		INSERT INTO user_roles (userId,role)
 		VALUES(#userId:VARCHAR#,#role:VARCHAR#)

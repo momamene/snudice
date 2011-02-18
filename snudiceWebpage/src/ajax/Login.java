@@ -40,9 +40,7 @@ public class Login extends HttpServlet {
 		
 		//길면 자른다.
 		if(userId.length()>Const.userIdMaxLen)
-			userId = userId.substring(0, Const.userIdMaxLen);
-		if(password.length()>Const.passwordMaxLen)
-			password = password.substring(0,Const.passwordMaxLen);
+			userId = userId.substring(0, Const.userIdMaxLen);		
 		
 		ServletOutputStream os = response.getOutputStream();
 		

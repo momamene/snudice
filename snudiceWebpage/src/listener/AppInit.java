@@ -25,11 +25,12 @@ public class AppInit implements ServletContextListener {
     public void contextInitialized(ServletContextEvent event) {
     	//root 경로를 DD에 적힌 초기화 파라매터를 읽어 속성으로 설정한다. 
         ServletContext sc = event.getServletContext();
+        String domain = sc.getInitParameter("domain");
         String root = sc.getInitParameter("root");
-        sc.setAttribute("root", root);
+        String footerMsg = sc.getInitParameter("footerMsg");        
         
-        //footer에 들어갈 메세지 설정
-        String footerMsg = sc.getInitParameter("footerMsg");
+        sc.setAttribute("domain", domain);    
+        sc.setAttribute("root", root);        
         sc.setAttribute("footerMsg", footerMsg);       
     }
 

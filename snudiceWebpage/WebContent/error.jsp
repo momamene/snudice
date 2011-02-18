@@ -4,50 +4,30 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" type="text/css" href="${root}/css/loginPageStyle.css">
+<link rel="stylesheet" type="text/css" href="${root}/css/errorPage.css">
 <script type="text/javascript">
-	
-window.onload = init;
-
-function init()
-{
-	window.onresize = function()
-	{
-		windowAutoResize(1024);
-	};
-	
-	var errorHeaderImage = document.getElementById("errorHeaderImage");
-	errorHeaderImage.onclick = function()
-	{
-		window.location = "${root}";
-	};
-}
-	
-</script>
+<jsp:include page="/javascript/header.jsp"/>
+</script>  
 
 <title>에러!!!</title>
 
 </head>
 <body>
 	<div class="bodyWrapper centerOfAllWidth">
-		<div class="backgroundUp"></div>
-		<div class="header">
-			<div id="errorHeaderImage"></div>
-		</div>
+		<jsp:include page="/reuseModule/headerModule.jsp"/>
 		
 		<div class="container">
 			<div class="left"></div>
 			
-			<div class="center centerAlign">
-			에러입니다!!!
+			<div class="center">
+				<br/><br/><br/><br/>				
+				에러입니다!!!
 			</div>
 			
 			<div class="right"></div>
 		</div>
 		
-		<div class="footer centerAlign">
-			<hr class="lightColor"/>${footerMsg}
-		</div>
+		<jsp:include page="/reuseModule/footerModule.jsp"/>
 	</div>
 </body>
 </html>

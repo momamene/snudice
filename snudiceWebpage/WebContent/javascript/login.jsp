@@ -114,11 +114,15 @@ function joinCloseFunc()
 	var joinPwConfirm = document.getElementById("joinPwConfirm");
 	var joinEmail = document.getElementById("joinEmail");
 	var joinMsg = document.getElementById("joinMsg");
+	var joinNickname = document.getElementById("joinNickname");
+	var joinComment = document.getElementById("joinComment");
 
 	joinId.value = "";
 	joinPw.value = "";
 	joinPwConfirm.value = "";
 	joinEmail.value = "";
+	joinNickname.value = "";
+	joinComment.value = "";
 	joinMsg.innerHTML = "";
 	
 	joinFormWrapper.className = "display_none";
@@ -131,6 +135,8 @@ function joinSubmitFunc()
 	var joinPw = document.getElementById("joinPw");
 	var joinPwConfirm = document.getElementById("joinPwConfirm");
 	var joinEmail = document.getElementById("joinEmail");
+	var joinNickname = document.getElementById("joinNickname");
+	var joinComment = document.getElementById("joinComment");
 	var joinSubmit = document.getElementById("joinSubmit");	
 
 	var joinMsg = document.getElementById("joinMsg");
@@ -168,12 +174,33 @@ function joinSubmitFunc()
 		return;
 	}		
 
+	if(!regexMatch(joinId.value,"([a-z]|[0-9])+"))
+	{
+		joinMsg.innerHTML = "id는 영문 소문자와 숫자만 가능합니다.";
+		joinId.focus();
+		return;
+	}	
+
 	if(!regexMatch(joinPw.value,"([a-z]|[A-Z]|[0-9])+"))
 	{
 		joinMsg.innerHTML = "암호는 영문 알파벳과 숫자만 가능합니다.";
 		joinPw.focus();
 		return;
 	}	
+	
+	if(joinNickname.value=="")
+	{
+		joinMsg.innerHTML = "별명을 입력해주세요";
+		joinNickname.focus();
+		return;
+	}
+	
+	if(joinComment.value=="")
+	{
+		joinMsg.innerHTML = "자기소개를 입력해주세요";
+		joinComment.focus();
+		return;
+	}
 	
 	joinMsg.innerHTML = "가입처리중입니다...";
 	joinSubmit.disabled = true;	
@@ -183,8 +210,10 @@ function joinSubmitFunc()
 	var param = "joinId="+encodeURIComponent(joinId.value);
 	param += "&joinPw="+encodeURIComponent(MD5(joinPw.value));	
 	param += "&joinEmail="+encodeURIComponent(joinEmail.value);
+	param += "&joinNickname="+encodeURIComponent(joinNickname.value);
+	param += "&joinComment="+encodeURIComponent(joinComment.value);	
 	var callback = joinFormRefresh;
-	var async = false;
+	var async = true;
 	
 	sendRequest(url,method,param,callback,async);		
 }
@@ -287,13 +316,7 @@ function joinFormRefresh()
 				joinMsg.innerHTML = "password는 공백문자를 포함할 수 없습니다.";
 				joinPw.focus();
 				joinPw.select();
-			}	
-			else if(request.responseText == "pwTooLong")
-			{
-				joinMsg.innerHTML = "password가 너무 깁니다.";
-				joinPw.focus();
-				joinPw.select();
-			}
+			}				
 			else if(request.responseText == "emailContainSpace")
 			{
 				joinMsg.innerHTML = "email은 공백문자를 포함할 수 없습니다.";
@@ -305,23 +328,46 @@ function joinFormRefresh()
 				joinMsg.innerHTML = "email이 너무 깁니다.";
 				joinEmail.focus();
 				joinEmail.select();
-			}
-			else if(request.responseText == "invalidId")
-			{
-				joinMsg.innerHTML = "id 는 영문 알파벳,숫자만 허용됩니다.";
-				joinId.focus();
-				joinId.select();
-			}		
+			}				
 			else if(request.responseText == "existingUser")
 			{
 				joinMsg.innerHTML = "이미 존재하는 id입니다.";
 				joinId.focus();
 				joinId.select();
 			}						
-				 
-			if(request.responseText == "joinOK")
+			else if(request.responseText == "nicknameContainSpace")
+			{
+				joinMsg.innerHTML = "별명은 공백문자를 포함할 수 없습니다.";
+				joinNickname.focus();
+				joinNickname.select();
+			}
+			else if(request.responseText == "nicknameTooLong")
+			{
+				joinMsg.innerHTML = "별명이 너무 깁니다.";
+				joinNickname.focus();
+				joinNickname.select();
+			}
+			else if(request.responseText == "commentTooLong")
+			{
+				joinMsg.innerHTML = "자기소개가 너무 깁니다.";
+				joinComment.focus();
+				joinComment.select();
+			}
+			else if(request.responseText == "existingNickname")
+			{
+				joinMsg.innerHTML = "이미 존재하는 별명입니다.";
+				joinId.focus();
+				joinId.select();
+			}			
+			else if(request.responseText == "emailSendingFail")
+			{
+				joinMsg.innerHTML = "인증메일을 전송할 수 없습니다.";
+				joinEmail.focus();
+				joinEmail.select();
+			}	 
+			else if(request.responseText == "joinOK")
 			{			
-				alert("회원 가입이 완료되었습니다.");
+				alert("회원 가입신청이 완료되었습니다.\nemail을 확인하여 계정을 활성화하세요.\n(스팸메일함도 살펴보세요)");
 				joinCloseFunc();
 			}
 		}
