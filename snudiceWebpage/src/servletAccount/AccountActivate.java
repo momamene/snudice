@@ -38,6 +38,9 @@ public class AccountActivate extends HttpServlet {
 		DB db = DB.getInstance();
 		try
 		{
+			if(userId==null || activationCode==null)
+				throw new RuntimeException();
+			
 			User user = db.dbAccount.getNotActivatedUser(userId, activationCode);
 			db.dbAccount.deleteNotActivatedUser(user.getUserId());
 			db.dbAccount.insertNewUser(user);
