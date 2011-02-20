@@ -286,6 +286,11 @@ void gServer::Recv()
 		case PL_BUSMOVESTARTCOUPLE_REP:
 			gGameCore::GetIF()->pk_busmovestartcouple_rep((PK_BUSMOVESTART_REP*)m_pkDefault.strPacket);
 			break;
+
+		case PL_GETITEM_REP:
+			gUIGame::GetIF()->pk_getitem_rep((PK_GETITEM_REP*)m_pkDefault.strPacket);
+			break;
+
 		
 	}
 }

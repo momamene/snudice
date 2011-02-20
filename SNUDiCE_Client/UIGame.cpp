@@ -80,7 +80,7 @@
 #define SUBINFO_SUBNAME_POS_Y				181
 #define SUBINFO_SUBNAME_TERM_Y				18
 #define SUBINFO_AVGRADE_FONTSIZE			22
-#define SUBINFO_AVGRADE_POS_X				355
+#define SUBINFO_AVGRADE_POS_X				350
 #define SUBINFO_AVGRADE_POS_Y				305
 #define SUBINFO_BTN_FILE_PREV				".\\Data\\Interface\\game_btn_prev.img"
 #define SUBINFO_BTN_FILE_NEXT				".\\Data\\Interface\\game_btn_next.img"
@@ -300,8 +300,8 @@
 #define DICE_GUAGEBAR_POS_Y					(DICE_GUAGEBARBACK_POS_Y + 4)
 
 // 게이지바 속도 단위는 pixel/sec
-#define DICE_GUAGEBAR_SPEED_MIN				300
-#define DICE_GUAGEBAR_SPEED_MAX				800
+#define DICE_GUAGEBAR_SPEED_MIN				1000
+#define DICE_GUAGEBAR_SPEED_MAX				2000
 
 // 전체맵 보기에서, 과목 점수(평점) 띄워줄 좌표.. 하드코딩 우왕 ㅋ
 static POINT s_ptPosGrade[CLASSNUM] = 
@@ -587,7 +587,7 @@ void gUIGame::Draw()
 					}
 				gUtil::EndText();
 
-				sprintf_s(szBuf, "%.1f", gp->fAvGrade);
+				sprintf_s(szBuf, "%.2f", gp->fAvGrade);
 				gUtil::SetSize(SUBINFO_AVGRADE_FONTSIZE);
 				gUtil::BeginText();
 					gUtil::Text(SUBINFO_AVGRADE_POS_X, SUBINFO_AVGRADE_POS_Y, szBuf);
@@ -630,17 +630,23 @@ void gUIGame::Draw()
 
 				float		fOverX;
 				
-				// 오른쪽 벗어남
-				if( (fOverX = m_fPosX_DiceGuageBar - (DICE_GUAGEBAR_POS_X + DICE_GUAGEBAR_SIZE_W)) > 0)
+				while(true)
 				{
-					m_fPosX_DiceGuageBar = DICE_GUAGEBAR_POS_X + DICE_GUAGEBAR_SIZE_W - fOverX;
-					m_fSpeed_DiceGuageBar *= -1;
-				}
-				// 왼쪽 벗어남
-				else if( (fOverX = m_fPosX_DiceGuageBar - DICE_GUAGEBAR_POS_X) < 0)
-				{
-					m_fPosX_DiceGuageBar = DICE_GUAGEBAR_POS_X - fOverX;
-					m_fSpeed_DiceGuageBar *= -1;
+					// 오른쪽 벗어남
+					if( (fOverX = m_fPosX_DiceGuageBar - (DICE_GUAGEBAR_POS_X + DICE_GUAGEBAR_SIZE_W)) > 0)
+					{
+						m_fPosX_DiceGuageBar = DICE_GUAGEBAR_POS_X + DICE_GUAGEBAR_SIZE_W - fOverX;
+						m_fSpeed_DiceGuageBar *= -1;
+						continue;
+					}
+					// 왼쪽 벗어남
+					else if( (fOverX = m_fPosX_DiceGuageBar - DICE_GUAGEBAR_POS_X) < 0)
+					{
+						m_fPosX_DiceGuageBar = DICE_GUAGEBAR_POS_X - fOverX;
+						m_fSpeed_DiceGuageBar *= -1;
+						continue;
+					}
+					break;
 				}
 
 				m_ImgUI[UIIMG_GUAGEBARBACK].Draw(DICE_GUAGEBARBACK_POS_X, DICE_GUAGEBARBACK_POS_Y);
@@ -3034,4 +3040,10 @@ void gUIGame::SendMoveAskByNC()
 {
 	if(m_uimode == UIM_DICEGUAGE)
 		BeforeSendMoveAsk();
+}
+
+void gUIGame::pk_getitem_rep(PK_GETITEM_REP* rep)
+{
+
+
 }

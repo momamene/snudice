@@ -1695,6 +1695,7 @@ void gRoomCore::pk_roomback_rep(PK_ROOMBACK_REP *rep)
 	gPlaySoundCore::GetIF()->StartBGM(BGM_FILE_0);
 	gMainWin::GetIF()->m_eCoreMode = ECM_ROOM;
 	gPopUp::GetIF()->m_bPopup = false;
+	gRoomCore::GetIF()->Clear();
 }
 
 
@@ -2025,4 +2026,9 @@ void gRoomCore::StartCount()
 	gPlaySoundCore::GetIF()->PlayEffectSound(EFFECT_FILE_10, true);
 	m_nStartTimer = GetTickCount();
 	m_bStartCount = TRUE;
+}
+
+void gRoomCore::Clear()
+{
+	m_bStartCount = false;
 }
