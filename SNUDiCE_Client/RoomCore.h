@@ -170,6 +170,7 @@ public:
 	void		OnRButtonDown();
 	// end overridng
 
+	void		Clear();
 	void		Clear_Make();
 
 	bool		PreTransMsg(MSG &msg);
