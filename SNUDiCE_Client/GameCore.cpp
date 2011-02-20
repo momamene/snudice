@@ -163,10 +163,20 @@ void gGameCore::MainLoop()
 		gMainWin::GetIF()->m_Keys[VK_RETURN] = false;
 	}
 	
-	if((int)GetTickCount() - SLEEPTIMEMAX >= m_turnTime || gMainWin::GetIF()->m_Keys[VK_SPACE])
+	if((int)GetTickCount() - SLEEPTIMEMAX >= m_turnTime)
 	{
 		SendMoveAsk();
-		gMainWin::GetIF()->m_Keys[VK_SPACE] = false;
+	}
+	else if(gMainWin::GetIF()->m_Keys[VK_SPACE]) 
+	{
+		SetDiceGuageMode();
+	}
+	
+	if(gUIGame::GetIF()->m_uimode == UIM_DICEGUAGE && !gUIGame::GetIF()->m_bGuageByMouse)
+	{
+		// 스페이스 바에서 손 떼었다
+		if(!gMainWin::GetIF()->m_Keys[VK_SPACE])
+			gUIGame::GetIF()->BeforeSendMoveAsk();
 	}
 
 	gChat::GetIF()->MainLoop();
@@ -849,6 +859,11 @@ void gGameCore::OnLButtonUp()
 	gMouse		*mouse	= gMouse::GetIF();
 	gChat		*chat	= gChat::GetIF();
 
+	if(gUIGame::GetIF()->m_uimode == UIM_DICEGUAGE)
+	{
+		gUIGame::GetIF()->OnLButtonUp();
+		return;
+	}
 	
 	if(chat->PointInUI(mouse->m_nPosX, mouse->m_nPosY))
 	{
@@ -857,8 +872,8 @@ void gGameCore::OnLButtonUp()
 	}
 	gUIGame::GetIF()->OnLButtonUp();
 		
-	if(m_bMoving || m_bBusing)
-		return;
+//	if(m_bMoving || m_bBusing)
+//		return;
 }
 
 void gGameCore::OnMouseMove()
@@ -925,7 +940,7 @@ bool gGameCore::PreTransMsg(MSG &msg)
 	return false;
 }
 
-void gGameCore::SendMoveAsk()
+void gGameCore::SendMoveAsk(float fRate)
 {
 	gPlayerContainer *gPC = gPlayerContainer::GetIF();
 	gUIGame *ui = gUIGame::GetIF();
@@ -935,7 +950,7 @@ void gGameCore::SendMoveAsk()
 	if(strcmp(gPC->m_MyGamePlayer.szID, gPC->m_GPlayerList[m_nTurn].szID) != 0) {
 		return;
 	}
-	m_turnTime = 0x7fffffff;
+//	m_turnTime = 0x7fffffff;
 
 	// 이미 움직였음, 스크롤링 중임
 	if(m_bMoved) //|| m_bScrolling)
@@ -948,11 +963,22 @@ void gGameCore::SendMoveAsk()
 	strcpy(ask.szID, gPlayerContainer::GetIF()->m_MyGamePlayer.szID);
 	ask.nCurPos		= gPlayerContainer::GetIF()->m_MyGamePlayer.nPos;
 
+	if(fRate < 0)
+	{
+		ask.fWeight = float(rand() % 10000);
+		ask.fWeight /= 10000;
+	}
+	else
+	{
+		ask.fWeight = fRate;
+	}
+		
 	gServer::GetIF()->Send(PL_MOVESTART_ASK, sizeof ask, &ask);
 
-	if(gUIGame::GetIF()->m_uimode == UIM_TARGETSELECT ||
-		gUIGame::GetIF()->m_uimode == UIM_TARGETSELECT_MULTI)
-		gUIGame::GetIF()->m_uimode = UIM_NONE;
+	if(ui->m_uimode == UIM_TARGETSELECT ||
+		ui->m_uimode == UIM_TARGETSELECT_MULTI ||
+		ui->m_uimode == UIM_DICEGUAGE )
+			ui->m_uimode = UIM_NONE;
 
 	m_bMoved = true;
 }
@@ -964,7 +990,8 @@ void gGameCore::pk_movestart_rep(PK_MOVESTART_REP *rep)
 	gUIGame::GetIF()->m_bShowTimeCount = false;
 	gPlaySoundCore::GetIF()->StopEffectSound(EFFECT_FILE_10);
 
-	m_turnTime = 0x7fffffff; m_bMoved = true;
+//	m_turnTime = 0x7fffffff;
+	m_bMoved = true;
 	if(m_bMoving)
 		return;
 
@@ -1329,7 +1356,7 @@ void gGameCore::pk_busmovestart_rep(PK_BUSMOVESTART_REP *rep)
 
 	int  nPos = gPC->m_GPlayerList[m_nTurn].nPos;
 
-	m_turnTime_Bus = 0x7fffffff;
+//	m_turnTime_Bus = 0x7fffffff;
 	if(rep->nDist == 0)
 	{
 		PK_BUSMOVEEND_ASK   ask;
@@ -1516,4 +1543,21 @@ void gGameCore::Clear(int newTurn)
 	{
 		sprintf_s(ui->m_szStatusMsg, STR_29, gPC->m_GPlayerList[m_nTurn].szID);
 	}
+}
+
+void gGameCore::SetDiceGuageMode()
+{
+	gPlayerContainer	*gPC	= gPlayerContainer::GetIF();
+	gUIGame				*ui		= gUIGame::GetIF();
+
+	if(strcmp(gPC->m_MyGamePlayer.szID, gPC->m_GPlayerList[m_nTurn].szID) != 0) {
+		return;
+	}
+	// 이미 움직였음, 스크롤링 중임
+	if(m_bMoved) //|| m_bScrolling)
+		return;
+	if(ui->m_drawmode == DM_RESULT || ui->m_bItemUsed)
+		return;
+
+	ui->SetDiceGuageMode();
 }

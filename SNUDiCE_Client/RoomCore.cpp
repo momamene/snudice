@@ -1694,6 +1694,7 @@ void gRoomCore::pk_roomback_rep(PK_ROOMBACK_REP *rep)
 	gChat::GetIF()->MsgStackClear();
 	gPlaySoundCore::GetIF()->StartBGM(BGM_FILE_0);
 	gMainWin::GetIF()->m_eCoreMode = ECM_ROOM;
+	gPopUp::GetIF()->m_bPopup = false;
 }
 
 

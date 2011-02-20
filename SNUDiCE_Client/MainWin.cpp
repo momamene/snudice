@@ -1,3 +1,5 @@
+#include <time.h>
+
 #include "MainWin.h"
 #include "const.h"
 #include "Mouse.h"
@@ -206,7 +208,7 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 
 	gPlaySoundCore::GetIF()->StartBGM(BGM_FILE_0);
 
-	//srand(NULL);
+	srand((unsigned int)time(NULL));
 	return true;
 }
 
@@ -429,7 +431,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 
 			return 0;
 		case WM_NCMOUSEMOVE:
-			mouse->SetShow(true);			
+			mouse->SetShow(true);
+			gUIGame::GetIF()->SendMoveAskByNC();
 			return 0;
 		// active
 		case WM_ACTIVATE:		
@@ -449,6 +452,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 						mw->m_bActive = false;
 						//ShowCursor(TRUE);
 						playSound->PauseBGM();
+						gUIGame::GetIF()->SendMoveAskByNC();
 					}
 					break;
 			}

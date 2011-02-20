@@ -53,6 +53,9 @@ enum UIIMAGE
 	UIIMG_MAPPLAYERBAR,		// 체력바
 	UIIMG_MAPLOVE,
 
+	UIIMG_GUAGEBARBACK,		// 이동할때 주사위 게이지 바
+	UIIMG_GUAGEBAR,
+
 	UIIMG_END,
 };
 
@@ -97,6 +100,7 @@ enum UIMODE
 	UIM_TARGETSELECT_MULTI,		// 대상 선택한 후, 여러명일 때
 	UIM_PLACESELECT,			// 이동 장소 선택
 	UIM_SUGANG,					// 수강편람
+	UIM_DICEGUAGE,				// 주사위 게이지
 	UIM_MAP,
 };
 
@@ -166,9 +170,16 @@ public:
 
 	char		m_szStatusMsg[128];
 
+	// for diceguage bar
+	bool		m_bGuageByMouse;			// 마우스로 주사위 굴리는거냐
 private:
 	RECT		m_rcBarDest, m_rcBarSour;
 	int			m_rankIdx[ROOMMAXPLAYER];	// 랭킹인덱스
+
+	// for diceguage bar
+	float		m_fSpeed_DiceGuageBar;
+	float		m_fPosX_DiceGuageBar;
+	int			m_nTimer_DiceGuageBar;
 
 private:
 	void		DrawMapToolTip();
@@ -210,4 +221,8 @@ public:
 	void		Clear();
 
 	void		GameEnd();
+
+	void		SetDiceGuageMode();
+	void		BeforeSendMoveAsk();		// SendMoveAsk 보내기 전에 셋팅
+	void		SendMoveAskByNC();			// 주사위 게이지 모드 중에 클라이언트 비활성 되었을 시 메시지 보냄
 };
