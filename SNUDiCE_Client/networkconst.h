@@ -486,6 +486,7 @@ struct PK_MOVESTART_ASK
 {
 	char		szID[IDLENGTH];
 	int			nCurPos;			// Ãâ¹ß ÁÂÇ¥
+	float		fWeight;			// 0 ~ 1;
 };
 
 typedef struct

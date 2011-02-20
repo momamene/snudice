@@ -287,6 +287,22 @@
 #define TURNINFO_FONTSIZE					18
 #define TURNINFO_FONTWEIGHT					1000
 
+#define DICE_GUAGEBARBACK_FILE				".\\Data\\Interface\\gaugebarback.img"
+#define DICE_GUAGEBARBACK_SIZE_W			418
+#define DICE_GUAGEBARBACK_SIZE_H			30
+#define DICE_GUAGEBARBACK_POS_X				((WNDSIZEW - DICE_GUAGEBARBACK_SIZE_W) / 2)
+#define DICE_GUAGEBARBACK_POS_Y				270
+
+#define DICE_GUAGEBAR_FILE					".\\Data\\Interface\\gaugebar.img"
+#define DICE_GUAGEBAR_SIZE_W				408
+#define DICE_GUAGEBAR_SIZE_H				22
+#define DICE_GUAGEBAR_POS_X					(DICE_GUAGEBARBACK_POS_X + 5)
+#define DICE_GUAGEBAR_POS_Y					(DICE_GUAGEBARBACK_POS_Y + 4)
+
+// 게이지바 속도 단위는 pixel/sec
+#define DICE_GUAGEBAR_SPEED_MIN				300
+#define DICE_GUAGEBAR_SPEED_MAX				800
+
 // 전체맵 보기에서, 과목 점수(평점) 띄워줄 좌표.. 하드코딩 우왕 ㅋ
 static POINT s_ptPosGrade[CLASSNUM] = 
 {
@@ -507,6 +523,11 @@ bool gUIGame::SetUp()
 	if(!m_ImgUI[UIIMG_MAPLOVE].Load(MAP_PLAYERLOVE_FILE))
 		return false;
 
+	if(!m_ImgUI[UIIMG_GUAGEBARBACK].Load(DICE_GUAGEBARBACK_FILE))
+		return false;
+	if(!m_ImgUI[UIIMG_GUAGEBAR].Load(DICE_GUAGEBAR_FILE))
+		return false;
+
 	m_uimode = UIM_NONE;
 	m_drawmode = DM_NONE;
 	m_bTargetByMove = false;
@@ -596,6 +617,47 @@ void gUIGame::Draw()
 		case UIM_MAP:
 			{
 				DrawUIMapMode();
+			}
+			break;
+		case UIM_DICEGUAGE:
+			{
+				float		fDeltaSec = float(GetTickCount() - m_nTimer_DiceGuageBar);
+				fDeltaSec /= 1000;
+
+				float		fDeltaX = fDeltaSec * m_fSpeed_DiceGuageBar;
+
+				m_fPosX_DiceGuageBar += fDeltaX;
+
+				float		fOverX;
+				
+				// 오른쪽 벗어남
+				if( (fOverX = m_fPosX_DiceGuageBar - (DICE_GUAGEBAR_POS_X + DICE_GUAGEBAR_SIZE_W)) > 0)
+				{
+					m_fPosX_DiceGuageBar = DICE_GUAGEBAR_POS_X + DICE_GUAGEBAR_SIZE_W - fOverX;
+					m_fSpeed_DiceGuageBar *= -1;
+				}
+				// 왼쪽 벗어남
+				else if( (fOverX = m_fPosX_DiceGuageBar - DICE_GUAGEBAR_POS_X) < 0)
+				{
+					m_fPosX_DiceGuageBar = DICE_GUAGEBAR_POS_X - fOverX;
+					m_fSpeed_DiceGuageBar *= -1;
+				}
+
+				m_ImgUI[UIIMG_GUAGEBARBACK].Draw(DICE_GUAGEBARBACK_POS_X, DICE_GUAGEBARBACK_POS_Y);
+
+				RECT	rcSour, rcDest;
+
+				SetRect(&rcDest,
+						DICE_GUAGEBAR_POS_X,
+						DICE_GUAGEBAR_POS_Y,
+						(int)m_fPosX_DiceGuageBar,
+						DICE_GUAGEBAR_POS_Y + DICE_GUAGEBAR_SIZE_H);
+				SetRect(&rcSour,
+						0, 0, 
+						(int)m_fPosX_DiceGuageBar - DICE_GUAGEBAR_POS_X, DICE_GUAGEBAR_SIZE_H);
+				m_ImgUI[UIIMG_GUAGEBAR].Draw(rcDest, rcSour, false);
+
+				m_nTimer_DiceGuageBar = GetTickCount();
 			}
 			break;
 	}
@@ -1221,10 +1283,17 @@ bool gUIGame::OnLButtonDown()
 	}
 	if(m_BtnUI[UIBTN_DICE].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 	{
+		gc->SetDiceGuageMode();
+		if(m_uimode == UIM_DICEGUAGE)
+			m_bGuageByMouse = true;
+
+
+		/*
 		if(gc->m_bMoving || gc->m_bBusing)
 			return true;
 		if(gPC->isTurn(gc->m_nTurn))
 			gc->SendMoveAsk();
+		*/
 
 		return true;
 	}
@@ -1841,6 +1910,11 @@ void gUIGame::SetTargetButton(int nPos, int charmax)
 void gUIGame::OnLButtonUp()
 {
 	gMouse				*mouse	= gMouse::GetIF();
+
+   	if(m_uimode == UIM_DICEGUAGE && m_bGuageByMouse)
+	{
+		BeforeSendMoveAsk();
+	}
 
 //	m_Scroll.OnLbuttonUp(mouse->m_nPosX, mouse->m_nPosY);
 }
@@ -2926,4 +3000,38 @@ void gUIGame::DrawTimerImage(int n)
 
 	OffsetRect(&rcSour, (n * TIMER_NUMBER_SIZE_W), 0);
 	m_ImgUI[UIIMG_TIMER].Draw(rcDest, rcSour);
+}
+
+void gUIGame::SetDiceGuageMode()
+{
+	if(m_uimode == UIM_DICEGUAGE)
+		return;
+
+	m_uimode = UIM_DICEGUAGE;
+
+	m_fSpeed_DiceGuageBar	= float( (rand() % (DICE_GUAGEBAR_SPEED_MAX - DICE_GUAGEBAR_SPEED_MIN)) + DICE_GUAGEBAR_SPEED_MIN );
+	m_fPosX_DiceGuageBar	= float( rand() % DICE_GUAGEBAR_SIZE_W + DICE_GUAGEBAR_POS_X);
+
+	if(rand() % 2)
+	{
+		m_fSpeed_DiceGuageBar *= -1;
+	}
+
+	m_nTimer_DiceGuageBar = GetTickCount();
+}
+
+void gUIGame::BeforeSendMoveAsk()
+{
+	float	fRateDice;
+
+	fRateDice = float((m_fPosX_DiceGuageBar - DICE_GUAGEBAR_POS_X) / DICE_GUAGEBAR_SIZE_W);
+
+	gGameCore::GetIF()->SendMoveAsk(fRateDice);
+	m_bGuageByMouse = false;
+}
+
+void gUIGame::SendMoveAskByNC()
+{
+	if(m_uimode == UIM_DICEGUAGE)
+		BeforeSendMoveAsk();
 }

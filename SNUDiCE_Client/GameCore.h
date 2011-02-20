@@ -129,7 +129,8 @@ public:
 	void		StepEnd();
 	void		End(bool Abnormal_End = 0);
 
-	void		SendMoveAsk();
+	void		SetDiceGuageMode();			// 주사위 굴리기 전에 게이지
+	void		SendMoveAsk(float fRate = -1.0f);
 private:
 	void		MainLoopMouse();
 
@@ -141,5 +142,4 @@ private:
 	void		DrawWarp();
 	void		DrawWarpList();
 	void		BusComeStart(int nPos);
-
 };
