@@ -13,6 +13,7 @@
 #include <time.h>
 
 #define fSWAP(a,b) {float temp = a; a = b ; b = temp;}
+#define iSWAP(a,b) {int temp = a; a = b ; b = temp;}
 
 static gGamePlayerContainer s_GamePlayerContainer;
 
@@ -1442,24 +1443,27 @@ ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, 
 							tgSubIndex = i;
 						}
 					}
-					fSWAP(m_GamePlayer[nRoomIndex][nInRoomIndex].fGrade[mySubIndex] , m_GamePlayer[nRoomIndex][targetIndex].fGrade[tgSubIndex]);
-					
+					iSWAP(m_nSubjectCount[nRoomIndex][nInRoomIndex][mySubIndex] , m_nSubjectCount[nRoomIndex][targetIndex][tgSubIndex]);
+					GradeRankSyncronizer(nRoomIndex);
+					pk_gameplayerinfo_rep(nRoomIndex);
 					break;
 										}
 			}
-			return IUS_INFOCHANGE;
+			return IUS_NEXTTURN;
 		}	else if (gIC->m_ItemList[ask.nItemID].type == ITEM_CHANGEALL)	{
 			switch(gIC->m_ItemList[ask.nItemID].target) {
 				case TARGET_OTHER :		{	//학바(전부)
 					int targetIndex = gRC->FindPlayerIndexInTheRoom(ask.szTarget,nRoomIndex);
 					for (int i = 0 ; i < MAXSUBJECT ; i++)	{
-						fSWAP(m_GamePlayer[nRoomIndex][nInRoomIndex].fGrade[i] , m_GamePlayer[nRoomIndex][targetIndex].fGrade[i]);
+						iSWAP(m_nSubjectCount[nRoomIndex][nInRoomIndex][i] , m_nSubjectCount[nRoomIndex][targetIndex][i]);
 					}
 
+					GradeRankSyncronizer(nRoomIndex);
+					pk_gameplayerinfo_rep(nRoomIndex);
 					break;
 										}
 			}
-			return IUS_INFOCHANGE;
+			return IUS_NEXTTURN;
 		}
 		return IUS_NONE;
 	}
