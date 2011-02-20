@@ -3,8 +3,8 @@
 #include <mysql.h>
 #include "network.h"
 
-#define DB_HOST "211.169.219.93" // 铰勘捞屈狼 db林家
-//#define DB_HOST "localhost" // 铰勘捞屈狼 db林家
+//#define DB_HOST "211.169.219.93" // 铰勘捞屈狼 db林家
+#define DB_HOST "localhost" // 铰勘捞屈狼 db林家
 #define DB_PORT 3306
 #define DB_USER "root"
 #define DB_PASS "prjn1267650600228229401496703205376"
