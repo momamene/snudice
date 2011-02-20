@@ -12,6 +12,7 @@
 
 #include <time.h>
 
+#define fSWAP(a,b) {float temp = a; a = b ; b = temp;}
 
 static gGamePlayerContainer s_GamePlayerContainer;
 
@@ -172,40 +173,31 @@ void gGamePlayerContainer::pk_movestart_ask(PK_DEFAULT *pk,SOCKET sock)
 	rep.Dice6_1 = 0;
 	rep.Dice6_2 = 0;
 
-	int nSum;
-	switch(m_GamePlayer[nRoomIndex][nInRoomIndex].nDice4) {
-	case 0:
-		break;
-	case 1:
-		rep.Dice4_1 = rand()%4 + 1;
-		break;
-	case 2:
-		rep.Dice4_1 = rand()%4 + 1;
-		rep.Dice4_2 = rand()%4 + 1;
-		break;
-	}
-	switch(m_GamePlayer[nRoomIndex][nInRoomIndex].nDice6) {
-	case 0:
-		break;
-	case 1:
-		rep.Dice6_1 = rand()%6 + 1;
-		break;
-	case 2:
-		rep.Dice6_1 = rand()%6 + 1;
-		rep.Dice6_2 = rand()%6 + 1;
-		break;
-	}
-	
-	/*	이동조작
-	rep.Dice4_1 = 2;
-	rep.Dice4_2 = 0;
-	rep.Dice6_1 = 0;
-	rep.Dice6_2 = 0;
-	*/
-	
-	nSum = rep.Dice4_1 + rep.Dice4_2 + rep.Dice6_1 + rep.Dice6_2;
+	int nSum , maxDist = 0 , minDist = 0;
 
+	for (int i = 0 ; i < m_GamePlayer[nRoomIndex][nInRoomIndex].nDice4 ; i++ , maxDist += 4 , minDist+=1) ;
+	for (int i = 0 ; i < m_GamePlayer[nRoomIndex][nInRoomIndex].nDice6 ; i++ , maxDist += 6 , minDist+=1) ;
+
+	nSum = (int)((maxDist-minDist) * ask.fWeight + minDist + 0.5);
 	rep.nDist = nSum;
+	
+	switch(minDist)	{
+		case 1 :
+			switch(maxDist)	{
+			case 4 :			rep.Dice4_1 += nSum;			break;
+			case 6 :			rep.Dice6_1 += nSum;			break;
+			}
+			break;
+		case 2 :
+			switch(maxDist)	{
+			case 8 :			rep.Dice4_1 = rand() % (nSum - 1 > 4 ? 8 - nSum + 1 : nSum - 1) + (nSum - 1 > 4 ? nSum - 4 : 1);
+								rep.Dice4_2 = nSum - rep.Dice4_1 ;		break;
+			case 10 :			rep.Dice6_1 = rand() % (nSum - 1 > 6 ? 10 - nSum + 1 : nSum - 1 > 4 ? 4 : nSum - 1 ) + (nSum - 1 > 4 ? nSum - 4 : 1);
+								rep.Dice4_1 = nSum - rep.Dice6_1 ;		break;
+			case 12 :			rep.Dice6_1 = rand() % (nSum - 1 > 6 ? 12 - nSum + 1 : nSum - 1) + (nSum - 1 > 6 ? nSum - 6 : 1);
+								rep.Dice6_2 = nSum - rep.Dice6_1 ;		break;
+			}
+	}
 	
 	pk_movestart_rep(nRoomIndex,nInRoomIndex, rep);
 	
@@ -895,9 +887,9 @@ void gGamePlayerContainer::NextTurn(int nRoomIndex)
 void gGamePlayerContainer::pk_getItem_rep(int nRoomIndex,int nInRoomIndex,int nItemID)
 {
 	static const int couplePriotiyHigh[3] = {23, 25 , 26};
-	static const int soloPriotiyHigh[5] = {21, 22 , 24, 27, 28};
+	static const int soloPriotiyHigh[7] = {21, 22 , 24, 27, 28 , 24 , 24};
 	
-	int itemIndex;
+	int itemIndex = -1;
 	for(int i = 0 ; i < MAXITEMNUM ; i++)
 	{
 		if(m_GamePlayer[nRoomIndex][nInRoomIndex].nItem[i] == -1) {
@@ -908,7 +900,7 @@ void gGamePlayerContainer::pk_getItem_rep(int nRoomIndex,int nInRoomIndex,int nI
 			else	{
 				if (rand() % 10 > 4 && isWhoCouple)	{	//높은 우선순위 확률 50%
 					if (m_GamePlayer[nRoomIndex][nInRoomIndex].nLove == -1)	{	//솔로?
-						itemIndex = soloPriotiyHigh[ rand() % 5];
+						itemIndex = soloPriotiyHigh[ rand() % 7];
 						m_GamePlayer[nRoomIndex][nInRoomIndex].nItem[i] = itemIndex;
 
 					}
@@ -1392,8 +1384,6 @@ ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, 
 					m_favor[nRoomIndex][nInRoomIndex].lvTargetIndex = partnerIndex;				m_favor[nRoomIndex][nInRoomIndex].bYes = CPS_PROPOSE;	
 
 					pk_askcouple_rep(	nRoomIndex,	nInRoomIndex , partnerIndex	);
-
-
 					break;
 			}
 		}	else if (gIC->m_ItemList[ask.nItemID].type == ITEM_POWERDASH)	{
@@ -1436,6 +1426,40 @@ ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, 
 					return IUS_INFOCHANGE;
 					break;
 			}
+		}	else if (gIC->m_ItemList[ask.nItemID].type == ITEM_CHANGE)	{
+			switch(gIC->m_ItemList[ask.nItemID].target) {	
+				case TARGET_OTHER :		{	//학바(하나)
+					int targetIndex = gRC->FindPlayerIndexInTheRoom(ask.szTarget,nRoomIndex);
+					int myMinGrade = m_GamePlayer[nRoomIndex][nInRoomIndex].fGrade[0], tgMaxGrade = m_GamePlayer[nRoomIndex][targetIndex].fGrade[0];
+					int mySubIndex = 0, tgSubIndex = 0;
+					for (int i = 1 ; i < MAXSUBJECT ; i++)	{
+						if (myMinGrade > m_GamePlayer[nRoomIndex][nInRoomIndex].fGrade[i])	{
+							myMinGrade = m_GamePlayer[nRoomIndex][nInRoomIndex].fGrade[i];
+							mySubIndex = i;
+						}
+						if (tgMaxGrade < m_GamePlayer[nRoomIndex][targetIndex].fGrade[i])	{
+							tgMaxGrade = m_GamePlayer[nRoomIndex][targetIndex].fGrade[i];
+							tgSubIndex = i;
+						}
+					}
+					fSWAP(m_GamePlayer[nRoomIndex][nInRoomIndex].fGrade[mySubIndex] , m_GamePlayer[nRoomIndex][targetIndex].fGrade[tgSubIndex]);
+					
+					break;
+										}
+			}
+			return IUS_INFOCHANGE;
+		}	else if (gIC->m_ItemList[ask.nItemID].type == ITEM_CHANGEALL)	{
+			switch(gIC->m_ItemList[ask.nItemID].target) {
+				case TARGET_OTHER :		{	//학바(전부)
+					int targetIndex = gRC->FindPlayerIndexInTheRoom(ask.szTarget,nRoomIndex);
+					for (int i = 0 ; i < MAXSUBJECT ; i++)	{
+						fSWAP(m_GamePlayer[nRoomIndex][nInRoomIndex].fGrade[i] , m_GamePlayer[nRoomIndex][targetIndex].fGrade[i]);
+					}
+
+					break;
+										}
+			}
+			return IUS_INFOCHANGE;
 		}
 		return IUS_NONE;
 	}

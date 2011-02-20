@@ -64,6 +64,10 @@ bool gItemContainer::SetUp()
 							type = ITEM_POWERDASH;
 						else if( strcmp(szTemp, "ITEM_LOVE") == 0)
 							type = ITEM_LOVE;
+						else if( strcmp(szTemp, "ITEM_CHANGE") == 0)
+							type = ITEM_CHANGE;
+						else if( strcmp(szTemp, "ITEM_CHANGEALL") == 0)
+							type = ITEM_CHANGEALL;
 						else
 							return false;
 
