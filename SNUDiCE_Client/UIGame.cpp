@@ -300,8 +300,8 @@
 #define DICE_GUAGEBAR_POS_Y					(DICE_GUAGEBARBACK_POS_Y + 4)
 
 // 게이지바 속도 단위는 pixel/sec
-#define DICE_GUAGEBAR_SPEED_MIN				1000
-#define DICE_GUAGEBAR_SPEED_MAX				2000
+#define DICE_GUAGEBAR_SPEED_MIN				800
+#define DICE_GUAGEBAR_SPEED_MAX				1000
 
 // 전체맵 보기에서, 과목 점수(평점) 띄워줄 좌표.. 하드코딩 우왕 ㅋ
 static POINT s_ptPosGrade[CLASSNUM] = 
@@ -1392,7 +1392,8 @@ bool gUIGame::OnLButtonDown()
 
 						switch(item->type)
 						{
-							case ITEM_STAT: case ITEM_STAMINA: case ITEM_NOCLASS: case ITEM_TOGETHERCLASS:
+						case ITEM_STAT: case ITEM_STAMINA: case ITEM_NOCLASS: case ITEM_TOGETHERCLASS:
+						case ITEM_CHANGE: case ITEM_CHANGEALL:
 								{
 									if(item->target == TARGET_OTHER || item->target == TARGET_MEOTHER)
 									{
@@ -3015,7 +3016,14 @@ void gUIGame::SetDiceGuageMode()
 
 	m_uimode = UIM_DICEGUAGE;
 
-	m_fSpeed_DiceGuageBar	= float( (rand() % (DICE_GUAGEBAR_SPEED_MAX - DICE_GUAGEBAR_SPEED_MIN)) + DICE_GUAGEBAR_SPEED_MIN );
+	int		nMyCharMove = gPlayerContainer::GetIF()->m_MyGamePlayer.nDice4 * 4
+						+ gPlayerContainer::GetIF()->m_MyGamePlayer.nDice6 * 6; 
+
+	int		nMaxSpeed = int(DICE_GUAGEBAR_SPEED_MAX * (12.0f / nMyCharMove));
+	int		nMinSpeed = int(DICE_GUAGEBAR_SPEED_MIN * (12.0f / nMyCharMove));
+
+
+	m_fSpeed_DiceGuageBar	= float( (rand() % (nMaxSpeed - nMinSpeed)) + nMinSpeed );
 	m_fPosX_DiceGuageBar	= float( rand() % DICE_GUAGEBAR_SIZE_W + DICE_GUAGEBAR_POS_X);
 
 	if(rand() % 2)
@@ -3034,6 +3042,7 @@ void gUIGame::BeforeSendMoveAsk()
 
 	gGameCore::GetIF()->SendMoveAsk(fRateDice);
 	m_bGuageByMouse = false;
+	gMainWin::GetIF()->m_Keys[VK_SPACE] = false;
 }
 
 void gUIGame::SendMoveAskByNC()

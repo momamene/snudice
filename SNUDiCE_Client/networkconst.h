@@ -12,8 +12,8 @@
 #define WM_SOCKET				WM_USER + 1
 
 #define	WINSOCK_VERSION_2_2		MAKEWORD(2, 2)
-//#define SERVER_IP				"211.169.219.93"		// 승엽
-#define SERVER_IP				"211.169.219.86"		// 현탁
+#define SERVER_IP				"211.169.219.93"		// 승엽
+//#define SERVER_IP				"211.169.219.86"		// 현탁
 //#define SERVER_IP				"211.169.219.87"		// 창규
 #define SERVER_PORT				9000
 #define BUFFERSIZE				2048
@@ -559,9 +559,9 @@ struct PK_GAMEEND_REP
 };
 
 #ifdef DEF_SERVER
-#define ITEMNUM		29 +1			// 
+#define ITEMNUM		31 +1			// 
 #else
-#define ITEMNUM		29
+#define ITEMNUM		31
 #endif
 
 enum ITEMTARGET
@@ -590,6 +590,8 @@ enum ITEMTYPE
 	ITEM_LOVE,				// 애정도
 	ITEM_DASH,				// 거절가능 대쉬
 	ITEM_POWERDASH,			// 거절불가 대쉬
+	ITEM_CHANGE,			// 학점 바꾸기(내꺼 min, 상대꺼 max)
+	ITEM_CHANGEALL,			// 학점 바꾸기(전부)
 };
 
 struct ITEMCARD
