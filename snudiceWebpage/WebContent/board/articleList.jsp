@@ -9,9 +9,8 @@
 <link rel="icon" href="${root}/favicon.ico" type="image/x-icon"/>
 <link rel="shortcut icon" href="${root}/favicon.ico" type="image/x-icon"/>
 <link rel="stylesheet" type="text/css" href="${root}/css/boardStyle.css"/>
-<script type="text/javascript">
+
 <jsp:include page="/javascript/header.jsp"/>
-</script> 
 
 <title>${boardAliasName}</title>
 </head>
