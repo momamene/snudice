@@ -66,4 +66,22 @@
 		FROM user_roles
 		WHERE userId=#userId:VARCHAR#
 	</select>
+	
+	<select id="getUserId" parameterClass="String">
+		SELECT userId
+		FROM user
+		WHERE email=#email:VARCHAR#
+	</select>
+	
+	<select id="countUser3" parameterClass="HashMap" resultClass="Integer">
+		SELECT COUNT(*)
+		FROM user
+		WHERE userId=#userId:VARCHAR# AND email=#email:VARCHAR#
+	</select>
+	
+	<update id="setPassword" parameterClass="HashMap">
+		UPDATE user
+		SET password=#password:VARCHAR#
+		WHERE userId=#userId:VARCHAR#
+	</update>
 </sqlMap>
