@@ -166,7 +166,7 @@ public class DBBoard {
 	}
 	
 	//글을 삭제한다.
-	public void deleteArticle(int articleIndex) {
+	public void deleteArticle(int articleIndex) {		
 		try
 		{
 			sqlMap.delete("deleteArticle", articleIndex);			
@@ -191,12 +191,12 @@ public class DBBoard {
 
 	//댓글을 삽입한다.
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public void insertReply(int articleIndex, String userId, String replyText) {
+	public void insertReply(int articleIndex, String nickname, String replyText) {
 		try
 		{
 			HashMap m = new HashMap();
 			m.put("articleIndex", articleIndex);
-			m.put("userId", userId);
+			m.put("nickname", nickname);
 			m.put("dateTime", Util.currDateTime());
 			m.put("replyText", replyText);
 			sqlMap.insert("insertReply", m);			

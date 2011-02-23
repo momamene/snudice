@@ -141,14 +141,27 @@ public class DBAccount {
 
 	//user의 role 정보를 얻는다.
 	@SuppressWarnings("unchecked")
-	public String getUserRole(String remoteUser) {
+	public String getUserRole(String userId) {
 		List<String> result = null;
 		try {			
-			result = (List<String>)sqlMap.queryForList("getUserRole",remoteUser);
+			result = (List<String>)sqlMap.queryForList("getUserRole",userId);
 		} catch (Exception e) {			
 			e.printStackTrace();
 		}
 		
 		return result.get(0);
-	}		
+	}
+	
+	//userId 로부터 nickname을 얻는다.
+	@SuppressWarnings("unchecked")
+	public String getNickname(String userId) {
+		List<String> result = null;
+		try {			
+			result = (List<String>)sqlMap.queryForList("getNickname",userId);
+		} catch (Exception e) {			
+			e.printStackTrace();
+		}
+		
+		return result.get(0);
+	}
 }

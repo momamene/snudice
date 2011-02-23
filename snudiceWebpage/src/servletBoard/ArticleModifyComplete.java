@@ -40,7 +40,7 @@ public class ArticleModifyComplete extends HttpServlet {
 		
 		HttpSession session = request.getSession(); 		
 		
-		String userId = (String) session.getAttribute("userId");
+		String nickname = (String) session.getAttribute("nickname");
 		String boardName = request.getParameter("boardName");
 		String currPage = request.getParameter("currPage");		
 		String title = request.getParameter("title");
@@ -57,7 +57,7 @@ public class ArticleModifyComplete extends HttpServlet {
 		if(title.compareTo("")==0)		
 			title = Util.currDateTime() + " 에 수정한 글입니다.";		
 		
-		Article article = new Article(boardName,userId,title, content);		
+		Article article = new Article(boardName,nickname,title, content);		
 		article.setArticleIndex(articleIndex);
 		article.setRawStr(true);
 		

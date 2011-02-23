@@ -44,7 +44,7 @@ public class ArticleWrite extends HttpServlet {
 		
 		HttpSession session = request.getSession();
 		
-		String userId = (String)session.getAttribute("userId");
+		String nickname = (String)session.getAttribute("nickname");
 		String boardName = request.getParameter("boardName");		
 		String title = request.getParameter("title");
 		String content = request.getParameter("content");
@@ -59,7 +59,7 @@ public class ArticleWrite extends HttpServlet {
 		if(title.compareTo("")==0)
 			title = Util.currDateTime() + " 에 작성한 글입니다.";
 		
-		Article article = new Article(boardName,userId,title,content);
+		Article article = new Article(boardName,nickname,title,content);
 		article.setRawStr(true);
 		
 		DB db = DB.getInstance();

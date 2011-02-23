@@ -3,7 +3,7 @@ package beans;
 public class Reply {
 	private int replyIndex;
 	private int articleIndex;
-	private String userId;
+	private String nickname;
 	private String dateTime;
 	private String replyText;
 	
@@ -19,11 +19,11 @@ public class Reply {
 	public int getArticleIndex() {
 		return articleIndex;
 	}
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
-	public String getUserId() {
-		return userId;
+	public String getNickname() {
+		return nickname;
 	}
 	public void setDateTime(String dateTime) {
 		this.dateTime = dateTime;
