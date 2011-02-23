@@ -115,6 +115,25 @@
 						<span id="joinClose">닫기</span>						
 					</div>
 					
+					<!-- 아이디,비번 찾기 Form -->
+					<div id="idpwFindForm" class="display_none">
+						<div id="idpwFindTitle">id,pw 찾기</div>	
+						<table id="idpwFindFormTable">
+							<tr>
+								<td class="label">email</td>
+								<td><input id="idpwFindEmail" type="text" name="idpwFindEmail"/></td>
+								<td><span id="idFind">id찾기</span></td>
+							</tr>
+							<tr>
+								<td class="label">id</td>
+								<td><input id="idpwFindId" type="text" name="idpwFindId"/></td>
+								<td><span id="pwFind">pw찾기</span></td>
+							</tr>
+						</table>
+						<div id="idpwFindMsg"></div>										
+						<div id="idpwFindClose">닫기</div>
+					</div>
+					
 					<!-- 로그인 Form -->
 					<c:choose>
 						<c:when test="${not empty userId}">

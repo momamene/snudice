@@ -24,6 +24,18 @@ function initLogin(){
 	loginButton.onclick = loginFunc;
 	loginButton.onmouseover = mousOverFunc;
 	loginButton.onmouseout = mouseOutFunc;
+	//아이디,비번 찾기 버튼
+	var findIdPw =  document.getElementById("findIdPw");
+	findIdPw.onclick = idpwFindOpenFunc;
+	//아이디,비번 찾기 창 닫기 버튼
+	var idpwFindClose = document.getElementById("idpwFindClose");
+	idpwFindClose.onclick = idpwFindCloseFunc;
+	//id 찾기 버튼
+	var idFind = document.getElementById("idFind");
+	idFind.onclick = idFindFunc;
+	//pw 찾기 버튼
+	var pwFind = document.getElementById("pwFind");
+	pwFind.onclick = pwFindFunc;
 	
 	//패스워드 창에서 엔터 치면 로그인시킴
 	enterKeyExec("password",loginFunc);
@@ -269,6 +281,34 @@ function guestLoginFunc()
 	var async = false;
 	
 	sendRequest(url,method,param,callback,async);	
+}
+
+//아이디,비번 찾기 창을 연다.
+function idpwFindOpenFunc()
+{
+	var idpwFindForm =  document.getElementById("idpwFindForm");
+	idpwFindForm.className = "display_block";		
+}
+
+//아이디,비번 찾기 창을 닫는다.
+function idpwFindCloseFunc()
+{
+	var idpwFindForm =  document.getElementById("idpwFindForm");
+	idpwFindForm.className = "display_none";	
+}
+
+//id 찾기버튼
+function idFindFunc()
+{
+	var idpwFindEmail = document.getElementById("idpwFindEmail");
+	if(idpwFindEmail.value=="")
+		alert('email');
+}
+
+//pw 찾기버튼
+function pwFindFunc()
+{
+	alert('b');
 }
 
 ////////////////////이미지 변화 event handler/////////////////////

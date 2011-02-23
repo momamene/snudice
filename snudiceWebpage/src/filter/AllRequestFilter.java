@@ -85,7 +85,7 @@ public class AllRequestFilter implements Filter {
 			}
 		}
 		
-		log.append(" "+req.getHeader("User-Agent"));
+		//log.append(" "+req.getHeader("User-Agent"));
 		
 		if(req.isSecure())
 			log.append(" (HTTPS)");
