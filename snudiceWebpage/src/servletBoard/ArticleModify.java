@@ -43,7 +43,7 @@ public class ArticleModify extends HttpServlet {
 		}
 		
 		HttpSession session = request.getSession();
-		String userId = (String)session.getAttribute("userId");
+		String nickname = (String)session.getAttribute("nickname");
 		String currPage = request.getParameter("currPage");
 		String boardName = request.getParameter("boardName");	
 		
@@ -53,7 +53,7 @@ public class ArticleModify extends HttpServlet {
 		article.setRawStr(true);
 		
 		//글쓴이와 id가 일치하지 않는 경우 ( admin 도 남의 글을 수정할 수는 없음 )
-		if(article.getUserId().compareTo(userId)!=0)  
+		if(article.getNickname().compareTo(nickname)!=0)  
 		{
 			response.sendRedirect("articleList.do?boardName="+boardName+"&currPage="+currPage);
 			return;

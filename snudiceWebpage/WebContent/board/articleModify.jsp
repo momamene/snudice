@@ -28,7 +28,7 @@
 							<td class="boardAliasNameLabel">게시판 이름</td>
 			    			<td class="boardAliasNameContent">${boardAliasName}</td>
 			    			<td class="articleWriterLabel">글쓴이</td>
-			    			<td class="articleWriterContent">${userId}</td>
+			    			<td class="articleWriterContent">${nickname}</td>
 			    		</tr>	
 			    		<tr>
 							<td class="articleTitleLabel">제목</td>

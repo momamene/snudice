@@ -43,24 +43,27 @@ public class AllRequestFilter implements Filter {
 		
 		HttpServletRequest req = (HttpServletRequest)request;
 		HttpSession session = req.getSession();
-		session.setMaxInactiveInterval(1800);		
+		session.setMaxInactiveInterval(1800);
+		DB db = DB.getInstance();
 		
 		StringBuffer log = new StringBuffer("["+Util.currDateTime()+"]");
 		log.append(" from "+"<"+req.getRemoteAddr()+">");
 		if(req.getRemoteUser()!=null) //로그인 된 경우
 		{			
-			if(session.getAttribute("userId")==null)
+			if(session.getAttribute("nickname")==null)
 			{
 				synchronized(session)
 				{
-					session.setAttribute("userId", req.getRemoteUser()); //userId 설정					
+					String userId = req.getRemoteUser();
+					String nickname = db.dbAccount.getNickname(userId);
+					session.setAttribute("userId", userId); //userId 설정
+					session.setAttribute("nickname", nickname); //nickname 설정					
 				}
 			}
 			if(session.getAttribute("role")==null)
 			{
 				synchronized(session)
-				{
-					DB db= DB.getInstance();
+				{					
 					String role = db.dbAccount.getUserRole(req.getRemoteUser()); //role 설정
 					session.setAttribute("role", role);
 				}				
@@ -74,6 +77,13 @@ public class AllRequestFilter implements Filter {
 				synchronized(session)
 				{
 					session.removeAttribute("userId");					
+				}				
+			}
+			if(session.getAttribute("nickname")!=null)
+			{
+				synchronized(session)
+				{
+					session.removeAttribute("nickname");					
 				}				
 			}
 			if(session.getAttribute("role")!=null)

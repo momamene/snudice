@@ -26,8 +26,8 @@
 	
 	<insert id="insertReply" parameterClass="HashMap">
 		INSERT INTO board_boardreply
-		(articleIndex,userId,dateTime,replyText)
-		VALUES(#articleIndex:INT#,#userId:VARCHAR#,#dateTime:DATETIME#,#replyText:TEXT#)
+		(articleIndex,nickname,dateTime,replyText)
+		VALUES(#articleIndex:INT#,#nickname:VARCHAR#,#dateTime:DATETIME#,#replyText:TEXT#)
 	</insert>
 	
 	<select id="getReplyList" parameterClass="Integer" resultClass="beans.Reply">
@@ -95,11 +95,14 @@
 		WHERE boardName= #boardName# AND BINARY(title) LIKE CONCAT('%',#titleKeyword:VARCHAR#,'%')
 	</select>
 	
-	<insert id="insertArticle" parameterClass="beans.Article">insert into board_board(boardName, title, userId, dateTime,text)
-	values(#boardName:VARCHAR#, #title:VARCHAR#, #userId:VARCHAR#,#dateTime:DATETIME#,#text:TEXT#)
-	<selectKey keyProperty="articleIndex" resultClass="int">
-	select LAST_INSERT_ID() AS articleIndex </selectKey>
+	<insert id="insertArticle" parameterClass="beans.Article">
+		INSERT INTO board_board(boardName, title, nickname, dateTime,text)
+		VALUES(#boardName:VARCHAR#, #title:VARCHAR#, #nickname:VARCHAR#,#dateTime:DATETIME#,#text:TEXT#)
+		<selectKey keyProperty="articleIndex" resultClass="int">
+			SELECT LAST_INSERT_ID() AS articleIndex 
+		</selectKey>
 	</insert>
+	
 	<select id="getArticleByIndex" parameterClass="int" resultClass="beans.Article">select * from board_board where articleIndex = #articleIndex#</select>
 
 <update id="updateArticle" parameterClass="beans.Article">update board_board

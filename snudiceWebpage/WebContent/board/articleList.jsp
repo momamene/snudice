@@ -58,7 +58,7 @@
 									</c:if>
 								</a>
 							</td>
-							<td class="${tdClassName}">${article.userId}</td>
+							<td class="${tdClassName}">${article.nickname}</td>
 							<td class="${tdClassName}">${article.dateTime}</td> 
 							<td class="${tdClassName}">${article.readCount}</td>		
 						</tr>

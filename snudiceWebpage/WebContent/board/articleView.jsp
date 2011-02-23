@@ -96,7 +96,7 @@ function replyComplete()
     		<div class="center centerAlign">          	
             	<span>${articleInfo.title}</span>   
             	<br/>
-                <span>${articleInfo.userId}</span>
+                <span>${articleInfo.nickname}</span>
                 <br/> 
                 <span>${articleInfo.dateTime}</span>            	
                 <br/>
@@ -133,7 +133,7 @@ function replyComplete()
 					<div id="replyContainer">
 					<c:forEach var="reply" items="${replyList}" varStatus="status">			
 						<div class="replyInfo">
-							[${status.count}] id : ${reply.userId}, ${reply.dateTime}
+							[${status.count}] id : ${reply.nickname}, ${reply.dateTime}
 						</div>									
 						<div class="replyContent">${reply.replyText}</div>				
 						<hr/>

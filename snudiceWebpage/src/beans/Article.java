@@ -8,7 +8,7 @@ public class Article {
 	private int articleIndex;
 	private String boardName;
 	private byte[] title;
-	private String userId;
+	private String nickname;
 	private String dateTime;
 	private byte[] text;
 	private int readCount;
@@ -16,9 +16,9 @@ public class Article {
 	
 	public Article() {}
 	
-	public Article(String boardName,String id, String title, String content) {		
+	public Article(String boardName,String nickname, String title, String content) {		
 		this.boardName= boardName;
-		this.userId = id;		
+		this.nickname = nickname;		
 		this.dateTime = Util.currDateTime();		
 		try {
 			this.title = title.getBytes("utf-8");
@@ -38,7 +38,7 @@ public class Article {
 		result += "/";
 		result += title;
 		result += "/";
-		result += userId;
+		result += nickname;
 		result += "/";
 		result += dateTime;
 		result += "/";
@@ -77,11 +77,11 @@ public class Article {
 	public void setTitle(byte[] title) {
 		this.title = title;
 	}
-	public String getUserId() {
-		return userId;
+	public String getNickname() {
+		return nickname;
 	}
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 	public String getDateTime() {
 		return dateTime;

@@ -51,7 +51,7 @@ public class ArticleView extends HttpServlet {
 		
 		int articleIndex =  Integer.parseInt( request.getParameter("articleIndex"));
 		HttpSession session = request.getSession();
-		String userId = (String)session.getAttribute("userId");
+		String nickname = (String)session.getAttribute("nickname");
 		String boardName = request.getParameter("boardName");
 		int currPage = Integer.parseInt(request.getParameter("currPage"));	
 		
@@ -59,7 +59,7 @@ public class ArticleView extends HttpServlet {
 		//글 정보를 가져옴
 		Article article= db.dbBoard.getArticleByIndex(articleIndex);
 		//자기가 쓴 글이 아닐 경우 조회수 증가		
-		if(article.getUserId().compareTo(userId)!=0)
+		if(article.getNickname().compareTo(nickname)!=0)
 		{
 			request.setAttribute("myArticle", false);
 			db.dbBoard.updateArticleReadCount(articleIndex);
@@ -73,7 +73,7 @@ public class ArticleView extends HttpServlet {
 		List<Reply> replyList = db.dbBoard.getReplyList(articleIndex);
 		for(Reply reply : replyList)
 		{
-			reply.setUserId(Util.encodeHtml(reply.getUserId()));
+			reply.setNickname(Util.encodeHtml(reply.getNickname()));
 			reply.setReplyText(Util.encodeHtml(reply.getReplyText()));
 		}
 		request.setAttribute("replyList", replyList);

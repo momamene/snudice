@@ -31,7 +31,7 @@ public class ArticleDelete extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
-		String userId = (String)session.getAttribute("userId");				
+		String nickname = (String)session.getAttribute("nickname");				
 		
 		int articleIndex = Integer.parseInt(request.getParameter("articleIndex"));
 		
@@ -39,7 +39,7 @@ public class ArticleDelete extends HttpServlet {
 		Article article= db.dbBoard.getArticleByIndex(articleIndex);
 	
 		//아이디가 글쓴이와 일치하거나 admin이면
-		if(article.getUserId().compareTo(userId)==0 || (Boolean)request.getAttribute("canAdmin")==true) //아이디가 글쓴이와 일치하면
+		if(article.getNickname().compareTo(nickname)==0 || (Boolean)request.getAttribute("canAdmin")==true) //아이디가 글쓴이와 일치하면
 		{			
 			//글에 달린 리플들을 지운다.
 			db.dbBoard.deleteReply(articleIndex);

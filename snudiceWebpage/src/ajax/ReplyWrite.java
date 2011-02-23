@@ -30,7 +30,7 @@ public class ReplyWrite extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();		
-		String userId = (String)session.getAttribute("userId");		
+		String nickname = (String)session.getAttribute("nickname");		
 		
 		int articleIndex = Integer.parseInt(request.getParameter("articleIndex"));
 		String replyText = request.getParameter("replyText");		
@@ -39,7 +39,7 @@ public class ReplyWrite extends HttpServlet {
 		if((Boolean)request.getAttribute("canComment")==true)
 		{
 			DB db = DB.getInstance();
-			db.dbBoard.insertReply(articleIndex,userId,replyText);
+			db.dbBoard.insertReply(articleIndex,nickname,replyText);
 		}
 	}
 }

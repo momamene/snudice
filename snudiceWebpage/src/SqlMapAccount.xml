@@ -84,4 +84,10 @@
 		SET password=#password:VARCHAR#
 		WHERE userId=#userId:VARCHAR#
 	</update>
+	
+	<select id="getNickname" parameterClass="String" resultClass="String">
+		SELECT nickname
+		FROM user
+		WHERE userId=#userId:VARCHAR#
+	</select>
 </sqlMap>
