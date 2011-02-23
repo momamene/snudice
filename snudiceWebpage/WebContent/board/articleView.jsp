@@ -9,10 +9,7 @@
 <link rel="icon" href="${root}/favicon.ico" type="image/x-icon"/>
 <link rel="shortcut icon" href="${root}/favicon.ico" type="image/x-icon"/>
 <link rel="stylesheet" type="text/css" href="${root}/css/boardStyle.css"/>
-<script type="text/javascript" src="${root}/javascript/util.js"></script>
-<script type="text/javascript">
 <jsp:include page="/javascript/header.jsp"/>
-</script>  
 
 <script type="text/javascript">
 <!-- 앞에서 include 한 내용의 일부는 덮어써진다. -->
