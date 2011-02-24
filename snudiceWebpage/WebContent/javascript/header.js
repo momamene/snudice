@@ -4,8 +4,8 @@ function initHeader()
 	window.onresize = function()
 	{
 		windowAutoResize(1024);
-	};
+	};		
 	
-	var headerImage = document.getElementsByClassName("headerImage");
-	headerImage[0].onclick = function() { window.location = root ; };	
+	var headerImage = document.getElementById("headerImage");	
+	headerImage.onclick = function() { window.location = root ; };	
 }
