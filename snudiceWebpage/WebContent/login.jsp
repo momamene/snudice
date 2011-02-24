@@ -7,73 +7,28 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="icon" href="${root}/favicon.ico" type="image/x-icon">
 <link rel="shortcut icon" href="${root}/favicon.ico" type="image/x-icon">  
-<link rel="stylesheet" type="text/css" href="${root}/css/loginPageStyle.css">
+<link rel="stylesheet" type="text/css" href="${root}/css/loginPageStyle.css"/>
+<link rel="stylesheet" type="text/css" href="${root}/css/menuStyle.css"/>
 <script type="text/javascript" src="${root}/javascript/util.js"></script>
 <script type="text/javascript" src="${root}/javascript/md5.js"></script> 
 <script type="text/javascript"> 
-<jsp:include page="/javascript/login.jsp"/>
+	<%@ include file="/javascript/login.jsp"%>
+	<%@ include file="/javascript/menuScript.jsp" %>
+window.onload = function() {
+	initMenu();
+	initLogin();
+};	
 </script>
 
 <title>SNUDice Web Page에 오신 것을 환영합니다.</title>
 </head>
 <body>	
 	<div class="bodyWrapper">		
-		<jsp:include page="/reuseModule/headerModule.jsp"/>
+		<%@ include file="/reuseModule/headerModule.jsp"%>
 		
 		<div class="container">		
-			<!-- menu -->
-			<div id="menu">
-				<div id="logoWrapper"></div>					
-				<div id="logo"></div>
-				<div id="menuWrapper">
-					<div id="menu1">
-						소식
-						<div id="menu1DropDown" class="menuDropDownWrapper invisible">
-							<div id="notice">								
-								<a href="${root}/board/articleList.do?boardName=${noticeBoardName}&currPage=0">${noticeBoardAliasName}</a>								
-							</div>
-							<div id="update">								
-								<a href="${root}/board/articleList.do?boardName=${updateBoardName}&currPage=0">${updateBoardAliasName}</a>							
-							</div>							
-						</div>
-					</div>
-					<div id="menu2">
-						게임소개
-						<div id="menu2DropDown" class="menuDropDownWrapper invisible">
-							<div id="synopsis">시놉시스</div>
-							<div id="playGuide">게임방법</div>
-							<div id="character">캐릭터</div>
-							<div id="card">카드</div>							
-						</div>
-					</div>
-					<div id="menu3">
-						PrjN
-						<div id="menu3DropDown" class="menuDropDownWrapper invisible">
-							<div id="teamIntro">팀소개</div>													
-						</div>
-					</div>
-					<div id="menu4">
-						게시판
-						<div id="menu4DropDown" class="menuDropDownWrapper invisible">
-							<div id="freeBoard">
-								<a href="${root}/board/articleList.do?boardName=${freeBoardName}&currPage=0">${freeBoardAliasName}</a>
-							</div>																		
-						</div>
-					</div>
-					<div id="menu5">
-						자료실
-						<div id="menu5DropDown" class="menuDropDownWrapper invisible">
-							<div id="gameDownload">	
-								<a href="${root}/setupFile/SNUDiCE_setup.exe">게임 다운로드</a>										
-							</div>
-							<div id="wallPaper">월페이퍼</div>	
-							<div id="screenShot">스크린샷</div>							
-						</div>
-					</div>
-				</div>				
-			</div>			
-				
-			<div class="containerTop"></div>		
+			<%@ include file="/reuseModule/menuModule.jsp"%>				
+					
 			<div class="leftCenterRightWrapper">				
 				<div class="left">
 					<!--  회원가입 Form -->					
@@ -243,7 +198,7 @@
 			<div class="containerBottom"></div>						
 		</div>		
 		
-		<jsp:include page="/reuseModule/footerModule.jsp"/>
+		<%@ include file="/reuseModule/footerModule.jsp"%>
 		
 	</div>
 </body>
