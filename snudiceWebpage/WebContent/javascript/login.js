@@ -202,7 +202,6 @@ function loginFunc()
 	var method = "post";
 	var param = "userId="+encodeURIComponent(userId.value);	
 	param += "&password="+encodeURIComponent(MD5(password.value));	
-	
 	var callback = loginFormRefresh;
 	var async = true;	
 	
@@ -219,10 +218,10 @@ function guestLoginFunc()
 	
 	var url = root+"/login.ajax";	
 	var method = "POST";
-	var param = "userId=guest";
-	param += "&password="+MD5("guest");	
+	var param = "userId="+encodeURIComponent("guest");
+	param += "&password="+encodeURIComponent(MD5("guest"));	
 	var callback = loginFormRefresh;
-	var async = false;
+	var async = true;
 	
 	sendRequest(url,method,param,callback,async);	
 }

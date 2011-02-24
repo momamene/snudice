@@ -25,12 +25,12 @@ function init()
 	
 	//댓글 쓰기 버튼
 	var replySubmitButton = document.getElementById("replySubmitButton");
-	replySubmitButton.onclick = replySubmit;
+	if(replySubmitButton!=null)
+		replySubmitButton.onclick = replySubmit;
 	// 글 수정 버튼
 	var articleDelButton = document.getElementById("articleDeleteButton");
-	if(articleDelButton==null) //글 수정 버튼이 없는 경우 (자기 글이 아닌 경우)
-		return;
-	articleDelButton.onclick = function() { show_confirm('정말 지울꺼에요?',articleDeleteFunc);	};
+	if(articleDelButton!=null)
+		articleDelButton.onclick = function() { show_confirm('정말 지울꺼에요?',articleDeleteFunc);	};
 }
 
 function focusToReply()

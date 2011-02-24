@@ -42,7 +42,7 @@
 	z-index : -1;	
 }
 
-.headerImage
+#headerImage
 {
 	background-image : url('/snudiceWebpage/image/mainpage/title.png');
 	background-repeat : no-repeat;	

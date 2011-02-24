@@ -92,7 +92,7 @@ tr,td
 }
 
 /*------------header-------------*/
-.headerImage
+#headerImage
 {
 	background-image : url('/snudiceWebpage/image/mainpage/title.png');
 	background-repeat : no-repeat;	
