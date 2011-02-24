@@ -40,12 +40,18 @@ public class AppInit implements ServletContextListener {
         sc.setAttribute("root", root);        
         sc.setAttribute("footerMsg", footerMsg);
         
-        //menu에 사용할 것들을 속성으로 설정한다.
-		DB db = DB.getInstance();
-		String freeBoardName = "free";
-		String freeBoardAliasName = db.dbBoard.getBoardAliasName(freeBoardName);
-		sc.setAttribute("freeBoardName",freeBoardName);
-		sc.setAttribute("freeBoardAliasName", freeBoardAliasName);
+        //menu에 사용할 것들을 속성으로 설정한다.	
+		setBoardInfo(sc,"free","freeBoardName","freeBoardAliasName");
+		setBoardInfo(sc,"notice","noticeBoardName","noticeBoardAliasName");
+		setBoardInfo(sc,"update","updateBoardName","updateBoardAliasName");		
+    }
+    
+    //servlet context에 주요 게시판 정보를 셋팅한다.
+    private void setBoardInfo(ServletContext sc,String boardName,String boardAttrbName,String boardAliasAttrbName) {
+    	DB db = DB.getInstance();
+    	String boardAliasName = db.dbBoard.getBoardAliasName(boardName);
+    	sc.setAttribute(boardAttrbName,boardName);
+		sc.setAttribute(boardAliasAttrbName, boardAliasName);
     }
 
 
