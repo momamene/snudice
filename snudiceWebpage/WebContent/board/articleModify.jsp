@@ -24,12 +24,12 @@
 					<input type="hidden" name="articleIndex" value="${param.articleIndex}"/>
 					<input type="hidden" name="currPage" value="${param.currPage}"/>	
 					<table class="articleWriteModifyTable">
-						<tr>
+						<%/* <tr>
 							<td class="boardAliasNameLabel">게시판 이름</td>
 			    			<td class="boardAliasNameContent">${boardAliasName}</td>
 			    			<td class="articleWriterLabel">글쓴이</td>
 			    			<td class="articleWriterContent">${nickname}</td>
-			    		</tr>	
+			    		</tr>  	*/%>
 			    		<tr>
 							<td class="articleTitleLabel">제목</td>
 			    			<td class="articleTitleContent" colspan="3">
@@ -43,7 +43,7 @@
 			    		</tr>
 						<tr>
 							<td colspan = "4">
-								<input type = "submit" value = "글수정">
+							<input class="articleModifyWrapper" type="image" src="${root}/image/board/articleModify.png" />
 							</td>
 			    		</tr>    					
     				</table>	
