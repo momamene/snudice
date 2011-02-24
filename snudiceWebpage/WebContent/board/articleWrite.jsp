@@ -23,13 +23,10 @@
 					<input type="hidden" name="boardName" value="${param.boardName}"/>
 					<input type="hidden" name="currPage" value="${param.currPage}"/>
 					
+					<% /* dong : 전에 항목들 없앰 글쓴이 이런것들..*/%>
+					
 					<table class="articleWriteModifyTable">
-						<tr>
-							<td class="boardAliasNameLabel">게시판 이름</td>
-			    			<td class="boardAliasNameContent">${boardAliasName}</td>
-			    			<td class="articleWriterLabel">글쓴이</td>
-			    			<td class="articleWriterContent">${nickname}</td>
-			    		</tr>
+
 			    		<tr>
 							<td class="articleTitleLabel">제목</td>
 			    			<td class="articleTitleContent" colspan="3">
@@ -42,8 +39,11 @@
 			    			</td>			    			
 			    		</tr>
 						<tr>
-							<td colspan = "4">
-								<input type = "submit" value = "글쓰기">
+							<td class="articleButtonContent" colspan = "3">
+								<input class="articleWriteWrapper" type="image" src="${root}/image/board/articleWrite.png" />
+								<a id="articleListWrapper" href="${root}/board/articleList.do?boardName=${param.boardName}&currPage=${param.currPage}">
+								<img src="${root}/image/board/toFirstPage.png"/>
+								</a>
 							</td>
 			    		</tr>
 			    	</table>
