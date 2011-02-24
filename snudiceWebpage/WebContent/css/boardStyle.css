@@ -184,8 +184,7 @@ table.articleWriteModifyTable
 {
 	width : 80%;	
 	margin-left : 10%;
-	margin-top : 10%;
-	background-color : white;	
+	margin-top : 10%;	
 }
 
 table.articleWriteModifyTable, table.articleWriteModifyTable td
@@ -241,16 +240,23 @@ table.articleWriteModifyTable input.noBorder,table.articleWriteModifyTable texta
 	border : 1px solid #61A2BC;	
 }
 
-table.articleWriteModifyTable input.articleWriteWrapper
+input.articleWriteWrapper
 {
 	position : relative;
 	left : 37%;
 	top : -10px;
 }
 
-table.articleWriteModifyTable a#articleListWrapper
+a#articleListWrapper
 {
 	position : relative;
 	left : 38%;
 	top : -12px;
+}
+
+input.articleModifyWrapper
+{
+	position : relative;
+	left : 30%;
+	top : -10px;
 }
