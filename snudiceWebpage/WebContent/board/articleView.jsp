@@ -9,15 +9,18 @@
 <link rel="icon" href="${root}/favicon.ico" type="image/x-icon"/>
 <link rel="shortcut icon" href="${root}/favicon.ico" type="image/x-icon"/>
 <link rel="stylesheet" type="text/css" href="${root}/css/boardStyle.css"/>
-<jsp:include page="/javascript/header.jsp"/>
+<link rel="stylesheet" type="text/css" href="${root}/css/menuStyle.css"/>
 
+<script type="text/javascript" src="${root}/javascript/util.js"></script>
 <script type="text/javascript">
-<!-- 앞에서 include 한 내용의 일부는 덮어써진다. -->
+	<%@ include file="/javascript/header.jsp"%>
+	<%@ include file="/javascript/menuScript.jsp" %>
 window.onload = init;
 
 function init()
-{	
+{
 	initHeader();
+	initMenu();
 	
 	//댓글 쓰기 버튼
 	var replySubmitButton = document.getElementById("replySubmitButton");
@@ -88,9 +91,11 @@ function replyComplete()
 </head>
 <body>
 	<div class="bodyWrapper">
-		<jsp:include page="/reuseModule/headerModule.jsp"/>
+		<%@ include file="/reuseModule/headerModule.jsp"%>
 				
     	<div class="container">
+    		<%@ include file="/reuseModule/menuModule.jsp"%>
+    		
     		<div class="left"></div>
     		
     		<div class="center">          	
@@ -165,7 +170,7 @@ function replyComplete()
         	<div class="right"></div>
 		</div>	
 			
-		<jsp:include page="/reuseModule/footerModule.jsp"/>
+		<%@ include file="/reuseModule/footerModule.jsp"%>
 		
 		<!-- 댓글을 썼다면 자신이 쓴 댓글을 볼 수 있게 focus를 댓글 쓰는 폼에 맞춘다 -->
 		<c:if test="${param.replySubmit == 'yes' }">

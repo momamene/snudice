@@ -7,15 +7,29 @@
 <link rel="icon" href="${root}/favicon.ico" type="image/x-icon"/>
 <link rel="shortcut icon" href="${root}/favicon.ico" type="image/x-icon"/>
 <link rel="stylesheet" type="text/css" href="${root}/css/boardStyle.css"/>
-<jsp:include page="/javascript/header.jsp"/>
+<link rel="stylesheet" type="text/css" href="${root}/css/menuStyle.css"/>
+<script type="text/javascript" src="${root}/javascript/util.js"></script>
+<script type="text/javascript">
+	<%@ include file="/javascript/header.jsp"%>
+	<%@ include file="/javascript/menuScript.jsp" %>
+window.onload = init;
+
+function init()
+{
+	initHeader();
+	initMenu();
+}
+</script>
 
 <title>글 수정하기</title>
 </head>
 <body> 
 	<div class="bodyWrapper"> 
-		<jsp:include page="/reuseModule/headerModule.jsp"/>
+		<%@ include file="/reuseModule/headerModule.jsp"%>
 	 
 		<div class="container">
+			<%@ include file="/reuseModule/menuModule.jsp"%>
+			
 			<div class="left"></div>
 		
 			<div class="center centerAlign">				
@@ -51,7 +65,7 @@
 			<div class="right"></div>
 		</div> 
 	
-		<jsp:include page="/reuseModule/footerModule.jsp"/>
+		<%@ include file="/reuseModule/footerModule.jsp"%>
 	</div>
 </body>
 </html>
