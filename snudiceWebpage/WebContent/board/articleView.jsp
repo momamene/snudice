@@ -93,15 +93,27 @@ function replyComplete()
     	<div class="container">
     		<div class="left"></div>
     		
-    		<div class="center centerAlign">          	
-            	<span>${articleInfo.title}</span>   
-            	<br/>
-                <span>${articleInfo.nickname}</span>
-                <br/> 
-                <span>${articleInfo.dateTime}</span>            	
-                <br/>
-            	<span>${articleInfo.text}</span>		
-            	<br/>
+    		<div class="center">          	
+            	<table>
+            		<tr id="articleTitleDateWrapper">
+            			<td class="articleTitleContent">
+            				${articleInfo.title}
+            			</td>
+            			<td class="articleDateTime">
+                			<span>${articleInfo.dateTime}</span>
+                		</td>
+                	</tr>
+                	<tr>
+                		<td class="articleNickName" colspan="2">
+                			${articleInfo.nickname}
+                		</td>
+                	</tr>
+                	<tr>
+                		<td class="articleTextContent" colspan="2">
+            				${articleInfo.text}
+            			</td>
+            		</tr>
+            	</table> 
             	
             	<a href="${root}/board/articleList.do?boardName=${param.boardName}&currPage=${param.currPage}">목록으로</a>
             	

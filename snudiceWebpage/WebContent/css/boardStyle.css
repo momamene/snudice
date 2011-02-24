@@ -80,10 +80,15 @@ table
 {
 	border : 0px;
 	padding : 0px;
-	margin : 0px;	
+	margin : 2%;	
+	width : 96%;
 }
 
-tr,td { height : 30px; }
+tr,td
+{ 
+	height : 30px;
+	padding : 5px;
+}
 
 /*------------header-------------*/
 .headerImage
@@ -171,14 +176,36 @@ td#search {width : 10%; }
 
 
 #replyWriteText
-{	
+{
 	margin-bottom : 5px;
 	
 	width : 470px;
 	height : 50px;	
 	
-	overflow : hidden; /* 스크롤바를 숨긴다 */
 	resize : none; /* 크롬에서 크기 조절을 못하게 한다. */
+}
+
+td.articleDateTime
+{
+	width : 30%;
+	text-align : right;
+	font-size : 90%;
+}
+td.articleDateTime span 
+{
+	position : relative;
+	top :  35%;
+	right : 10%;
+}
+		
+tr#articleTitleDateWrapper { border-bottom : 1px solid #61A2BC; }
+tr#articleTitleDateWrapper td {	padding-bottom : 15px; }
+
+td.articleNickName
+{ 
+	padding-top: 15px;
+	color : #8E511A;
+	font-weight : bold;
 }
 
 /*----------글 수정하기,글쓰기---------------*/
@@ -212,7 +239,12 @@ td.articleWriterLabel {width : 15%;}
 td.articleWriterContent {width : 35%;}
 
 td.articleTitleLabel {width : 20%;}
-td.articleTitleContent {width : 100%;}
+td.articleTitleContent
+{
+	width : 70%;
+	color : #59320B;
+	font-weight : bold;
+}
 td.articleTitleContent input
 { 
 	width: 70%; 
@@ -228,8 +260,7 @@ td.articleTextContent textarea
 {
 	width: 90%;
 	height:90%;
-    overflow : hidden; /* 스크롤바를 숨긴다 */
- 	resize : none; /* 크롬에서 크기 조절을 못하게 한다. */
+ 	resize : none; 		/* 크롬에서 크기 조절을 못하게 한다. */
 }
 
 table.articleWriteModifyTable input.noBorder,table.articleWriteModifyTable textarea
@@ -243,7 +274,7 @@ input.articleWriteWrapper
 {
 	position : relative;
 	left : 37%;
-	top : -10px;
+	top : -11px;
 }
 
 a.articleListWrapper
@@ -256,6 +287,8 @@ a.articleListWrapper
 input.articleModifyWrapper
 {
 	position : relative;
-	left : 30%;
+	left : 37%;
 	top : -10px;
 }
+
+
