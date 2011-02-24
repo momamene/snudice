@@ -171,9 +171,13 @@ td#search {width : 10%; }
 
 #reply
 {
-	border : 1px solid gray;	
+	border : 0px;	
 }
 
+#reply hr
+{
+	width : 98%;
+}
 
 #replyWriteText
 {
@@ -199,11 +203,17 @@ td.articleDateTime span
 }
 		
 tr#articleTitleDateWrapper { border-bottom : 1px solid #61A2BC; }
-tr#articleTitleDateWrapper td {	padding-bottom : 15px; }
+tr#articleTitleDateWrapper td
+{	
+	padding-bottom : 15px;
+	padding-left : 3%;
+}
 
 td.articleNickName
 { 
-	padding-top: 15px;
+	padding-left : 3%;
+	padding-top : 1%;
+	padding-bottom : 5%;
 	color : #8E511A;
 	font-weight : bold;
 }
