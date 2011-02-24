@@ -10,12 +10,9 @@
 <link rel="stylesheet" type="text/css" href="${root}/css/secureLoginForm.css">
 <script type="text/javascript" src="${root}/javascript/util.js"></script>
 <script type="text/javascript" src="${root}/javascript/md5.js"></script>
+<script type="text/javascript" src="${root}/javascript/header.js"></script>
 <script type="text/javascript">
-<jsp:include page="/javascript/header.jsp"/>
-</script>  
-<script type="text/javascript">
-
-<!-- 앞에서 include 한 내용의 일부는 덮어써진다. -->
+var root = "${root}";
 window.onload = init;
 
 function init()
@@ -97,7 +94,7 @@ function mouseOutFunc()
 </head>
 <body>
 	<div class="bodyWrapper">
-		<jsp:include page="/reuseModule/headerModule.jsp"/>
+		<%@ include file="/reuseModule/headerModule.jsp"%>
 		
 		<div class="container">	
 			<div class="left"></div>
@@ -129,7 +126,7 @@ function mouseOutFunc()
 			<div class="right"></div>
 		</div>
 		
-		<jsp:include page="/reuseModule/footerModule.jsp"/>
+		<%@ include file="/reuseModule/footerModule.jsp"%>
 	
 	</div>
 </body>
