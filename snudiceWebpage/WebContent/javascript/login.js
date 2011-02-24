@@ -1,4 +1,3 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 //event handler 추가	
 function initLogin(){	
 	window.onresize = function()
@@ -162,7 +161,7 @@ function joinSubmitFunc()
 	joinMsg.innerHTML = "가입처리중입니다...";
 	joinSubmit.disabled = true;	
 	
-	var url = "${root}/join.ajax";	
+	var url = root+"/join.ajax";	
 	var method = "POST";
 	var param = "joinId="+encodeURIComponent(joinId.value);
 	param += "&joinPw="+encodeURIComponent(MD5(joinPw.value));	
@@ -199,26 +198,26 @@ function loginFunc()
 
 	loginMsg.innerHTML = "로그인 중입니다..";
 	
-	var url = "${root}/login.ajax";	
+	var url = root+"/login.ajax";	
 	var method = "post";
 	var param = "userId="+encodeURIComponent(userId.value);	
 	param += "&password="+encodeURIComponent(MD5(password.value));	
 	
 	var callback = loginFormRefresh;
-	var async = false;	
+	var async = true;	
 	
 	sendRequest(url,method,param,callback,async);	
 }
 
 //손님으로 로그인한다.
 function guestLoginFunc()
-{
+{	
 	var userId = document.getElementById("userId");	
 	userId.value = "guest";
 	var loginMsg = document.getElementById("loginMsg");	
 	loginMsg.innerHTML = "로그인 중입니다..";
 	
-	var url = "${root}/login.ajax";	
+	var url = root+"/login.ajax";	
 	var method = "POST";
 	var param = "userId=guest";
 	param += "&password="+MD5("guest");	
@@ -360,7 +359,7 @@ function joinFormRefresh()
 }
 
 function loginFormRefresh()
-{	
+{		
 	var userId = document.getElementById("userId");	
 	var loginMsg = document.getElementById("loginMsg");	
 	var logoutWrapper = document.getElementById("logoutWrapper");		

@@ -33,15 +33,17 @@ public class FirstPage extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//공지,이벤트,개발자노트,업데이트 게시판의 최신글 목록을 가져옴
+		//공지,업데이트 게시판의 최신글 목록을 가져옴
 		setArticleList(request,"notice","noticeBoardName","noticeBoardAliasName","noticeList");		
 		setArticleList(request,"update","updateBoardName","updateBoardAliasName","updateList");
 		
+		/*
 		DB db = DB.getInstance();
 		String freeBoardName = "free";
 		String freeBoardAliasName = db.dbBoard.getBoardAliasName(freeBoardName);
 		request.setAttribute("freeBoardName",freeBoardName);
 		request.setAttribute("freeBoardAliasName", freeBoardAliasName);
+		*/
 				
 		String nextPage = "login.jsp";
 		RequestDispatcher view = request.getRequestDispatcher(nextPage);
@@ -50,9 +52,8 @@ public class FirstPage extends HttpServlet {
 	
 	//board 에서 글들을 가져와서 request 에 속성으로 설정한다.
 	private void setArticleList(HttpServletRequest request,String boardName,String boardNameAttrbName,String boardAliasAttrbName,String articleListName) {
-		DB db = DB.getInstance();
-		
-		//공지 글 목록을 가져온다.				
+		DB db = DB.getInstance();		
+				
 		List<Article> articleList = db.dbBoard.getArticleList(boardName,0, Const.artilcePerPageMain);
 		String boardAliasName = db.dbBoard.getBoardAliasName(boardName);
 		

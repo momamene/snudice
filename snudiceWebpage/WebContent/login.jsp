@@ -11,9 +11,10 @@
 <link rel="stylesheet" type="text/css" href="${root}/css/menuStyle.css"/>
 <script type="text/javascript" src="${root}/javascript/util.js"></script>
 <script type="text/javascript" src="${root}/javascript/md5.js"></script> 
+<script type="text/javascript" src="${root}/javascript/menuScript.js"></script> 
+<script type="text/javascript" src="${root}/javascript/login.js"></script> 
 <script type="text/javascript"> 
-	<%@ include file="/javascript/login.jsp"%>
-	<%@ include file="/javascript/menuScript.jsp" %>
+var root = "${root}";
 window.onload = function() {
 	initMenu();
 	initLogin();

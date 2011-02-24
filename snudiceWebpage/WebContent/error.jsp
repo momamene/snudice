@@ -5,16 +5,20 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" type="text/css" href="${root}/css/errorPage.css">
+<script type="text/javascript" src="${root}/javascript/header.js"></script>
 <script type="text/javascript">
-<jsp:include page="/javascript/header.jsp"/>
-</script>  
+var root = "${root}";
+window.onload = function() {
+	initHeader();
+}
+</script>
 
 <title>에러!!!</title>
 
 </head>
 <body>
-	<div class="bodyWrapper centerOfAllWidth">
-		<jsp:include page="/reuseModule/headerModule.jsp"/>
+	<div class="bodyWrapper">
+		<%@ include file="/reuseModule/headerModule.jsp"%>
 		
 		<div class="container">
 			<div class="left"></div>
@@ -27,7 +31,7 @@
 			<div class="right"></div>
 		</div>
 		
-		<jsp:include page="/reuseModule/footerModule.jsp"/>
+		<%@ include file="/reuseModule/footerModule.jsp"%>
 	</div>
 </body>
 </html>

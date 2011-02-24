@@ -12,9 +12,10 @@
 <link rel="stylesheet" type="text/css" href="${root}/css/menuStyle.css"/>
 
 <script type="text/javascript" src="${root}/javascript/util.js"></script>
-<script type="text/javascript">
-	<%@ include file="/javascript/header.jsp"%>
-	<%@ include file="/javascript/menuScript.jsp" %>
+<script type="text/javascript" src="${root}/javascript/header.js"></script>
+<script type="text/javascript" src="${root}/javascript/menuScript.js"></script> 
+<script type="text/javascript">		
+var root = "${root}";
 window.onload = init;
 
 function init()

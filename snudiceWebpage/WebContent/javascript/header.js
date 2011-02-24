@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-
+//header image 클릭시 메인 페이지로 이동한다.
 function initHeader()
 {
 	window.onresize = function()
@@ -8,5 +7,5 @@ function initHeader()
 	};
 	
 	var headerImage = document.getElementsByClassName("headerImage");
-	headerImage[0].onclick = function() { window.location = "${root}"; };	
+	headerImage[0].onclick = function() { window.location = root ; };	
 }
