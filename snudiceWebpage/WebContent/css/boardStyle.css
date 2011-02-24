@@ -254,7 +254,6 @@ td.articleTitleContent input
 td.articleTextContent 
 {
 	width : 100%;
-	height: 500px;
 }
 td.articleTextContent textarea
 {
