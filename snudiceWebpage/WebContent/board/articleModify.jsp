@@ -22,29 +22,26 @@
 				<form method = "post" action="${root}/board/articleModifyComplete.do">
 					<input type="hidden" name="boardName" value="${param.boardName}"/>
 					<input type="hidden" name="articleIndex" value="${param.articleIndex}"/>
-					<input type="hidden" name="currPage" value="${param.currPage}"/>	
+					<input type="hidden" name="currPage" value="${param.currPage}"/>
+						
 					<table class="articleWriteModifyTable">
-						<!--  <tr>
-							<td class="boardAliasNameLabel">게시판 이름</td>
-			    			<td class="boardAliasNameContent">${boardAliasName}</td>
-			    			<td class="articleWriterLabel">글쓴이</td>
-			    			<td class="articleWriterContent">${nickname}</td>
-			    		</tr>  	
-			    		-->
 			    		<tr>
 							<td class="articleTitleLabel">제목</td>
-			    			<td class="articleTitleContent" colspan="3">
+			    			<td class="articleTitleContent">
 			    				<input class="noBorder" type = "text" name = "title" value="${article.title}">
 			    			</td>
 			    		</tr>				
     					<tr>
-			    			<td class="articleTextContent" colspan="4">			    			    			
+			    			<td class="articleTextContent" colspan="2">			    			    			
 			    				<textarea name = "content">${article.text}</textarea>
 			    			</td>			    			
 			    		</tr>
 						<tr>
-							<td colspan = "4">
-							<input class="articleModifyWrapper" type="image" src="${root}/image/board/articleModify.png" />
+							<td colspan = "2">
+								<input class="articleModifyWrapper" type="image" src="${root}/image/board/articleModify.png" />
+								<a class="articleListWrapper" href="${root}/board/articleList.do?boardName=${param.boardName}&currPage=${param.currPage}">
+									<img src="${root}/image/board/toFirstPage.png"/>
+								</a>
 							</td>
 			    		</tr>    					
     				</table>	
