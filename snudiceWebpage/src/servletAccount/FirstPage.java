@@ -34,16 +34,8 @@ public class FirstPage extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//공지,업데이트 게시판의 최신글 목록을 가져옴
-		setArticleList(request,"notice","noticeBoardName","noticeBoardAliasName","noticeList");		
-		setArticleList(request,"update","updateBoardName","updateBoardAliasName","updateList");
-		
-		/*
-		DB db = DB.getInstance();
-		String freeBoardName = "free";
-		String freeBoardAliasName = db.dbBoard.getBoardAliasName(freeBoardName);
-		request.setAttribute("freeBoardName",freeBoardName);
-		request.setAttribute("freeBoardAliasName", freeBoardAliasName);
-		*/
+		setArticleList(request,"notice","noticeList");		
+		setArticleList(request,"update","updateList");		
 				
 		String nextPage = "login.jsp";
 		RequestDispatcher view = request.getRequestDispatcher(nextPage);
@@ -51,15 +43,9 @@ public class FirstPage extends HttpServlet {
 	}
 	
 	//board 에서 글들을 가져와서 request 에 속성으로 설정한다.
-	private void setArticleList(HttpServletRequest request,String boardName,String boardNameAttrbName,String boardAliasAttrbName,String articleListName) {
-		DB db = DB.getInstance();		
-				
-		List<Article> articleList = db.dbBoard.getArticleList(boardName,0, Const.artilcePerPageMain);
-		String boardAliasName = db.dbBoard.getBoardAliasName(boardName);
-		
+	private void setArticleList(HttpServletRequest request,String boardName,String articleListName) {
+		DB db = DB.getInstance();				
+		List<Article> articleList = db.dbBoard.getArticleList(boardName,0, Const.artilcePerPageMain);		
 		request.setAttribute(articleListName,articleList);
-		request.setAttribute(boardNameAttrbName, boardName);
-		request.setAttribute(boardAliasAttrbName, boardAliasName);
-
 	}
 }
