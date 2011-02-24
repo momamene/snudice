@@ -226,13 +226,10 @@ td.articleTextContent textarea
 {
 	width: 90%;
 	height:90%;
+    overflow : hidden; /* 스크롤바를 숨긴다 */
+ 	resize : none; /* 크롬에서 크기 조절을 못하게 한다. */
 }
-/*
-td.articleButtonContent
-{
-	width : 100%;
-}
-*/
+
 table.articleWriteModifyTable input.noBorder,table.articleWriteModifyTable textarea
 {
 	padding : 0px;
@@ -247,7 +244,7 @@ input.articleWriteWrapper
 	top : -10px;
 }
 
-a#articleListWrapper
+a.articleListWrapper
 {
 	position : relative;
 	left : 38%;
