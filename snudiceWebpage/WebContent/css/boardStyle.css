@@ -1,5 +1,7 @@
 @CHARSET "UTF-8";
 
+textarea,input { font-size : 120%; }
+
 .bodyWrapper
 {
 	width : 1025px; 
