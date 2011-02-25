@@ -19,6 +19,7 @@ window.onload = function() {
 	initMenu();
 	initLogin();
 };	
+
 </script>
 
 <title>SNUDice Web Page에 오신 것을 환영합니다.</title>
