@@ -173,11 +173,12 @@ td#search {width : 10%; }
 #reply
 {
 	border : 0px;	
+	padding : 4%;
 }
 
 #reply hr
 {
-	width : 98%;
+	width : 96%;
 }
 
 #replyWriteText
@@ -217,6 +218,13 @@ td.articleNickName
 	padding-bottom : 5%;
 	color : #8E511A;
 	font-weight : bold;
+}
+
+#replyHead { padding-bottom : 6%; }
+#articleButtonWrapper
+{
+	padding-top : 3%;
+	text-align : right;
 }
 
 /*----------글 수정하기,글쓰기---------------*/
