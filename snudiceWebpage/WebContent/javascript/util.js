@@ -93,7 +93,7 @@ function enterKeyExec(elementId,callback)
 	{
 		var keynum;
 		if(window.event) //IE			
-			keynum = event.keyCode;		
+			keynum = window.event.keyCode;		
 		else if(event.which) //Firefox, Chorme, ETC
 			keynum = event.which;		
 		
