@@ -265,7 +265,14 @@ td.articleTitleContent input
 td.articleTextContent 
 {
 	width : 100%;
+	height : 600px;
 }
+
+td#articleTextContentView
+{
+	height : auto;
+}
+	
 td.articleTextContent textarea
 {
 	width: 90%;
