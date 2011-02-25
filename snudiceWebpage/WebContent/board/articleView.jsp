@@ -120,7 +120,10 @@ function replyComplete()
             			</td>
             		</tr>
             	</table> 
-	            	<a href="${root}/board/articleList.do?boardName=${param.boardName}&currPage=${param.currPage}">목록으로</a>
+            	<div id="articleButtonWrapper">
+	            	<a href="${root}/board/articleList.do?boardName=${param.boardName}&currPage=${param.currPage}">
+	            		<img src="${root}/image/board/toFirstPage.png"/>
+	            	</a>
 	            	
 	            	<!-- 글 수정 버튼 : admin도 남의 글을 수정할 수는 없음 -->
 					<c:if test="${myArticle==true && canWrite==true}">						
@@ -140,17 +143,17 @@ function replyComplete()
 							<img src="${root}/image/board/articleWrite.png"/>
 						</a>
 					</c:if>
+				</div>
 				<div id="reply">
 					<div id="replyHead">
-						총 댓글 수 : ${replyCount}
+						댓글 ${replyCount}
 					</div>
-					<hr/>
 			
 					<div id="replyContainer">
 					<c:forEach var="reply" items="${replyList}" varStatus="status">			
 						<div class="replyInfo">
 							[${status.count}] id : ${reply.nickname}, ${reply.dateTime}
-						</div>									
+						</div>								
 						<div class="replyContent">${reply.replyText}</div>				
 						<hr/>
 					</c:forEach>
@@ -160,7 +163,7 @@ function replyComplete()
 						<div id="replyWrite">
 							한번 단 댓글은 수정,삭제가 불가능 합니다. 쓰기 전에 한번 더 생각해 주세요.<br/>					
 							<textarea id="replyWriteText"></textarea>
-							<input id="replySubmitButton" type="button" value="댓글 쓰기">
+							<input id="replySubmitButton" type="image" value="댓글 쓰기" src="${root}/image/board/replyWrite.png"/>
 						</div>
 					</c:if>			
 				</div>	 	         		
