@@ -491,7 +491,7 @@ void gGamePlayerContainer::pk_moveend_ask(PK_DEFAULT *pk,SOCKET sock)
 }
 
 
-void gGamePlayerContainer::pk_nextturn_rep (int nRoomIndex)
+bool gGamePlayerContainer::pk_nextturn_rep (int nRoomIndex)
 {
 	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
 
@@ -515,8 +515,11 @@ void gGamePlayerContainer::pk_nextturn_rep (int nRoomIndex)
 
 	if(m_nRound[nRoomIndex]<ENDROUND)
 		gPC->SendSelect(PL_NEXTTURN_REP,sizeof(rep),&rep,ECM_GAME,nRoomIndex);
-	else
+	else	{
 		pk_gameend_rep(nRoomIndex);
+		return true;
+	}
+	return false;
 }
 
 void gGamePlayerContainer::pk_busmovechoose_rep(int nRoomIndex,char* szID)
@@ -639,13 +642,8 @@ void gGamePlayerContainer::pk_gameend_rep(int nRoomIndex)
 	strcpy(rep.szID,m_GamePlayer[nRoomIndex][nWinnerIndex].szID);
 	
 	//다 끝나면 값을 다 0로 바꿈;
-/*	
-	memset(m_GamePlayer[nRoomIndex], 0, sizeof(GAMEPLAYER) * ROOMMAXPLAYER);
-	memset(m_isGamePlayer[nRoomIndex], 0, sizeof(bool) * ROOMMAXPLAYER);
-	memset(m_isNokdu[nRoomIndex], 0, sizeof(bool) * ROOMMAXPLAYER);
-	memset(m_favor[nRoomIndex], 0, sizeof(sFavor) * ROOMMAXPLAYER);
-	memset(m_bSyncronize[nRoomIndex], 0, sizeof(bool) * ROOMMAXPLAYER);
-*/	
+
+	
 	gMysql::GetIF()->scoreCountAdd(rep.szID, true);
 	
 	for (int i=0;i < ROOMMAXPLAYER ; i++)	
@@ -658,8 +656,15 @@ void gGamePlayerContainer::pk_gameend_rep(int nRoomIndex)
 		}
 		m_userItemList[nRoomIndex][i].clear();
 	}
-
 	gPC->SendSelect(PL_GAMEEND_REP,sizeof(rep),&rep,ECM_GAME,nRoomIndex);
+	
+	memset(m_GamePlayer[nRoomIndex], 0, sizeof(GAMEPLAYER) * ROOMMAXPLAYER);
+	memset(m_isGamePlayer[nRoomIndex], 0, sizeof(bool) * ROOMMAXPLAYER);
+	memset(m_isNokdu[nRoomIndex], 0, sizeof(bool) * ROOMMAXPLAYER);
+	memset(m_favor[nRoomIndex], 0, sizeof(sFavor) * ROOMMAXPLAYER);
+	memset(m_bSyncronize[nRoomIndex], 0, sizeof(bool) * ROOMMAXPLAYER);
+	
+
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -2295,7 +2300,8 @@ void	gGamePlayerContainer::TileProcess(int nRoomIndex, int nInRoomIndex, int nDe
 			pk_infochangeTile_rep(nRoomIndex,partnerIndex,-1, getCoupleAccomplishment);
 		}
 		if (getAccomplishment == -1 && getCoupleAccomplishment == -1)	{	//통과
-			pk_nextturn_rep(nRoomIndex);
+			if (pk_nextturn_rep(nRoomIndex))	//겜끝나면 걍종료
+				return;
 		}
 		pk_gameplayerinfo_rep(nRoomIndex);
 	}

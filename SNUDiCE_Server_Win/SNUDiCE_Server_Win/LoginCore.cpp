@@ -43,43 +43,6 @@ bool gLoginCore::SetUp()
 	USER*	user;
 	char	buf[1024];
 
-	/*
-	Put("1","1");
-	Put("11","1");
-	Put("2","2");
-	Put("3","3");
-	Put("4","4");
-	Put("5","5");
-	Put("6","6");
-	Put("7","7");
-	Put("8","8");
-	Put("9","9");
-	Put("test1","1111");
-	Put("test2","1111");
-	Put("test3","1111");
-	Put("test4","1111");
-	Put("test5","1111");
-	Put("test6","1111");
-	Put("test7","1111");
-	Put("test8","1111");
-	Put("test9","1111");
-	Put("test10","1111");
-	Put("test11","1111");
-	Put("test12","1111");
-	Put("test13","1111");
-	Put("test14","1111");
-	Put("test15","1111");
-	Put("test16","1111");
-	Put("test17","1111");
-	Put("test18","1111");
-	Put("test19","1111");
-	Put("test20","1111");
-	Put("빅토리아","1111");
-	Put("장연수","1111");
-	Put("sylairon","1111");
-	Put("장난죄송","1111");
-	Put("운영자","1111");
-*/
 	return true;
 }
 
@@ -103,7 +66,7 @@ void gLoginCore::pk_login_ask(PK_DEFAULT *pk, SOCKET sock)
 
 	ask = *((PK_LOGIN_ASK*)pk->strPacket);
 
-	sprintf(buf,"[PK_LOGIN_REP] %s\tid : %s\t pw : %s\n", inet_ntoa(clientAddr.sin_addr), ask.szID, ask.szPW);
+	sprintf(buf,"[PK_LOGIN_REP] %s\tid : %s\t pw : %s\n", inet_ntoa(clientAddr.sin_addr), ask.szLoginID, ask.szPW);
 	gMainWin::GetIF()->LogWrite(buf);
 
 	PK_LOGIN_REP	rep;
@@ -111,7 +74,9 @@ void gLoginCore::pk_login_ask(PK_DEFAULT *pk, SOCKET sock)
 	bool			bCanIn = false;
 	int finded;
 
-	user = GetID(ask.szID);
+	char*	userNickname = gMysql::GetIF()->nicknameGet(ask.szLoginID);
+
+	user = GetID(ask.szLoginID);
 
 	if(! strcmp("",user->szPW) ) {
 		rep.error = ELE_NOID; 
@@ -122,18 +87,18 @@ void gLoginCore::pk_login_ask(PK_DEFAULT *pk, SOCKET sock)
 		}
 		else {
 
-			if(gPlayerContainer::GetIF()->isExistedPlayer(user->szID)) {
+			if(gPlayerContainer::GetIF()->isExistedPlayer(userNickname)) {
 				rep.error = ELE_OVERCONNECT;
 			}
 			else {
 				// gChannelContainer start
-				bCanIn = gChannelContainer::GetIF()->Join(user->szID);
+				bCanIn = gChannelContainer::GetIF()->Join(userNickname);
 
 				if(!bCanIn) {
 					rep.error = ELE_USEROVER;
 				}
 				else {
-					finded = gChannelContainer::GetIF()->FindPlayer(user->szID);
+					finded = gChannelContainer::GetIF()->FindPlayer(userNickname);
 					if(finded==-1) {
 						// 만약 finded가 -1이 나온다면 치명적인 오류.
 						// 오류 체킹을 하고 있음.
@@ -148,7 +113,7 @@ void gLoginCore::pk_login_ask(PK_DEFAULT *pk, SOCKET sock)
 					rep.error = ELE_SUCCESS;
 					
 
-					strcpy(rep.player.szID,user->szID);
+					strcpy(rep.player.szID,userNickname);
 					rep.player.classtype = CLASS_NONE;
 					rep.player.coreWhere = ECM_BATTLENET;
 					rep.player.nCoreFlag = 0;

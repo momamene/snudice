@@ -203,6 +203,37 @@ char* gMysql::friendGet(char* userId) {
 
 	return friendArr;
 }
+char* gMysql::nicknameGet(char* userId)
+{
+	char query[255];
+	sprintf(query,USER_SELECT_NICKNAME,userId);
+
+	// 쿼리 수행
+	int query_stat = mysql_query(m_connection,query);
+	if(query_stat != 0) {
+		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		return NULL;
+	}
+
+	// 수행 분석
+	MYSQL_RES* sql_result = mysql_store_result(m_connection);
+	int arrLength = mysql_num_rows(sql_result);
+
+	char* gotNickname = new char [arrLength*17];
+	strcpy(gotNickname,"");
+
+	if(arrLength == 0) return NULL; // 아무도 친구가 없을때 
+	MYSQL_ROW sql_row = mysql_fetch_row(sql_result);
+	if(sql_row == NULL) {
+		fprintf(stderr,"nicknameGet() : null error");
+	}
+	else {
+		strcpy(gotNickname , sql_row[0]);
+	}	
+
+
+	return gotNickname;
+}
 
 bool gMysql::friendDeleteOne(char* userId, char* friendId) {
 

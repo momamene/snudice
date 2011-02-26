@@ -33,23 +33,27 @@ WHERE `userId` = '%s' ;"
 WHERE `userId` = '%s' ;"
 
 #define USER_WINCOUNT_SELECT "SELECT `winCount` FROM `userscore` \
-WHERE userId = '%s';" 
+WHERE `userId` = '%s';" 
 
 #define USER_LOSECOUNT_SELECT "SELECT `loseCount` FROM `userscore` \
-WHERE userId = '%s';" 
+WHERE `userId` = '%s';" 
+
+#define USER_SELECT_NICKNAME "SELECT `nickname` FROM `user` \
+WHERE `userId` = '%s';" 
+
 
 #define BLOCK_INSERT "INSERT INTO `block` \
-VALUES ('%s','%s');" //"
+VALUES ('%s','%s');" 
 
 #define BLOCK_SELECT_OR "SELECT * FROM `block` \
-WHERE `userId` = '%s' OR `blockId` = '%s';" //"
+WHERE `userId` = '%s' OR `blockId` = '%s';" 
 
 #define BLOCK_SELECT_AND "SELECT * FROM `block` \
-WHERE `userId` = '%s' AND `blockId` = '%s';" //"
+WHERE `userId` = '%s' AND `blockId` = '%s';" 
 
 // 이 쿼리문 등은 block_delete(a,b) (b,a) 이렇게 두번 불러야 한당.
 #define BLOCK_DELETE "DELETE FROM `block` \
-WHERE `userId` = '%s' AND `blockId` = '%s';" //"
+WHERE `userId` = '%s' AND `blockId` = '%s';" 
 
 //실제로 쓰지 않는다.
 #define SQL_INSERT_RECORD "INSERT INTO `mysql_api_test`\
@@ -107,6 +111,8 @@ public:
 
 	void scoreCountAdd(char* userId , bool val);	//	val = 1 : winCount추가 , val = 0 : loseCount추가 
 	int	 getScoreCount(char* userId , bool val);				//	val = 1 : get winCount , val = 0 : get loseCount 
+	
+	char* nicknameGet(char* userId);
 	
 	void release();
 
