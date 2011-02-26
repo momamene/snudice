@@ -58,6 +58,8 @@ enum UIIMAGE
 
 	UIIMG_GETITEM,
 
+	UIIMG_MENUBACK,
+
 	UIIMG_END,
 };
 
@@ -73,7 +75,11 @@ enum UIBTN
 
 	UIBTN_DICE,
 
-	UIBTN_MAPBTN,		
+	UIBTN_MAPBTN,
+
+	UIBTN_OPTION,
+	UIBTN_OUT,
+	UIBTN_EXIT,
 
 	UIBTN_END,
 };
@@ -86,10 +92,12 @@ enum UITYPE
 	UIT_MINIMAPBACK,
 	UIT_MINIMAP,		// 미니맵.. back말고
 	UIT_ITEM,
-	UIT_MENU,
+	UIT_MENU,			// 메뉴 버튼
 	UIT_DICE,
 	UIT_MAPBTN,
 	UIT_MAP,
+	UIT_MENUBACK,		// 메뉴 모드
+	UIT_OPTION,			// 환경설정
 	UIT_END,
 };
 
@@ -103,6 +111,8 @@ enum UIMODE
 	UIM_PLACESELECT,			// 이동 장소 선택
 	UIM_SUGANG,					// 수강편람
 	UIM_DICEGUAGE,				// 주사위 게이지
+	UIM_MENU,					// 메뉴 == 환경설정
+	UIM_OPTION,
 	UIM_MAP,
 };
 

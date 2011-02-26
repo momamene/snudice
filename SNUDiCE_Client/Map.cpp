@@ -790,7 +790,8 @@ void gMap::DrawMapCursor(int nSizeRate, int posX, int posY)
 		if(strlen(gPC->m_GPlayerList[i].szID) == 0)
 			continue;
 
-		if(strcmp(gPC->m_GPlayerList[i].szID, gPC->m_MyGamePlayer.szID) == 0)
+//		if(strcmp(gPC->m_GPlayerList[i].szID, gPC->m_MyGamePlayer.szID) == 0)
+		if(i == gUIGame::GetIF()->m_nCharSelected)
 			continue;
 
 		y = gPC->m_GPlayerList[i].nPos % LINEY;
@@ -821,8 +822,8 @@ void gMap::DrawMapCursor(int nSizeRate, int posX, int posY)
 		m_ImgCurBig.Draw(rcDest, rcSour, false);
 	}
 
-	y = gPC->m_MyGamePlayer.nPos % LINEY;
-	x = gPC->m_MyGamePlayer.nPos / LINEY;
+	y = gPC->m_GPlayerList[gUIGame::GetIF()->m_nCharSelected].nPos % LINEY;
+	x = gPC->m_GPlayerList[gUIGame::GetIF()->m_nCharSelected].nPos / LINEY;
 
 	if(x % 2 == 0)
 	{

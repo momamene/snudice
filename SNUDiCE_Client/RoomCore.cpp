@@ -1023,7 +1023,6 @@ void gRoomCore::MainLoop_Join()
 
 	if(gMainWin::GetIF()->m_Keys[VK_ESCAPE])
 	{
-		gTopUI::GetIF()->OnLButtonDown_Back();
 		gMainWin::GetIF()->m_Keys[VK_ESCAPE] = false;
 		return;
 	}
@@ -1283,7 +1282,8 @@ void gRoomCore::MainLoop_Room()
 
 	if(gMainWin::GetIF()->m_Keys[VK_ESCAPE])
 	{
-		gTopUI::GetIF()->OnLButtonDown_Back();
+		if(!m_bStartCount)
+			gTopUI::GetIF()->OnLButtonDown_Back();
 		gMainWin::GetIF()->m_Keys[VK_ESCAPE] = false;
 		return;
 	}
@@ -2025,7 +2025,7 @@ void gRoomCore::StartCount()
 {
 	gPlaySoundCore::GetIF()->PlayEffectSound(EFFECT_FILE_10, true);
 	m_nStartTimer = GetTickCount();
-	m_bStartCount = TRUE;
+	m_bStartCount = true;
 }
 
 void gRoomCore::Clear()

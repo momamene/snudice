@@ -203,7 +203,7 @@ bool gPlaySoundCore::SetUp()
 	}
 
 	setBGMVolume(m_nBGM);
-	setBGMVolume(m_nEffect);
+	setEffectSoundVolume(m_nEffect);
 
 	return true;
 }
