@@ -395,10 +395,9 @@ void gGamePlayerContainer::movePlayer(int nRoomIndex,int nInRoomIndex,int des,Mo
 	gTileContainer *gTC = gTileContainer::GetIF();
 	if(mpState == MPS_MOVE)
 	{
-		if (m_isNokdu[nRoomIndex][nInRoomIndex] && des == gTC->m_xInitSpacePos * LINEY + gTC->m_yInitSpacePos)
-			m_isNokdu[nRoomIndex][nInRoomIndex] = false;
-//		else if(des == 2*LINEY+17) 
-//			m_isNokdu[nRoomIndex][nInRoomIndex] = true;
+		if (des == gTC->m_xInitSpacePos * LINEY + gTC->m_yInitSpacePos)		{	// 정문을 지나는 경우
+			m_isNokdu[nRoomIndex][nInRoomIndex] = 1 - m_isNokdu[nRoomIndex][nInRoomIndex];
+		}
 	}
 	else if(mpState == MPS_BUS) 
 	{ // flip
@@ -892,9 +891,11 @@ void gGamePlayerContainer::NextTurn(int nRoomIndex)
 
 void gGamePlayerContainer::pk_getItem_rep(int nRoomIndex,int nInRoomIndex,int nItemID)
 {
-	static const int couplePriotiyHigh[3] = {23, 25 , 26};
-	static const int soloPriotiyHigh[7] = {21, 22 , 24, 27, 28 , 24 , 24};
-	
+	static const int nokduPriorityHigh[7] = {15, 20 , 13 , 29 , 30 , 19 , 18};	// 녹두로오라, 선배의호출, 음주가무, 사기1, 사기2, 정문이동, 스쿠터
+	static const int couplePriorityHigh[8] = {21, 22 , 23, 24 , 25, 26, 27 , 28};	// 커플8종세트
+	static const int proposePriorityHigh[2] = {21 , 22};
+	static const int sagiPriorityHigh[2] = {29 , 30};
+
 	int itemIndex = -1;
 	for(int i = 0 ; i < MAXITEMNUM ; i++)
 	{
@@ -904,28 +905,23 @@ void gGamePlayerContainer::pk_getItem_rep(int nRoomIndex,int nInRoomIndex,int nI
 				itemIndex = nItemID;
 			}
 			else	{
-				if (rand() % 10 > 4 && isWhoCouple)	{	//높은 우선순위 확률 50%
-					if (m_GamePlayer[nRoomIndex][nInRoomIndex].nLove == -1)	{	//솔로?
-						itemIndex = soloPriotiyHigh[ rand() % 7];
-						m_GamePlayer[nRoomIndex][nInRoomIndex].nItem[i] = itemIndex;
-
-					}
-					else	{
-						itemIndex = couplePriotiyHigh[ rand() % 3];
-						m_GamePlayer[nRoomIndex][nInRoomIndex].nItem[i] = itemIndex;
-					}
-				}	else	{	// 노말 아이템	
-					itemIndex = rand() % (21);
-					m_GamePlayer[nRoomIndex][nInRoomIndex].nItem[i] = itemIndex;	// 노말아이템
-				}
-
+				if (m_isNokdu[nRoomIndex][nInRoomIndex] && rand() % 10 < 3 )	//녹두
+					itemIndex = nokduPriorityHigh [ rand() % 7 ] ;
+				else if (rand() % 100 < 2)	// 사기템
+					itemIndex = sagiPriorityHigh [ rand() % 2 ] ;
+				else if (isWhoCouple && rand() % 10 < 3)	//커플
+					itemIndex = couplePriorityHigh[ rand() % 8];
+				else if (rand() % 10 < 1)	//고백
+					itemIndex = proposePriorityHigh[ rand() % 2 ]; 
+				else //나머지(사기제외)
+					itemIndex = rand() % 29 ;
 			}
 			break;
 		}
 	}
 	PK_GETITEM_REP rep;
 	rep.nItemID = itemIndex;
-	gMainWin::GetIF()->Send(PL_GETITEM_REP,sizeof(PK_GETITEM_REP),&rep,gRoomCore::GetIF()->FindPlayerszIDInTheRoom(nRoomIndex , nInRoomIndex));
+	gMainWin::GetIF()->Send(PL_GETITEM_REP,sizeof(PK_GETITEM_REP),&rep,gRoomCore::GetIF()->FindPlayerszIDInTheRoom(nInRoomIndex , nRoomIndex));
 }
 
 void gGamePlayerContainer::pushItem(int nRoomIndex,int nInRoomIndex,int nItemID)
