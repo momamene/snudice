@@ -56,6 +56,8 @@ enum UIIMAGE
 	UIIMG_GUAGEBARBACK,		// 이동할때 주사위 게이지 바
 	UIIMG_GUAGEBAR,
 
+	UIIMG_GETITEM,
+
 	UIIMG_END,
 };
 
@@ -183,6 +185,10 @@ private:
 
 	bool		m_bSendRoomBack;			// gTimer 에러땜시
 
+	// item 얻었을 때, 말풍선
+	bool		m_bDrawGetItem;
+	int			m_nTimerGetItem;
+
 private:
 	void		DrawMapToolTip();
 	void		DrawShowAlways();			// 항상 출력
@@ -218,6 +224,7 @@ public:
 	void		SetTargetButton_InfoChange();				// infochange_rep
 
 	void		Draw_InfoChange();
+	void		Draw_GetItem(int x, int y);
 
 	void		DrawTimerImage(int n);
 

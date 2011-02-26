@@ -101,6 +101,7 @@ void gGameCore::MainLoop()
 
 				gServer::GetIF()->Send(PL_ANSCOUPLE_ASK, sizeof(ask), &ask);
 				gPopUp::GetIF()->DoEsc();
+				gUtil::DebugMsg("asdadasd");
 			}
 		}
 		if(strcmp(gPopUp::GetIF()->m_szLine1, STR_20) == 0)
