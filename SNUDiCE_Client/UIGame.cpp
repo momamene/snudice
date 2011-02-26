@@ -16,6 +16,7 @@
 #include "PlaySoundCore.h"
 #include "SubmitCore.h"
 #include "RoomCore.h"
+#include "TopUI.h"
 
 #define	UI_FILE_MAININFO					".\\Data\\Interface\\game_maininfo.img"
 #define UI_SIZE_MAININFO_W					220
@@ -146,8 +147,8 @@
 #define USEINFO_TARGET_TERM_X				10
 #define USEINFO_TARGET_TERM_Y				10
 
-#define USEINFO_TICK						2000	// 3초 보여줌
-#define INFOCHANGE_TICK						2000
+#define USEINFO_TICK						3000	// 3초 보여줌
+#define INFOCHANGE_TICK						3000
 
 #define INFOCHANGE_POS_X					320
 #define	INFOCHANGE_POS_Y					150
@@ -206,7 +207,7 @@
 #define BECOUPLE_FEMALE_Y					BECOUPLE_MALE_Y
 #define BECOUPLE_HEART_X					(320 - COUPLE_LOVE_SIZE_W/2)
 #define BECOUPLE_HEART_Y					(220 - COUPLE_LOVE_SIZE_H/2)
-#define BECOUPLE_TICK						2000
+#define BECOUPLE_TICK						3000
 
 #define TEXT_NUM_FILE						".\\Data\\Interface\\number.img"
 #define TEXT_ICON_FILE						".\\Data\\Interface\\icon.img"
@@ -306,9 +307,31 @@
 #define GETITEM_FILE						".\\Data\\Interface\\getcard.img"
 #define GETITEM_SIZE_W						60
 #define GETITEM_SIZE_H						66
-#define GETITEM_POS_X						30
-#define GETITEM_POS_Y						-10
+#define GETITEM_POS_X						45
+#define GETITEM_POS_Y						-20
 #define GETITEM_SHOWTIME					3000
+
+// menu
+#define MENU_BACK_FILE						".\\Data\\Interface\\menu.img"
+#define MENU_BACK_SIZE_W					162
+#define MENU_BACK_SIZE_H					152
+#define MENU_BACK_POS_X						((WNDSIZEW - MENU_BACK_SIZE_W) / 2)
+#define MENU_BACK_POS_Y						((WNDSIZEH - MENU_BACK_SIZE_H) / 2 - 20)
+
+#define MENU_BTN_SIZE_W						120
+#define MENU_BTN_SIZE_H						32
+#define MENU_BTN_OPTION_FILE				".\\Data\\Interface\\menu_option.img"
+#define MENU_BTN_OUT_FILE					".\\Data\\Interface\\menu_out.img"
+#define MENU_BTN_EXIT_FILE					".\\Data\\Interface\\menu_exit.img"
+#define MENU_BTN_OPTION_POS_X				(MENU_BACK_POS_X + 21)
+#define MENU_BTN_OPTION_POS_Y				(MENU_BACK_POS_Y + 17)
+#define MENU_BTN_OUT_POS_X					MENU_BTN_OPTION_POS_X
+#define MENU_BTN_OUT_POS_Y					(MENU_BTN_OPTION_POS_Y + 42)
+#define MENU_BTN_EXIT_POS_X					MENU_BTN_OPTION_POS_X
+#define MENU_BTN_EXIT_POS_Y					(MENU_BTN_OUT_POS_Y + 42)
+
+
+
 
 // 전체맵 보기에서, 과목 점수(평점) 띄워줄 좌표.. 하드코딩 우왕 ㅋ
 static POINT s_ptPosGrade[CLASSNUM] = 
@@ -539,6 +562,37 @@ bool gUIGame::SetUp()
 	if(!m_ImgUI[UIIMG_GETITEM].Load(GETITEM_FILE))
 		return false;
 
+	// menu
+	if(!m_ImgUI[UIIMG_MENUBACK].Load(MENU_BACK_FILE))
+		return false;
+	SetRect(&m_rcPos[UIT_MENUBACK],
+			MENU_BACK_POS_X,
+			MENU_BACK_POS_Y,
+			MENU_BACK_POS_X + MENU_BACK_SIZE_W,
+			MENU_BACK_POS_Y + MENU_BACK_SIZE_H);
+	// menu btn
+	SetRect(&rcDest,
+			MENU_BTN_OPTION_POS_X,
+			MENU_BTN_OPTION_POS_Y,
+			MENU_BTN_OPTION_POS_X + MENU_BTN_SIZE_W,
+			MENU_BTN_OPTION_POS_Y + MENU_BTN_SIZE_H);
+	if(!m_BtnUI[UIBTN_OPTION].SetUp(MENU_BTN_OPTION_FILE, false, rcDest))
+		return false;
+	SetRect(&rcDest,
+		MENU_BTN_OUT_POS_X,
+		MENU_BTN_OUT_POS_Y,
+		MENU_BTN_OUT_POS_X + MENU_BTN_SIZE_W,
+		MENU_BTN_OUT_POS_Y + MENU_BTN_SIZE_H);
+	if(!m_BtnUI[UIBTN_OUT].SetUp(MENU_BTN_OUT_FILE, false, rcDest))
+		return false;
+	SetRect(&rcDest,
+		MENU_BTN_EXIT_POS_X,
+		MENU_BTN_EXIT_POS_Y,
+		MENU_BTN_EXIT_POS_X + MENU_BTN_SIZE_W,
+		MENU_BTN_EXIT_POS_Y + MENU_BTN_SIZE_H);
+	if(!m_BtnUI[UIBTN_EXIT].SetUp(MENU_BTN_EXIT_FILE, false, rcDest))
+		return false;
+
 	m_uimode = UIM_NONE;
 	m_drawmode = DM_NONE;
 	m_bTargetByMove = false;
@@ -677,6 +731,19 @@ void gUIGame::Draw()
 				m_ImgUI[UIIMG_GUAGEBAR].Draw(rcDest, rcSour, false);
 
 				m_nTimer_DiceGuageBar = GetTickCount();
+			}
+			break;
+		case UIM_MENU:
+			{
+				m_ImgUI[UIIMG_MENUBACK].Draw(MENU_BACK_POS_X, MENU_BACK_POS_Y);
+				m_BtnUI[UIBTN_OPTION].Draw();
+				m_BtnUI[UIBTN_OUT].Draw();
+				m_BtnUI[UIBTN_EXIT].Draw();
+			}
+			break;
+		case UIM_OPTION:
+			{
+				gTopUI::GetIF()->Draw_Option();
 			}
 			break;
 	}
@@ -1356,12 +1423,13 @@ bool gUIGame::OnLButtonDown()
 
 		return true;
 	}
-	//2010. 12. 28.
-	//MENU module 추가합시당....당....
-	//PopUp으로 메뉴 고르는걸 띄울까요?
-	//고르면 주사위 및 다른건 막히는건가? 아니면... 생각할 게 많네여...
 	if(m_BtnUI[UIBTN_MENU].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 	{
+		if(m_uimode == UIM_MENU)
+			m_uimode = UIM_NONE;
+		else
+			m_uimode = UIM_MENU;
+
 		return true;
 	}
 	if(m_BtnUI[UIBTN_MAPBTN].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
@@ -1771,6 +1839,25 @@ bool gUIGame::OnLButtonDown()
 				}
 			}
 			break;
+		case UIM_MENU:
+			{
+				if(m_BtnUI[UIBTN_OPTION].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+				{
+					m_uimode = UIM_OPTION;
+					gTopUI::GetIF()->m_uimode = RC_OPTION;
+				}
+				if(m_BtnUI[UIBTN_EXIT].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+				{
+					gMainWin::GetIF()->Exit();
+				}
+			}
+			break;
+		case UIM_OPTION:
+			{
+				gTopUI::GetIF()->OnLButtonDown(mouse->m_nPosX, mouse->m_nPosY);
+				if(gTopUI::GetIF()->m_uimode == RC_END)
+					m_uimode = UIM_MENU;
+			}
 	}
 
 	return false;
@@ -1957,6 +2044,10 @@ void gUIGame::OnMouseMove()
 			m_BtnUI[i].m_eBtnMode = EBM_HOVER;
 	}
 
+	if(m_uimode == UIM_OPTION)
+	{
+		gTopUI::GetIF()->OnMouseMove(mouse->m_nPosX, mouse->m_nPosY);
+	}
 	if(GetKeyState(VK_LBUTTON) < 0)
 	{
 		if(gUtil::PointInRect(mouse->m_nPosX, mouse->m_nPosY, m_rcPos[UIT_MINIMAPBACK]))
@@ -2020,6 +2111,12 @@ bool gUIGame::IsUIRange(int x, int y)
 			continue;
 
 		if(i == UIT_MAP && m_uimode != UIM_MAP)
+			continue;
+
+		if(i == UIT_MENUBACK && m_uimode != UIT_MENUBACK)
+			continue;
+
+		if(i == UIT_OPTION && m_uimode != UIT_OPTION)
 			continue;
 
 		if(gUtil::PointInRect(x, y, m_rcPos[i]))

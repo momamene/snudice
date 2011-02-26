@@ -182,7 +182,6 @@ void gPopUp::MainLoop()
 
 void gPopUp::Ok()
 {
-	m_ePop		= EPOP_NONE;
 	m_eBtnClk	= ECLK_OK;
 	m_bPopup	= false;
 	memset(m_szLine1, 0, 128);
@@ -195,7 +194,6 @@ void gPopUp::Ok()
 
 void gPopUp::Cancel()
 {
-	m_ePop		= EPOP_NONE;
 	m_eBtnClk	= ECLK_CANCEL;
 	m_bPopup	= false;
 	memset(m_szLine1, 0, 128);
