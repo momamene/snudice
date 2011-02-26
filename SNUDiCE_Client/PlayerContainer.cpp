@@ -406,6 +406,10 @@ void gPlayerContainer::Draw()
 	for(int i = 0 ; i < (int)PlayerRect.size() ; i++) {
 		int k = PlayerRect[i].index;
 		m_ImgInfo[ m_GPlayerList[k].ctype ].ImgDot.Draw(PlayerRect[i].rcScr, PlayerRect[i].rcImg, false);
+		if(k == GetMyGPIndex())
+		{
+			gUIGame::GetIF()->Draw_GetItem(PlayerRect[i].rcScr.left, PlayerRect[i].rcScr.top);
+		}
 	}
 }
 

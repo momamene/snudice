@@ -19,6 +19,7 @@ enum BTNCLK				// popup창에서 어떤 버튼이 클릭되었나
 
 enum ePOPTYPE			// 팝업창 타입
 {
+	EPOP_NONE = -1,
 	EPOP_RECONNECT = 0,
 	EPOP_DISCONNECT = 1,
 	EPOP_EXIT = 1,

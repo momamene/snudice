@@ -303,6 +303,13 @@
 #define DICE_GUAGEBAR_SPEED_MIN				800
 #define DICE_GUAGEBAR_SPEED_MAX				1000
 
+#define GETITEM_FILE						".\\Data\\Interface\\getcard.img"
+#define GETITEM_SIZE_W						60
+#define GETITEM_SIZE_H						66
+#define GETITEM_POS_X						30
+#define GETITEM_POS_Y						-10
+#define GETITEM_SHOWTIME					3000
+
 // 전체맵 보기에서, 과목 점수(평점) 띄워줄 좌표.. 하드코딩 우왕 ㅋ
 static POINT s_ptPosGrade[CLASSNUM] = 
 {
@@ -528,12 +535,17 @@ bool gUIGame::SetUp()
 	if(!m_ImgUI[UIIMG_GUAGEBAR].Load(DICE_GUAGEBAR_FILE))
 		return false;
 
+	// getitem
+	if(!m_ImgUI[UIIMG_GETITEM].Load(GETITEM_FILE))
+		return false;
+
 	m_uimode = UIM_NONE;
 	m_drawmode = DM_NONE;
 	m_bTargetByMove = false;
 	m_timer.SetUp();
 	m_bItemUsed = false;
 	m_bSendRoomBack = false;
+	m_bDrawGetItem = false;
 
 	return true;
 }
@@ -3059,6 +3071,17 @@ void gUIGame::SendMoveAskByNC()
 
 void gUIGame::pk_getitem_rep(PK_GETITEM_REP* rep)
 {
+	m_bDrawGetItem = true;
+	m_nTimerGetItem = GetTickCount();
+}
 
+void gUIGame::Draw_GetItem(int x, int y)
+{
+	if(!m_bDrawGetItem)
+		return;
 
+	m_ImgUI[UIIMG_GETITEM].Draw(x + GETITEM_POS_X, y + GETITEM_POS_Y);
+
+	if(GetTickCount() - m_nTimerGetItem > GETITEM_SHOWTIME)
+		m_bDrawGetItem = false;
 }
