@@ -533,6 +533,7 @@ bool gUIGame::SetUp()
 	m_bTargetByMove = false;
 	m_timer.SetUp();
 	m_bItemUsed = false;
+	m_bSendRoomBack = false;
 
 	return true;
 }
@@ -766,11 +767,15 @@ void gUIGame::Draw()
 				}
 				gUtil::EndText();
 
-				int		nFrame = m_timer.frame();
-				if(nFrame >= 1)
+				if(!m_bSendRoomBack)
 				{
-					m_timer.frameEnd();
-					gRoomCore::GetIF()->SendRoomBack();	//방나가고돌아오기수정
+					int		nFrame = m_timer.frame();
+					if(nFrame >= 1)
+					{
+						m_timer.frameEnd();
+						gRoomCore::GetIF()->SendRoomBack();	//방나가고돌아오기수정
+						m_bSendRoomBack = true;
+					}
 				}
 			}
 			break;
@@ -781,7 +786,7 @@ void gUIGame::Draw()
 	{
 		if(GetTickCount() - m_nYourTurnTimer > TIMER_SHOWTIME)
 			m_bShowYourTurn = false;
-		else
+		else  
 		{
 			m_ImgUI[UIIMG_YOURTURN].Draw(TIMER_YOURTURN_POS_X, TIMER_YOURTURN_POS_Y);
 		}
@@ -2984,6 +2989,7 @@ void gUIGame::Clear()
 	m_bShowYourTurn = false;
 	m_bShowTimeCount = true;
 	m_bItemUsed = false;
+	m_bSendRoomBack = false;
 }
 
 void gUIGame::GameEnd()

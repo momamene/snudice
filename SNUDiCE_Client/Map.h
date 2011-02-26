@@ -73,6 +73,9 @@ public:
 
 	gImage	m_ImgMapBG;
 
+	gImage	m_ImgCurSmall;
+	gImage	m_ImgCurBig;
+
 	int		count; // 아마 이것이 tile의 갯수갰지.
 
 	//bool	m_minimapOn;
@@ -111,8 +114,6 @@ public:
 	void	MainLoop();
 	void	Draw();				// 그리는 함수
 
-	void	DrawMap();			// 전체맵
-
 	// Draw Position set colony
 	void	posSetter(int xSpacePos, int ySpacePos);
 	void	posSpacor(bool isNokdu=false);		// space를 누르면 해당 위치로 이동하고, 캐릭터의 이동을 잡아주는 등의 함수
@@ -144,7 +145,12 @@ public:
 	// subjectIndex 는 선택된 과목 만약, 없다면 -1을 넣어주자.
 	// frameOn은 subjectIndex > 0 일 때, 1이면 깜빡이기.
 
+
+	void	DrawMap();			// 전체맵
+	void	DrawMapCursor(int nSizeRate, int posX, int posY);	// 전체맵 플레이어 위치
+
 	void	DrawMinimap(int x0, int y0, int n);
+	void	DrawMiniMapCursor(int nSizeRate, int posX, int posY);
 
 	int		viewabsToCon(POINT ij);
 	// 마우스 좌표 받아서, nPos return

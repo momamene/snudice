@@ -262,7 +262,7 @@ void gLoginCore::SendLogin()
 
 	char	szTemp[33];
 
-	strcpy(ask.szID, m_EditID.m_szEdit);
+	strcpy(ask.szLoginID, m_EditID.m_szEdit);
 	strcpy(szTemp, m_EditPW.m_szEdit);
 
 	MDString(szTemp, ask.szPW);

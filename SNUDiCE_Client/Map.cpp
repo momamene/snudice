@@ -7,28 +7,37 @@
 #include "UIGame.h"
 #include "GameCore.h"
 
-#define TILENUM				9
+#define TILENUM					9
 
-#define MAPFILE				".\\Data\\map.xy"
+#define MAPFILE					".\\Data\\map.xy"
 
-#define MAPFILEIMG			".\\Data\\Map\\mapbg.img"
-#define BACKMAPX			2255
-#define BACKMAPY			1639
+#define MAPFILEIMG				".\\Data\\Map\\mapbg.img"
+#define BACKMAPX				2255
+#define BACKMAPY				1639
 
-#define TILE_FOOD_IMG		".\\Data\\Map\\food.img"
-#define TILE_CARD_IMG		".\\Data\\Map\\card.img"
-#define TILE_NOKDU_IMG		".\\Data\\Map\\nokdu.img"
-#define TILE_BUS_IMG		".\\Data\\Map\\bus.img"
-#define TILE_MAINGATE_IMG	".\\Data\\Map\\maingate.img"
-#define TILE_MOUNTAIN_IMG	".\\Data\\Map\\mountain.img"
-#define TILE_LANG_IMG		".\\Data\\Map\\lang.img"
-#define TILE_MATH_IMG		".\\Data\\Map\\math.img"
-#define TILE_ART_IMG		".\\Data\\Map\\art.img"
+#define TILE_FOOD_IMG			".\\Data\\Map\\food.img"
+#define TILE_CARD_IMG			".\\Data\\Map\\card.img"
+#define TILE_NOKDU_IMG			".\\Data\\Map\\nokdu.img"
+#define TILE_BUS_IMG			".\\Data\\Map\\bus.img"
+#define TILE_MAINGATE_IMG		".\\Data\\Map\\maingate.img"
+#define TILE_MOUNTAIN_IMG		".\\Data\\Map\\mountain.img"
+#define TILE_LANG_IMG			".\\Data\\Map\\lang.img"
+#define TILE_MATH_IMG			".\\Data\\Map\\math.img"
+#define TILE_ART_IMG			".\\Data\\Map\\art.img"
 //#define TILE_TITLE_IMG		".\\Data\\Map\\title.img"
 
-#define TILE_SMALLTILE		".\\Data\\Map\\smallmapchip.img"
+#define TILE_SMALLTILE			".\\Data\\Map\\smallmapchip.img"
 
-#define BUSGLOWTICK			600
+#define BUSGLOWTICK				600
+
+
+#define	CURSORSMALL_FILE		".\\Data\\Interface\\map_cursor_small.img"
+#define CURSORSMALL_SIZE_W		8
+#define CURSORSMALL_SIZE_H		7
+
+#define	CURSORBIG_FILE			".\\Data\\Interface\\map_cursor_big.img"
+#define CURSORBIG_SIZE_W		12
+#define CURSORBIG_SIZE_H		11
 
 void gTile::init(int xo,int yo)
 {
@@ -112,6 +121,13 @@ bool gMap::Setup()
 	Load();
 	
 	posSetter(m_xInitSpacePos, m_yInitSpacePos);
+
+
+	// map cursor
+	if(!m_ImgCurSmall.Load(CURSORSMALL_FILE))
+		return false;
+	if(!m_ImgCurBig.Load(CURSORBIG_FILE))
+		return false;
 
 	return true;
 }
@@ -416,6 +432,7 @@ void gMap::DrawMinimap(int x0, int y0, int n)
 			}
 		}
 	}
+	DrawMiniMapCursor(n, x0, y0);
 }
 
 void gMap::DrawSubmit(int x0, int y0, int n, int subjectIndex, int frameOn) // frameOn = false °¡ ±âº» setting
@@ -515,6 +532,7 @@ void gMap::Draw()
 void gMap::DrawMap()
 {
 	DrawHexagon(235, 105, 6, gUIGame::GetIF()->m_nCharSelected, true);
+	DrawMapCursor(6, 235, 105);
 }
 
 // 2. Draw Line End
@@ -757,4 +775,150 @@ void gMap::SetPosByRateX(float ratex)
 void gMap::SetPosByRateY(float ratey)
 {
 	m_nAbsDrawlineY = int(BACKMAPY * ratey);
+}
+
+void gMap::DrawMapCursor(int nSizeRate, int posX, int posY)
+{
+	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
+
+	int		i;
+
+	int		x, y;
+	RECT	rcDest, rcSour;
+	for(i = 0; i < ROOMMAXPLAYER; i++)
+	{
+		if(strlen(gPC->m_GPlayerList[i].szID) == 0)
+			continue;
+
+		if(strcmp(gPC->m_GPlayerList[i].szID, gPC->m_MyGamePlayer.szID) == 0)
+			continue;
+
+		y = gPC->m_GPlayerList[i].nPos % LINEY;
+		x = gPC->m_GPlayerList[i].nPos / LINEY;
+
+		if(x % 2 == 0)
+		{
+			rcDest.left		= WIDEX * x / 2;
+			rcDest.top		= FULLY * y;
+		}
+		else
+		{
+			rcDest.left		= LEFTX + MIDDLEX + WIDEX * (x - 1) / 2;
+			rcDest.top		= HALFY + FULLY * y;
+		}
+
+		rcDest.left	/= nSizeRate;
+		rcDest.top	/= nSizeRate;
+
+		rcDest.right	= rcDest.left + CURSORBIG_SIZE_W;
+		rcDest.bottom	= rcDest.top + CURSORBIG_SIZE_H;
+
+		OffsetRect(&rcDest, posX + 3, posY - 6);
+
+		SetRect(&rcSour,
+			0, 0, CURSORBIG_SIZE_W, CURSORBIG_SIZE_H);
+
+		m_ImgCurBig.Draw(rcDest, rcSour, false);
+	}
+
+	y = gPC->m_MyGamePlayer.nPos % LINEY;
+	x = gPC->m_MyGamePlayer.nPos / LINEY;
+
+	if(x % 2 == 0)
+	{
+		rcDest.left		= WIDEX * x / 2;
+		rcDest.top		= FULLY * y;
+	}
+	else
+	{
+		rcDest.left		= LEFTX + MIDDLEX + WIDEX * (x - 1) / 2;
+		rcDest.top		= HALFY + FULLY * y;
+	}
+
+	rcDest.left	/= nSizeRate;
+	rcDest.top	/= nSizeRate;
+
+	rcDest.right	= rcDest.left + CURSORBIG_SIZE_W;
+	rcDest.bottom	= rcDest.top + CURSORBIG_SIZE_H;
+
+	OffsetRect(&rcDest, posX + 3, posY - 6);
+
+	SetRect(&rcSour,
+		0, 0, CURSORBIG_SIZE_W, CURSORBIG_SIZE_H);
+	OffsetRect(&rcSour, CURSORBIG_SIZE_W, 0);
+
+	m_ImgCurBig.Draw(rcDest, rcSour, false);
+}
+
+void gMap::DrawMiniMapCursor(int nSizeRate, int posX, int posY)
+{
+	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
+
+	int		i;
+
+	int		x, y;
+	RECT	rcDest, rcSour;
+	for(i = 0; i < ROOMMAXPLAYER; i++)
+	{
+		if(strlen(gPC->m_GPlayerList[i].szID) == 0)
+			continue;
+
+		if(strcmp(gPC->m_GPlayerList[i].szID, gPC->m_MyGamePlayer.szID) == 0)
+			continue;
+
+		y = gPC->m_GPlayerList[i].nPos % LINEY;
+		x = gPC->m_GPlayerList[i].nPos / LINEY;
+
+		if(x % 2 == 0)
+		{
+			rcDest.left		= WIDEX * x / 2;
+			rcDest.top		= FULLY * y;
+		}
+		else
+		{
+			rcDest.left		= LEFTX + MIDDLEX + WIDEX * (x - 1) / 2;
+			rcDest.top		= HALFY + FULLY * y;
+		}
+
+		rcDest.left	/= nSizeRate;
+		rcDest.top	/= nSizeRate;
+
+		rcDest.right	= rcDest.left + CURSORSMALL_SIZE_W;
+		rcDest.bottom	= rcDest.top + CURSORSMALL_SIZE_H;
+
+		OffsetRect(&rcDest, posX - 1, posY - 4);
+
+		SetRect(&rcSour,
+			0, 0, CURSORSMALL_SIZE_W, CURSORSMALL_SIZE_H);
+
+		m_ImgCurSmall.Draw(rcDest, rcSour, false);
+	}
+
+	y = gPC->m_MyGamePlayer.nPos % LINEY;
+	x = gPC->m_MyGamePlayer.nPos / LINEY;
+
+	if(x % 2 == 0)
+	{
+		rcDest.left		= WIDEX * x / 2;
+		rcDest.top		= FULLY * y;
+	}
+	else
+	{
+		rcDest.left		= LEFTX + MIDDLEX + WIDEX * (x - 1) / 2;
+		rcDest.top		= HALFY + FULLY * y;
+	}
+
+	rcDest.left	/= nSizeRate;
+	rcDest.top	/= nSizeRate;
+
+	rcDest.right	= rcDest.left + CURSORSMALL_SIZE_W;
+	rcDest.bottom	= rcDest.top + CURSORSMALL_SIZE_H;
+
+	OffsetRect(&rcDest, posX - 1, posY - 4);
+
+	SetRect(&rcSour,
+		0, 0, CURSORSMALL_SIZE_W, CURSORSMALL_SIZE_H);
+	OffsetRect(&rcSour, CURSORSMALL_SIZE_W, 0);
+
+	m_ImgCurSmall.Draw(rcDest, rcSour, false);
 }
