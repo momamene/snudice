@@ -1419,7 +1419,7 @@ ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, 
 
 						if (m_GamePlayer[nRoomIndex][playerIndex_a].nLove == 0 || m_GamePlayer[nRoomIndex][playerIndex_b].nLove == 0)	{
 							char *szID_me = gRC->FindPlayerszIDInTheRoom(playerIndex_a , nRoomIndex) , *szID_partner = gRC->FindPlayerszIDInTheRoom(playerIndex_b , nRoomIndex);
-							pk_becouple_rep(nRoomIndex, gPC->GetPlayerFromID(szID_me) ,  gPC->GetPlayerFromID(szID_partner) , false);
+							pk_becouple_rep(nRoomIndex, gPC->GetPlayerFromID(szID_me) ,  gPC->GetPlayerFromID(szID_partner) , false , true);
 						}	else	{
 //							pk_nextturn_rep(nRoomIndex);
 						}
@@ -2115,9 +2115,8 @@ void gGamePlayerContainer::pk_anscouple_ask(PK_DEFAULT *pk,SOCKET sock)	//수정 ,
 	}
 }
 
-void gGamePlayerContainer::pk_becouple_rep(int nRoomIndex , PLAYER player_a , PLAYER player_b , bool bCouple)	//player_a 가 player_b를 bCouple하게 했다.
-{	
-	
+void gGamePlayerContainer::pk_becouple_rep(int nRoomIndex , PLAYER player_a , PLAYER player_b , bool bCouple , bool isBothBreak)	//player_a 가 player_b를 bCouple하게 했다.
+{
 	PK_BECOUPLE_REP rep;
 	gCharinfo *gCI = gCharinfo::GetIF();
 	gRoomCore *gRC = gRoomCore::GetIF();
@@ -2202,7 +2201,9 @@ void gGamePlayerContainer::pk_becouple_rep(int nRoomIndex , PLAYER player_a , PL
 		element.first = COUPLE_BROCKEN_DEBUF_INDEX;
 		element.second = COUPLE_DEBUFFTURN;
 		m_userItemList[nRoomIndex][playerIndex_b].push_back(element);
-
+		if (isBothBreak)	{
+			m_userItemList[nRoomIndex][playerIndex_a].push_back(element);
+		}
 //		pk_nextturn_rep(nRoomIndex);
 	}
 
@@ -2317,13 +2318,14 @@ void	gGamePlayerContainer::TileProcess(int nRoomIndex, int nInRoomIndex, int nDe
 	}
 	else if(gTC->m_tileMap[nDestPos].tileType==TY_STAMINA) {
 		gMainWin::GetIF()->LogWrite("TY_STAMINA\n");
-		staminaConvert(nRoomIndex,m_nTurn[nRoomIndex],1);
+		int staminaUpPoint = rand() % 3 + 1;
+		staminaConvert(nRoomIndex,m_nTurn[nRoomIndex], staminaUpPoint );
 		if (m_GamePlayer[nRoomIndex][m_nTurn[nRoomIndex]].nLove == -1)	{	//싱글
-			pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex] , 1,0);
+			pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex] , staminaUpPoint ,0);
 		}	else	{	//커플
 			int partnerIndex = m_favor[nRoomIndex][m_nTurn[nRoomIndex]].lvTargetIndex;
-			staminaConvert(nRoomIndex,partnerIndex,1);
-			pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex] , 1,0 , partnerIndex);
+			staminaConvert(nRoomIndex,partnerIndex,staminaUpPoint);
+			pk_infochangeTile_rep(nRoomIndex,m_nTurn[nRoomIndex] , staminaUpPoint ,0 , partnerIndex);
 		}
 		pk_gameplayerinfo_rep(nRoomIndex);
 		//				pk_nextturn_rep(nRoomIndex);

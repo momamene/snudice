@@ -160,7 +160,7 @@ public:
 	void		pk_becoupleend_ask(PK_DEFAULT *pk , SOCKET sock );
 
 	void		pk_askcouple_rep( int nRoomIndex , int playerIndex_a, int playerIndex_b);	//	 a, b : 플레이어의 인덱스값	
-	void		pk_becouple_rep (int nRoomIndex , PLAYER player_a , PLAYER player_b , bool bCouple);
+	void		pk_becouple_rep (int nRoomIndex , PLAYER player_a , PLAYER player_b , bool bCouple , bool isBothBreak = false);
 
 	bool		SetUp();
 	bool		init(int nRoomIndex);
