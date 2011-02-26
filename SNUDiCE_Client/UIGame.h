@@ -181,6 +181,8 @@ private:
 	float		m_fPosX_DiceGuageBar;
 	int			m_nTimer_DiceGuageBar;
 
+	bool		m_bSendRoomBack;			// gTimer 에러땜시
+
 private:
 	void		DrawMapToolTip();
 	void		DrawShowAlways();			// 항상 출력

@@ -5,6 +5,8 @@
 
 //#define DEBUGMODE
 
+#define NOUSE_CRASHHANDLER
+
 #ifdef DEBUGMODE
 #using <System.dll>
 
@@ -132,53 +134,58 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 		}
 	}
 
-#ifndef DEBUGMODE
-//	LPTOP_LEVEL_EXCEPTION_FILTER lpPreviousFilter = NULL;
-//	lpPreviousFilter = SetUnhandledExceptionFilter(UnhandledExceptionFilter2);
-#endif
-
 	int		retValue = -1; 
 
-#ifdef DEBUGMODE
-	StackTrace^ st;
-	__try {
-		retValue = main->Run();
-	}
-	__except(st = gcnew StackTrace( true ), EXCEPTION_EXECUTE_HANDLER) {
-		
-		STARTUPINFO si = {sizeof(STARTUPINFO),};
-		
-		FILE *fp=fopen("Bug.txt","wt");
-		String^ stackIndent = "";
-		for ( int i = 0; i < st->FrameCount; i++ )
-		{
+#ifdef NOUSE_CRASHHANDLER
+	retValue = main->Run();
+#else
+	#ifndef DEBUGMODE
+	//	LPTOP_LEVEL_EXCEPTION_FILTER lpPreviousFilter = NULL;
+	//	lpPreviousFilter = SetUnhandledExceptionFilter(UnhandledExceptionFilter2);
+	#endif
 
-			// Note that at this level, there are five
-			// stack frames, one for each method invocation.
-			StackFrame^ sf = st->GetFrame( i );
-			fprintf(fp,"\n");
-			fprintf(fp,"High up the call stack, Method: {%s}\n", sf->GetMethod()->ToString() );
-			fprintf(fp,"High up the call stack, Line Number: {%s}\n", sf->GetFileLineNumber().ToString() );
+
+	#ifdef DEBUGMODE
+		StackTrace^ st;
+		__try {
+			retValue = main->Run();
 		}
-		fclose(fp);
-		
-		Sleep(1000);
-		WinExec("BugReport.exe", SW_SHOWNORMAL);
-		//CreateProcess(Path, " c:\\autoexec.bat", NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi);
-	}
-#endif
+		__except(st = gcnew StackTrace( true ), EXCEPTION_EXECUTE_HANDLER) {
+			
+			STARTUPINFO si = {sizeof(STARTUPINFO),};
+			
+			FILE *fp=fopen("Bug.txt","wt");
+			String^ stackIndent = "";
+			for ( int i = 0; i < st->FrameCount; i++ )
+			{
+
+				// Note that at this level, there are five
+				// stack frames, one for each method invocation.
+				StackFrame^ sf = st->GetFrame( i );
+				fprintf(fp,"\n");
+				fprintf(fp,"High up the call stack, Method: {%s}\n", sf->GetMethod()->ToString() );
+				fprintf(fp,"High up the call stack, Line Number: {%s}\n", sf->GetFileLineNumber().ToString() );
+			}
+			fclose(fp);
+			
+			Sleep(1000);
+			WinExec("BugReport.exe", SW_SHOWNORMAL);
+			//CreateProcess(Path, " c:\\autoexec.bat", NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi);
+		}
+	#endif
 
 
-#ifndef DEBUGMODE
-	_CrashHandler()->Create();
-	_CrashHandler()->Init();
-	__try {
-		retValue = main->Run();
-	}
-	__except(_CrashHandler()->ExceptionCallBack(GetExceptionInformation())) {
-		return -1;
-	}
-//	SetUnhandledExceptionFilter(lpPreviousFilter);
+	#ifndef DEBUGMODE
+		_CrashHandler()->Create();
+		_CrashHandler()->Init();
+		__try {
+			retValue = main->Run();
+		}
+		__except(_CrashHandler()->ExceptionCallBack(GetExceptionInformation())) {
+			return -1;
+		}
+	//	SetUnhandledExceptionFilter(lpPreviousFilter);
+	#endif
 #endif
 
 	main->Release();
