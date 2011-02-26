@@ -130,7 +130,7 @@ public:
 	void		pk_movestart_rep(int nRoomIndex , int nInRoomIndex , PK_MOVESTART_REP rep );	// debuger_move¸¦ À§ÇÔ;;;;
 	
 	void		pk_moveend_ask(PK_DEFAULT *pk,SOCKET sock);
-	void		pk_nextturn_rep(int nRoomIndex);
+	bool		pk_nextturn_rep(int nRoomIndex);
 	void		pk_busmovechoose_rep(int nRoomIndex,char* szID);
 	void		pk_busmoveselect_ask(PK_DEFAULT *pk,SOCKET sock);
 	void		pk_busmoveend_ask(PK_DEFAULT *pk,SOCKET sock);

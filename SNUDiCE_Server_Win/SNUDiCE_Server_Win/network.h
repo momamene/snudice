@@ -209,7 +209,6 @@ struct CHARINFO
 	int			nDice4;
 	int			nDice6;
 };
-
 struct PLAYER
 {
 	char		szID[IDLENGTH];
@@ -225,7 +224,7 @@ struct PLAYER
 
 struct PK_LOGIN_ASK
 {
-	char		szID[IDLENGTH];
+	char		szLoginID[IDLENGTH];
 	char		szPW[33];
 };
 
