@@ -11,6 +11,8 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import constant.Const;
+
 import utility.Util;
 
 import dbaccess.DB;
@@ -43,21 +45,28 @@ public class AllRequestFilter implements Filter {
 		
 		HttpServletRequest req = (HttpServletRequest)request;
 		HttpSession session = req.getSession();
-		session.setMaxInactiveInterval(1800);
+		session.setMaxInactiveInterval(Const.sessionTimeout);
 		DB db = DB.getInstance();
 		
 		StringBuffer log = new StringBuffer("["+Util.currDateTime()+"]");
 		log.append(" <"+req.getRemoteAddr()+">");
 		if(req.getRemoteUser()!=null) //로그인 된 경우
-		{			
-			if(session.getAttribute("nickname")==null)
+		{	
+			if(session.getAttribute("userId")==null)
 			{
 				synchronized(session)
 				{
 					String userId = req.getRemoteUser();
 					String nickname = db.dbAccount.getNickname(userId);
+					session.setAttribute("nickname", nickname); //nickname 설정
+				}
+			}			
+			if(session.getAttribute("nickname")==null)
+			{
+				synchronized(session)
+				{
+					String userId = req.getRemoteUser();					
 					session.setAttribute("userId", userId); //userId 설정
-					session.setAttribute("nickname", nickname); //nickname 설정					
 				}
 			}
 			if(session.getAttribute("role")==null)

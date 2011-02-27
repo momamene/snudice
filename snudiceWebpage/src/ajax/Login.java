@@ -60,8 +60,12 @@ public class Login extends HttpServlet {
 			os.print("loginFail");		
 		else
 		{
-			//session에 userId를 속성으로 지정					
+			String nickname = db.dbAccount.getNickname(userId);
+			String role = db.dbAccount.getUserRole(userId);			
+					
 			session.setAttribute("userId", userId);	
+			session.setAttribute("nickname", nickname);
+			session.setAttribute("role", role);			
 			
 			//secure login				
 			request.login(userId, password);

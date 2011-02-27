@@ -31,13 +31,19 @@ function initLogin(){
 	//pw 찾기 버튼
 	var pwFind = document.getElementById("pwFind");
 	pwFind.onclick = pwFindFunc;
+	//정보수정 창 열기 버튼
+	var infoModifyButton = document.getElementById("infoModifyButton");
+	infoModifyButton.onclick = infoModifyOpenFunc;
+	//정보수정 창 닫기 버튼
+	var infoModifyClose = document.getElementById("infoModifyClose");
+	infoModifyClose.onclick = infoModifyCloseFunc;
 	
 	//패스워드 창에서 엔터 치면 로그인시킴
 	enterKeyExec("password",loginFunc);
 
 	//로그아웃 버튼
-	var logoutWrapper = document.getElementById("logoutWrapper");
-	logoutWrapper.onclick = function() { window.location = "logout.do"; };
+	var logoutButton = document.getElementById("logoutButton");
+	logoutButton.onclick = function() { window.location = "logout.do"; };
 	
 	//손님 로그인 버튼
 	var guestLogin = document.getElementById("guestLogin");
@@ -291,6 +297,28 @@ function pwFindFunc()
 	sendRequest(url,method,param,callback,async);
 }
 
+//회원정보 수정 창을 연다.
+function infoModifyOpenFunc()
+{
+	var userId = document.getElementById("userId");
+	if(userId.value=="guest")
+		return;
+	
+	var url = root+"/infoModifyLoad.ajax";	
+	var method = "POST";
+	var param = "userId="+encodeURIComponent(userId.value);	
+	var callback = infoModifyRefresh;
+	var async = true;
+	
+	sendRequest(url,method,param,callback,async);
+}
+
+function infoModifyCloseFunc()
+{
+	var infoModifyForm = document.getElementById("infoModifyForm");
+	infoModifyForm.className = "display_none";
+}
+
 ////////////////////이미지 변화 event handler/////////////////////
 //마우스를 올려놓는 경우
 function mousOverFunc()
@@ -398,7 +426,8 @@ function loginFormRefresh()
 {		
 	var userId = document.getElementById("userId");	
 	var loginMsg = document.getElementById("loginMsg");	
-	var logoutWrapper = document.getElementById("logoutWrapper");		
+	var logginedButtonWrapper = document.getElementById("logginedButtonWrapper");
+	var infoModifyButton = document.getElementById("infoModifyButton");	
 	
 	if(request.readyState == 4)
 	{		
@@ -413,7 +442,11 @@ function loginFormRefresh()
 				loginMsg.className = "loggined";
 				loginFormWrapper.className = "invisible";
 				loginFormTitle.className = "invisible";
-				logoutWrapper.className = "visible";
+				logginedButtonWrapper.className = "visible";
+				if(userId.value=="guest")
+					infoModifyButton.className = "unavailable";
+				else
+					infoModifyButton.className = "available";
 				
 				var mainLeftTop = document.getElementById("mainLeftTop");
 				mainLeftTop.className = "loggined";
@@ -480,6 +513,26 @@ function pwFindRefresh()
 			}
 			else if(request.responseText=="emailSendingFail")			
 				idpwFindMsg.innerHTML = "email 발송에 실패했습니다.";				
+		}
+	}	
+}
+
+function infoModifyRefresh()
+{
+	if(request.readyState == 4)
+	{		
+		if(request.status == 200)
+		{
+			if(request.responseText=="error")
+			{
+				alert('사용자 정보를 불러올 수 없습니다.');
+				return;
+			}
+			else
+			{
+				var infoModifyForm = document.getElementById("infoModifyForm");
+				infoModifyForm.className = "display_block";	
+			}		
 		}
 	}	
 }

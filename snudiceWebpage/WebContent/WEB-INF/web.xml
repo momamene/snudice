@@ -80,6 +80,20 @@
   </security-constraint>
   <security-constraint>
     <web-resource-collection>
+      <web-resource-name>회원정보 수정</web-resource-name>
+      <url-pattern>/infoModify.ajax</url-pattern>
+      <url-pattern>/infoModifyLoad.ajax</url-pattern>
+      <http-method>GET</http-method>
+      <http-method>POST</http-method>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>admin</role-name>
+      <role-name>manager</role-name>
+      <role-name>member</role-name>
+    </auth-constraint>
+  </security-constraint>
+  <security-constraint>
+    <web-resource-collection>
       <web-resource-name>전체접근</web-resource-name>
       <url-pattern>/testAjax.ajax</url-pattern>
       <url-pattern>/login.ajax</url-pattern>
@@ -227,7 +241,6 @@
     <servlet-name>activation</servlet-name>
     <url-pattern>/activate.do</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <servlet-name>idFind</servlet-name>
     <servlet-class>ajax.IdFind</servlet-class>
@@ -236,7 +249,6 @@
     <servlet-name>idFind</servlet-name>
     <url-pattern>/idFind.ajax</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <servlet-name>pwFind</servlet-name>
     <servlet-class>ajax.PwFind</servlet-class>
@@ -244,6 +256,23 @@
   <servlet-mapping>
     <servlet-name>pwFind</servlet-name>
     <url-pattern>/pwFind.ajax</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>infoModify</servlet-name>
+    <servlet-class>ajax.InfoModify</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>infoModify</servlet-name>
+    <url-pattern>/infoModify.ajax</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>infoModifyLoad</servlet-name>
+    <servlet-class>ajax.InfoModifyLoad</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>infoModifyLoad</servlet-name>
+    <url-pattern>/infoModifyLoad.ajax</url-pattern>
   </servlet-mapping>
   
   <servlet>
