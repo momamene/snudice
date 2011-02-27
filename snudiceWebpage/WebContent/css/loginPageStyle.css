@@ -1,5 +1,22 @@
 @CHARSET "UTF-8";
 
+input
+{
+	height : 20px;
+	border-color: black; 
+}
+
+.button
+{
+	background-color : #D0DCE4;
+	border : 1px solid #9B9C9B;
+	padding-left : 5px;
+	padding-right: 5px;	
+	padding-bottom : 2px;
+	cursor : pointer;
+	text-align : center;
+}
+
 .bodyWrapper
 {
 	width : 1025px; 
@@ -241,24 +258,45 @@ hr
 #loginMsg.logouted { top : 40px; }
 #loginMsg.loggined { top : 30px; }
 
-#logoutWrapper.invisible 
-{
-	visibility : hidden;
-}
+#logginedButtonWrapper.invisible { visibility : hidden; }
 
-#logoutWrapper.visible 
+#logginedButtonWrapper.visible
 {
-	text-align : center;
-	background-image : url('/snudiceWebpage/image/mainpage/logout.png');
-	background-repeat : no-repeat;
-	width : 68px;
-	height : 31px;
 	visibility : visible;	
 	position : relative;
-	left : 50%;
-	margin-left : -34px;
-	top : 50px;
+	top : 50px;	
+	width : auto;
+	height : auto;	
+}
+
+#logoutButton,#infoModifyButton
+{ 
 	cursor : pointer;
+	float : left;
+	position : relative; 
+	width : 60px;
+	height : 22px;
+}
+
+#infoModifyButton.unavailable 
+{
+	opacity:0.3;
+	filter:alpha(opacity=30); /* for IE */
+} 
+
+#logoutButton { left : 45px; }	
+#infoModifyButton { left : 55px; }
+
+#logoutButton
+{	
+	background-image : url('/snudiceWebpage/image/mainpage/logout.png');
+	background-repeat : no-repeat;			
+}
+
+#infoModifyButton
+{
+	background-image : url('/snudiceWebpage/image/mainpage/infoModify.png');
+	background-repeat : no-repeat;	
 }
 
 #guestLogin 
@@ -348,16 +386,7 @@ hr
 	margin-left: 120px;
 	margin-right : 20px;
 }
-#joinSubmit,#joinClose
-{
-	background-color : #D0DCE4;
-	border : 1px solid #9B9C9B;
-	padding-left : 5px;
-	padding-right: 5px;	
-	padding-bottom : 2px;
-	margin-top : 10px;
-	cursor : pointer;
-}
+
 #joinFormTable
 {	
 	margin-top : 30px;
@@ -365,11 +394,6 @@ hr
 
 #joinFormTable td.label { padding-right : 20px; }
 #joinFormTable td { padding-bottom : 4px; }
-#joinFormTable input 
-{ 
-	height : 20px;
-	border-color: black; 
-}
 
 #joinId { width : 120px; }
 #joinPw { width : 120px; }
@@ -421,23 +445,7 @@ span.noticeMsg
 
 #idpwFindFormTable td.label { padding-right : 20px; }
 #idpwFindFormTable td { padding-bottom : 10px; }
-#idpwFindFormTable input 
-{ 
-	width : 120px;
-	height : 20px;
-	border-color: black; 
-}
-
-#idFind,#pwFind,#idpwFindClose
-{
-	background-color : #D0DCE4;
-	border : 1px solid #9B9C9B;
-	padding-left : 5px;
-	padding-right: 5px;	
-	padding-bottom : 2px;
-	cursor : pointer;
-	text-align : center;
-}
+#idpwFindFormTable input {	width : 120px; }
 
 #idpwFindClose
 {	
@@ -451,7 +459,27 @@ span.noticeMsg
 	color : red;
 	height : 30px; 	
 	margin-left : 15px;
-}	
+}
+
+
+/*---------------회원 정보 수정 form-----------*/
+#infoModifyForm.display_none { display : none; }
+#infoModifyForm.display_block
+{
+	background-image : url('/snudiceWebpage/image/mainpage/infoModifyForm.png');
+	background-repeat : no-repeat;	
+	
+	position : absolute;
+	left : 10px;
+	top : 30px;
+	display : block;	
+	
+	width : 403px;
+	height : 322px;
+	z-index : 2;	
+}
+
+#infoModifyClose { width : 40px; }
 
 /*-----------메인 섹션------------*/
 span.title 

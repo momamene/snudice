@@ -57,8 +57,8 @@
 	</insert>
 	
 	<insert id="insertUserScore" parameterClass="String">
-		INSERT INTO userscore (nickname,winCount,loseCount)
-		VALUES(#nickname:VARCHAR#,0,0)
+		INSERT INTO userscore (nickname)
+		VALUES(#nickname:VARCHAR#)
 	</insert>	
 	
 	<select id="getUserRole" parameterClass="String" resultClass="String">

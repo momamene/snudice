@@ -68,8 +68,8 @@ window.onload = function() {
 						</table>								
 					
 						<div id="joinMsg"></div>
-						<span id="joinSubmit">가입하기</span>					
-						<span id="joinClose">닫기</span>						
+						<span id="joinSubmit" class="button">가입하기</span>					
+						<span id="joinClose" class="button">닫기</span>						
 					</div>
 					
 					<!-- 아이디,비번 찾기 Form -->
@@ -79,16 +79,48 @@ window.onload = function() {
 							<tr>
 								<td class="label">email</td>
 								<td><input id="idpwFindEmail" type="text" name="idpwFindEmail"/></td>
-								<td><span id="idFind">id찾기</span></td>
+								<td><span id="idFind" class="button">id찾기</span></td>
 							</tr>
 							<tr>
 								<td class="label">id</td>
 								<td><input id="idpwFindId" type="text" name="idpwFindId"/></td>
-								<td><span id="pwFind">pw찾기</span></td>
+								<td><span id="pwFind" class="button">pw찾기</span></td>
 							</tr>
 						</table>
 						<div id="idpwFindMsg"></div>										
-						<div id="idpwFindClose">닫기</div>
+						<div id="idpwFindClose" class="button">닫기</div>
+					</div>
+					
+					<!-- 회원 정보 수정 form -->
+					<div id="infoModifyForm" class="display_none">					
+						<div id="infoModifyTitle">정보수정</div>	
+							<table id="infoModifyFormTable">
+								<tr>
+									<td class="label">기존pw</td>
+									<td><input id="pastPw" type="password" name="pastPw"/></td>									
+								</tr>
+								<tr>
+									<td class="label">새로운pw</td>
+									<td><input id="newPw" type="password" name="newPw"/></td>									
+								</tr>
+								<tr>
+									<td class="label">새로운pw확인</td>
+									<td><input id="newPwConfirm" type="password" name="newPwConfirm"/></td>									
+								</tr>
+								<tr>
+									<td class="label">email</td>
+									<td><input id="newEmail" type="text" name="newEmail"/></td>									
+								</tr>
+								<tr>
+									<td class="label">자기소개</td>
+									<td><input id="newComment" type="text" name="newComment"/></td>									
+								</tr>
+							</table>
+						<div id="infoModifyMsg"></div>
+						<div id="infoModifyButtonWrapper">
+							<span id="infoModifyExec" class="button">정보수정</span>
+							<span id="infoModifyClose" class="button">닫기</span>
+						</div>																						
 					</div>
 					
 					<!-- 로그인 Form -->
@@ -140,14 +172,24 @@ window.onload = function() {
 						</div>
 						<c:choose>
 							<c:when test="${not empty userId}">
-								<c:set var="logoutWrapperClass" value="visible"/>		
+								<c:set var="logginedButtonWrapperClass" value="visible"/>		
 							</c:when>
 							<c:otherwise>
-								<c:set var="logoutWrapperClass" value="invisible"/>		
+								<c:set var="logginedButtonWrapperClass" value="invisible"/>		
 							</c:otherwise>
-						</c:choose>			
-						<div id="logoutWrapper" class="${logoutWrapperClass}">				
-						</div>						
+						</c:choose>		
+						<div id="logginedButtonWrapper" class="${logginedButtonWrapperClass}">
+							<div id="logoutButton"></div>
+							<c:choose>
+								<c:when test="${role=='guest'}">
+									<c:set var="infoModifyButtonClass" value="unavailable"/>
+								</c:when>
+								<c:otherwise>
+									<c:set var="infoModifyButtonClass" value="available"/>
+								</c:otherwise>
+							</c:choose>
+							<div id="infoModifyButton" class="${infoModifyButtonClass}"></div>
+						</div>																	
 					</div>
 					<div id="mainLeftBottom">						
 						<a href="${root}/setupFile/SNUDiCE_setup.exe">게임 다운로드</a>										
@@ -171,7 +213,7 @@ window.onload = function() {
 										<td>										
 											<a href="${root}/board/articleView.do?boardName=${noticeBoardName}&articleIndex=${article.articleIndex}&currPage=0">${article.title}</a>											
 										</td>
-									</tr>													
+									</tr>												
 							</c:forEach>
 							</table>							
 																
