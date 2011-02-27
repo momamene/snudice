@@ -784,9 +784,9 @@ int gGamePlayerContainer::meetItemCalculator(int nRoomIndex,int nInRoomIndex,int
 			if (gIC->m_ItemList[itemNum].nMulti > 0)	{
 				originalVal *= gIC->m_ItemList[itemNum].nMulti;
 			}
-			if(classType == 0 && gIC->m_ItemList[itemNum].nLang > 0)	originalVal += gIC->m_ItemList[itemNum].nLang;
-			if(classType == 1 && gIC->m_ItemList[itemNum].nMath > 0)	originalVal += gIC->m_ItemList[itemNum].nMath;	
-			if(classType == 2 && gIC->m_ItemList[itemNum].nArt  > 0)	originalVal += gIC->m_ItemList[itemNum].nArt;
+			if(classType == 0)	originalVal += gIC->m_ItemList[itemNum].nLang;
+			if(classType == 1)	originalVal += gIC->m_ItemList[itemNum].nMath;	
+			if(classType == 2)	originalVal += gIC->m_ItemList[itemNum].nArt;
 		}
 	}
 	
@@ -915,13 +915,15 @@ void gGamePlayerContainer::pk_getItem_rep(int nRoomIndex,int nInRoomIndex,int nI
 					itemIndex = proposePriorityHigh[ rand() % 2 ]; 
 				else //나머지(사기제외)
 					itemIndex = rand() % 29 ;
+				m_GamePlayer[nRoomIndex][nInRoomIndex].nItem[i] = itemIndex;
 			}
 			break;
 		}
 	}
 	PK_GETITEM_REP rep;
 	rep.nItemID = itemIndex;
-	gMainWin::GetIF()->Send(PL_GETITEM_REP,sizeof(PK_GETITEM_REP),&rep,gRoomCore::GetIF()->FindPlayerszIDInTheRoom(nInRoomIndex , nRoomIndex));
+	char* szId = gRoomCore::GetIF()->FindPlayerszIDInTheRoom(nInRoomIndex , nRoomIndex);
+	gMainWin::GetIF()->Send(PL_GETITEM_REP,sizeof(PK_GETITEM_REP),&rep,szId);
 }
 
 void gGamePlayerContainer::pushItem(int nRoomIndex,int nInRoomIndex,int nItemID)
@@ -1053,7 +1055,7 @@ void gGamePlayerContainer::pk_itemuse_ask(PK_DEFAULT *pk,SOCKET sock)
 
 	PushbSynAllPlayer(nRoomIndex,false);
 
-	strcpy(rep.szUser,ask.szID); // 이게 맞겠지?
+	strcpy(rep.szUser,ask.szID);
 	rep.nItemID = ask.nItemID;
 	strcpy(rep.szTarget,ask.szTarget);
 
@@ -1420,6 +1422,7 @@ ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, 
 						if (m_GamePlayer[nRoomIndex][playerIndex_a].nLove == 0 || m_GamePlayer[nRoomIndex][playerIndex_b].nLove == 0)	{
 							char *szID_me = gRC->FindPlayerszIDInTheRoom(playerIndex_a , nRoomIndex) , *szID_partner = gRC->FindPlayerszIDInTheRoom(playerIndex_b , nRoomIndex);
 							pk_becouple_rep(nRoomIndex, gPC->GetPlayerFromID(szID_me) ,  gPC->GetPlayerFromID(szID_partner) , false , true);
+							return IUS_NONE;
 						}	else	{
 //							pk_nextturn_rep(nRoomIndex);
 						}
@@ -2209,8 +2212,8 @@ void gGamePlayerContainer::pk_becouple_rep(int nRoomIndex , PLAYER player_a , PL
 
 		
 	gPC->SendSelect(PL_BECOUPLE_REP,sizeof(rep),&rep,ECM_GAME,nRoomIndex);
-	pk_gameplayerinfo_rep(nRoomIndex);
-
+	if (!isBothBreak)	//	이간질로 생긴 경우이므로 어쩌피 나중에 보내게 됨, 그냥 하.코
+		pk_gameplayerinfo_rep(nRoomIndex);
 }
 
 //여기서는 뭐하는 거지?????
