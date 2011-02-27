@@ -56,3 +56,4 @@
 #define STR_32			"상대방을 선택하세요!"
 #define STR_33			"이동할 장소를 선택하세요!"
 #define STR_34			"%d/%d 턴"
+#define STR_35			"버스로 이동중입니다."

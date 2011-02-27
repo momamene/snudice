@@ -1370,6 +1370,7 @@ void gGameCore::pk_busmovestart_rep(PK_BUSMOVESTART_REP *rep)
 	}
 	else
 	{
+		sprintf_s(gUIGame::GetIF()->m_szStatusMsg, STR_35);
 		m_bBusing = true;
 		BusComeStart(nPos);
 		gPlaySoundCore	*sound = gPlaySoundCore::GetIF();
