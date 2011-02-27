@@ -151,9 +151,10 @@ hr
 
 #loginFormTitle
 {		
-	font-size : 120%;
+	font-size : 100%;
 	position : relative;
-	top : 5px;		
+	top : 5px;	
+	left: 10px;	
 }
 
 #loginFormTitle.invisible
@@ -178,7 +179,7 @@ hr
 {
 	float : left;	
 	margin-left : 10px;
-	margin-top : 8px;	
+	margin-top : 10px;	
 	color : #677EA0;	
 }
 
@@ -188,7 +189,7 @@ hr
 	height : 77px;
 	float : left;
 	position : relative;
-	left : 7px;	
+	left : 2px;	
 }
 
 #loginButton.mouseOut
@@ -219,7 +220,7 @@ hr
 	width : 100px;
 	height : 22px;
 	background-color : #C3DAFC;
-	border : 2px inset;
+	border : 0px inset;
 	color : black;
 }
 
@@ -227,7 +228,7 @@ hr
 #password 
 {
 	margin-left : 10px; 
-	margin-top:5px;
+	margin-top:7px;
 }
 
 #loginMsg
@@ -270,9 +271,17 @@ hr
 	float : left;
 	margin-top : -23px;
 	cursor : pointer;
+	position : relative;
+	left : -10px;
 }
 
-#joinOpen,#findIdPw { color : black; }
+#joinOpen,#findIdPw 
+{
+	color : black;
+	position : relative;
+	top : 5px;
+	font-size : 85%;
+}
 #findIdPw { margin-left : 25px; }
 
 #mainLeftBottom 
@@ -394,7 +403,7 @@ span.noticeMsg
 	display : block;	
 	
 	width : 304px;
-	height : 214px;
+	height : 230px;
 	z-index : 2;	
 }
 
@@ -441,17 +450,32 @@ span.noticeMsg
 {
 	color : red;
 	height : 30px; 	
+	margin-left : 15px;
 }	
 
 /*-----------메인 섹션------------*/
-span.title { font-weight : bold; }
-span.centerLMore,span.articleIcon 
-{ 	
-	position : relative;
-	top : -5px;
+span.title 
+{ 
+	font-weight : bold;
+	font-size : 85%;	
+	margin-left : 15px;
 }
 
-span.centerLMore { margin-left : 280px; }
+img.articleIcon { margin-left : 15px; }
+
+span.centerLMore 
+{
+	position : relative;
+	top : -5px;
+	margin-left : 280px;
+	font-size : 75%; 
+}
+
+table.articleTable td 
+{	
+	font-size : 85%;
+	padding-bottom : 5px;	
+}
 
 .center a { margin-top : -5px; }
 
@@ -467,13 +491,13 @@ span.centerLMore { margin-left : 280px; }
 #centerLU {	height : 252px; }
 #centerLD 
 {
-	margin-top : 10px;	
+	margin-top : -8px;	
 	height : 252px; 
 }
 
 #centerR
 {
-	margin-left: 10px;
+	margin-left: 15px;
 	background-image : url('/snudiceWebpage/image/mainpage/mainCenterR.png');
 	background-repeat : no-repeat;
 	width : 240px;
@@ -481,8 +505,8 @@ span.centerLMore { margin-left : 280px; }
 }
 
 #centerRU,#centerRD { height : 50%; }
-
 #centerLU,#centerLD,#centerRU,#centerRD { padding : 10px; }
+#centerRU { margin-top:5px; }
 
 
 /*----------- 게임 소개 ---------------*/

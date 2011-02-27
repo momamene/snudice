@@ -128,11 +128,12 @@ public class DBAccount {
 	//새로운 user를 추가한다.
 	public void insertNewUser(User newUser) {	
 		String userId = newUser.getUserId();
+		String nickname = newUser.getNickname();
 		UserRole newUserRole = new UserRole(userId,newUser.getRole());
 		try {
 			sqlMap.insert("insertUser",newUser);
 			sqlMap.insert("insertUserRole",newUserRole);
-			sqlMap.insert("insertUserScore",userId);
+			sqlMap.insert("insertUserScore",nickname);
 
 		} catch (Exception e) {			
 			e.printStackTrace();
@@ -163,5 +164,53 @@ public class DBAccount {
 		}
 		
 		return result.get(0);
+	}
+
+	//email 로 userId 를 얻는다.
+	@SuppressWarnings("unchecked")
+	public String[] getIdWithEmail(String email) {
+		List<String> result = null;
+		try {			
+			result = (List<String>)sqlMap.queryForList("getIdWithEmail",email);
+		} catch (Exception e) {			
+			e.printStackTrace();
+		}
+		
+		if(result.size()==0)
+			return null;
+		
+		String[] retVal = new String[result.size()];
+		result.toArray(retVal);
+		return retVal;
+	}
+	
+	//userId로 email을 얻는다.
+	@SuppressWarnings("unchecked")
+	public String getEmailWithId(String userId) {
+		List<String> result = null;
+		try {			
+			result = (List<String>)sqlMap.queryForList("getEmailWithId",userId);
+		} catch (Exception e) {			
+			e.printStackTrace();
+		}
+		
+		if(result.size()==0)
+			return null;
+		
+		return result.get(0);
+	}
+	
+	//새로운 password를 설정한다.
+	//주의 : encodedPw 값이 그대로 DB로 들어가게 된다.
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public void setPassword(String userId,String encodedPw) {
+		Map m = new HashMap();
+		m.put("userId",userId);
+		m.put("password", encodedPw);
+		try {			
+			sqlMap.update("setPassword",m);
+		} catch (Exception e) {			
+			e.printStackTrace();
+		}
 	}
 }

@@ -57,8 +57,8 @@
 	</insert>
 	
 	<insert id="insertUserScore" parameterClass="String">
-		INSERT INTO userscore (userId,winCount,loseCount)
-		VALUES(#userId:VARCHAR#,0,0)
+		INSERT INTO userscore (nickname,winCount,loseCount)
+		VALUES(#nickname:VARCHAR#,0,0)
 	</insert>	
 	
 	<select id="getUserRole" parameterClass="String" resultClass="String">
@@ -90,4 +90,16 @@
 		FROM user
 		WHERE userId=#userId:VARCHAR#
 	</select>
+	
+	<select id="getIdWithEmail" parameterClass="String" resultClass="String">
+		SELECT userId
+		FROM user
+		WHERE email=#email:VARCHAR#
+	</select>
+	
+	<select id="getEmailWithId" parameterClass="String" resultClass="String">
+		SELECT email
+		FROM user
+		WHERE userId=#userId:VARCHAR#
+	</select>	
 </sqlMap>

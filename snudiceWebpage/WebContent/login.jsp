@@ -161,13 +161,20 @@ window.onload = function() {
 								<span class="centerLMore">더보기</span>
 								<img src="${root}/image/mainpage/more.png"/>
 							</a>
-							<hr/>			
-							<c:forEach var="article" items="${noticeList}">
-								<img src="${root}/image/mainpage/noticeIcon.png"/>
-								<span class="articleIcon">
-									<a href="${root}/board/articleView.do?boardName=${noticeBoardName}&articleIndex=${article.articleIndex}&currPage=0">${article.title}</a><br/>
-								</span>						
-							</c:forEach>				
+							<hr/>
+							<table class="articleTable">
+								<c:forEach var="article" items="${noticeList}">	
+									<tr>
+										<td>
+											<img class="articleIcon" src="${root}/image/mainpage/noticeIcon.png"/>
+										</td>
+										<td>										
+											<a href="${root}/board/articleView.do?boardName=${noticeBoardName}&articleIndex=${article.articleIndex}&currPage=0">${article.title}</a>											
+										</td>
+									</tr>													
+							</c:forEach>
+							</table>							
+																
 						</div>
 						<div id="centerLD">							
 							<span class="title">${updateBoardAliasName}</span>
@@ -176,12 +183,18 @@ window.onload = function() {
 								<img src="${root}/image/mainpage/more.png"/>
 							</a>
 							<hr/>			
-							<c:forEach var="article" items="${updateList}">
-								<img src="${root}/image/mainpage/updateIcon.png"/>
-								<span class="articleIcon">
-									<a href="${root}/board/articleView.do?boardName=${updateBoardName}&articleIndex=${article.articleIndex}&currPage=0">${article.title}</a><br/>
-								</span>							
-							</c:forEach>
+							<table class="articleTable">
+								<c:forEach var="article" items="${updateList}">						
+									<tr>
+										<td>
+											<img class="articleIcon" src="${root}/image/mainpage/updateIcon.png"/>										
+										</td>
+										<td>
+											<a href="${root}/board/articleView.do?boardName=${updateBoardName}&articleIndex=${article.articleIndex}&currPage=0">${article.title}</a>										
+										</td>
+									</tr>																				
+								</c:forEach>
+							</table>	
 						</div>						
 					</div>					
 					<div id="centerR">	

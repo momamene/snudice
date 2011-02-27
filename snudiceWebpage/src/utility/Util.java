@@ -9,7 +9,19 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import constant.Const;
+
 public class Util {
+	//리셋된 password를 리턴. (Const.newPwDigits 자리수 만큼의 10진수)
+	public static String getNewPw() {
+		Random rand = new Random(System.currentTimeMillis());
+		StringBuffer sb = new StringBuffer();
+		for(int i=0;i<Const.newPwDigits;i++)
+			sb.append(rand.nextInt(10));
+		
+		return sb.toString();
+	}
+	
 	public static String currDateTime() {
 		Date today = new Date();	
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
