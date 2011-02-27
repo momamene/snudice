@@ -47,7 +47,7 @@ public class AllRequestFilter implements Filter {
 		DB db = DB.getInstance();
 		
 		StringBuffer log = new StringBuffer("["+Util.currDateTime()+"]");
-		log.append(" from "+"<"+req.getRemoteAddr()+">");
+		log.append(" <"+req.getRemoteAddr()+">");
 		if(req.getRemoteUser()!=null) //로그인 된 경우
 		{			
 			if(session.getAttribute("nickname")==null)
@@ -72,6 +72,8 @@ public class AllRequestFilter implements Filter {
 		}		
 		else //로그인 안된 경우
 		{
+			log.append(" <N/A:N/A>");
+			
 			if(session.getAttribute("userId")!=null)
 			{
 				synchronized(session)
@@ -103,6 +105,9 @@ public class AllRequestFilter implements Filter {
 			log.append(" (HTTP)");
 		log.append(" "+req.getMethod());	
 		log.append(" "+req.getServletPath());
+		String params = req.getQueryString();
+		if(params!=null)
+			log.append(" "+params);
 		
 		System.out.println(log);
 		

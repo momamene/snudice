@@ -236,22 +236,59 @@ function idpwFindOpenFunc()
 //아이디,비번 찾기 창을 닫는다.
 function idpwFindCloseFunc()
 {
+	var idpwFindMsg = document.getElementById("idpwFindMsg");
+	idpwFindMsg.innerHTML = "";
+	var idpwFindEmail = document.getElementById("idpwFindEmail");
+	idpwFindEmail.value = "";
+	var idpwFindId = document.getElementById("idpwFindId");
+	idpwFindId.value = "";
 	var idpwFindForm =  document.getElementById("idpwFindForm");
-	idpwFindForm.className = "display_none";	
+	idpwFindForm.className = "display_none";
 }
 
 //id 찾기버튼
 function idFindFunc()
 {
+	var idpwFindMsg = document.getElementById("idpwFindMsg");
 	var idpwFindEmail = document.getElementById("idpwFindEmail");
 	if(idpwFindEmail.value=="")
-		alert('email');
+	{		
+		idpwFindMsg.innerHTML = "email을 입력해주세요.";
+		return;
+	}
+	
+	idpwFindMsg.innerHTML = "처리중입니다..";
+	
+	var url = root+"/idFind.ajax";	
+	var method = "POST";
+	var param = "email="+encodeURIComponent(idpwFindEmail.value);	
+	var callback = idFindRefresh;
+	var async = true;
+	
+	sendRequest(url,method,param,callback,async);
 }
 
 //pw 찾기버튼
 function pwFindFunc()
 {
-	alert('b');
+	var idpwFindMsg = document.getElementById("idpwFindMsg");
+	var idpwFindId = document.getElementById("idpwFindId");
+	if(idpwFindId.value=="")
+	{
+		var idpwFindMsg = document.getElementById("idpwFindMsg");
+		idpwFindMsg.innerHTML = "id를 입력해주세요.";
+		return;
+	}	
+	
+	idpwFindMsg.innerHTML = "처리중입니다..";
+	
+	var url = root+"/pwFind.ajax";	
+	var method = "POST";
+	var param = "id="+encodeURIComponent(idpwFindId.value);	
+	var callback = pwFindRefresh;
+	var async = true;
+	
+	sendRequest(url,method,param,callback,async);
 }
 
 ////////////////////이미지 변화 event handler/////////////////////
@@ -391,6 +428,58 @@ function loginFormRefresh()
 			{
 				loginMsg.innerHTML = "이미 로그인 되어있습니다.<br/>새로고침 해주세요";
 			}			
+		}
+	}	
+}
+
+function idFindRefresh()
+{
+	if(request.readyState == 4)
+	{		
+		if(request.status == 200)
+		{				
+			var idpwFindMsg = document.getElementById("idpwFindMsg");
+			var idpwFindEmail = document.getElementById("idpwFindEmail");
+			
+			if(request.responseText=="idFindOK")
+			{
+				alert("email로 id가 전송되었습니다.");
+				idpwFindCloseFunc();
+			}
+			else if(request.responseText=="emailNotFound")
+			{				
+				idpwFindMsg.innerHTML = "해당 email로 가입된 id가 없습니다.";
+				idpwFindEmail.focus();
+				idpwFindEmail.select();
+			}
+			else if(request.responseText=="emailSendingFail")		
+				idpwFindMsg.innerHTML = "email 발송에 실패했습니다.";				
+		}
+	}	
+}
+
+function pwFindRefresh()
+{
+	if(request.readyState == 4)
+	{		
+		if(request.status == 200)
+		{	
+			var idpwFindMsg = document.getElementById("idpwFindMsg");
+			var idpwFindId = document.getElementById("idpwFindId");
+			
+			if(request.responseText=="pwFindOK")
+			{
+				alert("가입하신 email로 새로운 pw가 전송되었습니다.");
+				idpwFindCloseFunc();
+			}
+			else if(request.responseText=="idNotFound")
+			{				
+				idpwFindMsg.innerHTML = "해당 id가 없습니다.";
+				idpwFindId.focus();
+				idpwFindId.select();
+			}
+			else if(request.responseText=="emailSendingFail")			
+				idpwFindMsg.innerHTML = "email 발송에 실패했습니다.";				
 		}
 	}	
 }
