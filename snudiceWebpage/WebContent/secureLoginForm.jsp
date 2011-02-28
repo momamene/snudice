@@ -7,7 +7,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="icon" href="${root}/favicon.ico" type="image/x-icon"/>
 <link rel="shortcut icon" href="${root}/favicon.ico" type="image/x-icon"/>
-<link rel="stylesheet" type="text/css" href="${root}/css/secureLoginForm.css">
+<link rel="stylesheet" type="text/css" href="${root}/css/commonStyle.css"/>
+<link rel="stylesheet" type="text/css" href="${root}/css/loginModuleStyle.css"/>
+<link rel="stylesheet" type="text/css" href="${root}/css/secureLoginForm.css"/>
 <script type="text/javascript" src="${root}/javascript/util.js"></script>
 <script type="text/javascript" src="${root}/javascript/md5.js"></script>
 <script type="text/javascript" src="${root}/javascript/header.js"></script>
@@ -106,16 +108,22 @@ function mouseOutFunc()
 						<div id="guestLogin"></div> 
 					</div>
 					
-					<div id="loginFormWrapper">
+					<div id="loginFormWrapper" class="visible">
 						<form id="secureloginForm" method="POST" action="j_security_check">
 							<div id="idpw">	
 								ID<input id="userId" type="text" name="j_username"><br/>		
 								PW<input id="password" type="password" name="j_password"><br/>	
 							</div>							
 							<div id="loginButton" class="mouseOut"></div>
-						</form>	
+						</form>
+						
+						<div id="loginHelp">
+							<hr/>												
+								<a id="joinOpen" href="#">빠른 회원가입</a>							
+								<a id="findIdPw" href="#">ID/PW찾기</a>
+						</div>		
 					</div>												
-					<div id="loginMsg" class="visible clearLeft">
+					<div id="loginMsg" class="msg">
 						<c:if test="${not empty param.fail}">
 							로그인 실패!							
 						</c:if>
