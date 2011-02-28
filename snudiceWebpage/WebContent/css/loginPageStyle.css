@@ -6,6 +6,11 @@ input
 	border-color: black; 
 }
 
+.msg
+{
+	color:red;	
+}
+
 .button
 {
 	background-color : #D0DCE4;
@@ -249,8 +254,7 @@ hr
 }
 
 #loginMsg
-{
-	color:red;	
+{	
 	position : relative;
 	text-align : center; 
 }
@@ -401,8 +405,7 @@ hr
 #joinEmail { width : 180px; }
 
 #joinMsg 
-{ 
-	color : red;
+{ 	
 	height : 30px; 
 	margin-bottom : 5px;
 }
@@ -455,8 +458,7 @@ span.noticeMsg
 }
 
 #idpwFindMsg
-{
-	color : red;
+{	
 	height : 30px; 	
 	margin-left : 15px;
 }
@@ -480,6 +482,16 @@ span.noticeMsg
 }
 
 #infoModifyClose { width : 40px; }
+#infoModifyMsg
+{
+	height : 30px;
+}
+
+#infoModifyFormTable
+{
+	margin-top : 35px;
+	margin-left : 12px;
+}
 
 /*-----------메인 섹션------------*/
 span.title 

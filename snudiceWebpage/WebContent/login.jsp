@@ -9,6 +9,7 @@
 <link rel="shortcut icon" href="${root}/favicon.ico" type="image/x-icon">  
 <link rel="stylesheet" type="text/css" href="${root}/css/loginPageStyle.css"/>
 <link rel="stylesheet" type="text/css" href="${root}/css/menuStyle.css"/>
+<script type="text/javascript" src="${root}/javascript/json2.js"></script>
 <script type="text/javascript" src="${root}/javascript/util.js"></script>
 <script type="text/javascript" src="${root}/javascript/md5.js"></script> 
 <script type="text/javascript" src="${root}/javascript/menuScript.js"></script> 
@@ -18,8 +19,9 @@ var root = "${root}";
 window.onload = function() {
 	initMenu();
 	initLogin();
-};	
+};
 
+var _userId = "${userId}";
 </script>
 
 <title>SNUDice Web Page에 오신 것을 환영합니다.</title>
@@ -29,7 +31,7 @@ window.onload = function() {
 		<%@ include file="/reuseModule/headerModule.jsp"%>
 		
 		<div class="container">		
-			<%@ include file="/reuseModule/menuModule.jsp"%>				
+			<%@ include file="/reuseModule/menuModule.jsp"%>					
 					
 			<div class="leftCenterRightWrapper">				
 				<div class="left">
@@ -67,7 +69,7 @@ window.onload = function() {
 							</tr>
 						</table>								
 					
-						<div id="joinMsg"></div>
+						<div id="joinMsg" class="msg"></div>
 						<span id="joinSubmit" class="button">가입하기</span>					
 						<span id="joinClose" class="button">닫기</span>						
 					</div>
@@ -87,7 +89,7 @@ window.onload = function() {
 								<td><span id="pwFind" class="button">pw찾기</span></td>
 							</tr>
 						</table>
-						<div id="idpwFindMsg"></div>										
+						<div id="idpwFindMsg" class="msg"></div>										
 						<div id="idpwFindClose" class="button">닫기</div>
 					</div>
 					
@@ -100,7 +102,10 @@ window.onload = function() {
 									<td><input id="pastPw" type="password" name="pastPw"/></td>									
 								</tr>
 								<tr>
-									<td class="label">새로운pw</td>
+									<td class="label">
+										새로운pw<br/>
+										<span class="noticeMsg">(입력하지 않을 시 변경하지 않음)</span>
+									</td>
 									<td><input id="newPw" type="password" name="newPw"/></td>									
 								</tr>
 								<tr>
@@ -116,7 +121,7 @@ window.onload = function() {
 									<td><input id="newComment" type="text" name="newComment"/></td>									
 								</tr>
 							</table>
-						<div id="infoModifyMsg"></div>
+						<div id="infoModifyMsg" class="msg"></div>
 						<div id="infoModifyButtonWrapper">
 							<span id="infoModifyExec" class="button">정보수정</span>
 							<span id="infoModifyClose" class="button">닫기</span>
@@ -163,7 +168,7 @@ window.onload = function() {
 							</c:otherwise>											
 						</c:choose>	
 						
-						<div id="loginMsg" class="${loginMsgClass}">
+						<div id="loginMsg" class="${loginMsgClass} msg">
 							<c:choose>
 								<c:when test="${not empty userId}">
 									${userId} 님 로그인 하셨습니다.

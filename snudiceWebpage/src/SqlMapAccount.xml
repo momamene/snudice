@@ -102,4 +102,16 @@
 		FROM user
 		WHERE userId=#userId:VARCHAR#
 	</select>	
+	
+	<select id="getUser" parameterClass="String" resultClass="beans.User">
+		SELECT *
+		FROM user
+		WHERE userId=#userId:VARCHAR#
+	</select>	
+	
+	<update id="setUser" parameterClass="beans.User">
+		UPDATE user
+		SET password=#password:VARCHAR#,email=#email:VARCHAR#,comment=#comment:VARCHAR#
+		WHERE userId=#userId:VARCHAR#
+	</update>	
 </sqlMap>
