@@ -146,9 +146,8 @@ function replyComplete()
 				</div>
 				<div id="reply">
 					<div id="replyHead">
-						댓글 ${replyCount}
+						댓글 ${replyCount}   
 					</div>
-			
 					<div id="replyContainer">
 					<c:forEach var="reply" items="${replyList}" varStatus="status">			
 						<div class="replyInfo">
