@@ -8,8 +8,10 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <link rel="icon" href="${root}/favicon.ico" type="image/x-icon"/>
 <link rel="shortcut icon" href="${root}/favicon.ico" type="image/x-icon"/>
-<link rel="stylesheet" type="text/css" href="${root}/css/boardStyle.css"/>
+<link rel="stylesheet" type="text/css" href="${root}/css/commonStyle.css"/>
 <link rel="stylesheet" type="text/css" href="${root}/css/menuStyle.css"/>
+<link rel="stylesheet" type="text/css" href="${root}/css/loginModuleStyle.css"/>
+<link rel="stylesheet" type="text/css" href="${root}/css/boardStyle.css"/>
 
 <script type="text/javascript" src="${root}/javascript/util.js"></script>
 <script type="text/javascript" src="${root}/javascript/header.js"></script>
@@ -34,7 +36,11 @@ function init()
 		<div class="container">	
 			<%@ include file="/reuseModule/menuModule.jsp"%>
 			
-			<div class="left"></div>
+			<div class="left">
+				<%@ include file="/reuseModule/loginModule.jsp"%>
+				<div id="mainLeftBottom">
+				</div>
+			</div>
 					
 			<div class = "center">
 				<table id = "articleListMain">

@@ -1,0 +1,130 @@
+@CHARSET "UTF-8";
+
+a { color : black; }
+a:link { text-decoration:none;}    /* unvisited link */
+a:visited {text-decoration:none;} /* visited link */
+a:hover {text-decoration:none;}   /* mouse over link */
+a:active {text-decoration:none;}  /* selected link */
+input
+{
+	height : 20px;
+	border-color: black; 
+}
+
+img { border : 0px; padding : 0px; }
+div { border : 0px; padding : 0px; }
+hr
+{	
+	background-color : #BCD9EB;
+	height : 2px;
+	border : 0px;
+	width : 95%;	
+}
+
+.msg { color:red; }
+
+.button
+{
+	background-color : #D0DCE4;
+	border : 1px solid #9B9C9B;
+	padding-left : 5px;
+	padding-right: 5px;	
+	padding-bottom : 2px;
+	cursor : pointer;
+	text-align : center;
+}
+
+.bodyWrapper
+{
+	width : 1025px; 
+	/* 중앙 정렬 */
+	position : relative;
+	left : 50%;
+	margin-left : -512px;
+	font-family : "맑은 고딕","Franklin Gothic M";
+}
+
+.header,.footer {	width : 1025px; }
+
+/*----------------header-----------*/
+#headerImage
+{
+	background-image : url('/snudiceWebpage/image/mainpage/title.png');
+	background-repeat : no-repeat;	
+	height : 127px;
+	z-index : 1;
+	position : relative;	
+	margin-top : -270px;
+	left : 50px;
+}
+
+.footer 
+{ 
+	clear : left; 
+	position : relative; 	
+	text-align : center;
+}
+
+.left 
+{
+	 width : 227px; 
+	 margin-left:15px;
+	 float:left;
+}
+
+.center 
+{ 
+	float:left; 
+	margin-left: 10px; 
+	width : 720px;
+}
+
+.right 
+{ 
+	float:left;
+	width : 0px; 
+	margin-right:50px; 
+}
+
+.backgroundUp
+{
+	background-image : url('/snudiceWebpage/image/mainpage/backgroundUp.png');
+	background-repeat : no-repeat;
+	height : 284px;	
+	z-index : 0;	
+	position : relative;
+}
+
+.backgroundDown
+{
+	background-image : url('/snudiceWebpage/image/mainpage/backgroundDown.png');
+	background-repeat : no-repeat;	
+	width : 1025px;
+	height : 284px;
+	clear: left;
+	position : relative;	
+	z-index : 0;	
+}
+
+.containerTop, .containerBottom
+{
+	width : 980px;
+	height : 21px;
+	position : relative;
+	left : 22px;	
+	z-index : 1;
+}
+
+.containerTop
+{
+	background-image : url('/snudiceWebpage/image/mainpage/containerTop.png');
+	background-repeat : no-repeat;	
+	top : -76px;		
+}
+
+.containerBottom
+{
+	background-image : url('/snudiceWebpage/image/mainpage/containerBottom.png');
+	background-repeat : no-repeat;
+	top : 3px;
+}

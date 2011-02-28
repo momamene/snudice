@@ -7,8 +7,10 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="icon" href="${root}/favicon.ico" type="image/x-icon">
 <link rel="shortcut icon" href="${root}/favicon.ico" type="image/x-icon">  
-<link rel="stylesheet" type="text/css" href="${root}/css/loginPageStyle.css"/>
+<link rel="stylesheet" type="text/css" href="${root}/css/commonStyle.css"/>
+<link rel="stylesheet" type="text/css" href="${root}/css/loginModuleStyle.css"/>
 <link rel="stylesheet" type="text/css" href="${root}/css/menuStyle.css"/>
+<link rel="stylesheet" type="text/css" href="${root}/css/loginPageStyle.css"/>
 <script type="text/javascript" src="${root}/javascript/json2.js"></script>
 <script type="text/javascript" src="${root}/javascript/util.js"></script>
 <script type="text/javascript" src="${root}/javascript/md5.js"></script> 
@@ -35,167 +37,8 @@ var _userId = "${userId}";
 					
 			<div class="leftCenterRightWrapper">				
 				<div class="left">
-					<!--  회원가입 Form -->					
-					<div id="joinFormWrapper" class="display_none">	
-						<div id="joinTitle">회원가입</div>																
-						<table id="joinFormTable">
-							<tr>
-								<td class="label">ID</td>
-								<td><input id="joinId" type="text" name="id"/></td>
-							</tr>
-							<tr>
-								<td class="label">PW</td>
-								<td><input id="joinPw" type="password" name="pw"/></td>
-							</tr>
-							<tr>
-								<td class="label">PW확인</td>
-								<td><input id="joinPwConfirm" type="password" name="pwConfirm"/></td>
-							</tr>
-							<tr>
-								<td class="label">email<br/>
-									<span class="noticeMsg">(인증시 사용됨)</span>								
-								</td>
-								<td><input id="joinEmail" type="text" name="email"/></td>
-							</tr>
-							<tr>
-								<td class="label">별명<br/>
-									<span class="noticeMsg">(게임상에 보여짐)</span>
-								</td>
-								<td><input id="joinNickname" type="text" name="nickname"/></td>
-							</tr>
-							<tr>
-								<td class="label">자기소개</td>
-								<td><input id="joinComment" type="text" name="comment"/></td>
-							</tr>
-						</table>								
-					
-						<div id="joinMsg" class="msg"></div>
-						<span id="joinSubmit" class="button">가입하기</span>					
-						<span id="joinClose" class="button">닫기</span>						
-					</div>
-					
-					<!-- 아이디,비번 찾기 Form -->
-					<div id="idpwFindForm" class="display_none">
-						<div id="idpwFindTitle">id,pw 찾기</div>	
-						<table id="idpwFindFormTable">
-							<tr>
-								<td class="label">email</td>
-								<td><input id="idpwFindEmail" type="text" name="idpwFindEmail"/></td>
-								<td><span id="idFind" class="button">id찾기</span></td>
-							</tr>
-							<tr>
-								<td class="label">id</td>
-								<td><input id="idpwFindId" type="text" name="idpwFindId"/></td>
-								<td><span id="pwFind" class="button">pw찾기</span></td>
-							</tr>
-						</table>
-						<div id="idpwFindMsg" class="msg"></div>										
-						<div id="idpwFindClose" class="button">닫기</div>
-					</div>
-					
-					<!-- 회원 정보 수정 form -->
-					<div id="infoModifyForm" class="display_none">					
-						<div id="infoModifyTitle">정보수정</div>	
-							<table id="infoModifyFormTable">
-								<tr>
-									<td class="label">기존pw</td>
-									<td><input id="pastPw" type="password" name="pastPw"/></td>									
-								</tr>
-								<tr>
-									<td class="label">
-										새로운pw<br/>
-										<span class="noticeMsg">(입력하지 않을 시 변경하지 않음)</span>
-									</td>
-									<td><input id="newPw" type="password" name="newPw"/></td>									
-								</tr>
-								<tr>
-									<td class="label">새로운pw확인</td>
-									<td><input id="newPwConfirm" type="password" name="newPwConfirm"/></td>									
-								</tr>
-								<tr>
-									<td class="label">email</td>
-									<td><input id="newEmail" type="text" name="newEmail"/></td>									
-								</tr>
-								<tr>
-									<td class="label">자기소개</td>
-									<td><input id="newComment" type="text" name="newComment"/></td>									
-								</tr>
-							</table>
-						<div id="infoModifyMsg" class="msg"></div>
-						<div id="infoModifyButtonWrapper">
-							<span id="infoModifyExec" class="button">정보수정</span>
-							<span id="infoModifyClose" class="button">닫기</span>
-						</div>																						
-					</div>
-					
-					<!-- 로그인 Form -->
-					<c:choose>
-						<c:when test="${not empty userId}">
-							<c:set var="loginFormWrapperClass" value="invisible"/>	
-							<c:set var="mainLeftTopClass" value="loggined"/>
-						</c:when>
-						<c:otherwise>
-							<c:set var="loginFormWrapperClass" value="visible"/>	
-							<c:set var="mainLeftTopClass" value="logouted"/>
-						</c:otherwise>
-					</c:choose>
-					
-					<div id="mainLeftTop" class="${mainLeftTopClass}">						
-						<div id="loginFormTitle" class="${loginFormWrapperClass}">	
-							&nbsp;&nbsp;회원로그인					
-							<div id="guestLogin"></div> 
-						</div>		
-						
-						<div id="loginFormWrapper" class="${loginFormWrapperClass}">									
-							<div id="idpw">
-								ID<input id="userId" name="userId" type="text"/><br/>
-								PW<input id="password" name="password" type="password"/>
-							</div>					
-							<div id="loginButton" class="mouseOut"></div>
-													
-							<div id="loginHelp">
-								<hr/>												
-								<a id="joinOpen" href="#">빠른 회원가입</a>							
-								<a id="findIdPw" href="#">ID/PW찾기</a>
-							</div>						
-						</div>
-						<c:choose>
-							<c:when test="${not empty userId}">
-								<c:set var="loginMsgClass" value="loggined"/>
-							</c:when>	
-							<c:otherwise>
-								<c:set var="loginMsgClass" value="logouted"/>
-							</c:otherwise>											
-						</c:choose>	
-						
-						<div id="loginMsg" class="${loginMsgClass} msg">
-							<c:choose>
-								<c:when test="${not empty userId}">
-									${userId} 님 로그인 하셨습니다.
-								</c:when>												
-							</c:choose>	
-						</div>
-						<c:choose>
-							<c:when test="${not empty userId}">
-								<c:set var="logginedButtonWrapperClass" value="visible"/>		
-							</c:when>
-							<c:otherwise>
-								<c:set var="logginedButtonWrapperClass" value="invisible"/>		
-							</c:otherwise>
-						</c:choose>		
-						<div id="logginedButtonWrapper" class="${logginedButtonWrapperClass}">
-							<div id="logoutButton"></div>
-							<c:choose>
-								<c:when test="${role=='guest'}">
-									<c:set var="infoModifyButtonClass" value="unavailable"/>
-								</c:when>
-								<c:otherwise>
-									<c:set var="infoModifyButtonClass" value="available"/>
-								</c:otherwise>
-							</c:choose>
-							<div id="infoModifyButton" class="${infoModifyButtonClass}"></div>
-						</div>																	
-					</div>
+					<%@ include file="/reuseModule/loginModule.jsp"%>
+				
 					<div id="mainLeftBottom">						
 						<a href="${root}/setupFile/SNUDiCE_setup.exe">게임 다운로드</a>										
 					</div>

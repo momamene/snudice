@@ -14,7 +14,6 @@ import beans.User;
 import dbaccess.DB;
 
 import utility.Encrypt;
-import utility.Util;
 
 /**
  * Servlet implementation class InfoModify

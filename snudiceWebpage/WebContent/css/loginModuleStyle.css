@@ -1,0 +1,318 @@
+@CHARSET "UTF-8";
+/*------------- login form ---------*/
+#mainLeftTop,#mainLeftBottom { width : 229px; }
+#mainLeftTop.loggined
+{
+	background-image : url('/snudiceWebpage/image/mainpage/loginFormLoggined.png');	
+	background-repeat : repeat-y;
+}
+
+#mainLeftTop
+{
+	background-image : url('/snudiceWebpage/image/mainpage/loginForm.png');	
+	background-repeat : no-repeat;
+	height : 207px;
+	position : relative;
+	top : 10px;
+}
+
+#loginFormTitle
+{		
+	font-size : 100%;
+	position : relative;
+	top : 5px;	
+	left: 10px;	
+}
+
+#loginFormTitle.invisible
+{
+	visibility : hidden;
+}	
+	
+#loginFormWrapper.visible
+{	
+	display : block;
+	position : relative;
+	top : 25px;	
+	clear : left;	
+}
+
+#loginFormWrapper.invisible
+{
+	display : none;
+}
+
+#idpw 
+{
+	float : left;	
+	margin-left : 10px;
+	margin-top : 10px;	
+	color : #677EA0;	
+}
+
+#loginButton.mouseOut,#loginButton.mouseOver
+{
+	width : 76px;
+	height : 77px;
+	float : left;
+	position : relative;
+	left : 2px;	
+}
+
+#loginButton.mouseOut
+{
+	background-image : url('/snudiceWebpage/image/mainpage/login.png');	
+	background-repeat : no-repeat;	
+}
+
+#loginButton.mouseOver
+{
+	background-image : url('/snudiceWebpage/image/mainpage/loginMouseOver.png');
+	background-repeat : no-repeat;
+	cursor : pointer;	
+}
+
+#login { margin-left : 5px; }
+
+#loginHelp 
+{ 
+	text-align : center; 
+	clear:left;
+	position : relative;
+	top : 10px;	
+}
+
+#userId,#password
+{
+	width : 100px;
+	height : 22px;
+	background-color : #C3DAFC;
+	border : 0px inset;
+	color : black;
+}
+
+#userId {margin-left: 19px; }
+#password 
+{
+	margin-left : 10px; 
+	margin-top:7px;
+}
+
+#loginMsg
+{	
+	position : relative;
+	text-align : center; 
+}
+
+#loginMsg.logouted { top : 40px; }
+#loginMsg.loggined { top : 30px; }
+
+#logginedButtonWrapper.invisible { visibility : hidden; }
+
+#logginedButtonWrapper.visible
+{
+	visibility : visible;	
+	position : relative;
+	top : 50px;	
+	width : auto;
+	height : auto;	
+}
+
+#logoutButton,#infoModifyButton
+{ 
+	cursor : pointer;
+	float : left;
+	position : relative; 
+	width : 60px;
+	height : 22px;
+}
+
+#infoModifyButton.unavailable 
+{
+	opacity:0.3;
+	filter:alpha(opacity=30); /* for IE */
+} 
+
+#logoutButton { left : 45px; }	
+#infoModifyButton { left : 55px; }
+
+#logoutButton
+{	
+	background-image : url('/snudiceWebpage/image/mainpage/logout.png');
+	background-repeat : no-repeat;			
+}
+
+#infoModifyButton
+{
+	background-image : url('/snudiceWebpage/image/mainpage/infoModify.png');
+	background-repeat : no-repeat;	
+}
+
+#guestLogin 
+{
+	background-image : url('/snudiceWebpage/image/mainpage/guestLogin.png');
+	background-repeat : no-repeat;
+	width : 93px;
+	height : 29px;
+	margin-left : 130px;	
+	float : left;
+	margin-top : -23px;
+	cursor : pointer;
+	position : relative;
+	left : -10px;
+}
+
+#joinOpen,#findIdPw 
+{
+	color : black;
+	position : relative;
+	top : 5px;
+	font-size : 85%;
+}
+#findIdPw { margin-left : 25px; }
+
+
+/*---------------join form-----------*/
+#joinFormWrapper.display_none {	display : none; }
+#joinFormWrapper.display_block
+{	
+	background-image : url('/snudiceWebpage/image/mainpage/joinForm.png');
+	background-repeat : no-repeat;	
+	
+	position : absolute;
+	left : 10px;
+	top : 30px;
+	display : block;	
+	
+	width : 403px;
+	height : 376px;
+	z-index : 2;	
+}
+
+#joinTitle
+{
+	margin-left : 40px;
+	margin-top : 5px;
+}
+
+#joinMsg,#joinFormTable { margin-left:30px; }
+#joinSubmit 
+{
+	margin-left: 120px;
+	margin-right : 20px;
+}
+
+#joinFormTable
+{	
+	margin-top : 30px;
+}
+
+#joinFormTable td.label { padding-right : 20px; }
+#joinFormTable td { padding-bottom : 4px; }
+
+#joinId { width : 120px; }
+#joinPw { width : 120px; }
+#joinPwConfirm { width : 120px; }
+#joinEmail { width : 180px; }
+
+#joinMsg 
+{ 	
+	height : 30px; 
+	margin-bottom : 5px;
+}
+
+span.noticeMsg
+{
+	color : red;
+	font-weight : bold;
+	font-size : 80%;
+}
+
+/*---------------id,pw find form-----------*/
+#idpwFindForm.display_none { display : none; }
+#idpwFindForm.display_block
+{
+	background-image : url('/snudiceWebpage/image/mainpage/idpwFindForm.png');
+	background-repeat : no-repeat;	
+	
+	position : absolute;
+	left : 10px;
+	top : 30px;
+	display : block;	
+	
+	width : 304px;
+	height : 230px;
+	z-index : 2;	
+}
+
+#idpwFindTitle
+{
+	margin-left : 33px;
+	margin-top : 5px;
+}
+
+#idpwFindFormTable
+{	
+	margin-left : 15px;
+	margin-top : 30px;	
+}
+
+#idpwFindFormTable td.label { padding-right : 20px; }
+#idpwFindFormTable td { padding-bottom : 10px; }
+#idpwFindFormTable input {	width : 120px; }
+
+#idpwFindClose
+{	
+	margin-left : 120px;
+	margin-top : 10px;
+	width : 40px;	
+}
+
+#idpwFindMsg
+{	
+	height : 30px; 	
+	margin-left : 15px;
+}
+
+
+/*---------------회원 정보 수정 form-----------*/
+#infoModifyForm.display_none { display : none; }
+#infoModifyForm.display_block
+{
+	background-image : url('/snudiceWebpage/image/mainpage/infoModifyForm.png');
+	background-repeat : no-repeat;	
+	
+	position : absolute;
+	left : 10px;
+	top : 30px;
+	display : block;	
+	
+	width : 403px;
+	height : 322px;
+	z-index : 2;	
+}
+
+#infoModifyClose { width : 40px; }
+#infoModifyMsg
+{
+	height : 30px;
+}
+
+#infoModifyFormTable
+{
+	margin-top : 30px;
+	margin-left : 12px;
+}
+
+#infoModifyFormTable td { padding-bottom : 5px; }
+
+#infoModifyTitle 
+{
+	margin-left: 37px;
+	margin-top: 5px;
+}
+
+#infoModifyMsg { margin-left : 15px; }
+#infoModifyButtonWrapper { margin-left : 15px; }
+#infoModifyExec { margin-left : 110px; }
+#infoModifyClose { margin-left : 15px; }
