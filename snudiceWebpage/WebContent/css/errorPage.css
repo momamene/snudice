@@ -1,61 +1,16 @@
 @CHARSET "UTF-8";
 
-.bodyWrapper
-{
-	width : 1025px; 
-	/* 중앙 정렬 */
-	position : relative;
-	left : 50%;
-	margin-left : -512px;
-	font-family : "맑은 고딕","Franklin Gothic M";
-}
-
 .left { width : 0px; }
 .right { width : 0px; }
-
-
-.center
-{
-	text-align : center;
-}
-
-.header,.footer {	width : 1025px; }
-
-.footer 
+.center 
 { 
-	clear : left; 
-	position : relative; 	
 	text-align : center;
-	top:-60px;
-}
-
-.backgroundDown
-{
-	background-image : url('/snudiceWebpage/image/mainpage/backgroundDown.png');
-	background-repeat : no-repeat;	
-	width : 1025px;
-	height : 284px;
-	clear: left;
-	position : relative;	
-	z-index : -1;	
-}
-
-#headerImage
-{
-	background-image : url('/snudiceWebpage/image/mainpage/title.png');
-	background-repeat : no-repeat;	
-	height : 127px;
-	z-index : 0;
-	position : relative;
-	margin-top : -270px;	
-	left : 50px;
-}
-
-.backgroundUp
-{
-	background-image : url('/snudiceWebpage/image/mainpage/backgroundUp.png');
-	background-repeat : no-repeat;
-	height : 284px;	
-	z-index : -1;	
+	left : 120px; 
 	position : relative;
 }
+
+.footer { top:-60px; }
+
+.backgroundDown { z-index : -1; }
+.backgroundUp {	z-index : -1; }	
+#headerImage { margin-top : -270px; }
