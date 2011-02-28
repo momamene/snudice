@@ -52,7 +52,7 @@ public class AllRequestFilter implements Filter {
 		log.append(" <"+req.getRemoteAddr()+">");
 		if(req.getRemoteUser()!=null) //로그인 된 경우
 		{	
-			if(session.getAttribute("userId")==null)
+			if(session.getAttribute("nickname")==null)
 			{
 				synchronized(session)
 				{
@@ -61,7 +61,7 @@ public class AllRequestFilter implements Filter {
 					session.setAttribute("nickname", nickname); //nickname 설정
 				}
 			}			
-			if(session.getAttribute("nickname")==null)
+			if(session.getAttribute("userId")==null)
 			{
 				synchronized(session)
 				{
