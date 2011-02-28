@@ -2,72 +2,13 @@
 
 textarea,input { font-size : 120%; }
 
-.bodyWrapper
-{
-	width : 1025px; 
-	/* 중앙 정렬 */
-	position : relative;
-	left : 50%;
-	margin-left : -512px;
-	font-family : "맑은 고딕","Franklin Gothic M";
-}
-.left 
-{	 
-	width : 0px;
-	float : left;
-}
-
-.center 
-{ 
-	float:left; 
-	margin-left: 10px; 
-	width : 1025px;
-}
-
-.right 
-{ 
-	float:left;
-	width : 0px; 
-	margin-right:50px; 
-}
-
-.header,.footer {	width : 1025px; }
-
-.footer 
-{ 
-	clear : left; 	
-	text-align : center;	
-	position : relative;
-	top:-200px;
-}
+.left {	width : 0px;}
+.footer { top:-200px; }
 
 .backgroundDown
 {
-	background-image : url('/snudiceWebpage/image/mainpage/backgroundDown.png');
-	background-repeat : no-repeat;	
-	width : 1025px;
-	height : 284px;
-	clear: left;
-	position : relative;	
 	z-index : -1;
 	top : -150px;
-}
-
-/*----------------공통 적용 사항-----------*/
-a { color : black; }
-a:link { text-decoration:none;}    /* unvisited link */
-a:visited {text-decoration:none;} /* visited link */
-a:hover {text-decoration:none;}   /* mouse over link */
-a:active {text-decoration:none;}  /* selected link */
-
-img { border : 0px; padding : 0px; }
-div { border : 0px; padding : 0px; }
-
-hr
-{	
-	background-color : #BCD9EB;
-	height : 4px;
-	border : 0px;
 }
 
 .header,.container,.footer,.center,.left,.right,table,tr,td 
@@ -172,25 +113,54 @@ td#search {width : 10%; }
 
 #reply
 {
-	border : 0px;	
-	padding : 4%;
+	margin : 3%;
+	border : 0px;
 }
 
-#reply hr
+#reply hr {	width : 100%; }
+
+#replyHead
 {
-	width : 100%;
+	padding : 3%;
+	margin-bottom : -15px;
+}
+
+#replyDateTime
+{
+	float: right;
+}
+
+#replyBackground
+{
+	background-color : #E7F3FF;
+	padding : 3%;
+}
+
+#replyContainer { margin-bottom : 3%; }
+
+#replyWrite
+{
+	border : 0px;
+	padding-left : 3%;
 }
 
 #replyWriteText
 {
+	margin-top : 20px;
 	margin-bottom : 5px;
+	border : 1px solid #61A2BC;
 	
-	width : 470px;
-	height : 50px;	
+	width : 85%;
+	height : 80px;	
 	
 	resize : none; /* 크롬에서 크기 조절을 못하게 한다. */
 }
-
+#replySubmitButton
+{
+	position : relative;
+	padding-bottom : 10px;
+	padding-left : 5px;
+}
 td.articleDateTime
 {
 	width : 30%;
@@ -223,9 +193,13 @@ td.articleNickName
 #replyHead { padding-bottom : 6%; }
 #articleButtonWrapper
 {
-	padding-top : 3%;
 	text-align : right;
+	margin-top : -1%;
+	margin-right : 3%;
+	margin-bottom : 7%;
 }
+
+.replyContent { margin-top : 1%; }
 
 /*----------글 수정하기,글쓰기---------------*/
 table.articleWriteModifyTable

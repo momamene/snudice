@@ -8,8 +8,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="icon" href="${root}/favicon.ico" type="image/x-icon"/>
 <link rel="shortcut icon" href="${root}/favicon.ico" type="image/x-icon"/>
-<link rel="stylesheet" type="text/css" href="${root}/css/boardStyle.css"/>
+<link rel="stylesheet" type="text/css" href="${root}/css/commonStyle.css"/>
 <link rel="stylesheet" type="text/css" href="${root}/css/menuStyle.css"/>
+<link rel="stylesheet" type="text/css" href="${root}/css/boardStyle.css"/>
 
 <script type="text/javascript" src="${root}/javascript/util.js"></script>
 <script type="text/javascript" src="${root}/javascript/header.js"></script>
@@ -120,7 +121,34 @@ function replyComplete()
             			</td>
             		</tr>
             	</table> 
-            	<div id="articleButtonWrapper">
+            	
+				<div id="reply">
+					<div id="replyHead">
+						댓글 ${replyCount}   
+					</div>
+					<div id="replyBackground">
+						<div id="replyContainer">
+						<c:forEach var="reply" items="${replyList}" varStatus="status">			
+							<div class="replyInfo">
+								<span>[${status.count}] ${reply.nickname}</span>
+								<span id="replyDateTime">${reply.dateTime}</span>
+							</div>								
+							<div class="replyContent">${reply.replyText}</div>				
+							<hr/>
+						</c:forEach>
+						</div>
+						
+						<c:if test="${canComment == true}">
+							<div id="replyWrite">
+								한번 단 댓글은 수정,삭제가 불가능 합니다. 쓰기 전에 한번 더 생각해 주세요.<br/>					
+								<textarea id="replyWriteText"></textarea>
+								<input id="replySubmitButton" type="image" value="댓글 쓰기" src="${root}/image/board/replyWrite.png"/>
+							</div>
+						</c:if>			
+						</div>
+					</div>
+				
+				<div id="articleButtonWrapper">
 	            	<a href="${root}/board/articleList.do?boardName=${param.boardName}&currPage=${param.currPage}">
 	            		<img src="${root}/image/board/toFirstPage.png"/>
 	            	</a>
@@ -144,28 +172,7 @@ function replyComplete()
 						</a>
 					</c:if>
 				</div>
-				<div id="reply">
-					<div id="replyHead">
-						댓글 ${replyCount}   
-					</div>
-					<div id="replyContainer">
-					<c:forEach var="reply" items="${replyList}" varStatus="status">			
-						<div class="replyInfo">
-							[${status.count}] id : ${reply.nickname}, ${reply.dateTime}
-						</div>								
-						<div class="replyContent">${reply.replyText}</div>				
-						<hr/>
-					</c:forEach>
-					</div>
-					
-					<c:if test="${canComment == true}">
-						<div id="replyWrite">
-							한번 단 댓글은 수정,삭제가 불가능 합니다. 쓰기 전에 한번 더 생각해 주세요.<br/>					
-							<textarea id="replyWriteText"></textarea>
-							<input id="replySubmitButton" type="image" value="댓글 쓰기" src="${root}/image/board/replyWrite.png"/>
-						</div>
-					</c:if>			
-				</div>	 	         		
+					 	         		
         	</div>
 			
         	<div class="right"></div>
