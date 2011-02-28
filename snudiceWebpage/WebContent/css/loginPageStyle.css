@@ -489,9 +489,22 @@ span.noticeMsg
 
 #infoModifyFormTable
 {
-	margin-top : 35px;
+	margin-top : 30px;
 	margin-left : 12px;
 }
+
+#infoModifyFormTable td { padding-bottom : 5px; }
+
+#infoModifyTitle 
+{
+	margin-left: 37px;
+	margin-top: 5px;
+}
+
+#infoModifyMsg { margin-left : 15px; }
+#infoModifyButtonWrapper { margin-left : 15px; }
+#infoModifyExec { margin-left : 110px; }
+#infoModifyClose { margin-left : 15px; }
 
 /*-----------메인 섹션------------*/
 span.title 
