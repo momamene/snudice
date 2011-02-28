@@ -47,7 +47,7 @@ bool gEdit::SetUp(RECT rcPos, char *img, int strsize, EDITTYPE type)
 		dwFlag |= ES_PASSWORD;
 
 	m_hEdit = CreateWindow("edit", NULL, dwFlag,
-			1000, 0,
+			-100, -100,
 			640, 20,
 			gMainWin::GetIF()->m_hWnd, (HMENU)id++, gMainWin::GetIF()->m_hInst, NULL);
 	

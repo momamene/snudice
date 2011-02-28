@@ -55,6 +55,16 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 
 	char	szBuf[128];
 	wsprintf(szBuf, "%s Ver %s", GAMENAME, SNUDICE_VERSION);
+
+#ifdef DEF_ONLYONECLIENT
+	HWND	hWndClient;
+	hWndClient = FindWindow(szBuf, NULL);
+	if(hWndClient)
+	{
+		MessageBox(NULL, "이미 클라이언트가 실행중입니다.", "에러", MB_OK);
+		return false;
+	}
+#endif
 	
 	m_hInst	= hInstance;
 	// Make Window
@@ -83,7 +93,12 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 			CW_USEDEFAULT, CW_USEDEFAULT, WNDSIZEW, WNDSIZEH,
 			NULL, (HMENU)NULL, hInstance, NULL);
 
-		ResizeWindow();
+		//ResizeWindow();
+		RECT	rcWin = {0, 0, WNDSIZEW, WNDSIZEH};
+		AdjustWindowRect(&rcWin, WNDSTYLE, false);
+		SetWindowPos(m_hWnd, NULL, 0, 0,
+			rcWin.right - rcWin.left, rcWin.bottom - rcWin.top,
+			SWP_NOMOVE | SWP_NOZORDER);
 	}
 
 	HDC		hdc;
@@ -214,7 +229,8 @@ bool gMainWin::SetUp(HINSTANCE hInstance, LPSTR lpszCmdParam, int nCmdShow)
 
 void gMainWin::MoveWindow()
 {
-	SetRect(&m_rcScr, 0, 0, WNDSIZEW, WNDSIZEH);
+//	SetRect(&m_rcScr, 0, 0, WNDSIZEW, WNDSIZEH);
+	GetClientRect(m_hWnd, &m_rcScr);
 	ClientToScreen(m_hWnd, (POINT*)&m_rcScr);
 	ClientToScreen(m_hWnd, (POINT*)&m_rcScr + 1);
 }
@@ -370,6 +386,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
 
 	switch(iMsg)
 	{
+
 		case WM_MOVE:
 			if(!mw->m_bFullScreen)
 				mw->MoveWindow();
@@ -726,11 +743,16 @@ bool gMainWin::RestoreRes()
 void gMainWin::ResizeWindow()
 {
 	// ReSize Window
-	RECT	rcWin = {0, 0, WNDSIZEW, WNDSIZEH};
+	RECT	rcWin = {0, 0, 0, 0};
 	AdjustWindowRect(&rcWin, WNDSTYLE, false);
-	SetWindowPos(m_hWnd, NULL, 0, 0,
-		rcWin.right - rcWin.left, rcWin.bottom - rcWin.top,
-		SWP_NOMOVE | SWP_NOZORDER);
+// 	SetWindowPos(m_hWnd, NULL, 0, 0,
+// 		rcWin.right - rcWin.left, rcWin.bottom - rcWin.top,
+// 		SWP_NOMOVE | SWP_NOZORDER);
+	GetClientRect(m_hWnd, &m_rcScr);
+//	m_rcScr.left += rcWin.left;
+//	m_rcScr.right -= rcWin.right;
+//	m_rcScr.top += rcWin.top;
+//	m_rcScr.bottom -= rcWin.bottom;
 
 	MoveWindow();
 }

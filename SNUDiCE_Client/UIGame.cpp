@@ -1477,8 +1477,8 @@ bool gUIGame::OnLButtonDown()
 
 						switch(item->type)
 						{
-						case ITEM_STAT: case ITEM_STAMINA: case ITEM_NOCLASS: case ITEM_TOGETHERCLASS:
-						case ITEM_CHANGE: case ITEM_CHANGEALL:
+							case ITEM_STAT: case ITEM_STAMINA: case ITEM_NOCLASS: case ITEM_TOGETHERCLASS:
+							case ITEM_CHANGE: case ITEM_CHANGEALL:
 								{
 									if(item->target == TARGET_OTHER || item->target == TARGET_MEOTHER)
 									{
@@ -1601,23 +1601,24 @@ bool gUIGame::OnLButtonDown()
 				{
 					GAMEPLAYER	*target	= gPC->GetPlayerByPos(nPos);
 					ITEMCARD	*item	= &gItemContainer::GetIF()->m_ItemList[ m_nItemID ];
+
+					if(item->type == ITEM_MOVEPLACE)
+					{
+						PK_ITEMUSE_ASK		ask;
+						ask.nItemID	= m_nItemID;
+						strcpy(ask.szID, gPC->m_MyPlayer.szID);
+						strcpy(ask.szTarget, target->szID);
+
+						gServer::GetIF()->Send(PL_ITEMUSE_ASK, sizeof(ask), &ask);
+						m_uimode = UIM_NONE;
+						m_bItemUsed = true;
+						break;
+					}
+
 					if(m_bTargetByMove)
 					{
 						strcpy(m_szTarget, target->szID);
-						if(item->type == ITEM_MOVEPLACE)
-						{
-							PK_ITEMUSE_ASK		ask;
-							ask.nItemID	= m_nItemID;
-							strcpy(ask.szID, gPC->m_MyPlayer.szID);
-							strcpy(ask.szTarget, target->szID);
-
-							gServer::GetIF()->Send(PL_ITEMUSE_ASK, sizeof(ask), &ask);
-							m_uimode = UIM_NONE;
-							m_bItemUsed = true;
-							break;
-						}
 						m_uimode = UIM_PLACESELECT;
-
 						sprintf_s(m_szStatusMsg, STR_33);
 					}
 					else
