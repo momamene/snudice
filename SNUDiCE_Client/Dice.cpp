@@ -108,7 +108,10 @@ void gDice::DiceThrow()
 		gGameCore::GetIF()->m_bScrolling = false;
 		gGameCore::GetIF()->Start(m_spacor,ntPos/LINEY,ntPos%LINEY);
 
-		sprintf_s(gUIGame::GetIF()->m_szStatusMsg, STR_30, gPC->m_GPlayerList[gGameCore::GetIF()->m_nTurn].szID, m_spacor);
+		if(m_spacor > 0)
+			sprintf_s(gUIGame::GetIF()->m_szStatusMsg, STR_30, gPC->m_GPlayerList[gGameCore::GetIF()->m_nTurn].szID, m_spacor);
+		else
+			sprintf_s(gUIGame::GetIF()->m_szStatusMsg, STR_30, gPC->m_GPlayerList[gGameCore::GetIF()->m_nTurn].szID, -m_spacor);
 
 		return;
 	}

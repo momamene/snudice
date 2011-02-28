@@ -20,7 +20,7 @@
 
 #define PK_HEADER_SIZE			4
 
-#define SNUDICE_VERSION			"0.9324"
+#define SNUDICE_VERSION			"0.9345"
 
 #define ENDROUND				30
 

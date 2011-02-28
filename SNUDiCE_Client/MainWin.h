@@ -14,6 +14,8 @@
 
 #define DEF_WHISPER
 
+#define DEF_ONLYONECLIENT		// 한 컴퓨터에서 클라이언트 하나만 켜지게
+
 #define DEFAULT_FULLSCREEN		false
 
 #define DEF_FRAMEPRINT
@@ -23,7 +25,7 @@
 #define	WNDSIZEW		640
 #define WNDSIZEH		480
 #define GAMENAME		"SNUDiCE"
-#define WNDSTYLE		(WS_CAPTION | WS_SYSMENU)
+#define WNDSTYLE		(WS_CAPTION | WS_SYSMENU | WS_MAXIMIZEBOX | WS_MINIMIZEBOX)
 #define BEEPHACKREG		"Control Panel\\Sound"
 #define BEEPHACKREG2	"AppEvents\\Schemes\\Apps\\.Default\\.Default\\.Current"
 
@@ -71,6 +73,7 @@ public:
 	void		Release();
 
 	bool		FullScreen(bool bfull);
+	void		ResizeWindow();
 
 	int			Run();
 	void		MoveWindow();
@@ -85,7 +88,6 @@ private:
 	bool		EnableBeep();
 	bool		SetUpDirect();
 	void		MainLoop();
-	void		ResizeWindow();
 	bool		RestoreRes();				// bit 바뀔 때만.
 };
 
