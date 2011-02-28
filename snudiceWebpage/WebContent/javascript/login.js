@@ -1,3 +1,8 @@
+var idRegex = "([a-z]|[0-9])+";
+var pwRegex = "([a-z]|[A-Z]|[0-9]){8,}";
+var idMsg = "id는 영문 소문자와 숫자만 가능합니다.";
+var pwMsg ="pw는 영문,숫자 8자 이상이어야 합니다.";
+
 //event handler 추가	
 function initLogin(){	
 	window.onresize = function()
@@ -37,6 +42,9 @@ function initLogin(){
 	//정보수정 창 닫기 버튼
 	var infoModifyClose = document.getElementById("infoModifyClose");
 	infoModifyClose.onclick = infoModifyCloseFunc;
+	//정보수정 버튼
+	var infoModifyExec = document.getElementById("infoModifyExec");
+	infoModifyExec.onclick = infoModifyExecFunc;
 	
 	//패스워드 창에서 엔터 치면 로그인시킴
 	enterKeyExec("password",loginFunc);
@@ -136,16 +144,16 @@ function joinSubmitFunc()
 		return;
 	}		
 
-	if(!regexMatch(joinId.value,"([a-z]|[0-9])+"))
+	if(!regexMatch(joinId.value,idRegex))
 	{
-		joinMsg.innerHTML = "id는 영문 소문자와 숫자만 가능합니다.";
+		joinMsg.innerHTML = idMsg
 		joinId.focus();
 		return;
 	}	
 
-	if(!regexMatch(joinPw.value,"([a-z]|[A-Z]|[0-9])+"))
+	if(!regexMatch(joinPw.value,pwRegex))
 	{
-		joinMsg.innerHTML = "암호는 영문 알파벳과 숫자만 가능합니다.";
+		joinMsg.innerHTML = pwMsg
 		joinPw.focus();
 		return;
 	}	
@@ -299,24 +307,72 @@ function pwFindFunc()
 
 //회원정보 수정 창을 연다.
 function infoModifyOpenFunc()
-{
-	var userId = document.getElementById("userId");
-	if(userId.value=="guest")
+{		
+	if(_userId=="guest")
+		return;
+	if(_userId=="") //never reach here!!
 		return;
 	
 	var url = root+"/infoModifyLoad.ajax";	
 	var method = "POST";
-	var param = "userId="+encodeURIComponent(userId.value);	
-	var callback = infoModifyRefresh;
+	var param = "userId="+encodeURIComponent(_userId);	
+	var callback = infoModifyLoadRefresh;
 	var async = true;
 	
 	sendRequest(url,method,param,callback,async);
 }
 
+//회원정보 수정 창을 닫는다.
 function infoModifyCloseFunc()
 {
+	var infoModifyMsg = document.getElementById("infoModifyMsg");
+	var pastPw = document.getElementById("pastPw");
+	var newPw = document.getElementById("newPw");
+	var newPwConfirm = document.getElementById("newPwConfirm");
+	infoModifyMsg.innerHTML = "";
+	pastPw.value = "";
+	newPw.value = "";
+	newPwConfirm.value = "";
+	
 	var infoModifyForm = document.getElementById("infoModifyForm");
-	infoModifyForm.className = "display_none";
+	infoModifyForm.className = "display_none";	
+}
+
+//회원정보 수정 요청을 보낸다.
+function infoModifyExecFunc()
+{		
+	var infoModifyMsg = document.getElementById("infoModifyMsg");
+	var pastPw = document.getElementById("pastPw");
+	var newPw = document.getElementById("newPw");
+	var newPwConfirm = document.getElementById("newPwConfirm");
+	var newEmail = document.getElementById("newEmail");
+	var newComment = document.getElementById("newComment");
+	if(newPw.value!=newPwConfirm.value)
+	{
+		infoModifyMsg.innerHTML = "새로운pw와 새로운pw확인이 일치하지 않습니다.";
+		newPw.focus();
+		newPw.select();
+		return;
+	}
+	if(newPw.value!="" && !regexMatch(newPw.value,pwRegex))
+	{
+		infoModifyMsg.innerHTML = pwMsg;
+		newPw.focus();
+		newPw.select();
+		return;
+	}
+	
+	var url = root+"/infoModify.ajax";	
+	var method = "POST";	
+	var param = "pastPw="+encodeURIComponent(MD5(pastPw.value));
+	if(newPw.value!="")
+		param += "&newPw="+encodeURIComponent(MD5(newPw.value));
+	param += "&newEmail="+encodeURIComponent(newEmail.value);
+	param += "&newComment="+encodeURIComponent(newComment.value);
+	var callback = infoModifyRefresh;
+	var async = true;
+	
+	sendRequest(url,method,param,callback,async);	
 }
 
 ////////////////////이미지 변화 event handler/////////////////////
@@ -435,11 +491,13 @@ function loginFormRefresh()
 		{			
 			if(request.responseText=="loginOK")
 			{				
+				_userId = userId.value;
+				
 				loginMsg.innerHTML = userId.value + " 님 로그인 하셨습니다.";
 				var loginFormWrapper = document.getElementById("loginFormWrapper");
 				var loginFormTitle = document.getElementById("loginFormTitle");
 				
-				loginMsg.className = "loggined";
+				loginMsg.className = "loggined msg";
 				loginFormWrapper.className = "invisible";
 				loginFormTitle.className = "invisible";
 				logginedButtonWrapper.className = "visible";
@@ -517,7 +575,7 @@ function pwFindRefresh()
 	}	
 }
 
-function infoModifyRefresh()
+function infoModifyLoadRefresh()
 {
 	if(request.readyState == 4)
 	{		
@@ -530,9 +588,37 @@ function infoModifyRefresh()
 			}
 			else
 			{
+				var user = JSON.parse(request.responseText);
+				
+				var newEmail = document.getElementById("newEmail");
+				var newComment = document.getElementById("newComment");
+				newEmail.value = user.email;
+				newComment.value= user.comment;
+				
 				var infoModifyForm = document.getElementById("infoModifyForm");
 				infoModifyForm.className = "display_block";	
 			}		
 		}
 	}	
+}
+
+function infoModifyRefresh()
+{
+	if(request.readyState == 4)
+	{		
+		if(request.status == 200)
+		{
+			if(request.responseText=="error")
+			{
+				var infoModifyMsg = document.getElementById("infoModifyMsg");
+				infoModifyMsg.innerHTML = "기존 pw가 일치하지 않습니다.";
+				return;
+			}
+			if(request.responseText=="modifyOK")
+			{
+				alert('회원 정보가 수정되었습니다.');
+				infoModifyCloseFunc();
+			}
+		}
+	}
 }

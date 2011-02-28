@@ -213,4 +213,29 @@ public class DBAccount {
 			e.printStackTrace();
 		}
 	}
+	
+	//유저정보를 얻는다.
+	@SuppressWarnings("unchecked")
+	public User getUser(String userId) {
+		List<User> result = null;
+		try {			
+			result = (List<User>)sqlMap.queryForList("getUser",userId);
+		} catch (Exception e) {			
+			e.printStackTrace();
+		}
+		
+		if(result.size()==0)
+			throw new RuntimeException(userId+" 가 존재하지 않습니다.");
+		
+		return result.get(0);
+	}
+
+	//유저 정보를 변경한다.
+	public void setUser(User user) {
+		try {			
+			sqlMap.update("setUser",user);
+		} catch (Exception e) {			
+			e.printStackTrace();
+		}		
+	}
 }
