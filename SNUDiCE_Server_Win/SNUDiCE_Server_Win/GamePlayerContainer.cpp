@@ -891,11 +891,11 @@ void gGamePlayerContainer::NextTurn(int nRoomIndex)
 
 void gGamePlayerContainer::pk_getItem_rep(int nRoomIndex,int nInRoomIndex,int nItemID)
 {
-	static const int nokduPriorityHigh[7] = {15, 20 , 13 , 29 , 30 , 19 , 18};	// 녹두로오라, 선배의호출, 음주가무, 사기1, 사기2, 정문이동, 스쿠터
-	static const int couplePriorityHigh[8] = {21, 22 , 23, 24 , 25, 26, 27 , 28};	// 커플8종세트
+	static const int nokduPriorityHigh[5] = {15, 20 , 13 , 19 , 18};	// 녹두로오라, 선배의호출, 음주가무, 사기1, 사기2, 정문이동, 스쿠터
+	static const int couplePriorityHigh[6] = {24, 24 , 25, 26, 27 , 28};	// 커플 5종세트
 	static const int proposePriorityHigh[2] = {21 , 22};
 	static const int sagiPriorityHigh[2] = {29 , 30};
-
+	static const int bcouplefalsePriorityHigh[1] = {23};
 	int itemIndex = -1;
 	for(int i = 0 ; i < MAXITEMNUM ; i++)
 	{
@@ -905,14 +905,20 @@ void gGamePlayerContainer::pk_getItem_rep(int nRoomIndex,int nInRoomIndex,int nI
 				itemIndex = nItemID;
 			}
 			else	{
-				if (m_isNokdu[nRoomIndex][nInRoomIndex] && rand() % 10 < 3 )	//녹두
-					itemIndex = nokduPriorityHigh [ rand() % 7 ] ;
+				if (m_isNokdu[nRoomIndex][nInRoomIndex] && rand() % 10 < 3 )	{	//녹두
+					if (rand() % 100 < 2 )
+						itemIndex = sagiPriorityHigh [ rand() % 2 ] ;
+					else
+						itemIndex = nokduPriorityHigh [ rand() % 5 ] ;
+				}
 				else if (rand() % 1000 < 7)	// 사기템
 					itemIndex = sagiPriorityHigh [ rand() % 2 ] ;
 				else if (isWhoCouple && rand() % 10 < 3)	//커플
-					itemIndex = couplePriorityHigh[ rand() % 8];
+					itemIndex = couplePriorityHigh[ rand() % 6 ];
 				else if (rand() % 10 < 1)	//고백
-					itemIndex = proposePriorityHigh[ rand() % 2 ]; 
+					itemIndex = proposePriorityHigh[ rand() % 2 ];
+				else if (m_GamePlayer[nRoomIndex][nInRoomIndex].nLove != -1 && rand() % 10 < 4)
+					itemIndex = bcouplefalsePriorityHigh[ rand() % 1 ];
 				else //나머지(사기제외)
 					itemIndex = rand() % 29 ;
 				m_GamePlayer[nRoomIndex][nInRoomIndex].nItem[i] = itemIndex;
