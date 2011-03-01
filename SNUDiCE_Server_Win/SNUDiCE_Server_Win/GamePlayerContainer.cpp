@@ -641,7 +641,7 @@ void gGamePlayerContainer::pk_gameend_rep(int nRoomIndex)
 	strcpy(rep.szID,m_GamePlayer[nRoomIndex][nWinnerIndex].szID);
 	
 	//다 끝나면 값을 다 0로 바꿈;
-
+	
 	
 	gMysql::GetIF()->scoreCountAdd(rep.szID, true);
 	
@@ -907,7 +907,7 @@ void gGamePlayerContainer::pk_getItem_rep(int nRoomIndex,int nInRoomIndex,int nI
 			else	{
 				if (m_isNokdu[nRoomIndex][nInRoomIndex] && rand() % 10 < 3 )	//녹두
 					itemIndex = nokduPriorityHigh [ rand() % 7 ] ;
-				else if (rand() % 100 < 2)	// 사기템
+				else if (rand() % 1000 < 7)	// 사기템
 					itemIndex = sagiPriorityHigh [ rand() % 2 ] ;
 				else if (isWhoCouple && rand() % 10 < 3)	//커플
 					itemIndex = couplePriorityHigh[ rand() % 8];
@@ -955,13 +955,9 @@ void gGamePlayerContainer::releaseItemGlobal(int nRoomIndex)
 			for (; j != itrVEnd ; ++j)	{
 				itemNum = j->first;
 				itemCoolTime = j->second;
-				if(itemCoolTime > 100) {
-					j->second--;
-					if(itemCoolTime %100 == 0)
-						j->second--;
-				}
-				else if(itemCoolTime%10 > 0) 
-					j->second--;
+				j->second--;
+				if(j->second %100 == 0)
+					j->second = 0;
 
 				if (j->second == 0)	{	//CoolTime이 0인 item 항을 제거
 					j = m_userItemList[nRoomIndex][i].erase(j);
@@ -1876,12 +1872,18 @@ void gGamePlayerContainer::pk_infochangeTile_rep(int nRoomIndex,int nInRoomIndex
 		if (gItemContainer::GetIF()->m_ItemList[itemNum].type == ITEM_TOGETHERCLASS &&	//대출아이템적용
 			itemCoolTime%10 > 0
 			)	{
-				rep.info[itemCoolTime / 100].nLang = 0;
-				rep.info[itemCoolTime / 100].nMath = 0;
-				rep.info[itemCoolTime / 100].nArt = 0;
-				rep.info[itemCoolTime / 100].nStamina = stamina;
-				rep.info[itemCoolTime / 100].nGrade = accomplishment;
-				strcpy(rep.info[itemCoolTime / 100].szID,m_GamePlayer[nRoomIndex][itemCoolTime / 100].szID);
+				int daechulIndex = itemCoolTime / 100;
+				for (int k = 0 ; k < MAXSUBJECT ; k++)	{
+					if (m_GamePlayer[nRoomIndex][daechulIndex].bySubIdx[k] == gTileContainer::GetIF()->m_tileMap[ m_GamePlayer[nRoomIndex][nInRoomIndex].nPos ].flag2)	{
+						rep.info[itemCoolTime / 100].nLang = 0;
+						rep.info[itemCoolTime / 100].nMath = 0;
+						rep.info[itemCoolTime / 100].nArt = 0;
+						rep.info[itemCoolTime / 100].nStamina = 0;
+						rep.info[itemCoolTime / 100].nGrade = accomplishment;
+						strcpy(rep.info[itemCoolTime / 100].szID,m_GamePlayer[nRoomIndex][itemCoolTime / 100].szID);
+						break;
+					}
+				}
 		}
 	}
 
