@@ -111,8 +111,11 @@ function replyComplete()
                 		</td>
                 	</tr>
                 	<tr>
-                		<td class="articleNickName" colspan="2">
+                		<td class="articleNickName">
                 			${articleInfo.nickname}
+                		</td>
+                		<td class="articleReadCount">
+                			조회수 : ${articleInfo.readCount}
                 		</td>
                 	</tr>
                 	<tr>
