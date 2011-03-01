@@ -124,7 +124,7 @@ function replyComplete()
             	
 				<div id="reply">
 					<div id="replyHead">
-						댓글 ${replyCount}   
+						<span>댓글 ${replyCount}</span> 
 					</div>
 					<div id="replyBackground">
 						<div id="replyContainer">
