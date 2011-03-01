@@ -164,11 +164,11 @@ bool gSubmitCore::putSubject(int nRoomIndex,int nInRoomIndex,int nSubjectIndex)
 	if(!m_isValidSubmitSubject[nRoomIndex]) 
 		return false;
 	if(isSubjectFull(nRoomIndex,nInRoomIndex)) 
-		return false;
+		return false; 
 	if(isSubjectExisted(nRoomIndex,nInRoomIndex,nSubjectIndex))
 		return false;
 	
-	for(int i = 0 ; i < CLASSNUM ; i++)
+	for(int i = 0 ; i < CLASSSEAT ; i++)
 	{
 		if(m_submitSubject[nRoomIndex][nSubjectIndex][i]==NOSEAT) {
 			return false;	//수강2개 수정
