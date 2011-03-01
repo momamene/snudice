@@ -20,7 +20,7 @@
 
 #define PK_HEADER_SIZE			4
 
-#define SNUDICE_VERSION			"0.9345"
+#define SNUDICE_VERSION			"0.9352"
 
 #define ENDROUND				30
 
@@ -362,12 +362,12 @@ struct PK_ROOMJOIN_REP
 
 struct PK_ROOMBACK_ASK
 {
-	char		szID[IDLENGTH];	
+	char				szID[IDLENGTH];	
 };
 
 struct PK_ROOMBACK_REP
 {
-	ROOM		room;
+	ROOM				room;
 	PLAYER				playerlist[ROOMMAXPLAYER];
 };
 

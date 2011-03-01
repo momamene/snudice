@@ -975,6 +975,7 @@ void gGameCore::SendMoveAsk(float fRate)
 	}
 		
 	gServer::GetIF()->Send(PL_MOVESTART_ASK, sizeof ask, &ask);
+	gPlaySoundCore::GetIF()->StopEffectSound(EFFECT_FILE_10);
 
 	if(ui->m_uimode == UIM_TARGETSELECT ||
 		ui->m_uimode == UIM_TARGETSELECT_MULTI ||
@@ -989,7 +990,6 @@ void gGameCore::pk_movestart_rep(PK_MOVESTART_REP *rep)
 	gPlayerContainer *gPC = gPlayerContainer::GetIF();
 
 	gUIGame::GetIF()->m_bShowTimeCount = false;
-	gPlaySoundCore::GetIF()->StopEffectSound(EFFECT_FILE_10);
 
 //	m_turnTime = 0x7fffffff;
 	m_bMoved = true;

@@ -1846,10 +1846,23 @@ bool gUIGame::OnLButtonDown()
 				{
 					m_uimode = UIM_OPTION;
 					gTopUI::GetIF()->m_uimode = RC_OPTION;
+					break;
 				}
 				if(m_BtnUI[UIBTN_EXIT].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 				{
 					gMainWin::GetIF()->Exit();
+					break;
+				}
+				if(m_BtnUI[UIBTN_OUT].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
+				{
+					PK_CHANNELCHANGE_ASK		ask;
+
+					strcpy(ask.szID, gPC->m_MyGamePlayer.szID);
+					ask.nChannel = gPC->m_MyChannel.nChannelNum;
+
+					gServer::GetIF()->Send(PL_CHANNELCHANGE_ASK, sizeof(ask), &ask);
+					gMainWin::GetIF()->m_eCoreMode = ECM_BATTLENET;
+					break;
 				}
 			}
 			break;
