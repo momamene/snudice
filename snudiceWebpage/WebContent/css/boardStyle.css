@@ -131,10 +131,15 @@ td#search {width : 10%; }
 	float: right;
 }
 
-#replyBackground
+#replyBackground.visible
 {
 	background-color : #E7F3FF;
 	padding : 3%;
+}
+
+#replyBackground.invisible
+{
+	visibility : none;
 }
 
 #replyContainer { margin-bottom : 3%; }
@@ -210,6 +215,7 @@ td.articleNickName
 	margin-bottom : 3%;
 }
 #replyNickName { color : #8E511A; }
+.articleReadCount { float : right; }
 
 /*----------글 수정하기,글쓰기---------------*/
 table.articleWriteModifyTable
@@ -282,15 +288,16 @@ table.articleWriteModifyTable input.noBorder,table.articleWriteModifyTable texta
 input.articleWriteWrapper
 {
 	position : relative;
-	left : 37%;
-	top : -11px;
+	left : 35%;
+	top : -20px;
+	height : 25px;
 }
 
 a.articleListWrapper
 {
 	position : relative;
-	left : 38%;
-	top : -12px;
+	left : 36%;
+	top : -21px;
 }
 
 input.articleModifyWrapper
