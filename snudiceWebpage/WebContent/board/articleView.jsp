@@ -129,7 +129,13 @@ function replyComplete()
 					<div id="replyHead">
 						<span>댓글 ${replyCount}</span> 
 					</div>
-					<div id="replyBackground">
+					
+					<c:set var="replyVisible" value="visible"/>
+					<c:if test="${canComment == false && replyCount==0}">
+						<c:set var="replyVisible" value="invisible"/>
+					</c:if>		
+					
+					<div id="replyBackground" class="${replyVisible}">
 						<div id="replyContainer">
 						<c:forEach var="reply" items="${replyList}" varStatus="status">			
 							<div class="replyInfo">
