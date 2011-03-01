@@ -130,7 +130,8 @@ function replyComplete()
 						<div id="replyContainer">
 						<c:forEach var="reply" items="${replyList}" varStatus="status">			
 							<div class="replyInfo">
-								<span>[${status.count}] ${reply.nickname}</span>
+								<span>[${status.count}] </span> 
+								<span id="replyNickName">${reply.nickname}</span>
 								<span id="replyDateTime">${reply.dateTime}</span>
 							</div>								
 							<div class="replyContent">${reply.replyText}</div>				
@@ -149,9 +150,13 @@ function replyComplete()
 					</div>
 				
 				<div id="articleButtonWrapper">
-	            	<a href="${root}/board/articleList.do?boardName=${param.boardName}&currPage=${param.currPage}">
-	            		<img src="${root}/image/board/toFirstPage.png"/>
-	            	</a>
+	            	
+					<!-- 글쓰기 버튼 -->
+					<c:if test="${canWrite == true}">
+						<a id="boardWrite" href="${root}/board/articleWriteForm.do?boardName=${param.boardName}&currPage=${param.currPage}">
+							<img src="${root}/image/board/articleWrite.png"/>
+						</a>
+					</c:if>
 	            	
 	            	<!-- 글 수정 버튼 : admin도 남의 글을 수정할 수는 없음 -->
 					<c:if test="${myArticle==true && canWrite==true}">						
@@ -163,14 +168,11 @@ function replyComplete()
 					<!--  글 삭제 버튼 : 본인과 admin 이 삭제 가능 -->
 					<c:if test="${myArticle==true || canAdmin==true}">					
 						<input id="articleDeleteButton" type="image" src="${root}/image/board/articleDelete.png" />
-					</c:if>							
-					
-					<!-- 글쓰기 버튼 -->
-					<c:if test="${canWrite == true}">
-						<a id="boardWrite" href="${root}/board/articleWriteForm.do?boardName=${param.boardName}&currPage=${param.currPage}">
-							<img src="${root}/image/board/articleWrite.png"/>
-						</a>
-					</c:if>
+					</c:if>	
+											
+					<a id="articleListButton" href="${root}/board/articleList.do?boardName=${param.boardName}&currPage=${param.currPage}">
+	            		<img src="${root}/image/board/toFirstPage.png"/>
+	            	</a>
 				</div>
 					 	         		
         	</div>
