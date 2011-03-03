@@ -8,18 +8,25 @@
 <link rel="shortcut icon" href="${root}/favicon.ico" type="image/x-icon"/>
 <link rel="stylesheet" type="text/css" href="${root}/css/commonStyle.css"/>
 <link rel="stylesheet" type="text/css" href="${root}/css/menuStyle.css"/>
+<link rel="stylesheet" type="text/css" href="${root}/css/loginModuleStyle.css"/>
 <link rel="stylesheet" type="text/css" href="${root}/css/boardStyle.css"/>
 <script type="text/javascript" src="${root}/javascript/util.js"></script>
+<script type="text/javascript" src="${root}/javascript/md5.js"></script>
 <script type="text/javascript" src="${root}/javascript/header.js"></script>
 <script type="text/javascript" src="${root}/javascript/menuScript.js"></script> 
+<script type="text/javascript" src="${root}/javascript/login.js"></script> 
 <script type="text/javascript">		
 var root = "${root}";
+var _userId = "${userId}";
+var role = "${role}";
+
 window.onload = init;
 
 function init()
 {
 	initHeader();
 	initMenu();
+	initLogin();
 }
 </script>
 
@@ -32,7 +39,11 @@ function init()
 		<div class="container">
 			<%@ include file="/reuseModule/menuModule.jsp"%>
 			
-			<div class="left"></div>
+			<div class="left">
+				<%@ include file="/reuseModule/loginModule.jsp"%>
+				<div id="mainLeftBottom">
+				</div>
+			</div>
 			
 			<div class="center">
 				<form method = "post" action="${root}/board/articleWrite.do">
@@ -43,12 +54,12 @@ function init()
 			    		<tr>
 							<td class="articleTitleLabel">제목</td>
 			    			<td class="articleTitleContent">
-			    				<input class="noBorder" type = "text" name = "title">
+			    				<input class="board" type = "text" name = "title">
 			    			</td>
 			    		</tr>			    	
 			    		<tr>
 			    			<td class="articleTextContent" colspan="2">			    			    			
-			    				<textarea name = "content"></textarea>
+			    				<textarea class="board" name = "content"></textarea>
 			    			</td>			    			
 			    		</tr>
 						<tr>

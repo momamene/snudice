@@ -1,8 +1,28 @@
 @CHARSET "UTF-8";
 
-textarea,input { font-size : 120%; }
+textarea.board,input.board { font-size : 120%; }
+textarea.board 
+{ 
+	resize : none; /*크롬에서 크기조절을 못하게 한다*/
+	overflow : hidden; /*스크롤 바를 숨긴다 */ 
+}
 
-.left {	width : 0px;}
+table.board
+{	
+	margin : 2%;	
+	width : 96%;
+}
+
+tr.board,td.board
+{ 
+	height : 30px;
+	padding : 5px;
+}
+
+/*------------header-------------*/
+#headerImage {	z-index : 0; }
+.backgroundUp {	z-index : -1; }
+
 .footer { top:-200px; }
 
 .backgroundDown
@@ -11,47 +31,10 @@ textarea,input { font-size : 120%; }
 	top : -150px;
 }
 
-.header,.container,.footer,.center,.left,.right,table,tr,td 
-{
-	border : 0px;
-	border-collapse : collapse; 	
-	margin : 0px;
-}
 
-table
-{
-	border : 0px;
-	padding : 0px;
-	margin : 2%;	
-	width : 96%;
-}
+/*----login module----*/
+#infoModifyForm.display_block {	top : 230px; }
 
-tr,td
-{ 
-	height : 30px;
-	padding : 5px;
-}
-
-/*------------header-------------*/
-#headerImage
-{
-	background-image : url('/snudiceWebpage/image/mainpage/title.png');
-	background-repeat : no-repeat;	
-	height : 127px;
-	z-index : 0;
-	position : relative;
-	margin-top : -270px;	
-	left : 50px;
-}
-
-.backgroundUp
-{
-	background-image : url('/snudiceWebpage/image/mainpage/backgroundUp.png');
-	background-repeat : no-repeat;
-	height : 284px;	
-	z-index : -1;	
-	position : relative;
-}
 
 /*----------글 목록 보기-------*/
 table#articleListMain,table#articleListBottom
@@ -67,10 +50,7 @@ tr#articleListHeader
 	height : 40px;
 }
 
-tr.article
-{
-	background-color : #E4E4F9;	
-}
+tr.article { background-color : #E4E4F9; }
 
 table#articleListBottom,table#articleListBottom a
 {
@@ -126,10 +106,7 @@ td#search {width : 10%; }
 	
 }
 
-#replyDateTime
-{
-	float: right;
-}
+#replyDateTime { float: right; }
 
 #replyBackground.visible
 {
@@ -137,10 +114,7 @@ td#search {width : 10%; }
 	padding : 3%;
 }
 
-#replyBackground.invisible
-{
-	visibility : none;
-}
+#replyBackground.invisible { visibility : none; }
 
 #replyContainer { margin-bottom : 3%; }
 
@@ -158,9 +132,8 @@ td#search {width : 10%; }
 	
 	width : 85%;
 	height : 80px;	
-	
-	resize : none; /* 크롬에서 크기 조절을 못하게 한다. */
 }
+
 #replySubmitButton
 {
 	position : relative;
@@ -275,7 +248,7 @@ td.articleTextContent textarea
 {
 	width: 90%;
 	height:90%;
- 	resize : none; 		/* 크롬에서 크기 조절을 못하게 한다. */
+ 	 		/* 크롬에서 크기 조절을 못하게 한다. */
 }
 
 table.articleWriteModifyTable input.noBorder,table.articleWriteModifyTable textarea

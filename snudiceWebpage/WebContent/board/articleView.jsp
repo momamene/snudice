@@ -10,19 +10,26 @@
 <link rel="shortcut icon" href="${root}/favicon.ico" type="image/x-icon"/>
 <link rel="stylesheet" type="text/css" href="${root}/css/commonStyle.css"/>
 <link rel="stylesheet" type="text/css" href="${root}/css/menuStyle.css"/>
+<link rel="stylesheet" type="text/css" href="${root}/css/loginModuleStyle.css"/>
 <link rel="stylesheet" type="text/css" href="${root}/css/boardStyle.css"/>
 
 <script type="text/javascript" src="${root}/javascript/util.js"></script>
+<script type="text/javascript" src="${root}/javascript/md5.js"></script>
 <script type="text/javascript" src="${root}/javascript/header.js"></script>
 <script type="text/javascript" src="${root}/javascript/menuScript.js"></script> 
+<script type="text/javascript" src="${root}/javascript/login.js"></script> 
 <script type="text/javascript">		
 var root = "${root}";
+var _userId = "${userId}";
+var role = "${role}";
+
 window.onload = init;
 
 function init()
 {
 	initHeader();
 	initMenu();
+	initLogin();
 	
 	//댓글 쓰기 버튼
 	var replySubmitButton = document.getElementById("replySubmitButton");
@@ -98,7 +105,11 @@ function replyComplete()
     	<div class="container">
     		<%@ include file="/reuseModule/menuModule.jsp"%>
     		
-    		<div class="left"></div>
+    		<div class="left">
+				<%@ include file="/reuseModule/loginModule.jsp"%>
+				<div id="mainLeftBottom">
+				</div>
+			</div>
     		
     		<div class="center">          	
             	<table>
@@ -151,7 +162,7 @@ function replyComplete()
 						<c:if test="${canComment == true}">
 							<div id="replyWrite">
 								한번 단 댓글은 수정,삭제가 불가능 합니다. 쓰기 전에 한번 더 생각해 주세요.<br/>					
-								<textarea id="replyWriteText"></textarea>
+								<textarea class="board" id="replyWriteText"></textarea>
 								<input id="replySubmitButton" type="image" value="댓글 쓰기" src="${root}/image/board/replyWrite.png"/>
 							</div>
 						</c:if>			

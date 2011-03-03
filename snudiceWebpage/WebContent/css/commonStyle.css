@@ -11,8 +11,10 @@ input
 	border-color: black; 
 }
 
-img { border : 0px; padding : 0px; }
-div { border : 0px; padding : 0px; }
+img,div,table,tr,td  {	border : 0px; }
+tr,td { padding : 0px; }
+table { border-collapse: collapse; }
+
 hr
 {	
 	background-color : #BCD9EB;
@@ -20,6 +22,8 @@ hr
 	border : 0px;
 	width : 95%;	
 }
+
+
 
 .msg { color:red; }
 
