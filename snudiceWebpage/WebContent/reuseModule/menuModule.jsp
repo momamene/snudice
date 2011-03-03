@@ -19,10 +19,18 @@
 		<div id="menu2">
 			게임소개
 			<div id="menu2DropDown" class="menuDropDownWrapper invisible">
-				<div id="synopsis">시놉시스</div>
-				<div id="playGuide">게임방법</div>
-				<div id="character">캐릭터</div>
-				<div id="card">카드</div>							
+				<div id="synopsis">
+					<a href="${root}/misc/synopsis.do">시놉시스</a>
+				</div>
+				<div id="playGuide">
+					<a href="${root}/misc/manual.do">게임방법</a>
+				</div>
+				<div id="character">
+					<a href="${root}/misc/charIntro.do">캐릭터</a>							
+				</div>
+				<div id="card">
+					<a href="${root}/misc/card.do">카드</a>
+				</div>							
 			</div>
 		</div>
 		<div id="menu3">

@@ -10,16 +10,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class GameIntro
+ * Servlet implementation class GameManual
  */
-@WebServlet("/GameIntro")
-public class GameIntro extends HttpServlet {
+@WebServlet("/GameManual")
+public class Card extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GameIntro() {
+    public Card() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -28,7 +28,7 @@ public class GameIntro extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String nextPage = "/misc/gameIntro.jsp";		
+		String nextPage = "/misc/card.jsp";		
 		RequestDispatcher view = request.getRequestDispatcher(nextPage);
 		view.forward(request, response); 
 	}

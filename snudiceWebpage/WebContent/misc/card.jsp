@@ -27,7 +27,7 @@ window.onload = function() {
 var _userId = "${userId}";
 var _role = "${role}";
 </script>
-<title>캐릭터 소개</title>
+<title>카드</title>
 </head>
 <body>
 	<div class="bodyWrapper">		
@@ -46,7 +46,7 @@ var _role = "${role}";
 				</div>
 				
 				<div class="center">
-					캐릭터소개	
+					카드임
 				</div>
 				
 				<div class="right"></div>

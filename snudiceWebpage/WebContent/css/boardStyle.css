@@ -31,6 +31,26 @@ tr.board,td.board
 	top : -150px;
 }
 
+/*-----공통-----*/
+.boardFrameTop
+{
+	background-image : url('/snudiceWebpage/image/mainpage/backgroundUp.png');
+	background-repeat : no-repeat;
+}
+
+.boardFrameBody
+{
+	background-image : url('/snudiceWebpage/image/mainpage/backgroundUp.png');
+	background-repeat : no-repeat;
+}
+
+.boardFrameBottom
+{
+	background-image : url('/snudiceWebpage/image/mainpage/backgroundUp.png');
+	background-repeat : no-repeat;
+}
+
+
 /*----------글 목록 보기-------*/
 table#articleListMain,table#articleListBottom
 {
