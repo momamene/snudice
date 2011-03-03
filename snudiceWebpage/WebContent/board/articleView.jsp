@@ -105,99 +105,102 @@ function replyComplete()
     	<div class="container">
     		<%@ include file="/reuseModule/menuModule.jsp"%>
     		
-    		<div class="left">
-				<%@ include file="/reuseModule/loginModule.jsp"%>
-				<div id="mainLeftBottom">
-				</div>
-			</div>
-    		
-    		<div class="center">          	
-            	<table>
-            		<tr id="articleTitleDateWrapper">
-            			<td class="articleTitleContent">
-            				<span>${articleInfo.title}</span>
-            			</td>
-            			<td class="articleDateTime">
-                			<span>${articleInfo.dateTime}</span>
-                		</td>
-                	</tr>
-                	<tr>
-                		<td class="articleNickName">
-                			${articleInfo.nickname}
-                		</td>
-                		<td class="articleReadCount">
-                			조회수 : ${articleInfo.readCount}
-                		</td>
-                	</tr>
-                	<tr>
-                		<td id="articleTextContentView" class="articleTextContent" colspan="2">
-            				${articleInfo.text}
-            			</td>
-            		</tr>
-            	</table> 
-            	
-				<div id="reply">
-					<div id="replyHead">
-						<span>댓글 ${replyCount}</span> 
+    		<div class="leftCenterRightWrapper">    		
+	    		<div class="left">
+					<%@ include file="/reuseModule/loginModule.jsp"%>
+					<div id="mainLeftBottom">
 					</div>
-					
-					<c:set var="replyVisible" value="visible"/>
-					<c:if test="${canComment == false && replyCount==0}">
-						<c:set var="replyVisible" value="invisible"/>
-					</c:if>		
-					
-					<div id="replyBackground" class="${replyVisible}">
-						<div id="replyContainer">
-						<c:forEach var="reply" items="${replyList}" varStatus="status">			
-							<div class="replyInfo">
-								<span>[${status.count}] </span> 
-								<span id="replyNickName">${reply.nickname}</span>
-								<span id="replyDateTime">${reply.dateTime}</span>
-							</div>								
-							<div class="replyContent">${reply.replyText}</div>				
-							<hr/>
-						</c:forEach>
+				</div>
+	    		
+	    		<div class="center">          	
+	            	<table>
+	            		<tr id="articleTitleDateWrapper">
+	            			<td class="articleTitleContent">
+	            				<span>${articleInfo.title}</span>
+	            			</td>
+	            			<td class="articleDateTime">
+	                			<span>${articleInfo.dateTime}</span>
+	                		</td>
+	                	</tr>
+	                	<tr>
+	                		<td class="articleNickName">
+	                			${articleInfo.nickname}
+	                		</td>
+	                		<td class="articleReadCount">
+	                			조회수 : ${articleInfo.readCount}
+	                		</td>
+	                	</tr>
+	                	<tr>
+	                		<td id="articleTextContentView" class="articleTextContent" colspan="2">
+	            				${articleInfo.text}
+	            			</td>
+	            		</tr>
+	            	</table> 
+	            	
+					<div id="reply">
+						<div id="replyHead">
+							<span>댓글 ${replyCount}</span> 
 						</div>
 						
-						<c:if test="${canComment == true}">
-							<div id="replyWrite">
-								한번 단 댓글은 수정,삭제가 불가능 합니다. 쓰기 전에 한번 더 생각해 주세요.<br/>					
-								<textarea class="board" id="replyWriteText"></textarea>
-								<input id="replySubmitButton" type="image" value="댓글 쓰기" src="${root}/image/board/replyWrite.png"/>
+						<c:set var="replyVisible" value="visible"/>
+						<c:if test="${canComment == false && replyCount==0}">
+							<c:set var="replyVisible" value="invisible"/>
+						</c:if>		
+						
+						<div id="replyBackground" class="${replyVisible}">
+							<div id="replyContainer">
+							<c:forEach var="reply" items="${replyList}" varStatus="status">			
+								<div class="replyInfo">
+									<span>[${status.count}] </span> 
+									<span id="replyNickName">${reply.nickname}</span>
+									<span id="replyDateTime">${reply.dateTime}</span>
+								</div>								
+								<div class="replyContent">${reply.replyText}</div>				
+								<hr/>
+							</c:forEach>
 							</div>
-						</c:if>			
+							
+							<c:if test="${canComment == true}">
+								<div id="replyWrite">
+									한번 단 댓글은 수정,삭제가 불가능 합니다. 쓰기 전에 한번 더 생각해 주세요.<br/>					
+									<textarea class="board" id="replyWriteText"></textarea>
+									<input id="replySubmitButton" type="image" value="댓글 쓰기" src="${root}/image/board/replyWrite.png"/>
+								</div>
+							</c:if>			
+							</div>
 						</div>
-					</div>
-				
-				<div id="articleButtonWrapper">
-	            	
-					<!-- 글쓰기 버튼 -->
-					<c:if test="${canWrite == true}">
-						<a id="boardWrite" href="${root}/board/articleWriteForm.do?boardName=${param.boardName}&currPage=${param.currPage}">
-							<img src="${root}/image/board/articleWrite.png"/>
-						</a>
-					</c:if>
-	            	
-	            	<!-- 글 수정 버튼 : admin도 남의 글을 수정할 수는 없음 -->
-					<c:if test="${myArticle==true && canWrite==true}">						
-						<a id="boardModify" href="${root}/board/articleModify.do?boardName=${param.boardName}&articleIndex=${articleInfo.articleIndex}&currPage=${param.currPage}">
-							<img src="${root}/image/board/articleModify.png"/>
-						</a>
-					</c:if>
 					
-					<!--  글 삭제 버튼 : 본인과 admin 이 삭제 가능 -->
-					<c:if test="${myArticle==true || canAdmin==true}">					
-						<input id="articleDeleteButton" type="image" src="${root}/image/board/articleDelete.png" />
-					</c:if>	
-											
-					<a id="articleListButton" href="${root}/board/articleList.do?boardName=${param.boardName}&currPage=${param.currPage}">
-	            		<img src="${root}/image/board/toFirstPage.png"/>
-	            	</a>
-				</div>
-					 	         		
-        	</div>
-			
-        	<div class="right"></div>
+					<div id="articleButtonWrapper">
+		            	
+						<!-- 글쓰기 버튼 -->
+						<c:if test="${canWrite == true}">
+							<a id="boardWrite" href="${root}/board/articleWriteForm.do?boardName=${param.boardName}&currPage=${param.currPage}">
+								<img src="${root}/image/board/articleWrite.png"/>
+							</a>
+						</c:if>
+		            	
+		            	<!-- 글 수정 버튼 : admin도 남의 글을 수정할 수는 없음 -->
+						<c:if test="${myArticle==true && canWrite==true}">						
+							<a id="boardModify" href="${root}/board/articleModify.do?boardName=${param.boardName}&articleIndex=${articleInfo.articleIndex}&currPage=${param.currPage}">
+								<img src="${root}/image/board/articleModify.png"/>
+							</a>
+						</c:if>
+						
+						<!--  글 삭제 버튼 : 본인과 admin 이 삭제 가능 -->
+						<c:if test="${myArticle==true || canAdmin==true}">					
+							<input id="articleDeleteButton" type="image" src="${root}/image/board/articleDelete.png" />
+						</c:if>	
+												
+						<a id="articleListButton" href="${root}/board/articleList.do?boardName=${param.boardName}&currPage=${param.currPage}">
+		            		<img src="${root}/image/board/toFirstPage.png"/>
+		            	</a>
+					</div>
+						 	         		
+	        	</div>
+				
+	        	<div class="right"></div>
+	        </div>
+        	<div class="containerBottom"></div>
 		</div>	
 			
 		<%@ include file="/reuseModule/footerModule.jsp"%>

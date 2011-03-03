@@ -1,22 +1,5 @@
 @CHARSET "UTF-8";
 
-.leftCenterRightWrapper 
-{	
-	width : 980px;
-	height : 670px;
-	margin-left:22px;
-	margin-right:22px;	
-	margin-top:-80px;
-	padding-top : 30px;	
-	
-	position : relative;
-	top : 3px;
-	z-index : 1;	
-	
-	background-image : url('/snudiceWebpage/image/mainpage/containerMiddle.png');
-	background-repeat : repeat-y;
-}
-
 .footer { top:-200px; }
 .backgroundDown { top : -150px; }
 

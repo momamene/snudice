@@ -39,43 +39,46 @@ function init()
 		<div class="container">
 			<%@ include file="/reuseModule/menuModule.jsp"%>
 			
-			<div class="left">
-				<%@ include file="/reuseModule/loginModule.jsp"%>
-				<div id="mainLeftBottom">
+			<div class="leftCenterRightWrapper">			
+				<div class="left">
+					<%@ include file="/reuseModule/loginModule.jsp"%>
+					<div id="mainLeftBottom">
+					</div>
 				</div>
+			
+				<div class="center centerAlign">				
+					<form method = "post" action="${root}/board/articleModifyComplete.do">
+						<input type="hidden" name="boardName" value="${param.boardName}"/>
+						<input type="hidden" name="articleIndex" value="${param.articleIndex}"/>
+						<input type="hidden" name="currPage" value="${param.currPage}"/>
+							
+						<table class="articleWriteModifyTable">
+				    		<tr>
+								<td class="articleTitleLabel">제목</td>
+				    			<td class="articleTitleContent">
+				    				<input class="board" type = "text" name = "title" value="${article.title}">
+				    			</td>
+				    		</tr>				
+	    					<tr>
+				    			<td class="articleTextContent" colspan="2">			    			    			
+				    				<textarea class="board" name = "content">${article.text}</textarea>
+				    			</td>			    			
+				    		</tr>
+							<tr>
+								<td colspan = "2">
+									<input class="articleModifyWrapper" type="image" src="${root}/image/board/articleModify.png" />
+									<a class="articleListWrapper" href="${root}/board/articleList.do?boardName=${param.boardName}&currPage=${param.currPage}">
+										<img src="${root}/image/board/toFirstPage.png"/>
+									</a>
+								</td>
+				    		</tr>    					
+	    				</table>	
+					</form>
+				</div>
+			
+				<div class="right"></div>
 			</div>
-		
-			<div class="center centerAlign">				
-				<form method = "post" action="${root}/board/articleModifyComplete.do">
-					<input type="hidden" name="boardName" value="${param.boardName}"/>
-					<input type="hidden" name="articleIndex" value="${param.articleIndex}"/>
-					<input type="hidden" name="currPage" value="${param.currPage}"/>
-						
-					<table class="articleWriteModifyTable">
-			    		<tr>
-							<td class="articleTitleLabel">제목</td>
-			    			<td class="articleTitleContent">
-			    				<input class="board" type = "text" name = "title" value="${article.title}">
-			    			</td>
-			    		</tr>				
-    					<tr>
-			    			<td class="articleTextContent" colspan="2">			    			    			
-			    				<textarea class="board" name = "content">${article.text}</textarea>
-			    			</td>			    			
-			    		</tr>
-						<tr>
-							<td colspan = "2">
-								<input class="articleModifyWrapper" type="image" src="${root}/image/board/articleModify.png" />
-								<a class="articleListWrapper" href="${root}/board/articleList.do?boardName=${param.boardName}&currPage=${param.currPage}">
-									<img src="${root}/image/board/toFirstPage.png"/>
-								</a>
-							</td>
-			    		</tr>    					
-    				</table>	
-				</form>
-			</div>
-		
-			<div class="right"></div>
+			<div class="containerBottom"></div>
 		</div> 
 	
 		<%@ include file="/reuseModule/footerModule.jsp"%>
