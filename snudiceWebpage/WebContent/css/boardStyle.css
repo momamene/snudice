@@ -31,11 +31,6 @@ tr.board,td.board
 	top : -150px;
 }
 
-
-/*----login module----*/
-#infoModifyForm.display_block {	top : 230px; }
-
-
 /*----------글 목록 보기-------*/
 table#articleListMain,table#articleListBottom
 {

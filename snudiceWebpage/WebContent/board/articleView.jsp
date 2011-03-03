@@ -21,7 +21,7 @@
 <script type="text/javascript">		
 var root = "${root}";
 var _userId = "${userId}";
-var role = "${role}";
+var _role = "${role}";
 
 window.onload = init;
 
