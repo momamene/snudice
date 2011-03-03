@@ -61,21 +61,10 @@ function init()
 								<td>조회수</td>
 							</tr>
 							
-							<c:forEach var="article" items="${articleList}" varStatus="status">
-								<c:set var="tdClassName" value="normal"/>
-								<c:if test="${status.first == true}">
-									<c:set var="tdClassName" value="first"/>							
-								</c:if>
-								<c:if test="${status.last == true}">
-									<c:set var="tdClassName" value="last"/>							
-								</c:if>
-								<c:if test="${ (status.first == true) && (status.last ==true)}">
-									<c:set var="tdClassName" value="firstLast"/>							
-								</c:if>	
-								
+							<c:forEach var="article" items="${articleList}" varStatus="status">								
 								<tr class="article">
-									<td class="${tdClassName}">${article.articleIndex}</td>
-									<td class="${tdClassName}">								
+									<td>${article.articleIndex}</td>
+									<td>								
 										<c:set var="articleReadLink" value="#"/>								
 										<c:if test="${canRead == true}">
 											<c:set var="articleReadLink" value="${root}/board/articleView.do?boardName=${param.boardName}&amp;articleIndex=${article.articleIndex}&amp;currPage=${param.currPage}"/>
@@ -88,9 +77,9 @@ function init()
 											</c:if>
 										</a>
 									</td>
-									<td class="${tdClassName}">${article.nickname}</td>
-									<td class="${tdClassName}">${article.dateTime}</td> 
-									<td class="${tdClassName}">${article.readCount}</td>		
+									<td class="nickname">${article.nickname}</td>
+									<td>${article.dateTime}</td> 
+									<td>${article.readCount}</td>		
 								</tr>
 							</c:forEach>					 
 						</table>
