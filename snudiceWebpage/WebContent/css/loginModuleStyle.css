@@ -289,14 +289,11 @@ span.noticeMsg
 	
 	width : 403px;
 	height : 322px;
-	z-index : 2;	
+	z-index : 4;	
 }
 
 #infoModifyClose { width : 40px; }
-#infoModifyMsg
-{
-	height : 30px;
-}
+#infoModifyMsg { height : 30px; }
 
 #infoModifyFormTable
 {

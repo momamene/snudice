@@ -19,7 +19,7 @@ window.onload = init;
 
 function init()
 {	
-	initHeader();
+	initHeader();	
 	
 	//로그인 버튼
 	var loginButton = document.getElementById("loginButton");
@@ -115,13 +115,7 @@ function mouseOutFunc()
 								PW<input id="password" type="password" name="j_password"><br/>	
 							</div>							
 							<div id="loginButton" class="mouseOut"></div>
-						</form>
-						
-						<div id="loginHelp">
-							<hr/>												
-								<a id="joinOpen" href="#">빠른 회원가입</a>							
-								<a id="findIdPw" href="#">ID/PW찾기</a>
-						</div>		
+						</form>							
 					</div>												
 					<div id="loginMsg" class="msg">
 						<c:if test="${not empty param.fail}">

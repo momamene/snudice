@@ -14,16 +14,22 @@
 <link rel="stylesheet" type="text/css" href="${root}/css/boardStyle.css"/>
 
 <script type="text/javascript" src="${root}/javascript/util.js"></script>
+<script type="text/javascript" src="${root}/javascript/md5.js"></script>
 <script type="text/javascript" src="${root}/javascript/header.js"></script>
 <script type="text/javascript" src="${root}/javascript/menuScript.js"></script> 
+<script type="text/javascript" src="${root}/javascript/login.js"></script> 
 <script type="text/javascript">		
 var root = "${root}";
+var _userId = "${userId}";
+var role = "${role}";
+
 window.onload = init;
 
 function init()
 {
 	initHeader();
 	initMenu();
+	initLogin();
 }
 </script>
 
@@ -149,7 +155,7 @@ function init()
 						</td>
 						<td id="search">
 							<form method="get" action="${root}/board/articleSearch.do">
-								<span>검색 : </span><input name="titleKeyword" type="text"/>
+								<span>검색 : </span><input class="board" name="titleKeyword" type="text"/>
 								<input type="submit" value="검색"/>
 								<input type="hidden" name="boardName" value="${param.boardName}"/>
 								<input type="hidden" name="currPage" value="0"/>							

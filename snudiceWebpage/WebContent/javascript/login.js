@@ -51,7 +51,7 @@ function initLogin(){
 
 	//로그아웃 버튼
 	var logoutButton = document.getElementById("logoutButton");
-	logoutButton.onclick = function() { window.location = "logout.do"; };
+	logoutButton.onclick = function() { window.location = root+"/logout.do"; };
 	
 	//손님 로그인 버튼
 	var guestLogin = document.getElementById("guestLogin");
@@ -308,9 +308,9 @@ function pwFindFunc()
 //회원정보 수정 창을 연다.
 function infoModifyOpenFunc()
 {		
-	if(_userId=="guest")
+	if(role=="guest")
 		return;
-	if(_userId=="") //never reach here!!
+	if(role=="") //never reach here!!
 		return;
 	
 	var url = root+"/infoModifyLoad.ajax";	
