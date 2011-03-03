@@ -43,7 +43,8 @@ tr.board,td.board
 .boardFrameBody
 {
 	background-image : url('/snudiceWebpage/image/mainpage/boardFrameBody.png');
-	background-repeat : repeat-y;		
+	background-repeat : repeat-y;	
+	width : 702px;	
 }
 
 .boardFrameBottom
@@ -57,47 +58,36 @@ tr.board,td.board
 
 /*----------글 목록 보기-------*/
 table#articleListMain,table#articleListBottom
-{
-	width : 100%;
+{	
+	margin-left : 3%;
+	margin-right : 3%;
+	width : 94%;
 	text-align : center;
+	position : relative;
+	top : -20px;
 }
 
-tr#articleListHeader
-{
-	background-color : #2C2B70;
-	color : white;
+tr#articleListHeader 
+{	
 	height : 40px;
+	color : #59320B; 
+	font-weight : bold;
+	border-bottom : 2px solid #61A2BC;
 }
 
-tr.article { background-color : #E4E4F9; }
-
-table#articleListBottom,table#articleListBottom a
+table#articleListMain td.nickname
 {
-	background-color : #2C2B70;
-	color : white;	
+	color : #90513A;
+	font-weight : bold;
 }
 
 tr.article td
 {
-	border : 2px dotted #F2B066;
+	border : 0px;
+	border-bottom : 1px solid #61A2BC;
 	border-left : 0px;
 	border-right : 0px;
-}
-
-tr.article td.first
-{
-	border-top : 2px solid #F2B066;
-}
-
-tr.article td.last
-{
-	border-bottom : 2px solid #F2B066;
-}
-
-tr.article td.firstLast
-{
-	border-top : 2px solid #F2B066;
-	border-bottom : 2px solid #F2B066;
+	padding : 5px;
 }
 
 td.pageNumber { width : 80%; }
