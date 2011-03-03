@@ -307,11 +307,9 @@ function pwFindFunc()
 
 //회원정보 수정 창을 연다.
 function infoModifyOpenFunc()
-{		
-	if(role=="guest")
-		return;
-	if(role=="") //never reach here!!
-		return;
+{	
+	if(_role=="guest")
+		return;	
 	
 	var url = root+"/infoModifyLoad.ajax";	
 	var method = "POST";
@@ -488,10 +486,12 @@ function loginFormRefresh()
 	if(request.readyState == 4)
 	{		
 		if(request.status == 200)
-		{			
-			if(request.responseText=="loginOK")
-			{				
-				_userId = userId.value;
+		{				
+			var resp = JSON.parse(request.responseText);
+			if(resp.msg=="loginOK")
+			{					
+				_userId = resp.userId;
+				_role = resp.role;				
 				
 				loginMsg.innerHTML = userId.value + " 님 로그인 하셨습니다.";
 				var loginFormWrapper = document.getElementById("loginFormWrapper");
@@ -509,13 +509,13 @@ function loginFormRefresh()
 				var mainLeftTop = document.getElementById("mainLeftTop");
 				mainLeftTop.className = "loggined";
 			}
-			else if(request.responseText=="loginFail")
+			else if(resp.msg=="loginFail")
 			{				
 				loginMsg.innerHTML = "로그인 실패!";
 				userId.focus();
 				userId.select();
 			}
-			else if(request.responseText=="alreadyLoggined")
+			else if(resp.msg=="alreadyLoggined")
 			{
 				loginMsg.innerHTML = "이미 로그인 되어있습니다.<br/>새로고침 해주세요";
 			}			
