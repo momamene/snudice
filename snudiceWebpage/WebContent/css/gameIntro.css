@@ -1,23 +1,10 @@
 @CHARSET "UTF-8";
 
-.iframeBodyWrapper,.introContent
-{
-	background-color : #E4E4F9;
-}
-
-.introContent
-{	
-	height : 1000px; /* for IE */
-	border-left: 5px solid black; 
-}
-
 /*------시놉시스------*/
 
 /*------게임 메뉴얼------*/
-#gameManualContent
-{
-	color : red;
-}
+
 
 /*------캐릭터 소개------*/
 
+/*--------카드----------*/

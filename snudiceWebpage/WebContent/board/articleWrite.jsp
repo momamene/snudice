@@ -47,6 +47,11 @@ function init()
 				</div>
 				
 				<div class="center">
+					<div class="boardFrameTop"></div>
+					<div class="boardFrameBody">
+					</div>
+					<div class="boardFrameBottom"></div>
+				
 					<form method = "post" action="${root}/board/articleWrite.do">
 						<input type="hidden" name="boardName" value="${param.boardName}"/>
 						<input type="hidden" name="currPage" value="${param.currPage}"/>

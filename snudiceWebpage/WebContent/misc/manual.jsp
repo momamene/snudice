@@ -6,6 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="icon" href="${root}/favicon.ico" type="image/x-icon">
 <link rel="shortcut icon" href="${root}/favicon.ico" type="image/x-icon">  
+
 <link rel="stylesheet" type="text/css" href="${root}/css/commonStyle.css">
 <link rel="stylesheet" type="text/css" href="${root}/css/loginModuleStyle.css"/>
 <link rel="stylesheet" type="text/css" href="${root}/css/menuStyle.css"/>
@@ -27,7 +28,7 @@ window.onload = function() {
 var _userId = "${userId}";
 var _role = "${role}";
 </script>
-<title>캐릭터 소개</title>
+<title>게임방법</title>
 </head>
 <body>
 	<div class="bodyWrapper">		
@@ -45,8 +46,8 @@ var _role = "${role}";
 					</div>					
 				</div>
 				
-				<div class="center">
-					캐릭터소개	
+				<div class="center">	
+					메뉴얼임
 				</div>
 				
 				<div class="right"></div>

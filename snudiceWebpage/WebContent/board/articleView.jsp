@@ -110,9 +110,13 @@ function replyComplete()
 					<%@ include file="/reuseModule/loginModule.jsp"%>
 					<div id="mainLeftBottom">
 					</div>
-				</div>
-	    		
-	    		<div class="center">          	
+				</div>	    		
+	    		<div class="center">      
+	    			<div class="boardFrameTop"></div>
+					<div class="boardFrameBody">
+					</div>
+					<div class="boardFrameBottom"></div>
+					    	
 	            	<table>
 	            		<tr id="articleTitleDateWrapper">
 	            			<td class="articleTitleContent">

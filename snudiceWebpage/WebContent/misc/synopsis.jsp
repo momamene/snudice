@@ -4,14 +4,58 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="icon" href="${root}/favicon.ico" type="image/x-icon">
+<link rel="shortcut icon" href="${root}/favicon.ico" type="image/x-icon">  
+<script type="text/javascript" src="${root}/javascript/json2.js"></script>
+<script type="text/javascript" src="${root}/javascript/util.js"></script>
+<script type="text/javascript" src="${root}/javascript/md5.js"></script> 
+<script type="text/javascript" src="${root}/javascript/header.js"></script>
+<script type="text/javascript" src="${root}/javascript/menuScript.js"></script> 
+<script type="text/javascript" src="${root}/javascript/login.js"></script>
+<link rel="stylesheet" type="text/css" href="${root}/css/commonStyle.css">
+<link rel="stylesheet" type="text/css" href="${root}/css/loginModuleStyle.css"/>
+<link rel="stylesheet" type="text/css" href="${root}/css/menuStyle.css"/>
 <link rel="stylesheet" type="text/css" href="${root}/css/gameIntro.css">
+<script type="text/javascript"> 
+var root = "${root}";
+window.onload = function() {
+	initHeader();
+	initMenu();
+	initLogin();
+};
+
+var _userId = "${userId}";
+var _role = "${role}";
+</script>
 <title>시놉시스</title>
 </head>
 <body>
-	<div class="iframeBodyWrapper introContent">
-		<div id="synopsisContent" class="introContent">
-			시놉시스임!
-		</div>	
+	<div class="bodyWrapper">		
+		<%@ include file="/reuseModule/headerModule.jsp"%>
+		
+		<div class="container">		
+			<%@ include file="/reuseModule/menuModule.jsp"%>					
+					
+			<div class="leftCenterRightWrapper">				
+				<div class="left">
+					<%@ include file="/reuseModule/loginModule.jsp"%>
+				
+					<div id="mainLeftBottom">						
+									
+					</div>					
+				</div>
+				
+				<div class="center">	
+					시놉시스
+				</div>
+				
+				<div class="right"></div>
+			</div>
+			
+			<div class="containerBottom"></div>
+		</div>
+		
+		<%@ include file="/reuseModule/footerModule.jsp"%>
 	</div>
 </body>
 </html>

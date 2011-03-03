@@ -94,7 +94,7 @@
   </security-constraint>
   <security-constraint>
     <web-resource-collection>
-      <web-resource-name>전체접근</web-resource-name>
+      <web-resource-name>전체접근AJAX</web-resource-name>
       <url-pattern>/testAjax.ajax</url-pattern>
       <url-pattern>/login.ajax</url-pattern>
       <url-pattern>/join.ajax</url-pattern>
@@ -177,14 +177,43 @@
     <servlet-name>logoutInternalName</servlet-name>
     <url-pattern>/logout.do</url-pattern>
   </servlet-mapping>
+  
   <servlet>
-    <servlet-name>gameIntro</servlet-name>
-    <servlet-class>servletMisc.GameIntro</servlet-class>
+    <servlet-name>CharIntro</servlet-name>
+    <servlet-class>servletMisc.CharIntro</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>gameIntro</servlet-name>
-    <url-pattern>/gameIntro.do</url-pattern>
+    <servlet-name>CharIntro</servlet-name>
+    <url-pattern>/misc/charIntro.do</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>Synopsis</servlet-name>
+    <servlet-class>servletMisc.Synopsis</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Synopsis</servlet-name>
+    <url-pattern>/misc/synopsis.do</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>Card</servlet-name>
+    <servlet-class>servletMisc.Card</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Card</servlet-name>
+    <url-pattern>/misc/card.do</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>Manual</servlet-name>
+    <servlet-class>servletMisc.Manual</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Manual</servlet-name>
+    <url-pattern>/misc/manual.do</url-pattern>
+  </servlet-mapping>
+  
   <servlet>
     <servlet-name>articleWriteFormInternalName</servlet-name>
     <servlet-class>servletBoard.ArticleWriteForm</servlet-class>

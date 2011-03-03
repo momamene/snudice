@@ -46,7 +46,7 @@ function init()
 					</div>
 				</div>
 			
-				<div class="center centerAlign">				
+				<div class="center">				
 					<form method = "post" action="${root}/board/articleModifyComplete.do">
 						<input type="hidden" name="boardName" value="${param.boardName}"/>
 						<input type="hidden" name="articleIndex" value="${param.articleIndex}"/>
