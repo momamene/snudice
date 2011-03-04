@@ -85,12 +85,14 @@ public class ArticleList extends HttpServlet {
 		{			
 			//날짜 간략화
 			String simpleDateTime = Util.getSimpleDateTime(article.getDateTime());
-			article.setDateTime(simpleDateTime); 
+			article.setDateTime(simpleDateTime);			
 			
-			//제목 간략화 - title이 BINARY로 저장되는 것을 고려
-			String[] titleChar = article.getTitle().split(";");					
-			if(titleChar.length>Const.articleTitleInListMaxLen)
-				article.setTitle(Util.getSimpleBinaryString(titleChar, Const.articleTitleInListMaxLen).getBytes());			
+			//제목 간략화(길면 자른다)
+			article.setRawStr(true);
+			String title = article.getTitle();							
+			if(title.length()>Const.articleTitleInListMaxLen)
+				article.setTitle((title.substring(0,Const.articleTitleInListMaxLen)+"...").getBytes());			
+			article.setRawStr(false);
 			
 			//리플수 저장
 			int replyCount = db.dbBoard.getReplyCount(article.getArticleIndex());

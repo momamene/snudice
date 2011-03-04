@@ -133,7 +133,7 @@ function replyComplete()
 		                		</td>
 		                	</tr>
 		                	<tr>
-		                		<td id="articleTextContentView" class="articleTextContent" colspan="2">
+		                		<td id="articleTextContentView" colspan="2">
 		            				${articleInfo.text}
 		            			</td>
 		            		</tr>

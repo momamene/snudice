@@ -29,7 +29,7 @@ public class Util {
 	}
 	
 	public static String encodeHtml(String html) {
-		StringBuffer result = new StringBuffer();
+		StringBuffer result = new StringBuffer();		
 		
 		for(int i=0;i<html.length();i++)
 		{
@@ -45,6 +45,7 @@ public class Util {
 			else
 				result.append(c);
 		}
+		
 		return result.toString();
 	}
 	
@@ -109,16 +110,5 @@ public class Util {
 	//output은 03-03 17:39 의 형태가 된다.
 	public static String getSimpleDateTime(String dateTime) {
 		return dateTime.substring(5,dateTime.length()-5);		
-	}
-	
-	private static StringBuffer sb = new StringBuffer();
-	//binary string을 간략화 한다.(일정 길이만 남기고 자른다)
-	public static String getSimpleBinaryString(String[] strChar,int maxlen) {			
-		sb.delete(0, sb.length());
-		for(int i=0;i<maxlen;i++)
-			sb.append(strChar[i]);	
-		sb.append("...");
-		
-		return sb.toString();
 	}
 }

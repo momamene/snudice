@@ -92,9 +92,9 @@ public class Article {
 	public String getText() {
 		String result = null;
 		try {
-			result = new String(text,"utf-8");	
+			result = new String(text,"utf-8");				
 			if(!isRawStr())			
-				result = Util.encodeHtml(result);
+				result = Util.encodeHtml(result);			
 		}
 		catch (UnsupportedEncodingException e) {			
 			e.printStackTrace();
