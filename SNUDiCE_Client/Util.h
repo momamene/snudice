@@ -11,6 +11,8 @@
 
 #define UTIL_COLOR_BLACK		RGB(0, 0, 0)
 #define UTIL_COLOR_WHITE		RGB(255, 255, 255)
+#define UTIL_COLOR_RED			RGB(255, 0, 0)
+#define UTIL_COLOR_BLUE			RGB(0, 0, 255)
 
 class gUtil  
 {

@@ -251,10 +251,18 @@ struct PK_LOGIN_REP
 	CHANNEL			channel;
 };
 
+enum CHATMSGCOLOR
+{
+	MSGCLR_BLACK,
+	MSGCLR_RED,
+	MSGCLR_BLUE,
+};
+
 typedef struct
 {
-	char	szID[IDLENGTH];
-	char	szMsg[MSGLENGTH];
+	char			szID[IDLENGTH];
+	char			szMsg[MSGLENGTH];
+	CHATMSGCOLOR	msgclr;
 
 } PK_MESSAGE_ASK, PK_MESSAGE_REP;
 

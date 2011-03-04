@@ -61,6 +61,7 @@ public:
 	int			m_nSize;
 	char		m_szID[MSGSTACKSIZE][IDLENGTH];
 	char		m_szMsg[MSGSTACKSIZE][MSGLENGTH];
+	CHATMSGCOLOR	m_clrMsg[MSGSTACKSIZE];
 
 public:
 	bool		SetUp();
@@ -69,7 +70,7 @@ public:
 
 	void		Draw();
 
-	void		AddStr(char* szID, char* szMsg);
+	void		AddStr(char* szID, char* szMsg, CHATMSGCOLOR clrmsg = MSGCLR_BLACK);
 	void		MsgClear();					// 메시지 입력 창 클리어
 	void		SendMsg();
 	bool		PointInUI(int x, int y);

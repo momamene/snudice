@@ -88,7 +88,6 @@ void gChat::DrawMsg()
 
 	if(m_nSize < SHOW_MAXMSG)
 	{
-		gUtil::BeginText();
 		for(i = SHOW_MAXMSG - m_nSize; i < SHOW_MAXMSG; i++)
 		{
 			memset(szTemp, 0, sizeof(szTemp));
@@ -98,22 +97,34 @@ void gChat::DrawMsg()
 				// 왜 위의 넘으로 한번에 하면, 맨 처음에 제대로 안 나오는지 모르겠음 ;
 				// 친구 목록을 나열할 경우 MSG앞에 *을 붙여준다. "*1. 양현탁" 이런식으로 오도록.
 				if(m_szMsg[index][0]!='*') wsprintf(szTemp, "[%s] ", m_szID[index]);
-				strcat(szTemp, m_szMsg[index--]);
-				gUtil::Text(CHAT_MSG_X, CHAT_POS_Y + 70 - CHAT_INTERVALY * (i - (SHOW_MAXMSG - m_nSize)), szTemp);
+				strcat(szTemp, m_szMsg[index]);
+				switch(m_clrMsg[index])
+				{
+					case MSGCLR_BLACK:
+						gUtil::SetColor(UTIL_COLOR_BLACK);
+						break;
+					case MSGCLR_RED:
+						gUtil::SetColor(UTIL_COLOR_RED);
+						break;
+					case MSGCLR_BLUE:
+						gUtil::SetColor(UTIL_COLOR_BLUE);
+						break;
+				}
+				gUtil::BeginText();
+					gUtil::Text(CHAT_MSG_X, CHAT_POS_Y + 70 - CHAT_INTERVALY * (i - (SHOW_MAXMSG - m_nSize)), szTemp);
+				gUtil::EndText();
 			}
-			else
-				index--;
+			index--;
 
 			if(index < 0)
 				index += MSGSTACKSIZE;
 
 			if(index==m_nCur) overend=1;
 		}
-		gUtil::EndText();
+		gUtil::SetDefaultFont();
 		return;
 	}
 	
-	gUtil::BeginText();
 	for(i = 0; i < SHOW_MAXMSG; i++)
 	{
 		memset(szTemp, 0, sizeof(szTemp));
@@ -123,11 +134,24 @@ void gChat::DrawMsg()
 			// 왜 위의 넘으로 한번에 하면, 맨 처음에 제대로 안 나오는지 모르겠음 ;
 
 			if(m_szMsg[index][0]!='*') wsprintf(szTemp, "[%s] ", m_szID[index]);
-			strcat(szTemp, m_szMsg[index--]);
-			gUtil::Text(CHAT_MSG_X, CHAT_POS_Y + 70 - CHAT_INTERVALY * i, szTemp);
+			strcat(szTemp, m_szMsg[index]);
+			switch(m_clrMsg[index])
+			{
+			case MSGCLR_BLACK:
+				gUtil::SetColor(UTIL_COLOR_BLACK);
+				break;
+			case MSGCLR_RED:
+				gUtil::SetColor(UTIL_COLOR_RED);
+				break;
+			case MSGCLR_BLUE:
+				gUtil::SetColor(UTIL_COLOR_BLUE);
+				break;
+			}
+			gUtil::BeginText();
+				gUtil::Text(CHAT_MSG_X, CHAT_POS_Y + 70 - CHAT_INTERVALY * i, szTemp);
+			gUtil::EndText();
 		}
-		else
-			index--;
+		index--;
 
 		if(index < 0)
 			index += MSGSTACKSIZE;
@@ -135,7 +159,7 @@ void gChat::DrawMsg()
 		if(index==m_nCur) overend=1;
 
 	}
-	gUtil::EndText();
+	gUtil::SetDefaultFont();
 }
 
 enum PARSE_CODE {
@@ -196,7 +220,7 @@ PARSE_CODE ParseStr(const char *szMsg, char *opID, char *opMsg, int *itemnum)
 	return COMMAND_ERROR;	
 }
 
-void gChat::AddStr(char* szID, char* szMsg)
+void gChat::AddStr(char* szID, char* szMsg, CHATMSGCOLOR clrmsg)
 {
 	m_nCur++;
 
@@ -206,6 +230,7 @@ void gChat::AddStr(char* szID, char* szMsg)
 	m_nShowCur = m_nCur;
 	strcpy(m_szID[m_nCur], szID);
 	strcpy(m_szMsg[m_nCur], szMsg);
+	m_clrMsg[m_nCur] = clrmsg;
 
 	m_nSize++;
 
@@ -436,6 +461,7 @@ void gChat::MsgStackClear()
 
 	memset(m_szID, 0, MSGSTACKSIZE * IDLENGTH );
 	memset(m_szMsg, 0, MSGSTACKSIZE * MSGLENGTH );
+	memset(m_clrMsg, 0, MSGSTACKSIZE * sizeof(CHATMSGCOLOR));
 
 	MsgClear();
 }
