@@ -274,6 +274,7 @@ span.noticeMsg
 	margin-left : 15px;
 }
 
+#idFind,#pwFind { margin-left : 10px; }
 
 /*---------------회원 정보 수정 form-----------*/
 #infoModifyForm.display_none { display : none; }

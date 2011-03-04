@@ -62,7 +62,8 @@ span.centerLMore
 table.articleTable td 
 {	
 	font-size : 85%;
-	padding-bottom : 5px;	
+	padding-bottom : 5px;
+	padding-right : 10px;	
 }
 
 .center a { margin-top : -5px; }
