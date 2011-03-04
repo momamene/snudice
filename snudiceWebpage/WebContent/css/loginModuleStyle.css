@@ -208,7 +208,7 @@
 }
 
 #joinFormTable td.label { padding-right : 20px; }
-#joinFormTable td { padding-bottom : 4px; }
+#joinFormTable td { padding-bottom : 8px; }
 
 #joinId { width : 120px; }
 #joinPw { width : 120px; }
