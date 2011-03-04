@@ -34,7 +34,7 @@ tr.board,td.board
 /*-----공통-----*/
 .boardFrameTop
 {
-	background-image : url('/snudiceWebpage/image/mainpage/boardFrameTop.png');
+	background-image : url('/snudiceWebpage/image/board/boardFrameTop.png');
 	background-repeat : no-repeat;
 	width : 702px;
 	height : 26px;	
@@ -42,14 +42,14 @@ tr.board,td.board
 
 .boardFrameBody
 {
-	background-image : url('/snudiceWebpage/image/mainpage/boardFrameBody.png');
+	background-image : url('/snudiceWebpage/image/board/boardFrameBody.png');
 	background-repeat : repeat-y;	
 	width : 702px;	
 }
 
 .boardFrameBottom
 {
-	background-image : url('/snudiceWebpage/image/mainpage/boardFrameBottom.png');
+	background-image : url('/snudiceWebpage/image/board/boardFrameBottom.png');
 	background-repeat : no-repeat;
 	width : 702px;
 	height : 22px;	
@@ -88,6 +88,7 @@ tr.article td
 	border-left : 0px;
 	border-right : 0px;
 	padding : 5px;
+	padding-bottom : 10px;
 }
 
 td.pageNumber { width : 80%; }
