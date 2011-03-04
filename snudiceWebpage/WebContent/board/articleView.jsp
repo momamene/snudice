@@ -116,12 +116,12 @@ function replyComplete()
 	    			<div class="boardFrameTop"></div>
 					<div class="boardFrameBody">
 						<div id="articleViewWrapper">
-		            		<div class="articleHeader1">		            			
-		            			<span id="articleTitle">${articleInfo.title}</span>		            			
+		            		<div id="articleHeader1">		            			
+		            			<span id="articleTitle">${articleInfo.title}</span>		            			            			
 	                			<span id="articleDateTime">${articleInfo.dateTime}</span>
 		                	</div>
 		                	<hr/>		                	
-		                	<div class="articleHeader2">
+		                	<div id="articleHeader2">
 		                		<span id="articleNickName">	${articleInfo.nickname}</span>
 		                		<span id="articleReadCount">조회수 : ${articleInfo.readCount}</span>
 		                	</div>
