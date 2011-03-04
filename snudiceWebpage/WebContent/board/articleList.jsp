@@ -50,6 +50,7 @@ function init()
 				</div>
 						
 				<div class = "center">
+					<div class="boardName">${boardAliasName}</div>				
 					<div class="boardFrameTop"></div>
 					<div class="boardFrameBody">
 						<table id = "articleListMain">
@@ -86,6 +87,18 @@ function init()
 						
 						<c:url var="titleKeywordEncoded" value="${titleKeyword}"/>			
 						<table id="articleListBottom">
+							<tr class="buttonTr">
+								<td colspan="3">
+									<a href="${root}/board/articleList.do?boardName=${param.boardName}&currPage=0">
+										<img src="${root}/image/board/toFirstPage.png"/>
+									</a>
+									<c:if test="${canWrite == true}">
+										<a href="${root}/board/articleWriteForm.do?boardName=${param.boardName}&currPage=${param.currPage}">
+											<img src="${root}/image/board/articleWrite.png"/>
+										</a>
+									</c:if>
+								</td>								
+							</tr>						
 							<tr>
 								<td class="prevNextPage"> 					
 									<c:choose>
@@ -136,32 +149,17 @@ function init()
 										<img src="${root}/image/board/next.png" alt="뒷페이지"/>
 									</a> 					
 								</td>
-							</tr>			
-						
-							<tr>
-								<td colspan="3">현재 페이지 : ${param.currPage}	</td>					
-							</tr>  					
-							<tr>
-								<td id="firstList">
-									<a href="${root}/board/articleList.do?boardName=${param.boardName}&amp;currPage=0">처음목록</a>
-								</td>
-								<td id="search">
-									<form method="get" action="${root}/board/articleSearch.do">
-										<span>검색 : </span><input class="board" name="titleKeyword" type="text"/>
-										<input type="submit" value="검색"/>
-										<input type="hidden" name="boardName" value="${param.boardName}"/>
-										<input type="hidden" name="currPage" value="0"/>							
-									</form>
-								</td>
-								<td id="articleWrite">
-									<c:if test="${canWrite == true}">
-										<a href="${root}/board/articleWriteForm.do?boardName=${param.boardName}&amp;currPage=${param.currPage}">글쓰기</a>
-									</c:if>
-								</td>										
-							</tr>			
+							</tr>	
 						</table>
 					</div>
-					<div class="boardFrameBottom"></div>					
+					<div id="articleSearch" class="boardFrameBottom">
+						<form id="articleSearchForm" method="get" action="${root}/board/articleSearch.do">
+							<span>검색 : </span><input class="board" name="titleKeyword" type="text"/>
+							<input type="submit" value="검색"/>
+							<input type="hidden" name="boardName" value="${param.boardName}"/>
+							<input type="hidden" name="currPage" value="0"/>							
+						</form>
+					</div>					
 				</div>
 									
 				<div class="right"></div>

@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import utility.Util;
+
 /**
  * Servlet implementation class LogOut
  */
@@ -31,7 +33,7 @@ public class LogOut extends HttpServlet {
 		session.invalidate();
 		request.logout();		
 		
-		String root = (String)request.getServletContext().getAttribute("root");
+		String root = (String)Util.getServletContextAttr(request, "root");		
 		response.sendRedirect(root+"/first.do");
 	}
 }

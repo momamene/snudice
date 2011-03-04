@@ -55,6 +55,15 @@ tr.board,td.board
 	height : 22px;	
 }
 
+.boardName
+{
+	margin-left : 10px;
+	margin-bottom : 10px;
+	font-size : 150%;
+	color : #60320B;
+}
+
+tr.buttonTr { text-align : right; }
 
 /*----------글 목록 보기-------*/
 table#articleListMain,table#articleListBottom
@@ -94,10 +103,17 @@ tr.article td
 td.pageNumber { width : 80%; }
 td.prevNextPage { width : 10%; }
 
-td#firstList { width :10%; }
 td#articleWrite {width : 80%; }
-td#search {width : 10%; }
 
+table#articleListBottom {margin-top : 15px; }
+table#articleListBottom td { padding-bottom : 5px; }
+
+#articleSearch { text-align : center; }
+form#articleSearchForm
+{
+	position : relative;
+	top : -20px;
+}
 
 /*----------글 보기---------*/
 

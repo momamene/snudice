@@ -103,4 +103,11 @@ public class Util {
 		Random r = new Random(System.currentTimeMillis());		
 		return Encrypt.md5(Long.toString(r.nextLong()));		
 	}
+
+	//datetime string을 간략화 한다.
+	//input은 2011-03-03 17:39:29.0 의 형태라고 가정한다.
+	//output은 03-03 17:39 의 형태가 된다.
+	public static String getSimpleDateTime(String dateTime) {
+		return dateTime.substring(5,dateTime.length()-5);		
+	}
 }
