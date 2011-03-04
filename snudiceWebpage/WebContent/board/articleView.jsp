@@ -78,7 +78,7 @@ function replySubmit()
 	param += "&replyText="+encodeURIComponent(writeText);
 	param += "&boardName="+encodeURIComponent("${param.boardName}");
 	var callback = replyComplete;
-	var async = false;
+	var async = true;
 	
 	sendRequest(url,method,param,callback,async);
 }
@@ -115,29 +115,20 @@ function replyComplete()
 	    			<div class="boardName">${boardAliasName}</div>
 	    			<div class="boardFrameTop"></div>
 					<div class="boardFrameBody">
-						<table id="articleViewTable">
-		            		<tr id="articleTitleDateWrapper">
-		            			<td class="articleTitleContent">
-		            				<span>${articleInfo.title}</span>
-		            			</td>
-		            			<td class="articleDateTime">
-		                			<span>${articleInfo.dateTime}</span>
-		                		</td>
-		                	</tr>
-		                	<tr>
-		                		<td class="articleNickName">
-		                			${articleInfo.nickname}
-		                		</td>
-		                		<td class="articleReadCount">
-		                			조회수 : ${articleInfo.readCount}
-		                		</td>
-		                	</tr>
-		                	<tr>
-		                		<td id="articleTextContentView" colspan="2">
-		            				${articleInfo.text}
-		            			</td>
-		            		</tr>
-		            	</table> 
+						<div id="articleViewWrapper">
+		            		<div class="articleHeader1">		            			
+		            			<span id="articleTitle">${articleInfo.title}</span>		            			
+	                			<span id="articleDateTime">${articleInfo.dateTime}</span>
+		                	</div>
+		                	<hr/>		                	
+		                	<div class="articleHeader2">
+		                		<span id="articleNickName">	${articleInfo.nickname}</span>
+		                		<span id="articleReadCount">조회수 : ${articleInfo.readCount}</span>
+		                	</div>
+		                	<div>
+		            			<span>${articleInfo.text}</span>
+		            		</div>		                	
+		            	</div> 
 		            	
 						<div id="reply">
 							<div id="replyHead">
@@ -152,13 +143,14 @@ function replyComplete()
 							<div id="replyBackground" class="${replyVisible}">
 								<div id="replyContainer">
 								<c:forEach var="reply" items="${replyList}" varStatus="status">			
-									<div class="replyInfo">
+									<div>
 										<span>[${status.count}] </span> 
-										<span id="replyNickName">${reply.nickname}</span>
-										<span id="replyDateTime">${reply.dateTime}</span>
+										<span class="replyNickName">${reply.nickname}</span>
+										<span class="replyDateTime">${reply.dateTime}</span>
+										<br/>
+										<span class="replyContent">${reply.replyText}</span>
+										<hr/>
 									</div>								
-									<div class="replyContent">${reply.replyText}</div>				
-									<hr/>
 								</c:forEach>
 								</div>
 								
