@@ -61,6 +61,16 @@ public class ArticleSearch extends HttpServlet {
 		List<Article> articleList = db.dbBoard.getArticleList(boardName,currPage,articlePerPage,titleKeyword);
 		for(Article article : articleList)		
 		{			
+			//날짜 간략화
+			String simpleDateTime = Util.getSimpleDateTime(article.getDateTime());
+			article.setDateTime(simpleDateTime); 
+			
+			//제목 간략화 - title이 BINARY로 저장되는 것을 고려
+			String[] titleChar = article.getTitle().split(";");					
+			if(titleChar.length>Const.articleTitleInListMaxLen)
+				article.setTitle(Util.getSimpleBinaryString(titleChar, Const.articleTitleInListMaxLen).getBytes());			
+			
+			//리플수 저장
 			int replyCount = db.dbBoard.getReplyCount(article.getArticleIndex());
 			replyCountList.add(replyCount);			
 		}

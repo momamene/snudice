@@ -110,4 +110,15 @@ public class Util {
 	public static String getSimpleDateTime(String dateTime) {
 		return dateTime.substring(5,dateTime.length()-5);		
 	}
+	
+	private static StringBuffer sb = new StringBuffer();
+	//binary string을 간략화 한다.(일정 길이만 남기고 자른다)
+	public static String getSimpleBinaryString(String[] strChar,int maxlen) {			
+		sb.delete(0, sb.length());
+		for(int i=0;i<maxlen;i++)
+			sb.append(strChar[i]);	
+		sb.append("...");
+		
+		return sb.toString();
+	}
 }

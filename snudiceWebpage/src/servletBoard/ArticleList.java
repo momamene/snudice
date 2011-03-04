@@ -78,6 +78,8 @@ public class ArticleList extends HttpServlet {
 		List<Integer> replyCountList = new ArrayList<Integer>();
 		
 		//글 목록을 가져온다.
+		StringBuffer sb = new StringBuffer();
+		
 		List<Article> articleList = db.dbBoard.getArticleList(boardName,currPage, articlePerPage);		
 		for(Article article : articleList)		
 		{			
@@ -86,15 +88,9 @@ public class ArticleList extends HttpServlet {
 			article.setDateTime(simpleDateTime); 
 			
 			//제목 간략화 - title이 BINARY로 저장되는 것을 고려
-			String[] articleTitleChar = article.getTitle().split(";");			
-			if(articleTitleChar.length>Const.articleTitleInListMaxLen)
-			{
-				StringBuffer sb = new StringBuffer();
-				for(int i=0;i<Const.articleTitleInListMaxLen;i++)
-					sb.append(articleTitleChar[i]);	
-				sb.append("...");
-				article.setTitle(sb.toString().getBytes());
-			}
+			String[] titleChar = article.getTitle().split(";");					
+			if(titleChar.length>Const.articleTitleInListMaxLen)
+				article.setTitle(Util.getSimpleBinaryString(titleChar, Const.articleTitleInListMaxLen).getBytes());			
 			
 			//리플수 저장
 			int replyCount = db.dbBoard.getReplyCount(article.getArticleIndex());
