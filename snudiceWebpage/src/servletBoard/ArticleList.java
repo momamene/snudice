@@ -81,6 +81,22 @@ public class ArticleList extends HttpServlet {
 		List<Article> articleList = db.dbBoard.getArticleList(boardName,currPage, articlePerPage);		
 		for(Article article : articleList)		
 		{			
+			//날짜 간략화
+			String simpleDateTime = Util.getSimpleDateTime(article.getDateTime());
+			article.setDateTime(simpleDateTime); 
+			
+			//제목 간략화 - title이 BINARY로 저장되는 것을 고려
+			String[] articleTitleChar = article.getTitle().split(";");			
+			if(articleTitleChar.length>Const.articleTitleInListMaxLen)
+			{
+				StringBuffer sb = new StringBuffer();
+				for(int i=0;i<Const.articleTitleInListMaxLen;i++)
+					sb.append(articleTitleChar[i]);	
+				sb.append("...");
+				article.setTitle(sb.toString().getBytes());
+			}
+			
+			//리플수 저장
 			int replyCount = db.dbBoard.getReplyCount(article.getArticleIndex());
 			replyCountList.add(replyCount);			
 		}

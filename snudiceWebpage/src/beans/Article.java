@@ -73,7 +73,7 @@ public class Article {
 		}
 		
 		return result;
-	}
+	}	
 	public void setTitle(byte[] title) {
 		this.title = title;
 	}

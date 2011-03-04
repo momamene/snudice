@@ -16,4 +16,6 @@ public class Const {
 	
 	public static int articleTitleMaxLen = 50; //글 제목 최대길이
 	public static int articleTextMaxLen = 5000; //글 내용 최대길이
+	
+	public static int articleTitleInListMaxLen = 20; //글 목록보기에서의 글 제목 최대 길이
 }
