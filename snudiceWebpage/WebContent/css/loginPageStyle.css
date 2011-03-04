@@ -4,16 +4,7 @@
 .backgroundDown { top : -150px; }
 
 /*----------------main 좌 하단-----------*/
-#mainLeftBottom 
-{
-	background-image : url('/snudiceWebpage/image/mainpage/clientDownload.png');
-	background-repeat : no-repeat;
-	height : 113px;
-	margin-top : 20px;
-	font-size: 200%;
-	text-align : center;
-	padding-top : 15px;
-}	
+#mainLeftBottom { margin-top : 20px; }	
 
 #gameStart 
 {

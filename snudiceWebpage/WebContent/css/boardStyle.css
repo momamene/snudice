@@ -45,6 +45,7 @@ tr.board,td.board
 	background-image : url('/snudiceWebpage/image/board/boardFrameBody.png');
 	background-repeat : repeat-y;	
 	width : 702px;	
+	height : 100%;
 }
 
 .boardFrameBottom
@@ -156,18 +157,26 @@ form#articleSearchForm
 	margin-bottom : 5px;
 	border : 1px solid #61A2BC;
 	
-	width : 85%;
+	width : 84%;
 	height : 80px;	
 }
 
 #replySubmitButton
 {
 	position : relative;
-	height : 7%;
-	width : 12%;
+	height : 73px;
+	width : 75px;
 	padding-bottom : 10px;
-	padding-left : 5px;
+	padding-left : 10px;
 }
+
+table#articleViewTable
+{
+	width : 94%;
+	margin-left : 3%;
+	margin-right : 3%;
+}
+
 td.articleDateTime
 {
 	width : 30%;
@@ -202,8 +211,7 @@ td.articleNickName
 {
 	text-align : right;
 	margin-top : -1%;
-	margin-right : 3%;
-	margin-bottom : 7%;
+	margin-right : 3%;	
 }
 
 #articleDeleteButton { height : 24px; }
