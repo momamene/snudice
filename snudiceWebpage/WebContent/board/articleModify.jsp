@@ -46,7 +46,8 @@ function init()
 					</div>
 				</div>
 			
-				<div class="center">	
+				<div class="center">	]
+					<div class="boardName">${boardAliasName}</div>
 					<div class="boardFrameTop"></div>
 					<div class="boardFrameBody">
 						<form method = "post" action="${root}/board/articleModifyComplete.do">
@@ -81,6 +82,7 @@ function init()
 				</div>				
 							
 				<div class="right"></div>
+				<div class="dummy"></div>
 			</div>
 			<div class="containerBottom"></div>
 		</div> 

@@ -163,6 +163,7 @@ function init()
 				</div>
 									
 				<div class="right"></div>
+				<div class="dummy"></div>
 			</div>
 			<div class="containerBottom"></div>
 		</div>		

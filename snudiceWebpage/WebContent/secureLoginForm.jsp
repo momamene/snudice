@@ -126,6 +126,7 @@ function mouseOutFunc()
 			</div>
 			
 			<div class="right"></div>
+			<div class="dummy"></div>
 		</div>
 		
 		<%@ include file="/reuseModule/footerModule.jsp"%>

@@ -88,6 +88,8 @@ hr
 	margin-right:50px; 
 }
 
+.dummy { clear: both; }
+
 .backgroundUp
 {
 	background-image : url('/snudiceWebpage/image/mainpage/backgroundUp.png');
@@ -128,13 +130,12 @@ hr
 {
 	background-image : url('/snudiceWebpage/image/mainpage/containerBottom.png');
 	background-repeat : no-repeat;
-	top : 3px;
+	top : 3px;	
 }
 
 .leftCenterRightWrapper 
 {	
-	width : 980px;
-	height : 670px;
+	width : 980px;	
 	margin-left:22px;
 	margin-right:22px;	
 	margin-top:-80px;
@@ -145,5 +146,5 @@ hr
 	z-index : 1;	
 	
 	background-image : url('/snudiceWebpage/image/mainpage/containerMiddle.png');
-	background-repeat : repeat-y;
+	background-repeat : repeat-y;	
 }

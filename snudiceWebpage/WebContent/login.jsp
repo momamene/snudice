@@ -41,7 +41,9 @@ var _role = "${role}";
 					<%@ include file="/reuseModule/loginModule.jsp"%>
 				
 					<div id="mainLeftBottom">						
-						<a href="${root}/setupFile/SNUDiCE_setup.exe">게임 다운로드</a>										
+						<a href="${root}/setupFile/SNUDiCE_setup.exe">
+							<img src="${root}/image/mainpage/clientDownload.png"/>
+						</a>										
 					</div>
 				</div>			
 				<div id="centerContent" class="center">	
@@ -99,7 +101,8 @@ var _role = "${role}";
 						</div>	
 					</div>						
 				</div>
-				<div class="right">&nbsp;</div>					
+				<div class="right"></div>	
+				<div class="dummy"></div>				
 			</div>
 			<div class="containerBottom"></div>						
 		</div>		

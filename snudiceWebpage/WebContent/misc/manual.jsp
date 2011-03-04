@@ -51,6 +51,7 @@ var _role = "${role}";
 				</div>
 				
 				<div class="right"></div>
+				<div class="dummy"></div>
 			</div>
 			
 			<div class="containerBottom"></div>

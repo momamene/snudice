@@ -112,9 +112,10 @@ function replyComplete()
 					</div>
 				</div>	    		
 	    		<div class="center">      
+	    			<div class="boardName">${boardAliasName}</div>
 	    			<div class="boardFrameTop"></div>
 					<div class="boardFrameBody">
-						<table>
+						<table id="articleViewTable">
 		            		<tr id="articleTitleDateWrapper">
 		            			<td class="articleTitleContent">
 		            				<span>${articleInfo.title}</span>
@@ -171,8 +172,7 @@ function replyComplete()
 								</div>
 							</div>
 						
-						<div id="articleButtonWrapper">
-			            	
+						<div id="articleButtonWrapper">			            	
 							<!-- 글쓰기 버튼 -->
 							<c:if test="${canWrite == true}">
 								<a id="boardWrite" href="${root}/board/articleWriteForm.do?boardName=${param.boardName}&currPage=${param.currPage}">
@@ -200,7 +200,8 @@ function replyComplete()
 					<div class="boardFrameBottom"></div>						 	         		
 	        	</div>
 				
-	        	<div class="right"></div>
+	        	<div class="right"></div>	
+	        	<div class="dummy"></div>        	
 	        </div>
         	<div class="containerBottom"></div>
 		</div>	
