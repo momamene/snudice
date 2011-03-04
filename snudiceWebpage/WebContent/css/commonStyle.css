@@ -1,5 +1,9 @@
 @CHARSET "UTF-8";
-table,tr,td,div,span { word-break: break-all; }
+table,tr,td,div,span 
+{
+	word-wrap:break-word; 
+	word-break: break-all; 
+}
 
 a { color : black; }
 a:link { text-decoration:none;}    /* unvisited link */

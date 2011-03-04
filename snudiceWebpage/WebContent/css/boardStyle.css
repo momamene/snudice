@@ -1,5 +1,10 @@
 @CHARSET "UTF-8";
 
+hr 
+{ 
+	background-color : #61A2BC;
+	width : 100%; 
+}
 textarea.board,input.board { font-size : 120%; }
 textarea.board 
 { 
@@ -117,32 +122,71 @@ form#articleSearchForm
 
 /*----------글 보기---------*/
 
+#articleViewWrapper
+{
+	width : 94%;
+	margin-left : 3%;
+	margin-right : 3%;
+}
+
+.articleHeader1{ margin-bottom : 10px;}
+.articleHeader2 { margin-bottom : 40px;}
+	
+span#articleTitle
+{
+	width : 70%;
+	color: #59320B;
+    font-weight: bold;
+}
+
+span#articleDateTime
+{
+	display:inline-block; 
+	width : 200px;
+	text-align : right;	
+	font-size : 90%;
+}
+
+span#articleNickName
+{ 	
+	color : #8E511A;
+	font-weight : bold;
+}
+
+span#articleReadCount 
+{ 
+	display:inline-block; 
+	float : right; 
+}
+
 #reply
 {
 	margin : 3%;
 	border : 0px;
 }
 
-#reply hr {	width : 100%; }
-
 #replyHead
 {
 	padding-top : 8%;
-	padding-bottom : 3%;
-	
+	padding-bottom : 6%;		
 }
 
-#replyDateTime { float: right; }
-
+#replyBackground.invisible { visibility : none; }
 #replyBackground.visible
 {
 	background-color : #E7F3FF;
 	padding : 3%;
 }
 
-#replyBackground.invisible { visibility : none; }
-
 #replyContainer { margin-bottom : 3%; }
+
+span.replyNickName { color : #8E511A; }
+span.replyDateTime { float: right; }
+span.replyContent 
+{
+	margin-top : 3%;
+	margin-bottom : 3%;
+}
 
 #replyWrite
 {
@@ -169,43 +213,6 @@ form#articleSearchForm
 	padding-left : 10px;
 }
 
-table#articleViewTable
-{
-	width : 94%;
-	margin-left : 3%;
-	margin-right : 3%;
-}
-
-td.articleDateTime
-{
-	width : 30%;
-	text-align : right;
-	font-size : 90%;
-}
-td.articleDateTime span 
-{
-	position : relative;
-	top :  35%;
-	right : 10%;
-}
-		
-tr#articleTitleDateWrapper { border-bottom : 1px solid #61A2BC; }
-tr#articleTitleDateWrapper td
-{	
-	padding-bottom : 15px;
-	padding-left : 3%;
-}
-
-td.articleNickName
-{ 
-	padding-left : 3%;
-	padding-top : 1%;
-	padding-bottom : 5%;
-	color : #8E511A;
-	font-weight : bold;
-}
-
-#replyHead { padding-bottom : 6%; }
 #articleButtonWrapper
 {
 	text-align : right;
@@ -215,13 +222,6 @@ td.articleNickName
 
 #articleDeleteButton { height : 24px; }
 
-.replyContent 
-{
-	margin-top : 3%;
-	margin-bottom : 3%;
-}
-#replyNickName { color : #8E511A; }
-.articleReadCount { float : right; }
 
 /*----------글 수정하기,글쓰기---------------*/
 table.articleWriteModifyTable
@@ -255,9 +255,7 @@ td.articleWriterContent {width : 35%;}
 td.articleTitleLabel {width : 20%;}
 td.articleTitleContent
 {
-	width : 80%;
-	color : #59320B;
-	font-weight : bold;
+	width : 80%;	
 	padding-right: 1%;
 }
 td.articleTitleContent input
@@ -271,11 +269,6 @@ td.articleTextContent
 {
 	width : 100%;
 	height : 600px;
-}
-
-td#articleTextContentView
-{
-	height : auto;
 }
 	
 td.articleTextContent textarea
