@@ -44,8 +44,7 @@ tr.board,td.board
 {
 	background-image : url('/snudiceWebpage/image/board/boardFrameBody.png');
 	background-repeat : repeat-y;	
-	width : 702px;	
-	height : 100%;
+	width : 702px;		
 }
 
 .boardFrameBottom
@@ -227,9 +226,8 @@ td.articleNickName
 /*----------글 수정하기,글쓰기---------------*/
 table.articleWriteModifyTable
 {
-	width : 80%;	
-	margin-left : 10%;
-	margin-top : 10%;	
+	width : 99%;	
+	margin-left: 1%;	
 }
 
 table.articleWriteModifyTable, table.articleWriteModifyTable td
@@ -257,14 +255,16 @@ td.articleWriterContent {width : 35%;}
 td.articleTitleLabel {width : 20%;}
 td.articleTitleContent
 {
-	width : 70%;
+	width : 80%;
 	color : #59320B;
 	font-weight : bold;
+	padding-right: 1%;
 }
 td.articleTitleContent input
 { 
-	width: 70%; 
+	width: 90%; 
 	height:100%;
+	border: 1px solid #61A2BC;
 }
 
 td.articleTextContent 
@@ -281,8 +281,7 @@ td#articleTextContentView
 td.articleTextContent textarea
 {
 	width: 90%;
-	height:90%;
- 	 		/* 크롬에서 크기 조절을 못하게 한다. */
+	height:90%; 	 		
 }
 
 table.articleWriteModifyTable input.noBorder,table.articleWriteModifyTable textarea
@@ -295,23 +294,20 @@ table.articleWriteModifyTable input.noBorder,table.articleWriteModifyTable texta
 input.articleWriteWrapper
 {
 	position : relative;
-	left : 35%;
-	top : -20px;
+	left : 35%;	
 	height : 25px;
 }
 
 a.articleListWrapper
 {
 	position : relative;
-	left : 36%;
-	top : -21px;
+	left : 36%;	
 }
 
 input.articleModifyWrapper
 {
 	position : relative;
-	left : 37%;
-	top : -10px;
+	left : 36%;	
+	width : 45px;
+	height : 24px;
 }
-
-
