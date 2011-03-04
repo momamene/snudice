@@ -129,22 +129,23 @@ form#articleSearchForm
 	margin-right : 3%;
 }
 
-.articleHeader1{ margin-bottom : 10px;}
-.articleHeader2 { margin-bottom : 40px;}
+#articleHeader1{ margin-bottom : 10px;}
+#articleHeader2 { margin-bottom : 40px;}
 	
 span#articleTitle
 {
 	width : 70%;
 	color: #59320B;
-    font-weight: bold;
+    font-weight: bold;  
 }
 
 span#articleDateTime
 {
 	display:inline-block; 
-	width : 200px;
+	width : 30%;
 	text-align : right;	
 	font-size : 90%;
+	float:right;
 }
 
 span#articleNickName
