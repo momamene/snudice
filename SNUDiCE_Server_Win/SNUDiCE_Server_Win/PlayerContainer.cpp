@@ -427,7 +427,6 @@ void gPlayerContainer::pk_frienddelete_ask(PK_DEFAULT *pk, SOCKET sock)
 	gMainWin::GetIF()->LogWrite(buf);
 	
 	gMysql::GetIF()->friendDeleteOne(ask.szMyID , ask.szFriendID);
-
 }
 
 void gPlayerContainer::pk_getplayerinfo_ask(PK_DEFAULT *pk, SOCKET sock)
@@ -450,8 +449,6 @@ void gPlayerContainer::pk_getplayerinfo_ask(PK_DEFAULT *pk, SOCKET sock)
 	PK_GETPLAYERINFO_REP	rep;
 
 	strcpy(rep.szTarget , ask.szTarget);
-	rep.nLose = gMysql::GetIF()->getScoreCount(ask.szTarget , 0);
-	rep.nWin = gMysql::GetIF()->getScoreCount(ask.szTarget , true);
 	
 	gMainWin::GetIF()->Send(PL_GETPLAYERINFO_REP , sizeof(PK_GETPLAYERINFO_REP) , &rep , ask.szID);
 	
