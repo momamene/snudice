@@ -206,7 +206,7 @@ char* gMysql::friendGet(char* userId) {
 char* gMysql::nicknameGet(char* userId)
 {
 	char query[255];
-	sprintf(query,USER_SELECT_NICKNAME,userId);
+	sprintf(query,USER_NICKNAME_SELECT,userId);
 
 	// 쿼리 수행
 	int query_stat = mysql_query(m_connection,query);
@@ -250,7 +250,7 @@ bool gMysql::friendDeleteOne(char* userId, char* friendId) {
 	}
 
 }
-
+/* 고대시대의 유물
 void gMysql::scoreCountAdd(char* userId, bool val) {
 
 	char query[255];
@@ -266,6 +266,7 @@ void gMysql::scoreCountAdd(char* userId, bool val) {
 		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
 	}
 }
+*/
 
 
 
@@ -393,7 +394,7 @@ bool gMysql::blockDeleteOne(char* userId, char* blockId) {
 }
 
 
-
+/* 고대시대의 유물
 int gMysql::getScoreCount(char* userId , bool val) {
 
 	int returnValue = -1;
@@ -423,3 +424,347 @@ int gMysql::getScoreCount(char* userId , bool val) {
 	}
 	return returnValue;
 }
+*/
+
+char* gMysql::roleGet( char* userId )
+{
+	char query[255];
+	sprintf(query,USER_ROLE_SELECT,userId);
+
+	// 쿼리 수행
+	int query_stat = mysql_query(m_connection,query);
+	if(query_stat != 0) {
+		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		return NULL;
+	}
+
+	// 수행 분석
+	MYSQL_RES* sql_result = mysql_store_result(m_connection);
+	int arrLength = mysql_num_rows(sql_result);
+
+	char* gotRole = new char [arrLength*17];
+	strcpy(gotRole,"");
+
+	if(arrLength == 0) return NULL; // 아무도 친구가 없을때 
+	MYSQL_ROW sql_row = mysql_fetch_row(sql_result);
+	if(sql_row == NULL) {
+		fprintf(stderr,"roleGet() : null error");
+	}
+	else {
+		strcpy(gotRole , sql_row[0]);
+	}
+
+	return gotRole;
+}
+
+char* gMysql::IDbyNicknameGet( char* nickname )
+{
+	char query[255];
+	sprintf(query,USER_IDbyNICKNAME_SELECT,nickname);
+
+	// 쿼리 수행
+	int query_stat = mysql_query(m_connection,query);
+	if(query_stat != 0) {
+		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		return NULL;
+	}
+
+	// 수행 분석
+	MYSQL_RES* sql_result = mysql_store_result(m_connection);
+	int arrLength = mysql_num_rows(sql_result);
+
+	char* gotId = new char [arrLength*17];
+	strcpy(gotId,"");
+
+	if(arrLength == 0) return NULL; // 아무도 친구가 없을때 
+	MYSQL_ROW sql_row = mysql_fetch_row(sql_result);
+	if(sql_row == NULL) {
+		fprintf(stderr,"nicknameGet() : null error");
+	}
+	else {
+		strcpy(gotId , sql_row[0]);
+	}	
+
+
+	return gotId;
+}
+
+void gMysql::dropCountAdd( char* userId )
+{
+	char query[255];
+	sprintf(query,USERSCORE_DROP_COUNT,userId);
+
+	int query_stat = mysql_query(m_connection,query);
+
+	if(query_stat != 0 ) {
+		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+	}
+}
+
+int gMysql::getDropCount( char* userId )
+{
+	int returnValue = -1;
+	char query[255];
+	sprintf(query,USERSCORE_DROP_SELECT,userId);
+
+	// sql의 성공 실패를...
+	// query_stat 이 0이 아니면 error인가보다.
+	int query_stat = mysql_query(m_connection, (TCHAR*)query);
+	if(query_stat != 0) {
+		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		return -1;
+	}
+
+	// 쿼리 결과를 받아서 password를 받는 부분,
+	MYSQL_RES* sql_result = mysql_store_result(m_connection);
+	MYSQL_ROW sql_row = mysql_fetch_row(sql_result);
+
+	if(sql_row == NULL) {
+		fprintf(stderr,"getDropCount() : null error");
+	}
+	else {
+		returnValue = atoi(sql_row[0]);
+	}
+	return returnValue;
+}
+
+void gMysql::gameplayCountAdd( char* userId )
+{
+	char query[255];
+	sprintf(query,USERSCORE_GAMEPLAY_COUNT,userId);
+
+	int query_stat = mysql_query(m_connection,query);
+
+	if(query_stat != 0 ) {
+		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+	}
+}
+
+int gMysql::getGameplayCount( char* userId )
+{
+	int returnValue = -1;
+	char query[255];
+	sprintf(query,USERSCORE_GAMEPLAY_SELECT,userId);
+
+	// sql의 성공 실패를...
+	// query_stat 이 0이 아니면 error인가보다.
+	int query_stat = mysql_query(m_connection, (TCHAR*)query);
+	if(query_stat != 0) {
+		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		return -1;
+	}
+
+	// 쿼리 결과를 받아서 password를 받는 부분,
+	MYSQL_RES* sql_result = mysql_store_result(m_connection);
+	MYSQL_ROW sql_row = mysql_fetch_row(sql_result);
+
+	if(sql_row == NULL) {
+		fprintf(stderr,"getGameplayCount() : null error");
+	}
+	else {
+		returnValue = atoi(sql_row[0]);
+	}
+	return returnValue;
+}
+
+
+void gMysql::majorCountAdd( char* userId , char *major )
+{
+	char query[255];
+	sprintf(query,USERSCORE_MAJOR_COUNT,major,major , userId);
+
+	int query_stat = mysql_query(m_connection,query);
+
+	if(query_stat != 0 ) {
+		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+	}
+}
+
+int gMysql::getMajorCount( char* userId , char *major )
+{
+	int returnValue = -1;
+	char query[255];
+	sprintf(query,USERSCORE_MAJOR_SELECT, major,userId);
+
+	// sql의 성공 실패를...
+	// query_stat 이 0이 아니면 error인가보다.
+	int query_stat = mysql_query(m_connection, (TCHAR*)query);
+	if(query_stat != 0) {
+		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		return -1;
+	}
+
+	// 쿼리 결과를 받아서 password를 받는 부분,
+	MYSQL_RES* sql_result = mysql_store_result(m_connection);
+	MYSQL_ROW sql_row = mysql_fetch_row(sql_result);
+
+	if(sql_row == NULL) {
+		fprintf(stderr,"getMajorCount() : null error");
+	}
+	else {
+		returnValue = atoi(sql_row[0]);
+	}
+	return returnValue;
+}
+
+void gMysql::gradeMaxUpdate( char* userId , double grade )
+{
+	char query[255];
+	sprintf(query,USERSCORE_GRADEMAX_UPDATE, grade , userId);
+
+	int query_stat = mysql_query(m_connection,query);
+
+	if(query_stat != 0 ) {
+		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+	}
+}
+
+double gMysql::getGradeMax( char* userId )
+{
+	double returnValue = -1;
+	char query[255];
+	sprintf(query,USERSCORE_GRADEMAX_SELECT,userId);
+
+	// sql의 성공 실패를...
+	// query_stat 이 0이 아니면 error인가보다.
+	int query_stat = mysql_query(m_connection, (TCHAR*)query);
+	if(query_stat != 0) {
+		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		return -1;
+	}
+
+	// 쿼리 결과를 받아서 password를 받는 부분,
+	MYSQL_RES* sql_result = mysql_store_result(m_connection);
+	MYSQL_ROW sql_row = mysql_fetch_row(sql_result);
+
+	if(sql_row == NULL) {
+		fprintf(stderr,"getGradeMax() : null error");
+	}
+	else {
+		returnValue = atof(sql_row[0]);
+	}
+	return returnValue;
+}
+
+void gMysql::gradeSumUpdate( char* userId , double grade )
+{
+	char query[255];
+	sprintf(query,USERSCORE_GRADESUM_UPDATE, grade , userId);
+
+	int query_stat = mysql_query(m_connection,query);
+
+	if(query_stat != 0 ) {
+		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+	}
+}
+
+double gMysql::getGradeSum( char* userId )
+{
+	double returnValue = -1;
+	char query[255];
+	sprintf(query,USERSCORE_GRADESUM_SELECT,userId);
+
+	// sql의 성공 실패를...
+	// query_stat 이 0이 아니면 error인가보다.
+	int query_stat = mysql_query(m_connection, (TCHAR*)query);
+	if(query_stat != 0) {
+		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		return -1;
+	}
+
+	// 쿼리 결과를 받아서 password를 받는 부분,
+	MYSQL_RES* sql_result = mysql_store_result(m_connection);
+	MYSQL_ROW sql_row = mysql_fetch_row(sql_result);
+
+	if(sql_row == NULL) {
+		fprintf(stderr,"getGradeSum() : null error");
+	}
+	else {
+		returnValue = atof(sql_row[0]);
+	}
+	return returnValue;
+}
+
+void gMysql::gradeAvrUpdate( char* userId , double grade )
+{
+	
+	char query[255];
+	sprintf(query,USERSCORE_GRADEAVR_UPDATE, grade , userId);
+
+	int query_stat = mysql_query(m_connection,query);
+
+	if(query_stat != 0 ) {
+		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+	}
+}
+
+double gMysql::getGradeAvr( char* userId )
+{
+	double returnValue = -1;
+	char query[255];
+	sprintf(query,USERSCORE_GRADEAVR_SELECT,userId);
+
+	// sql의 성공 실패를...
+	// query_stat 이 0이 아니면 error인가보다.
+	int query_stat = mysql_query(m_connection, (TCHAR*)query);
+	if(query_stat != 0) {
+		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		return -1;
+	}
+
+	// 쿼리 결과를 받아서 password를 받는 부분,
+	MYSQL_RES* sql_result = mysql_store_result(m_connection);
+	MYSQL_ROW sql_row = mysql_fetch_row(sql_result);
+
+	if(sql_row == NULL) {
+		fprintf(stderr,"getGradeAvr() : null error");
+	}
+	else {
+		returnValue = atof(sql_row[0]);
+	}
+	return returnValue;
+}
+
+void gMysql::scoreUpdate( char* userId , int endTurn , int maxUser , int myRank )
+{
+	char query[255];
+	int addedScore = endTurn * (maxUser - myRank);
+	sprintf(query,USERSCORE_SCORE_UPDATE, addedScore , userId);
+
+	int query_stat = mysql_query(m_connection,query);
+
+	if(query_stat != 0 ) {
+		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+	}
+}
+
+int gMysql::getScore( char* userId )
+{
+	int returnValue = -1;
+	char query[255];
+	sprintf(query,USERSCORE_GRADEAVR_SELECT,userId);
+
+	// sql의 성공 실패를...
+	// query_stat 이 0이 아니면 error인가보다.
+	int query_stat = mysql_query(m_connection, (TCHAR*)query);
+	if(query_stat != 0) {
+		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		return -1;
+	}
+
+	// 쿼리 결과를 받아서 password를 받는 부분,
+	MYSQL_RES* sql_result = mysql_store_result(m_connection);
+	MYSQL_ROW sql_row = mysql_fetch_row(sql_result);
+
+	if(sql_row == NULL) {
+		fprintf(stderr,"getScore() : null error");
+	}
+	else {
+		returnValue = atoi(sql_row[0]);
+	}
+	return returnValue;
+}
+
+
+
+

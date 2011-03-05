@@ -26,21 +26,14 @@ WHERE `userId` = '%s' AND `friendId` = '%s';" //"
 #define FRIEND_DELETE "DELETE FROM `friend` \
 WHERE `userId` = '%s' AND `friendId` = '%s';" //"
 
-#define USER_WIN_COUNT "UPDATE `userscore` SET `winCount` = `winCount` + 1   \
-WHERE `userId` = '%s' ;"
-
-#define USER_LOSE_COUNT "UPDATE `userscore` SET `loseCount` = `loseCount` + 1   \
-WHERE `userId` = '%s' ;"
-
-#define USER_WINCOUNT_SELECT "SELECT `winCount` FROM `userscore` \
+#define USER_NICKNAME_SELECT "SELECT `nickname` FROM `user` \
 WHERE `userId` = '%s';" 
 
-#define USER_LOSECOUNT_SELECT "SELECT `loseCount` FROM `userscore` \
+#define USER_ROLE_SELECT "SELECT `role` FROM `user_roles` \
 WHERE `userId` = '%s';" 
 
-#define USER_SELECT_NICKNAME "SELECT `nickname` FROM `user` \
-WHERE `userId` = '%s';" 
-
+#define USER_IDbyNICKNAME_SELECT "SELECT `userId` FROM `user` \
+WHERE `nickname` = '%s';" 
 
 #define BLOCK_INSERT "INSERT INTO `block` \
 VALUES ('%s','%s');" 
@@ -61,6 +54,66 @@ WHERE `userId` = '%s' AND `blockId` = '%s';"
 VALUES (\
 NULL , '%s', '%s'\
 );" //"
+
+/*	고대시대의 유물
+#define USER_WIN_COUNT "UPDATE `userscore` SET `winCount` = `winCount` + 1   \
+WHERE `userId` = '%s' ;"
+
+#define USER_LOSE_COUNT "UPDATE `userscore` SET `loseCount` = `loseCount` + 1   \
+WHERE `userId` = '%s' ;"
+
+#define USER_WINCOUNT_SELECT "SELECT `winCount` FROM `userscore` \
+WHERE `userId` = '%s';" 
+
+#define USER_LOSECOUNT_SELECT "SELECT `loseCount` FROM `userscore` \
+WHERE `userId` = '%s';" 
+*/
+
+
+#define USERSCORE_DROP_COUNT "UPDATE `userscore` SET `dropCount` = `dropCount` + 1   \
+WHERE `nickname` = '%s' ;"
+
+#define USERSCORE_GAMEPLAY_COUNT "UPDATE `userscore` SET `gameplayCount` = `gameplayCount` + 1   \
+WHERE `nickname` = '%s' ;"
+
+#define USERSCORE_MAJOR_COUNT "UPDATE `userscore` SET `%sCount` = `%sCount` + 1   \
+WHERE `nickname` = '%s' ;"
+
+
+#define USERSCORE_GRADEMAX_UPDATE "UPDATE `userscore` SET `gradeMax` = '%f'   \
+WHERE `nickname` = '%s' ;"
+
+#define USERSCORE_GRADESUM_UPDATE "UPDATE `userscore` SET `gradeSum` = `gradeSum` + '%f'   \
+WHERE `nickname` = '%s' ;"
+
+#define USERSCORE_GRADEAVR_UPDATE "UPDATE `userscore` SET `gradeAvr` = '%f'   \
+WHERE `nickname` = '%s' ;"
+
+#define USERSCORE_SCORE_UPDATE "UPDATE `userscore` SET `score` = '%d'   \
+WHERE `nickname` = '%s' ;"
+
+
+#define USERSCORE_DROP_SELECT "SELECT `dropCount` FROM `userscore`	\
+WHERE `nickname` = '%s' ;"
+
+#define USERSCORE_GAMEPLAY_SELECT "SELECT `gameplayCount` FROM `userscore`	\
+WHERE `nickname` = '%s' ;"
+
+#define USERSCORE_MAJOR_SELECT "SELECT `'%s'Count` FROM `userscore`	\
+WHERE `nickname` = '%s' ;"
+
+#define USERSCORE_GRADEMAX_SELECT "SELECT `gradeMax` FROM `userscore`	\
+WHERE `nickname` = '%s' ;"
+
+#define USERSCORE_GRADESUM_SELECT "SELECT `gradeSum` FROM `userscore`	\
+WHERE `nickname` = '%s' ;"
+
+#define USERSCORE_GRADEAVR_SELECT "SELECT `gradeAvr` FROM `userscore`	\
+WHERE `nickname` = '%s' ;"
+
+#define USERSCORE_SCORE_SELECT "SELECT `score` FROM `userscore`	\
+WHERE `nickname` = '%s' ;"
+
 
 
 
@@ -109,11 +162,33 @@ public:
 	// 그렇지 않다고 잘 제거하였으면 true 값을 return한다.
 	bool blockDeleteOne(char* userId,char* blockId);
 
-	void scoreCountAdd(char* userId , bool val);	//	val = 1 : winCount추가 , val = 0 : loseCount추가 
-	int	 getScoreCount(char* userId , bool val);				//	val = 1 : get winCount , val = 0 : get loseCount 
+//	void scoreCountAdd(char* userId , bool val);	//	val = 1 : winCount추가 , val = 0 : loseCount추가 
+//	int	 getScoreCount(char* userId , bool val);				//	val = 1 : get winCount , val = 0 : get loseCount 
+
+	void dropCountAdd(char* userId);
+	int	 getDropCount(char* userId);
+
+	void gameplayCountAdd(char* userId);
+	int	 getGameplayCount(char* userId);
+
+	void majorCountAdd(char* userId , char *mayor);
+	int	 getMajorCount(char* userId , char *mayor);
+
+	void	gradeMaxUpdate(char* userId , double grade);
+	double	getGradeMax(char* userId);
+
+	void	gradeSumUpdate(char* userId , double grade);
+	double	getGradeSum(char* userId);
+
+	void	gradeAvrUpdate(char* userId , double grade);
+	double	getGradeAvr(char* userId);
 	
+	void	scoreUpdate(char* userId , int endTurn , int maxUser , int myRank);
+	int		getScore(char* userId);
+
 	char* nicknameGet(char* userId);
-	
+	char* roleGet( char* userId );
+	char* IDbyNicknameGet( char* nickname );
 	void release();
 
 	bool isFriendOneExisted(char* userId, char* friendId);

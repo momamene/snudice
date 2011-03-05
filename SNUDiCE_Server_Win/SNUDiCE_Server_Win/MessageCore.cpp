@@ -51,6 +51,8 @@ void gMessageCore::pk_message_ask(PK_DEFAULT *pk, SOCKET sock)
 	PK_MESSAGE_REP	rep;
 	eCOREMODE mode;
 	int flag;
+	
+	rep.msgclr = MSGCLR_BLACK;
 
 	mode = gPC->GetMode(ask.szID);
 	flag = gPC->GetCoreFlag(ask.szID);
@@ -97,7 +99,7 @@ void gMessageCore::command(char* str,char* szID) {
 
 	if(strcmp(szStr1,"w")==0)	{
 		if (!strcmp(szStr2 , szID))	{	//지가 지한테 귓말 -ㅅ-;
-			msg_failMessage(szID , "물리적인 이유로 자신에게 귓속말을 할 수 없습니다.");
+			msg_failMessage(szID , "자신에게 귓속말을 할 수 없습니다.");
 		}
 		else	{
 			char szStr4[1024] = {0,};
@@ -112,15 +114,32 @@ void gMessageCore::command(char* str,char* szID) {
 		}
 		return;
 	}
+	
+	char* role;
+	gMysql * gMS = gMysql::GetIF() ;
+	role = gMS->roleGet(gMS->IDbyNicknameGet(szID));
+	if (strcmp(role , "admin") == 0)	{
+		if(strcmp(szStr1,"a")==0)	{
+			char szStr4[1024] = {0,};
+			strcat(szStr4 , szStr2);
+			do 
+			{
+				strcat(szStr4 , " ");
+				ss >> szStr2;
+				strcat(szStr4 , szStr2);
+			} while (strcmp(szStr2 , ""));
+			msg_shout(szID , szStr4);
+		}
 #ifdef GAMEPLAY_DEBUGER
-	nStr2 = atoi(szStr2);
-	if(strcmp(szStr1,"move")==0) 
-		gGPCt->debuger_move(nStr2,szID);
-	else if(strcmp(szStr1,"card")==0) 
-		gGPCt->debuger_card(nStr2,szID);
-	else if (strcmp(szStr1,"turn")==0)
-		gGPCt->debuger_turn(szID);
+		nStr2 = atoi(szStr2);
+		if(strcmp(szStr1,"move")==0) 
+			gGPCt->debuger_move(nStr2,szID);
+		else if(strcmp(szStr1,"card")==0) 
+			gGPCt->debuger_card(nStr2,szID);
+		else if (strcmp(szStr1,"turn")==0)
+			gGPCt->debuger_turn(szID);
 #endif
+	}
 }
 
 void gMessageCore::msg_whisper(char	 szToID[IDLENGTH] , char szFromID[IDLENGTH] , char szComment[MSGLENGTH] )
@@ -134,7 +153,9 @@ void gMessageCore::msg_whisper(char	 szToID[IDLENGTH] , char szFromID[IDLENGTH] 
 	
 	sock		=	gPlayerContainer::GetIF()->GetPlayerFromID(szToID).sock;
 	sendsock	=	gPlayerContainer::GetIF()->GetPlayerFromID(szFromID).sock;
-	
+
+	rep1.msgclr = MSGCLR_BLACK;		rep2.msgclr = MSGCLR_BLACK;	
+
 	strcpy(rep1.szID,"To ");
 	strcat(rep1.szID,szFromID);
 	strcpy(rep1.szMsg,szComment);
@@ -151,15 +172,16 @@ void gMessageCore::msg_whisper(char	 szToID[IDLENGTH] , char szFromID[IDLENGTH] 
 void gMessageCore::msg_failMessage(char	 szToID[IDLENGTH] , char szComment[MSGLENGTH] )
 {
 
-	PK_MESSAGE_REP rep1,rep2;	//rep1 : 보낸놈 rep2 : 받는놈
+	PK_MESSAGE_REP rep;	//rep1 : 보낸놈 rep2 : 받는놈
 
 	char				buf [1024];
 
 	SOCKET sock		=	gPlayerContainer::GetIF()->GetPlayerFromID(szToID).sock;
 
-	strcpy(rep1.szID,"Fail");
-	strcpy(rep1.szMsg,szComment);
-	gMainWin::GetIF()->Send(PL_MESSAGE_REP, sizeof(rep1), &rep1, sock);
+	strcpy(rep.szID,"Fail");
+	strcpy(rep.szMsg,szComment);
+	rep.msgclr = MSGCLR_BLACK;	
+	gMainWin::GetIF()->Send(PL_MESSAGE_REP, sizeof(rep), &rep, sock);
 
 }
 
@@ -188,6 +210,7 @@ void gMessageCore::pk_friendwhisper_ask(PK_DEFAULT *pk, SOCKET sock)
 		strcpy(rep1.szID,"To ");
 		strcat(rep1.szID,"Friends");
 		strcpy(rep1.szMsg,ask.szComment);
+		rep1.msgclr = MSGCLR_BLACK;	
 		gMainWin::GetIF()->Send(PL_MESSAGE_REP, sizeof(rep1), &rep1, sock);
 		
 		msg_failMessage(ask.szMyID , "그러나 그의 외침은 외로운 메아리만이 답해주었다.");
@@ -204,6 +227,7 @@ void gMessageCore::pk_friendwhisper_ask(PK_DEFAULT *pk, SOCKET sock)
 	strcpy(rep1.szID,"To ");
 	strcat(rep1.szID,"Friends");
 	strcpy(rep1.szMsg,ask.szComment);
+	rep1.msgclr = MSGCLR_BLACK;	
 	gMainWin::GetIF()->Send(PL_MESSAGE_REP, sizeof(rep1), &rep1, sock);
 	
 	
@@ -215,6 +239,7 @@ void gMessageCore::pk_friendwhisper_ask(PK_DEFAULT *pk, SOCKET sock)
 		strcpy(rep2.szID,"From ");
 		strcat(rep2.szID,ask.szMyID);
 		strcpy(rep2.szMsg,ask.szComment);
+		rep2.msgclr = MSGCLR_BLACK;	
 
 		sendsock	=	gPlayerContainer::GetIF()->GetPlayerFromID(friendid).sock;
 		gMainWin::GetIF()->Send(PL_MESSAGE_REP, sizeof(rep2), &rep2, sendsock);
@@ -263,6 +288,7 @@ void gMessageCore::pk_friendlist_ask(PK_DEFAULT *pk, SOCKET sock)
 
 	strcpy(rep.szID,ask.szMyID);
 	strcpy(rep.szMsg,"님의 친구 목록");
+	rep.msgclr = MSGCLR_BLACK;	
 	gMainWin::GetIF()->Send(PL_MESSAGE_REP, sizeof(rep), &rep, sock);
 	
 	for (int i=1; ss ; i++ )	{
@@ -278,9 +304,39 @@ void gMessageCore::pk_friendlist_ask(PK_DEFAULT *pk, SOCKET sock)
 
 		strcat(rep.szMsg,friendid);
 
+		rep.msgclr = MSGCLR_BLACK;	
 		gMainWin::GetIF()->Send(PL_MESSAGE_REP, sizeof(rep), &rep, sock);
 		friendid [0] = 0;
 
+	}
+}
+
+void gMessageCore::msg_shout( char szID[IDLENGTH] , char szComment[MSGLENGTH] )
+{
+	gPlayerContainer	*gPC	= gPlayerContainer::GetIF();
+	gChannelContainer	*gCC	= gChannelContainer::GetIF();
+	PLAYER*				temp;
+
+	// for print
+	SOCKADDR_IN			clientAddr;
+	int					addrLen;
+	char				buf [1024];
+
+
+	sprintf(buf,"[PK_MSGSHOUT_ASK] %s\tMYID : %s", inet_ntoa(clientAddr.sin_addr), szID);
+	gMainWin::GetIF()->LogWrite(buf);
+
+	PK_MESSAGE_REP	rep;
+
+	rep.msgclr = MSGCLR_RED;
+
+	strcpy(rep.szID , szID);
+	strcpy(rep.szMsg  ,szComment);
+	
+	list<PLAYER*>::iterator i = gPC->m_PlayerList.begin();
+	for(; i != gPC->m_PlayerList.end(); i++)
+	{
+		gMainWin::GetIF()->Send(PL_MESSAGE_REP , sizeof(PK_MESSAGE_REP) , &rep, (*i)->szID);
 	}
 }
 

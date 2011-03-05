@@ -13,6 +13,7 @@ public:
 
 	void			pk_message_ask(PK_DEFAULT *pk, SOCKET sock);
 	void			msg_whisper(char	 szToID[IDLENGTH] , char szFromID[IDLENGTH] , char szComment[MSGLENGTH] );
+	void			msg_shout(char	 szToID[IDLENGTH] , char szComment[MSGLENGTH] );
 
 	void			pk_friendwhisper_ask(PK_DEFAULT *pk, SOCKET sock);
 	void			pk_friendlist_ask(PK_DEFAULT *pk, SOCKET sock);

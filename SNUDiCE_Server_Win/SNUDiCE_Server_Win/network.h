@@ -12,7 +12,7 @@
 #define WM_SOCKET				WM_USER + 1
 
 #define	WINSOCK_VERSION_2_2		MAKEWORD(2, 2)
-#define SERVER_IP				"211.169.219.93"		// 蝓膨30
+#define SERVER_IP				"211.169.219.93"		// 蝓膨
 //#define SERVER_IP				"211.169.219.86"		// ⑷饕
 //#define SERVER_IP				"211.169.219.87"		// 璽敘
 #define SERVER_PORT				9000
@@ -24,7 +24,7 @@
 
 #define DEF_SERVER
 
-#define ENDROUND	1
+#define ENDROUND	3
 
 //天天天天天天天天天天天天天天天天天天天天天天天天天天天天天天天天天天天天天天天天
 //	鱔褐 Щ煎饜屬
@@ -251,10 +251,18 @@ struct PK_LOGIN_REP
 	CHANNEL			channel;
 };
 
+enum CHATMSGCOLOR
+{
+	MSGCLR_BLACK,
+	MSGCLR_RED,
+	MSGCLR_BLUE,
+};
+
 typedef struct
 {
-	char	szID[IDLENGTH];
-	char	szMsg[MSGLENGTH];
+	char			szID[IDLENGTH];
+	char			szMsg[MSGLENGTH];
+	CHATMSGCOLOR	msgclr;
 
 } PK_MESSAGE_ASK, PK_MESSAGE_REP;
 

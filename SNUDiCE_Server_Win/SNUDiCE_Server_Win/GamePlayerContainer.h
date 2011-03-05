@@ -166,7 +166,8 @@ public:
 	bool		init(int nRoomIndex);
 	void		Release();
 
-
+	void				majorCount(int nRoomIndex);
+	void				gameplayCount(int nRoomIndex);
 
 	void				debuger_move(int nDis,char* szID);
 	void				debuger_card(int nIndex,char* szID);
@@ -210,5 +211,5 @@ private:
 			// 리턴값 : 지나가다 만날 때 커플신청이면 true
 
 	void				TileProcess(int nRoomIndex, int nInRoomIndex , int nDestPos);
-	
+
 };

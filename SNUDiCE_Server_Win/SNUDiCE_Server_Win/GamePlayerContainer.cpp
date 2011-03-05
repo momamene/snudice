@@ -125,6 +125,7 @@ void gGamePlayerContainer::Release()
 
 void gGamePlayerContainer::pk_maingamestart_rep(int nRoomIndex)
 {
+	m_bSyncronize[MAXROOM][ROOMMAXPLAYER];
 	gPlayerContainer *gPC = gPlayerContainer::GetIF();
 
 	init(nRoomIndex);
@@ -132,6 +133,9 @@ void gGamePlayerContainer::pk_maingamestart_rep(int nRoomIndex)
 	PK_MAINGAMESTART_REP rep;
 	memcpy(rep.list,m_GamePlayer[nRoomIndex],sizeof(GAMEPLAYER)*ROOMMAXPLAYER);
 	rep.nTurn = 0; // 치명적 temp - 당장 바꿔야지.
+
+	majorCount(nRoomIndex);
+	gameplayCount(nRoomIndex);
 
 	gPC->PutModeToModeForAll(ECM_SUBMIT,nRoomIndex,ECM_GAME);
 	
@@ -642,19 +646,56 @@ void gGamePlayerContainer::pk_gameend_rep(int nRoomIndex)
 	
 	//다 끝나면 값을 다 0로 바꿈;
 	
-	
-	gMysql::GetIF()->scoreCountAdd(rep.szID, true);
+	gMysql* gMS = gMysql::GetIF();
+
+	int		userCount = 0;
+	int		userRank[ROOMMAXPLAYER];
+	double	userGradeSorting[ROOMMAXPLAYER];
 	
 	for (int i=0;i < ROOMMAXPLAYER ; i++)	
 	{
-		if (m_isGamePlayer[nRoomIndex][i])	{
-			setState(GS_RESULT , m_GamePlayer[nRoomIndex][i].szID);
-			if (nWinnerIndex != i)	{
-				gMysql::GetIF()->scoreCountAdd(m_GamePlayer[nRoomIndex][i].szID, false);
-			}
-		}
 		m_userItemList[nRoomIndex][i].clear();
 	}
+	//userscoreUpdate
+	for (int i=0;i < ROOMMAXPLAYER ; i++)	
+	{
+		if (m_isGamePlayer[nRoomIndex][i])	{
+			GAMEPLAYER* player = &m_GamePlayer[nRoomIndex][i];
+			setState(GS_RESULT , player->szID);
+			double beforeGrade = gMS->getGradeMax(player->szID);
+			if (beforeGrade < player->fAvGrade)	{
+				gMS->gradeMaxUpdate(player->szID , player->fAvGrade);
+			}
+			gMS->gradeSumUpdate(player->szID , player->fAvGrade);
+			gMS->gradeAvrUpdate(player->szID , gMS->getGradeSum(player->szID) / gMS->getGameplayCount(player->szID)) ;
+
+			userCount++;
+			userGradeSorting[i] = player->fAvGrade;
+		}	else	{
+			userGradeSorting[i] = 0;
+		}
+		userRank[i] = i ;
+	}
+	//sorting
+	double temp;
+	for (int i=0;i<ROOMMAXPLAYER ; i++)	{
+		for (int j=i+1;j<ROOMMAXPLAYER;j++)	{
+			if (userGradeSorting[i] < userGradeSorting[j])	{
+				fSWAP(userGradeSorting[i] , userGradeSorting[j]);
+				iSWAP(userRank[i] , userRank[j]);
+			}
+		}
+	}
+	
+	//userscoreScoreUpdate
+	for (int i=0;i < ROOMMAXPLAYER ; i++)
+	{
+		if (m_isGamePlayer[nRoomIndex][i])	{
+			GAMEPLAYER* player = &m_GamePlayer[nRoomIndex][i];
+			gMS->scoreUpdate(player->szID , m_nRound[nRoomIndex] , userCount , userRank[i]);
+		}
+	}
+
 	gPC->SendSelect(PL_GAMEEND_REP,sizeof(rep),&rep,ECM_GAME,nRoomIndex);
 	
 	memset(m_GamePlayer[nRoomIndex], 0, sizeof(GAMEPLAYER) * ROOMMAXPLAYER);
@@ -663,7 +704,6 @@ void gGamePlayerContainer::pk_gameend_rep(int nRoomIndex)
 	memset(m_favor[nRoomIndex], 0, sizeof(sFavor) * ROOMMAXPLAYER);
 	memset(m_bSyncronize[nRoomIndex], 0, sizeof(bool) * ROOMMAXPLAYER);
 	
-
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -1961,7 +2001,9 @@ void gGamePlayerContainer::pk_exit_ask(char *clientID, SOCKET sock)
 	rep.flag = 0;
 	strcpy(rep.szID , clientID);
 
-	gMysql::GetIF()->scoreCountAdd(clientID, false);
+	//임시
+	gMysql::GetIF()->dropCountAdd(clientID);
+
 	//남은사람 체크 , 변수만들기 귀찮아서 걍 for문
 
 	switch(gPC->GetMode(clientID))	{
@@ -2375,4 +2417,49 @@ void gGamePlayerContainer::setState(GAMESTATE eState, char *szID)
 	}
 	strcat(buf , " ; id : ");	strcat(buf , szID);	strcat(buf , "\n");
 	gMainWin::GetIF()->LogWrite(buf);
+}
+
+void gGamePlayerContainer::majorCount( int nRoomIndex )
+{
+	char strMajor[8];
+	gMysql* gMS = gMysql::GetIF();
+	for (int i = 0 ;i < ROOMMAXPLAYER ; i++)	{
+		if (m_isGamePlayer[nRoomIndex][i])	{
+			switch(m_GamePlayer[nRoomIndex][i].ctype)	{
+				// 언어
+				case  CLASS_LITERAL :	strcpy(strMajor , "literal");	break;
+				case  CLASS_SOCIAL	:	strcpy(strMajor , "social");	break;
+				case  CLASS_MANAGE	:	strcpy(strMajor , "manage");	break;
+				case  CLASS_LAW		:	strcpy(strMajor , "law");	break;
+				case  CLASS_LIFE	:	strcpy(strMajor , "life");	break;
+				case  CLASS_TEACH	:	strcpy(strMajor , "teach");	break;
+				case  CLASS_FREE	:	strcpy(strMajor , "free");	break;
+				// 수리
+				case  CLASS_ENGINE	:	strcpy(strMajor , "engine");	break;
+				case  CLASS_NATURE	:	strcpy(strMajor , "nature");	break;
+				case  CLASS_DOCTOR	:	strcpy(strMajor , "doctor");	break;
+				case  CLASS_ANIMAL	:	strcpy(strMajor , "animal");	break;
+				case  CLASS_DRUG	:	strcpy(strMajor , "drug");	break;
+				case  CLASS_NURSE	:	strcpy(strMajor , "nurse");	break;
+				case  CLASS_FARM	:	strcpy(strMajor , "farm");	break;
+
+				// 예술
+				case  CLASS_MUSIC	:	strcpy(strMajor , "music");	break;
+				case  CLASS_ART		:	strcpy(strMajor , "art");	break;
+
+			};
+			gMS->majorCountAdd(m_GamePlayer[nRoomIndex][i].szID , strMajor);
+		}
+	}
+}
+
+void gGamePlayerContainer::gameplayCount( int nRoomIndex )
+{
+	char strMajor[8];
+	gMysql* gMS = gMysql::GetIF();
+	for (int i = 0 ;i < ROOMMAXPLAYER ; i++)	{
+		if (m_isGamePlayer[nRoomIndex][i])	{
+			gMS->gameplayCountAdd(m_GamePlayer[nRoomIndex][i].szID);
+		}
+	}
 }
