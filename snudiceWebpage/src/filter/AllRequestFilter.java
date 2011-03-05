@@ -77,7 +77,11 @@ public class AllRequestFilter implements Filter {
 					session.setAttribute("role", role);
 				}				
 			}
-			log.append(" user="+"<"+req.getRemoteUser()+":"+session.getAttribute("role")+">");
+			log.append(" <");
+			log.append(req.getRemoteUser());
+			log.append(':');
+			log.append(session.getAttribute("role"));
+			log.append('>');
 		}		
 		else //로그인 안된 경우
 		{

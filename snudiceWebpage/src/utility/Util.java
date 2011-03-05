@@ -98,6 +98,24 @@ public class Util {
 		}
 		return result;
 	}
+	
+	//문자열을 byte 크기로 자른다.(아스키는 1바이트, 한글은 2바이트로 취급)
+	public static String getCuttedString(String s,int byteCnt) {		
+		int size = 0;
+		int i=0;
+		for(;i<s.length();i++)
+		{
+			if(s.charAt(i)<128)
+				size += 1;
+			else
+				size += 2;
+			
+			if(size>byteCnt)
+				break;			
+		}
+		
+		return s.substring(0,i);
+	}
 
 	//email 인증에 사용할 activation code를 만든다.
 	public static String getActivationCode() {

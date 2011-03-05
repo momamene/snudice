@@ -88,10 +88,9 @@ public class ArticleList extends HttpServlet {
 			article.setDateTime(simpleDateTime);			
 			
 			//제목 간략화(길면 자른다)
-			article.setRawStr(true);
-			String title = article.getTitle();							
-			if(title.length()>Const.articleTitleInListMaxLen)
-				article.setTitle((title.substring(0,Const.articleTitleInListMaxLen)+"...").getBytes());			
+			article.setRawStr(true);			
+			String shortTitle = Util.getCuttedString(article.getTitle(),Const.articleTitleInListMaxLen);
+			article.setTitle((shortTitle+"...").getBytes());			
 			article.setRawStr(false);
 			
 			//리플수 저장

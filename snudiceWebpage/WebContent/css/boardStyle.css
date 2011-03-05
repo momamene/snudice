@@ -81,6 +81,12 @@ table#articleListMain,table#articleListBottom
 	top : -20px;
 }
 
+td.articleListIndex { width:9%;}
+td.articleListTitle { width:45%;}
+td.articleListWriter { width:15%;}
+td.articleListDateTime { width:15%;}
+td.articleListReadCount { width:9%;}
+
 tr#articleListHeader 
 {	
 	height : 40px;
