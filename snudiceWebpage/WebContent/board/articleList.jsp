@@ -55,17 +55,17 @@ function init()
 					<div class="boardFrameBody">
 						<table id = "articleListMain">
 							<tr id="articleListHeader">
-								<td>번호</td>
-								<td>제목</td>
-								<td>글쓴이</td>
-								<td>날짜</td>
-								<td>조회수</td>
+								<td class="articleListIndex">번호</td>
+								<td class="articleListTitle">제목</td>
+								<td class="articleListWriter">글쓴이</td>
+								<td class="articleListDateTime">날짜</td>
+								<td class="articleListReadCount">조회수</td>
 							</tr>
 							
 							<c:forEach var="article" items="${articleList}" varStatus="status">								
 								<tr class="article">
-									<td>${article.articleIndex}</td>
-									<td>								
+									<td class="articleListIndex">${article.articleIndex}</td>
+									<td class="articleListTitle">								
 										<c:set var="articleReadLink" value="#"/>								
 										<c:if test="${canRead == true}">
 											<c:set var="articleReadLink" value="${root}/board/articleView.do?boardName=${param.boardName}&amp;articleIndex=${article.articleIndex}&amp;currPage=${param.currPage}"/>
@@ -78,9 +78,9 @@ function init()
 											</c:if>
 										</a>
 									</td>
-									<td class="nickname">${article.nickname}</td>
-									<td>${article.dateTime}</td> 
-									<td>${article.readCount}</td>		
+									<td class="articleListWriter nickname">${article.nickname}</td>
+									<td class="articleListDateTime">${article.dateTime}</td> 
+									<td class="articleListReadCount">${article.readCount}</td>		
 								</tr>
 							</c:forEach>					 
 						</table>
