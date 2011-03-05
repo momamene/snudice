@@ -12,6 +12,7 @@ public class DB {
 	////////////////////////////////////////////////
 	public DBAccount dbAccount;	
 	public DBBoard dbBoard;	
+	public DBGame dbGame;
 	////////////////////////////////////////////////
 	
 	private String configXMLFile = "SqlMapConfig.xml"; //xml file명	
@@ -33,7 +34,8 @@ public class DB {
 		
 		////////////////////////////////////////////////
 		dbAccount = DBAccount.getInstance(sqlMap);
-		dbBoard = DBBoard.getInstance(sqlMap);		
+		dbBoard = DBBoard.getInstance(sqlMap);	
+		dbGame = DBGame.getInstance(sqlMap);
 		////////////////////////////////////////////////
 	}
 	

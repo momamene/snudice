@@ -66,10 +66,13 @@ public class ArticleSearch extends HttpServlet {
 			article.setDateTime(simpleDateTime); 
 			
 			//제목 간략화(길면 자른다)
-			article.setRawStr(true);
-			String title = article.getTitle();								
-			if(title.length()>Const.articleTitleInListMaxLen)
-				article.setTitle((title.substring(0,Const.articleTitleInListMaxLen)+"...").getBytes());
+			article.setRawStr(true);		
+			String articleTitle = article.getTitle();
+			if(Util.getByteCnt(articleTitle)>Const.articleTitleInListMaxLen)
+			{				
+				String shortTitle = Util.getCuttedString(articleTitle,Const.articleTitleInListMaxLen);
+				article.setTitle((shortTitle+"...").getBytes());	
+			}					
 			article.setRawStr(false);
 			
 			//리플수 저장

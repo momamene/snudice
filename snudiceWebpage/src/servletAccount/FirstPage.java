@@ -1,6 +1,7 @@
 package servletAccount;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -39,7 +40,13 @@ public class FirstPage extends HttpServlet {
 				
 		String nextPage = "login.jsp";
 		RequestDispatcher view = request.getRequestDispatcher(nextPage);
-		view.forward(request, response);		
+		view.forward(request, response);	
+		
+		//rank를 재계산한다.
+		DB db = DB.getInstance();
+		ArrayList<String> l = db.dbGame.evalGradeMaxRank("휘사마");
+		for(int i=0;i<l.size();i++)	
+			db.dbGame.setGradeMaxRank(l.get(i), i+1);		
 	}
 	
 	//board 에서 글들을 가져와서 request 에 속성으로 설정한다.

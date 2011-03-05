@@ -45,6 +45,9 @@ public class AccountActivate extends HttpServlet {
 			db.dbAccount.deleteNotActivatedUser(user.getUserId());
 			db.dbAccount.insertNewUser(user);
 			
+			//rank table에 추가
+			db.dbGame.addRank(user.getNickname());
+			
 			response.setContentType("text/plain; charset=UTF-8");
 			response.setCharacterEncoding("UTF-8");
 			PrintWriter pw = response.getWriter();

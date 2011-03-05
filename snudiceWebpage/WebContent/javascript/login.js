@@ -1,7 +1,7 @@
 var idRegex = "([a-z]|[0-9])+";
-var pwRegex = "([a-z]|[A-Z]|[0-9]){8,}";
+var pwRegex = "([a-z]|[A-Z]|[0-9]){6,}";
 var idMsg = "id는 영문 소문자와 숫자만 가능합니다.";
-var pwMsg ="pw는 영문,숫자 8자 이상이어야 합니다.";
+var pwMsg ="pw는 영문,숫자 6자 이상이어야 합니다.";
 
 //event handler 추가	
 function initLogin(){	

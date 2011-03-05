@@ -8,4 +8,5 @@
 	</transactionManager>
 	<sqlMap resource="SqlMapAccount.xml" />
 	<sqlMap resource="SqlMapBoard.xml" ></sqlMap>
+	<sqlMap resource="SqlMapGame.xml" ></sqlMap>
 </sqlMapConfig>

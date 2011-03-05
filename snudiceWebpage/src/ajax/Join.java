@@ -99,7 +99,7 @@ public class Join extends HttpServlet {
 				
 				//계정 추가 - md5를 한번 더 적용해서 저장함				
 				db.dbAccount.insertNotActivatedUser(joinId, Encrypt.md5(joinPw), joinEmail, joinNickname, joinComment, activationCode, "member");				
-				os.print("joinOK");
+				os.print("joinOK");				
 			}			
 		}		
 	}
