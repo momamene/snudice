@@ -74,11 +74,11 @@ public class DBGame {
 	
 	//특정유저의 최고학점 rank를 계산한다.( userscore table을 통해)
 	@SuppressWarnings("unchecked")
-	public ArrayList<String> evalGradeMaxRank(String nickname) {
+	public ArrayList<String> evalGradeMaxRank() {
 		ArrayList<String> result = null;		
 		try
 		{
-			result = (ArrayList<String>)sqlMap.queryForList("evalGradeMaxRank", nickname);			
+			result = (ArrayList<String>)sqlMap.queryForList("evalGradeMaxRank");			
 		}
 		catch(Exception e)
 		{
