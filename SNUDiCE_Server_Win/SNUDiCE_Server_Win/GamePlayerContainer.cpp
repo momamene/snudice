@@ -220,7 +220,7 @@ void gGamePlayerContainer::pk_movestart_rep (int nRoomIndex , int nInRoomIndex ,
 
 	if (m_isNokdu[nRoomIndex][nInRoomIndex])
 		rep.nDist *= -1;
-	
+
 	PushbSynAllPlayer(nRoomIndex,false);
 
 	if (m_GamePlayer[nRoomIndex][nInRoomIndex].nLove == -1)	{	//너, 솔로냐?
@@ -259,17 +259,15 @@ int gGamePlayerContainer::putFavorCross(int nRoomIndex, int nInRoomIndex, int nP
 	GAMEPLAYER metPlayer , myPlayer = m_GamePlayer[nRoomIndex][nInRoomIndex];
 	int iPos = nPos;
 	
-	bool nok = false;
 	if (nDist < 0 )	{
-		nok = true;
-		nDist = -nDist;
+		return  gTC->destination(nPos,nDist) ;
 	}
 
 	int dest;	//방향
 	
 	for (int i = 1 ; i <= nDist ; i++)	{
 		
-		dest = nok ? -i : i;
+		dest = i;
 		
 		iPos =  gTC->destination(nPos,dest);
 		if (iPos == 109)	{	//정문을 지나면
@@ -280,7 +278,7 @@ int gGamePlayerContainer::putFavorCross(int nRoomIndex, int nInRoomIndex, int nP
 			if (nInRoomIndex == j)		continue;	//	j : 지나간 사람 index
 			metPlayer = m_GamePlayer[nRoomIndex][j];
 			if (iPos == metPlayer.nPos)	{
-				if (gCI->getMale(metPlayer.ctype)^gCI->getMale(myPlayer.ctype))	{
+				if (gCI->getMale(metPlayer.ctype) ^ gCI->getMale(myPlayer.ctype))	{
 					if (metPlayer.nLove != -1)	//애인있는사람에게 작업금지;
 						continue;
 					if (dest == nDist)	{	//도착지점에서 만나 
