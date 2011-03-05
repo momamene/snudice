@@ -44,7 +44,7 @@ public class FirstPage extends HttpServlet {
 		
 		//rank를 재계산한다.
 		DB db = DB.getInstance();
-		ArrayList<String> l = db.dbGame.evalGradeMaxRank("휘사마");
+		ArrayList<String> l = db.dbGame.evalGradeMaxRank();
 		for(int i=0;i<l.size();i++)	
 			db.dbGame.setGradeMaxRank(l.get(i), i+1);		
 	}
