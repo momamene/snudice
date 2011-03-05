@@ -738,13 +738,17 @@ struct PK_GETPLAYERINFO_ASK
 	char  szTarget[IDLENGTH];    // 원하는 놈의 정보
 };
 
+#define COMMENT_LENGTH   100
+
 struct PK_GETPLAYERINFO_REP
 {
 	char  szTarget[IDLENGTH];    // 원하는 놈의 정보
-	int   nWin;
-	int   nLose;
+	int   nGamePlay;      // 게임 플레이 수
+	float  fMaxGrade;      // 최고학점
+	float  fAvgGrade;      // 평균학점
+	int   nRank;       // 랭킹
+	char  szComment[COMMENT_LENGTH];  // 커멘트
 };
-
 struct PK_GETITEM_REP
 {
 	int   nItemID;

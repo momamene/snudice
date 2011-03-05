@@ -765,6 +765,65 @@ int gMysql::getScore( char* userId )
 	return returnValue;
 }
 
+char* gMysql::commentGet( char* userId )
+{
 
+	char query[255];
+	sprintf(query,USER_COMMENT_SELECT,userId);
 
+	// 쿼리 수행
+	int query_stat = mysql_query(m_connection,query);
+	if(query_stat != 0) {
+		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		return NULL;
+	}
 
+	// 수행 분석
+	MYSQL_RES* sql_result = mysql_store_result(m_connection);
+	int arrLength = mysql_num_rows(sql_result);
+
+	char* gotComment = new char [arrLength*17];
+	strcpy(gotComment,"");
+
+	if(arrLength == 0) return NULL; // 아무도 친구가 없을때 
+	MYSQL_ROW sql_row = mysql_fetch_row(sql_result);
+	if(sql_row == NULL) {
+		fprintf(stderr,"nicknameGet() : null error");
+	}
+	else {
+		strcpy(gotComment , sql_row[0]);
+	}	
+
+	return gotComment;
+}
+
+int gMysql::getRank( char* userId )
+{
+
+	char query[255];
+	sprintf(query,RANK_GRADEMAX_SELECT,userId);
+
+	// 쿼리 수행
+	int query_stat = mysql_query(m_connection,query);
+	if(query_stat != 0) {
+		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		return NULL;
+	}
+
+	// 수행 분석
+	MYSQL_RES* sql_result = mysql_store_result(m_connection);
+	int arrLength = mysql_num_rows(sql_result);
+
+	int gotGradeMaxRank = -1;
+
+	if(arrLength == 0) return NULL; // 아무도 친구가 없을때 
+	MYSQL_ROW sql_row = mysql_fetch_row(sql_result);
+	if(sql_row == NULL) {
+		fprintf(stderr,"nicknameGet() : null error");
+	}
+	else {
+		gotGradeMaxRank = atoi(sql_row[0]);
+	}	
+
+	return gotGradeMaxRank;
+}

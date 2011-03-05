@@ -29,6 +29,10 @@ WHERE `userId` = '%s' AND `friendId` = '%s';" //"
 #define USER_NICKNAME_SELECT "SELECT `nickname` FROM `user` \
 WHERE `userId` = '%s';" 
 
+#define USER_COMMENT_SELECT "SELECT `comment` FROM `user` \
+WHERE `nickname` = '%s';" 
+
+
 #define USER_ROLE_SELECT "SELECT `role` FROM `user_roles` \
 WHERE `userId` = '%s';" 
 
@@ -114,7 +118,8 @@ WHERE `nickname` = '%s' ;"
 #define USERSCORE_SCORE_SELECT "SELECT `score` FROM `userscore`	\
 WHERE `nickname` = '%s' ;"
 
-
+#define RANK_GRADEMAX_SELECT	"SELECT `gradeMaxRank` FROM `rank`	\
+WHERE `nickname` = '%s' ;"
 
 
 class gMysql {
@@ -187,6 +192,10 @@ public:
 	int		getScore(char* userId);
 
 	char* nicknameGet(char* userId);
+	char* commentGet(char* userId);
+	
+	int		getRank(char* userId);
+
 	char* roleGet( char* userId );
 	char* IDbyNicknameGet( char* nickname );
 	void release();

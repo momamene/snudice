@@ -447,8 +447,17 @@ void gPlayerContainer::pk_getplayerinfo_ask(PK_DEFAULT *pk, SOCKET sock)
 	gMainWin::GetIF()->LogWrite(buf);
 
 	PK_GETPLAYERINFO_REP	rep;
+	
+	gMysql *gMS = gMysql::GetIF();
 
 	strcpy(rep.szTarget , ask.szTarget);
+	strcpy(rep.szComment , gMS->commentGet(ask.szTarget));
+	rep.fMaxGrade = gMS->getGradeMax(ask.szTarget);
+	rep.fAvgGrade = gMS->getGradeAvr(ask.szTarget);
+	rep.nGamePlay = gMS->getGameplayCount(ask.szTarget);
+	rep.nRank	= gMS->getRank(ask.szTarget);
+
+	
 	
 	gMainWin::GetIF()->Send(PL_GETPLAYERINFO_REP , sizeof(PK_GETPLAYERINFO_REP) , &rep , ask.szID);
 	
