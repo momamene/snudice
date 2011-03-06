@@ -12,14 +12,14 @@ import dbaccess.DB;
 /**
  * Servlet implementation class BoardDelete
  */
-@WebServlet("/BoardDelete")
-public class BoardDelete extends HttpServlet {
+@WebServlet("/DeleteBoard")
+public class DeleteBoard extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public BoardDelete() {
+    public DeleteBoard() {
         super();
         // TODO Auto-generated constructor stub
     }

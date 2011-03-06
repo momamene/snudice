@@ -83,6 +83,16 @@
 		WHERE boardName = #boardName:VARCHAR#
 	</delete>
 	
+	<insert id="addBoard" parameterClass="HashMap">
+		INSERT INTO board_boardlist(boardName,aliasName)
+		VALUES(#boardName:VARCHAR#,#aliasName:VARCHAR#)
+	</insert>
+	
+	<insert id="addNormalBoardAuth" parameterClass="String">
+		INSERT INTO board_authorization(boardName,admin,manager,member,guest)
+		VALUES(#boardName:VARCHAR#,'rwalc','rwalc','rw-lc','r--l-')
+	</insert>
+	
 	<select id="getArticleCount" parameterClass="String" resultClass="Integer">
 		SELECT COUNT(*) 
 		FROM board_board 

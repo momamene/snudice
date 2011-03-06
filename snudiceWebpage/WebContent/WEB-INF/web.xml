@@ -106,20 +106,36 @@
     </web-resource-collection>
   </security-constraint>
   <servlet>
-    <servlet-name>adminInternalName</servlet-name>
+    <servlet-name>adminMain</servlet-name>
     <servlet-class>servletAdmin.AdminMain</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>adminInternalName</servlet-name>
+    <servlet-name>adminMain</servlet-name>
     <url-pattern>/admin</url-pattern>
   </servlet-mapping>
   <servlet>
-    <servlet-name>adminTestInternalName</servlet-name>
-    <servlet-class>servletAdmin.AdminTest</servlet-class>
+    <servlet-name>rankRefresh</servlet-name>
+    <servlet-class>ajax.RankRefresh</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>adminTestInternalName</servlet-name>
-    <url-pattern>/admin/test.do</url-pattern>
+    <servlet-name>rankRefresh</servlet-name>
+    <url-pattern>/admin/rankRefresh.ajax</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>deleteBoard</servlet-name>
+    <servlet-class>ajax.DeleteBoard</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>deleteBoard</servlet-name>
+    <url-pattern>/admin/deleteBoard.ajax</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>createBoard</servlet-name>
+    <servlet-class>ajax.CreateBoard</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>createBoard</servlet-name>
+    <url-pattern>/admin/createBoard.ajax</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>articleWriteInternalName</servlet-name>
@@ -177,7 +193,6 @@
     <servlet-name>logoutInternalName</servlet-name>
     <url-pattern>/logout.do</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <servlet-name>CharIntro</servlet-name>
     <servlet-class>servletMisc.CharIntro</servlet-class>
@@ -186,7 +201,6 @@
     <servlet-name>CharIntro</servlet-name>
     <url-pattern>/misc/charIntro.do</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <servlet-name>Synopsis</servlet-name>
     <servlet-class>servletMisc.Synopsis</servlet-class>
@@ -195,7 +209,6 @@
     <servlet-name>Synopsis</servlet-name>
     <url-pattern>/misc/synopsis.do</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <servlet-name>Card</servlet-name>
     <servlet-class>servletMisc.Card</servlet-class>
@@ -204,7 +217,6 @@
     <servlet-name>Card</servlet-name>
     <url-pattern>/misc/card.do</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <servlet-name>Manual</servlet-name>
     <servlet-class>servletMisc.Manual</servlet-class>
@@ -213,7 +225,6 @@
     <servlet-name>Manual</servlet-name>
     <url-pattern>/misc/manual.do</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <servlet-name>articleWriteFormInternalName</servlet-name>
     <servlet-class>servletBoard.ArticleWriteForm</servlet-class>
@@ -245,14 +256,6 @@
   <servlet-mapping>
     <servlet-name>replyWrite</servlet-name>
     <url-pattern>/board/replyWrite.ajax</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>boardDelete</servlet-name>
-    <servlet-class>ajax.BoardDelete</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>boardDelete</servlet-name>
-    <url-pattern>/admin/boardDelete.ajax</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>join</servlet-name>
@@ -294,7 +297,6 @@
     <servlet-name>infoModify</servlet-name>
     <url-pattern>/infoModify.ajax</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <servlet-name>infoModifyLoad</servlet-name>
     <servlet-class>ajax.InfoModifyLoad</servlet-class>
@@ -303,7 +305,6 @@
     <servlet-name>infoModifyLoad</servlet-name>
     <url-pattern>/infoModifyLoad.ajax</url-pattern>
   </servlet-mapping>
-  
   <servlet>
     <servlet-name>login</servlet-name>
     <servlet-class>ajax.Login</servlet-class>

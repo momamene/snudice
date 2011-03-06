@@ -292,6 +292,26 @@ public class DBBoard {
 			e.printStackTrace();
 		}				
 	}
+	
+	//게시판을 생성한다. 성공시 true를 실패시 false를 리턴한다.
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public boolean createBoard(String boardName,String aliasName) {
+		try
+		{
+			Map m = new HashMap();
+			m.put("boardName", boardName);
+			m.put("aliasName", aliasName);
+			
+			sqlMap.insert("addBoard",m);
+			sqlMap.insert("addNormalBoardAuth",boardName);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
 
 	//게시판의 aliasName을 얻는다.
 	@SuppressWarnings("unchecked")
