@@ -80,7 +80,13 @@ void gChannelCore::pk_channelchange_ask (PK_DEFAULT *pk, SOCKET sock)
 
 	int channelBefore = gChannelContainer::GetIF()->FindPlayer(ask.szID);
 	switch(gPC->GetMode(ask.szID))	{
-		case ECM_BATTLENET : 				case ECM_ROOMJOIN :
+		case ECM_ROOMJOIN : 
+			rep.error = ECE_SUCCESS;
+			rep.channel = gChannelContainer::GetIF()->m_channelArray[ask.nChannel-1];
+			gPC->PutMode(ask.szID,ECM_BATTLENET);
+			gPC->PutCoreFlag(ask.szID,ask.nChannel-1);
+			break;
+		case ECM_BATTLENET :
 			if(channelBefore == -1) {
 				// 에러 처리
 				gMainWin::GetIF()->LogWrite("(f)[pk_channelchange_ask] Cannot Find Player Error\n");
