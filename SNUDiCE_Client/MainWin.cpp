@@ -28,7 +28,6 @@
 #define LOGO2_FILE			".\\Data\\Login\\logo2.img"
 #define LOGO_SHOWTIME		2000
 
-
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 static gMainWin	s_MainWin;		// for singleton

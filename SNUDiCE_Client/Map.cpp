@@ -710,6 +710,8 @@ void gMap::Release()
 
 	m_ImgSmallTile.Release();
 	m_ImgMapBG.Release();
+	m_ImgCurSmall.Release();
+	m_ImgCurBig.Release();
 }
 
 bool gMap::Restore()
@@ -724,6 +726,12 @@ bool gMap::Restore()
 		return false;
 
 	if(!m_ImgMapBG.Restore())
+		return false;
+
+	if(!m_ImgCurSmall.Restore())
+		return false;
+	
+	if(!m_ImgCurBig.Restore())
 		return false;
 
 	return true;

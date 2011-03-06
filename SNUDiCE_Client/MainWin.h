@@ -14,11 +14,11 @@
 
 #define DEF_WHISPER
 
-//#define DEF_ONLYONECLIENT		// 한 컴퓨터에서 클라이언트 하나만 켜지게
+#define DEF_ONLYONECLIENT		// 한 컴퓨터에서 클라이언트 하나만 켜지게
 
 #define DEFAULT_FULLSCREEN		false
 
-#define DEF_FRAMEPRINT
+//#define DEF_FRAMEPRINT
 #define DEF_FRAMECOUNT			60
 #define DEF_FRAMETICK			(1000 / DEF_FRAMECOUNT)
 
