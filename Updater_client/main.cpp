@@ -38,8 +38,19 @@ bool HTTPDown(HWND hWnd,  char *url, char *path);
 
 void AutoFolderMake(char *szPath);
 
+HICON	hIcon;
+
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow)
 {
+	HWND	hWndClient;
+	hWndClient = FindWindow(NULL, "SNUDiCE Updater");
+	if(hWndClient)
+	{
+		MessageBox(NULL, "이미 업데이터가 실행중입니다.", "에러", MB_OK);
+		return false;
+	}
+
+	hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1));
 	DialogBox(hInstance, MAKEINTRESOURCE(IDD_DIALOG1), HWND_DESKTOP, MainDlgProc);
 	exit(0);
 }
@@ -50,6 +61,7 @@ BOOL CALLBACK MainDlgProc(HWND hDlg, UINT iMsg, WPARAM wParam, LPARAM lParam)
 	{
 		case WM_INITDIALOG:
 			hDlgMain = hDlg;
+			SendMessage(hDlg, WM_SETICON, (WPARAM)TRUE, (LPARAM)hIcon);
 			if(!SetUp())
 			{
 				MessageBox(NULL, "서버와 접속할 수 없습니다.", "Error", MB_OK);
