@@ -452,7 +452,10 @@ void gPlayerContainer::pk_getplayerinfo_ask(PK_DEFAULT *pk, SOCKET sock)
 
 	char* comment = gMS->commentGet(ask.szTarget);
 	strcpy(rep.szTarget , ask.szTarget);
-	strcpy(rep.szComment , comment);
+	if (comment == NULL)
+		strcpy(rep.szComment , "Äõ¸®¿¡·¯");
+	else
+		strcpy(rep.szComment , comment);
 	rep.fMaxGrade = gMS->getGradeMax(ask.szTarget);
 	rep.fAvgGrade = gMS->getGradeAvr(ask.szTarget);
 	rep.nGamePlay = gMS->getGameplayCount(ask.szTarget);

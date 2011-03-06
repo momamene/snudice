@@ -128,6 +128,7 @@ public:
 private:
 	MYSQL m_conn;
 	MYSQL *m_connection;
+	CRITICAL_SECTION dbLock;
 
 public:
 	// mysql을 시동하는 함수
