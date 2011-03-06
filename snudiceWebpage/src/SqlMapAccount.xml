@@ -32,7 +32,7 @@
 	
 	<insert id="insertNotActivatedUser" parameterClass="beans.User">
 		INSERT INTO join_wait (userId,password,email,nickname,comment,activationCode,role) 
-		VALUES(#userId:VARCHAR#,#password:VARCHAR#,#email:VARCHAR#,#nickname:VARBINARY#,#comment:VARCHAR#,#activationCode:VARCHAR#,#role:VARCHAR#)
+		VALUES(#userId:VARCHAR#,#password:VARCHAR#,#email:VARCHAR#,#nickname:VARCHAR#,#comment:VARCHAR#,#activationCode:VARCHAR#,#role:VARCHAR#)
 	</insert>
 	
 	<select id="getNotActivatedUser" parameterClass="HashMap" resultClass="beans.User">
@@ -48,7 +48,7 @@
 		
 	<insert id="insertUser" parameterClass="beans.User">
 		INSERT INTO user (userId,password,email,nickname,comment) 
-		VALUES(#userId:VARCHAR#,#password:VARCHAR#,#email:VARCHAR#,#nickname:VARBINARY#,#comment:VARCHAR#)
+		VALUES(#userId:VARCHAR#,#password:VARCHAR#,#email:VARCHAR#,#nickname:VARCHAR#,#comment:VARCHAR#)
 	</insert>
 	
 	<insert id="insertUserRole" parameterClass="beans.UserRole">

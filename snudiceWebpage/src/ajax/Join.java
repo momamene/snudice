@@ -55,11 +55,11 @@ public class Join extends HttpServlet {
 		else if(joinEmail.indexOf(' ')>=0)
 			os.print("emailContainSpace");
 		else if(joinEmail.length()>Const.emailMaxLen)
-			os.print("emailTooLong");	
+			os.print("emailTooLong");			
 		else if(joinNickname.indexOf(' ')>=0)
 			os.print("nicknameContainSpace");
 		else if(Util.getByteCnt(joinNickname)>Const.nicknameMaxLen)
-			os.print("nicknameTooLong");
+			os.print("nicknameTooLong");		
 		else if(Util.getByteCnt(joinComment)>Const.commentMaxLen)
 			os.print("commentTooLong");
 		else
