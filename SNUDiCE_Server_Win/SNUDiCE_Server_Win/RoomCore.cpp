@@ -4,6 +4,7 @@
 #include "ChannelContainer.h"
 #include "SubmitCore.h"
 #include "ChannelCore.h"
+#include "const.h"
 
 static gRoomCore s_RoomCore;
 

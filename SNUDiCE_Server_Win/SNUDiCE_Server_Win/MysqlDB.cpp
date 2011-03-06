@@ -1,4 +1,5 @@
 #include "mysqlDB.h"
+#include "const.h"
 
 
 #include <string.h>
@@ -69,7 +70,7 @@ USER* gMysql::get(char* userId) {
 	if(pass)
 	{
 		strcpy(user->szPW, pass);
-		delete pass;
+		SAFE_DELETE_ARRAY(pass);
 	}
 
 	return user;
@@ -782,13 +783,14 @@ char* gMysql::commentGet( char* userId )
 	MYSQL_RES* sql_result = mysql_store_result(m_connection);
 	int arrLength = mysql_num_rows(sql_result);
 
-	char* gotComment = new char [arrLength*17];
+	char* gotComment = new char [COMMENT_LENGTH];
 	strcpy(gotComment,"");
 
-	if(arrLength == 0) return NULL; // 아무도 친구가 없을때 
+	if(arrLength == 0)
+		return NULL; // 아무도 친구가 없을때 
 	MYSQL_ROW sql_row = mysql_fetch_row(sql_result);
 	if(sql_row == NULL) {
-		fprintf(stderr,"nicknameGet() : null error");
+		fprintf(stderr,"commentGet() : null error");
 	}
 	else {
 		strcpy(gotComment , sql_row[0]);

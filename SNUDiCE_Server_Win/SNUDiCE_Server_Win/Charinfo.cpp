@@ -1,4 +1,5 @@
 #include "Charinfo.h"
+#include "const.h"
 #include <stdio.h>
 
 static gCharinfo s_Charinfo;

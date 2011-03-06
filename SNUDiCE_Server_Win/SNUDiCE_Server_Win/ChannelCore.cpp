@@ -3,6 +3,7 @@
 #include "ChannelContainer.h"
 #include "PlayerContainer.h"
 #include "MainWin.h"
+#include "const.h"
 
 static gChannelCore s_ChannelCore;
 

@@ -1,5 +1,6 @@
 #include "ChannelContainer.h"
 #include "MainWin.h"
+#include "const.h"
 
 static gChannelContainer s_ChannelContainer;
 

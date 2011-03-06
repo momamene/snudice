@@ -4,6 +4,7 @@
 #include "MainWin.h"
 #include "MysqlDB.h"
 #include "GamePlayerContainer.h"
+#include "const.h"
 
 #include <sstream>
 
@@ -115,9 +116,10 @@ void gMessageCore::command(char* str,char* szID) {
 		return;
 	}
 	
-	char* role;
 	gMysql * gMS = gMysql::GetIF() ;
-	role = gMS->roleGet(gMS->IDbyNicknameGet(szID));
+	char* nick = gMS->IDbyNicknameGet(szID);
+	char* role = gMS->roleGet(nick);
+	
 	if (strcmp(role , "admin") == 0)	{
 		if(strcmp(szStr1,"a")==0)	{
 			char szStr4[1024] = {0,};
@@ -140,6 +142,8 @@ void gMessageCore::command(char* str,char* szID) {
 			gGPCt->debuger_turn(szID);
 #endif
 	}
+	SAFE_DELETE_ARRAY(nick);
+	SAFE_DELETE_ARRAY(role);
 }
 
 void gMessageCore::msg_whisper(char	 szToID[IDLENGTH] , char szFromID[IDLENGTH] , char szComment[MSGLENGTH] )
@@ -199,7 +203,7 @@ void gMessageCore::pk_friendwhisper_ask(PK_DEFAULT *pk, SOCKET sock)
 
 	ask = *((PK_FRIENDWHISPER_ASK*)pk->strPacket);
 
-	sprintf(buf,"[PK_FRIENDWHISPER_ASK] %s\tMYID : %s", inet_ntoa(clientAddr.sin_addr), ask.szMyID);
+	wsprintf(buf,"[PK_FRIENDWHISPER_ASK] %s\tMYID : %s", inet_ntoa(clientAddr.sin_addr), ask.szMyID);
 	gMainWin::GetIF()->LogWrite(buf);
 
 	stringstream ss;
@@ -248,7 +252,8 @@ void gMessageCore::pk_friendwhisper_ask(PK_DEFAULT *pk, SOCKET sock)
 	
 	} while (ss);
 
-	delete userFriendList;
+	if (userFriendList)
+		delete userFriendList;
 }
 
 void gMessageCore::pk_friendlist_ask(PK_DEFAULT *pk, SOCKET sock)
@@ -265,7 +270,7 @@ void gMessageCore::pk_friendlist_ask(PK_DEFAULT *pk, SOCKET sock)
 
 	ask = *((PK_FRIENDLIST_ASK*)pk->strPacket);
 
-	sprintf(buf,"[PK_FRIENDWHISPER_ASK] %s\tMYID : %s", inet_ntoa(clientAddr.sin_addr), ask.szMyID);
+	wsprintf(buf,"[PK_FRIENDWHISPER_ASK] %s\tMYID : %s", inet_ntoa(clientAddr.sin_addr), ask.szMyID);
 	gMainWin::GetIF()->LogWrite(buf);
 
 	stringstream ss;
@@ -309,6 +314,8 @@ void gMessageCore::pk_friendlist_ask(PK_DEFAULT *pk, SOCKET sock)
 		friendid [0] = 0;
 
 	}
+	SAFE_DELETE_ARRAY(userFriendList);
+	
 }
 
 void gMessageCore::msg_shout( char szID[IDLENGTH] , char szComment[MSGLENGTH] )
@@ -322,8 +329,7 @@ void gMessageCore::msg_shout( char szID[IDLENGTH] , char szComment[MSGLENGTH] )
 	int					addrLen;
 	char				buf [1024];
 
-
-	sprintf(buf,"[PK_MSGSHOUT_ASK] %s\tMYID : %s", inet_ntoa(clientAddr.sin_addr), szID);
+	wsprintf(buf,"[PK_MSGSHOUT_ASK]\tMYID : %s", szID);
 	gMainWin::GetIF()->LogWrite(buf);
 
 	PK_MESSAGE_REP	rep;

@@ -4,6 +4,7 @@
 #include "MysqlDB.h"
 #include "ChannelContainer.h"
 #include "ChannelCore.h"
+#include "const.h"
 
 static gLoginCore s_LoginCore;
 
@@ -127,7 +128,8 @@ void gLoginCore::pk_login_ask(PK_DEFAULT *pk, SOCKET sock)
 		}
 	}
 
-	delete user;
+	SAFE_DELETE_ARRAY(userNickname);
+	SAFE_DELETE(user);
 
 	gMainWin::GetIF()->Send(PL_LOGIN_REP, sizeof(rep), &rep, sock);
 	if(rep.error==ELE_SUCCESS)

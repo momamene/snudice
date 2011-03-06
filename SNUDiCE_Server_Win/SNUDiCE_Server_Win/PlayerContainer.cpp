@@ -1,7 +1,7 @@
 #include "PlayerContainer.h"
 #include "GamePlayerContainer.h"	//수정사항, 에라 모르겟다 춤이나 추자
 #include "MainWin.h"
-
+#include "const.h"
 #include "MysqlDB.h"
 #include "MessageCore.h"
 
@@ -450,15 +450,16 @@ void gPlayerContainer::pk_getplayerinfo_ask(PK_DEFAULT *pk, SOCKET sock)
 	
 	gMysql *gMS = gMysql::GetIF();
 
+	char* comment = gMS->commentGet(ask.szTarget);
 	strcpy(rep.szTarget , ask.szTarget);
-	strcpy(rep.szComment , gMS->commentGet(ask.szTarget));
+	strcpy(rep.szComment , comment);
 	rep.fMaxGrade = gMS->getGradeMax(ask.szTarget);
 	rep.fAvgGrade = gMS->getGradeAvr(ask.szTarget);
 	rep.nGamePlay = gMS->getGameplayCount(ask.szTarget);
 	rep.nRank	= gMS->getRank(ask.szTarget);
 
 	
-	
 	gMainWin::GetIF()->Send(PL_GETPLAYERINFO_REP , sizeof(PK_GETPLAYERINFO_REP) , &rep , ask.szID);
 	
+	SAFE_DELETE_ARRAY(comment);
 }
