@@ -1,4 +1,5 @@
 #include "ItemContainer.h"
+#include "const.h"
 #include <stdio.h>
 
 #define ITEMSCRIPT			".\\Data\\itemdata.dat"

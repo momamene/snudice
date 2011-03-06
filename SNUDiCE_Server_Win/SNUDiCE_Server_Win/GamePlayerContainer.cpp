@@ -9,6 +9,7 @@
 #include "ChannelCore.h"
 #include "ChannelContainer.h"
 #include "MysqlDB.h"
+#include "const.h"
 
 #include <time.h>
 
@@ -1337,7 +1338,8 @@ ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, 
 
 						pk_warpliststart_rep(nRoomIndex , bInRoomIndex ,desList);
 
-						delete desList;						delete bInRoomIndex;
+						SAFE_DELETE_ARRAY(desList);
+						SAFE_DELETE_ARRAY(bInRoomIndex);
 					}
 					break;
 			}
@@ -1364,7 +1366,8 @@ ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, 
 
 						pk_warpliststart_rep(nRoomIndex , bInRoomIndex ,desList);
 
-						delete desList;						delete bInRoomIndex;
+						SAFE_DELETE_ARRAY(desList);
+						SAFE_DELETE_ARRAY(bInRoomIndex);
 					}
 					break;
 				case TARGET_OTHER:	{//æ∆¿Ã≈€º±πË¿«»£√‚»πµÊ	
@@ -1385,7 +1388,8 @@ ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, 
 
 						pk_warpliststart_rep(nRoomIndex , bInRoomIndex ,desList);
 
-						delete desList;						delete bInRoomIndex;
+						SAFE_DELETE_ARRAY(desList);
+						SAFE_DELETE_ARRAY(bInRoomIndex);
 					}
 				}
 					break;
@@ -1412,7 +1416,8 @@ ItemUseState gGamePlayerContainer::itemUse (PK_ITEMUSE_ASK ask, int nRoomIndex, 
 
 					pk_warpliststart_rep(nRoomIndex , bInRoomIndex ,desList);
 
-					delete desList;						delete bInRoomIndex;
+					SAFE_DELETE_ARRAY(desList);
+					SAFE_DELETE_ARRAY(bInRoomIndex);
 					break;
 			}
 			return IUS_NONE;

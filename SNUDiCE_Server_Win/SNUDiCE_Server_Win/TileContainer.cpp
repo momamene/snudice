@@ -1,6 +1,7 @@
 #include "MainWin.h"
 #include "TileContainer.h"
 #include "SubjectContainer.h"
+#include "const.h"
 
 static gTileContainer s_tileContainer; // 2
 
