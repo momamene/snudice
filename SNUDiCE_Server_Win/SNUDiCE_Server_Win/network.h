@@ -744,8 +744,8 @@ struct PK_GETPLAYERINFO_REP
 {
 	char  szTarget[IDLENGTH];    // 원하는 놈의 정보
 	int   nGamePlay;      // 게임 플레이 수
-	float  fMaxGrade;      // 최고학점
-	float  fAvgGrade;      // 평균학점
+	float fMaxGrade;      // 최고학점
+	float fAvgGrade;      // 평균학점
 	int   nRank;       // 랭킹
 	char  szComment[COMMENT_LENGTH];  // 커멘트
 };

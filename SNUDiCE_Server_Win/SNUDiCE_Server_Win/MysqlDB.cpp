@@ -18,6 +18,7 @@ gMysql* gMysql::GetIF()
 }
 
 void gMysql::init() {
+	InitializeCriticalSection(&dbLock);
 
 	mysql_init(&m_conn);
 
@@ -43,11 +44,14 @@ void gMysql::release() {
 //////////////////////////////////////////////////////////////////////////
 
 void gMysql::put(char* id,char* pw) {
+	EnterCriticalSection(&dbLock);	
+
 	char query[255];
 	int query_stat;
 
 	if(get(id)!=NULL) {
 		fprintf(stderr,"This ID %s is already existed\n",id);
+		LeaveCriticalSection(&dbLock);
 		return;
 	}
 
@@ -56,12 +60,17 @@ void gMysql::put(char* id,char* pw) {
 	query_stat = mysql_query(m_connection,query);
 	if(query_stat != 0) {
 		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		LeaveCriticalSection(&dbLock);
 		return;
 	}
+
+	LeaveCriticalSection(&dbLock);
 }
 
 
 USER* gMysql::get(char* userId) {
+	EnterCriticalSection(&dbLock);
+
 	USER *user = new USER;
 	char*	pass;
 	strcpy(user->szID , userId);
@@ -73,10 +82,12 @@ USER* gMysql::get(char* userId) {
 		SAFE_DELETE_ARRAY(pass);
 	}
 
+	LeaveCriticalSection(&dbLock);
 	return user;
 }
 
 char* gMysql::passwordGet(char* userId) {
+	EnterCriticalSection(&dbLock);
 
 	char* password = new char[33];
 	char query[255];
@@ -88,6 +99,7 @@ char* gMysql::passwordGet(char* userId) {
 	if(query_stat != 0) {
 		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
 		delete password;
+		LeaveCriticalSection(&dbLock);
 		return NULL;
 	}
 
@@ -100,16 +112,20 @@ char* gMysql::passwordGet(char* userId) {
 	else {
 		strcpy(password,"");
 	}
+	LeaveCriticalSection(&dbLock);
 	return password;
 
 }
 
 void gMysql::friendPutOne(char* userId, char* friendId) {
+	EnterCriticalSection(&dbLock);
+
 	char query[255];
 	int query_stat;
 
 	if(isFriendOneExisted(userId,friendId)) {
 		fprintf(stderr,"Friend Connection %s - %s is already existed\n",userId,friendId);
+		LeaveCriticalSection(&dbLock);
 		return;
 	}
 
@@ -117,13 +133,16 @@ void gMysql::friendPutOne(char* userId, char* friendId) {
 	query_stat = mysql_query(m_connection,query);
 	if(query_stat != 0) {
 		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		LeaveCriticalSection(&dbLock);
 		return;
 	}
+	LeaveCriticalSection(&dbLock);
 }
 
 // 너무 막장이고 잘 돌아가는 지 확신이 안든다.
 // 좀 더 많은 테스트를 거칠것
 bool gMysql::isFriendOneExisted(char* userId, char* friendId) {
+	EnterCriticalSection(&dbLock);
 
 	char query[255];
 	sprintf(query,FRIEND_SELECT_AND,userId,friendId);
@@ -131,12 +150,14 @@ bool gMysql::isFriendOneExisted(char* userId, char* friendId) {
 	int query_stat = mysql_query(m_connection,query);
 	if(query_stat != 0) {
 		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		LeaveCriticalSection(&dbLock);
 		return false;
 	}
 
 	MYSQL_RES* sql_resultA = mysql_store_result(m_connection);
 	int count = mysql_num_rows(sql_resultA);
 	if(count != 0) {
+		LeaveCriticalSection(&dbLock);
 		return true;
 	}
 
@@ -144,14 +165,17 @@ bool gMysql::isFriendOneExisted(char* userId, char* friendId) {
 	query_stat = mysql_query(m_connection,query);
 	if(query_stat != 0) {
 		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		LeaveCriticalSection(&dbLock);
 		return false;
 	}
 
 	MYSQL_RES* sql_resultB = mysql_store_result(m_connection);
 	count = mysql_num_rows(sql_resultB);
 	if(count != 0) {
+		LeaveCriticalSection(&dbLock);
 		return true;
 	}
+	LeaveCriticalSection(&dbLock);
 	return false;
 }
 
@@ -160,6 +184,7 @@ bool gMysql::isFriendOneExisted(char* userId, char* friendId) {
 // 다 쓴 다음에 변수를 delete 해주면 좋을 것 같다.
 // "test1,test2,test3,test4"
 char* gMysql::friendGet(char* userId) {
+	EnterCriticalSection(&dbLock);
 
 	char query[255];
 	sprintf(query,FRIEND_SELECT_OR,userId,userId);
@@ -168,6 +193,7 @@ char* gMysql::friendGet(char* userId) {
 	int query_stat = mysql_query(m_connection,query);
 	if(query_stat != 0) {
 		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		LeaveCriticalSection(&dbLock);
 		return NULL;
 	}
 
@@ -201,11 +227,13 @@ char* gMysql::friendGet(char* userId) {
 		}
 	}	
 
-
+	LeaveCriticalSection(&dbLock);
 	return friendArr;
 }
 char* gMysql::nicknameGet(char* userId)
 {
+	EnterCriticalSection(&dbLock);
+
 	char query[255];
 	sprintf(query,USER_NICKNAME_SELECT,userId);
 
@@ -213,6 +241,7 @@ char* gMysql::nicknameGet(char* userId)
 	int query_stat = mysql_query(m_connection,query);
 	if(query_stat != 0) {
 		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		LeaveCriticalSection(&dbLock);
 		return NULL;
 	}
 
@@ -232,11 +261,12 @@ char* gMysql::nicknameGet(char* userId)
 		strcpy(gotNickname , sql_row[0]);
 	}	
 
-
+	LeaveCriticalSection(&dbLock);
 	return gotNickname;
 }
 
 bool gMysql::friendDeleteOne(char* userId, char* friendId) {
+	EnterCriticalSection(&dbLock);
 
 	char query[255];
 	sprintf(query,FRIEND_DELETE,userId,friendId);
@@ -247,9 +277,12 @@ bool gMysql::friendDeleteOne(char* userId, char* friendId) {
 
 	if(query_statA != 0 && query_statB != 0) {
 		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		LeaveCriticalSection(&dbLock);
 		return NULL;
 	}
 
+	LeaveCriticalSection(&dbLock);
+	return true;
 }
 /* 고대시대의 유물
 void gMysql::scoreCountAdd(char* userId, bool val) {
@@ -278,11 +311,14 @@ void gMysql::scoreCountAdd(char* userId, bool val) {
 //////////////////////////////////////////////////////////////////////////
 
 void gMysql::blockPutOne(char* userId, char* blockId) {
+	EnterCriticalSection(&dbLock);
+
 	char query[255];
 	int query_stat;
 
 	if(isBlockOneExisted(userId,blockId)) {
 		fprintf(stderr,"Block Connection %s - %s is already existed\n",userId,blockId);
+		LeaveCriticalSection(&dbLock);
 		return;
 	}
 
@@ -290,13 +326,17 @@ void gMysql::blockPutOne(char* userId, char* blockId) {
 	query_stat = mysql_query(m_connection,query);
 	if(query_stat != 0) {
 		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		LeaveCriticalSection(&dbLock);
 		return;
 	}
+
+	LeaveCriticalSection(&dbLock);
 }
 
 // 너무 막장이고 잘 돌아가는 지 확신이 안든다.
 // 좀 더 많은 테스트를 거칠것
 bool gMysql::isBlockOneExisted(char* userId, char* blockId) {
+	EnterCriticalSection(&dbLock);
 
 	char query[255];
 	sprintf(query,BLOCK_SELECT_AND,userId,blockId);
@@ -304,12 +344,14 @@ bool gMysql::isBlockOneExisted(char* userId, char* blockId) {
 	int query_stat = mysql_query(m_connection,query);
 	if(query_stat != 0) {
 		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		LeaveCriticalSection(&dbLock);
 		return false;
 	}
 
 	MYSQL_RES* sql_resultA = mysql_store_result(m_connection);
 	int count = mysql_num_rows(sql_resultA);
 	if(count != 0) {
+		LeaveCriticalSection(&dbLock);
 		return true;
 	}
 
@@ -317,14 +359,17 @@ bool gMysql::isBlockOneExisted(char* userId, char* blockId) {
 	query_stat = mysql_query(m_connection,query);
 	if(query_stat != 0) {
 		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		LeaveCriticalSection(&dbLock);
 		return false;
 	}
 
 	MYSQL_RES* sql_resultB = mysql_store_result(m_connection);
 	count = mysql_num_rows(sql_resultB);
 	if(count != 0) {
+		LeaveCriticalSection(&dbLock);
 		return true;
 	}
+	LeaveCriticalSection(&dbLock);
 	return false;
 }
 
@@ -333,6 +378,7 @@ bool gMysql::isBlockOneExisted(char* userId, char* blockId) {
 // 다 쓴 다음에 변수를 delete 해주면 좋을 것 같다.
 // "test1,test2,test3,test4"
 char* gMysql::blockGet(char* userId) {
+	EnterCriticalSection(&dbLock);
 
 	char query[255];
 	sprintf(query,BLOCK_SELECT_OR,userId,userId);
@@ -341,6 +387,7 @@ char* gMysql::blockGet(char* userId) {
 	int query_stat = mysql_query(m_connection,query);
 	if(query_stat != 0) {
 		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		LeaveCriticalSection(&dbLock);
 		return NULL;
 	}
 
@@ -374,11 +421,12 @@ char* gMysql::blockGet(char* userId) {
 		}
 	}	
 
-
+	LeaveCriticalSection(&dbLock);
 	return blockArr;
 }
 
 bool gMysql::blockDeleteOne(char* userId, char* blockId) {
+	EnterCriticalSection(&dbLock);
 
 	char query[255];
 	sprintf(query,BLOCK_DELETE,userId,blockId);
@@ -389,9 +437,11 @@ bool gMysql::blockDeleteOne(char* userId, char* blockId) {
 
 	if(query_statA != 0 && query_statB != 0) {
 		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		LeaveCriticalSection(&dbLock);
 		return NULL;
 	}
-
+	LeaveCriticalSection(&dbLock);
+	return true;
 }
 
 
@@ -429,6 +479,8 @@ int gMysql::getScoreCount(char* userId , bool val) {
 
 char* gMysql::roleGet( char* userId )
 {
+	EnterCriticalSection(&dbLock);
+
 	char query[255];
 	sprintf(query,USER_ROLE_SELECT,userId);
 
@@ -436,6 +488,7 @@ char* gMysql::roleGet( char* userId )
 	int query_stat = mysql_query(m_connection,query);
 	if(query_stat != 0) {
 		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		LeaveCriticalSection(&dbLock);
 		return NULL;
 	}
 
@@ -455,11 +508,14 @@ char* gMysql::roleGet( char* userId )
 		strcpy(gotRole , sql_row[0]);
 	}
 
+	LeaveCriticalSection(&dbLock);
 	return gotRole;
 }
 
 char* gMysql::IDbyNicknameGet( char* nickname )
 {
+	EnterCriticalSection(&dbLock);
+
 	char query[255];
 	sprintf(query,USER_IDbyNICKNAME_SELECT,nickname);
 
@@ -467,6 +523,7 @@ char* gMysql::IDbyNicknameGet( char* nickname )
 	int query_stat = mysql_query(m_connection,query);
 	if(query_stat != 0) {
 		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		LeaveCriticalSection(&dbLock);
 		return NULL;
 	}
 
@@ -486,12 +543,14 @@ char* gMysql::IDbyNicknameGet( char* nickname )
 		strcpy(gotId , sql_row[0]);
 	}	
 
-
+	LeaveCriticalSection(&dbLock);
 	return gotId;
 }
 
 void gMysql::dropCountAdd( char* userId )
 {
+	EnterCriticalSection(&dbLock);
+
 	char query[255];
 	sprintf(query,USERSCORE_DROP_COUNT,userId);
 
@@ -500,10 +559,13 @@ void gMysql::dropCountAdd( char* userId )
 	if(query_stat != 0 ) {
 		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
 	}
+	LeaveCriticalSection(&dbLock);
 }
 
 int gMysql::getDropCount( char* userId )
 {
+	EnterCriticalSection(&dbLock);
+
 	int returnValue = -1;
 	char query[255];
 	sprintf(query,USERSCORE_DROP_SELECT,userId);
@@ -513,6 +575,7 @@ int gMysql::getDropCount( char* userId )
 	int query_stat = mysql_query(m_connection, (TCHAR*)query);
 	if(query_stat != 0) {
 		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		LeaveCriticalSection(&dbLock);
 		return -1;
 	}
 
@@ -526,11 +589,14 @@ int gMysql::getDropCount( char* userId )
 	else {
 		returnValue = atoi(sql_row[0]);
 	}
+	LeaveCriticalSection(&dbLock);
 	return returnValue;
 }
 
 void gMysql::gameplayCountAdd( char* userId )
 {
+	EnterCriticalSection(&dbLock);
+
 	char query[255];
 	sprintf(query,USERSCORE_GAMEPLAY_COUNT,userId);
 
@@ -539,10 +605,13 @@ void gMysql::gameplayCountAdd( char* userId )
 	if(query_stat != 0 ) {
 		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
 	}
+	LeaveCriticalSection(&dbLock);
 }
 
 int gMysql::getGameplayCount( char* userId )
 {
+	EnterCriticalSection(&dbLock);
+
 	int returnValue = -1;
 	char query[255];
 	sprintf(query,USERSCORE_GAMEPLAY_SELECT,userId);
@@ -552,6 +621,7 @@ int gMysql::getGameplayCount( char* userId )
 	int query_stat = mysql_query(m_connection, (TCHAR*)query);
 	if(query_stat != 0) {
 		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		LeaveCriticalSection(&dbLock);
 		return -1;
 	}
 
@@ -565,12 +635,15 @@ int gMysql::getGameplayCount( char* userId )
 	else {
 		returnValue = atoi(sql_row[0]);
 	}
+	LeaveCriticalSection(&dbLock);
 	return returnValue;
 }
 
 
 void gMysql::majorCountAdd( char* userId , char *major )
 {
+	EnterCriticalSection(&dbLock);
+
 	char query[255];
 	sprintf(query,USERSCORE_MAJOR_COUNT,major,major , userId);
 
@@ -579,10 +652,13 @@ void gMysql::majorCountAdd( char* userId , char *major )
 	if(query_stat != 0 ) {
 		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
 	}
+	LeaveCriticalSection(&dbLock);
 }
 
 int gMysql::getMajorCount( char* userId , char *major )
 {
+	EnterCriticalSection(&dbLock);
+
 	int returnValue = -1;
 	char query[255];
 	sprintf(query,USERSCORE_MAJOR_SELECT, major,userId);
@@ -592,6 +668,7 @@ int gMysql::getMajorCount( char* userId , char *major )
 	int query_stat = mysql_query(m_connection, (TCHAR*)query);
 	if(query_stat != 0) {
 		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		LeaveCriticalSection(&dbLock);
 		return -1;
 	}
 
@@ -605,11 +682,14 @@ int gMysql::getMajorCount( char* userId , char *major )
 	else {
 		returnValue = atoi(sql_row[0]);
 	}
+	LeaveCriticalSection(&dbLock);
 	return returnValue;
 }
 
 void gMysql::gradeMaxUpdate( char* userId , double grade )
 {
+	EnterCriticalSection(&dbLock);
+
 	char query[255];
 	sprintf(query,USERSCORE_GRADEMAX_UPDATE, grade , userId);
 
@@ -618,10 +698,13 @@ void gMysql::gradeMaxUpdate( char* userId , double grade )
 	if(query_stat != 0 ) {
 		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
 	}
+	LeaveCriticalSection(&dbLock);
 }
 
 double gMysql::getGradeMax( char* userId )
 {
+	EnterCriticalSection(&dbLock);
+
 	double returnValue = -1;
 	char query[255];
 	sprintf(query,USERSCORE_GRADEMAX_SELECT,userId);
@@ -631,6 +714,7 @@ double gMysql::getGradeMax( char* userId )
 	int query_stat = mysql_query(m_connection, (TCHAR*)query);
 	if(query_stat != 0) {
 		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		LeaveCriticalSection(&dbLock);
 		return -1;
 	}
 
@@ -644,11 +728,14 @@ double gMysql::getGradeMax( char* userId )
 	else {
 		returnValue = atof(sql_row[0]);
 	}
+	LeaveCriticalSection(&dbLock);
 	return returnValue;
 }
 
 void gMysql::gradeSumUpdate( char* userId , double grade )
 {
+	EnterCriticalSection(&dbLock);
+
 	char query[255];
 	sprintf(query,USERSCORE_GRADESUM_UPDATE, grade , userId);
 
@@ -657,10 +744,13 @@ void gMysql::gradeSumUpdate( char* userId , double grade )
 	if(query_stat != 0 ) {
 		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
 	}
+	LeaveCriticalSection(&dbLock);
 }
 
 double gMysql::getGradeSum( char* userId )
 {
+	EnterCriticalSection(&dbLock);
+
 	double returnValue = -1;
 	char query[255];
 	sprintf(query,USERSCORE_GRADESUM_SELECT,userId);
@@ -670,6 +760,7 @@ double gMysql::getGradeSum( char* userId )
 	int query_stat = mysql_query(m_connection, (TCHAR*)query);
 	if(query_stat != 0) {
 		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		LeaveCriticalSection(&dbLock);
 		return -1;
 	}
 
@@ -683,11 +774,13 @@ double gMysql::getGradeSum( char* userId )
 	else {
 		returnValue = atof(sql_row[0]);
 	}
+	LeaveCriticalSection(&dbLock);
 	return returnValue;
 }
 
 void gMysql::gradeAvrUpdate( char* userId , double grade )
 {
+	EnterCriticalSection(&dbLock);
 	
 	char query[255];
 	sprintf(query,USERSCORE_GRADEAVR_UPDATE, grade , userId);
@@ -697,10 +790,13 @@ void gMysql::gradeAvrUpdate( char* userId , double grade )
 	if(query_stat != 0 ) {
 		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
 	}
+	LeaveCriticalSection(&dbLock);
 }
 
 double gMysql::getGradeAvr( char* userId )
 {
+	EnterCriticalSection(&dbLock);
+
 	double returnValue = -1;
 	char query[255];
 	sprintf(query,USERSCORE_GRADEAVR_SELECT,userId);
@@ -710,6 +806,7 @@ double gMysql::getGradeAvr( char* userId )
 	int query_stat = mysql_query(m_connection, (TCHAR*)query);
 	if(query_stat != 0) {
 		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		LeaveCriticalSection(&dbLock);
 		return -1;
 	}
 
@@ -723,11 +820,14 @@ double gMysql::getGradeAvr( char* userId )
 	else {
 		returnValue = atof(sql_row[0]);
 	}
+	LeaveCriticalSection(&dbLock);
 	return returnValue;
 }
 
 void gMysql::scoreUpdate( char* userId , int endTurn , int maxUser , int myRank )
 {
+	EnterCriticalSection(&dbLock);
+
 	char query[255];
 	int addedScore = endTurn * (maxUser - myRank);
 	sprintf(query,USERSCORE_SCORE_UPDATE, addedScore , userId);
@@ -737,10 +837,13 @@ void gMysql::scoreUpdate( char* userId , int endTurn , int maxUser , int myRank 
 	if(query_stat != 0 ) {
 		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
 	}
+	LeaveCriticalSection(&dbLock);
 }
 
 int gMysql::getScore( char* userId )
 {
+	EnterCriticalSection(&dbLock);
+
 	int returnValue = -1;
 	char query[255];
 	sprintf(query,USERSCORE_GRADEAVR_SELECT,userId);
@@ -750,6 +853,7 @@ int gMysql::getScore( char* userId )
 	int query_stat = mysql_query(m_connection, (TCHAR*)query);
 	if(query_stat != 0) {
 		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		LeaveCriticalSection(&dbLock);
 		return -1;
 	}
 
@@ -763,44 +867,50 @@ int gMysql::getScore( char* userId )
 	else {
 		returnValue = atoi(sql_row[0]);
 	}
+	LeaveCriticalSection(&dbLock);
 	return returnValue;
 }
 
 char* gMysql::commentGet( char* userId )
-{
+{	
+	EnterCriticalSection(&dbLock);
 
 	char query[255];
-	sprintf(query,USER_COMMENT_SELECT,userId);
+	sprintf(query,USER_COMMENT_SELECT,userId);	
 
 	// 쿼리 수행
 	int query_stat = mysql_query(m_connection,query);
 	if(query_stat != 0) {
 		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		LeaveCriticalSection(&dbLock);
 		return NULL;
-	}
+	}	
 
 	// 수행 분석
 	MYSQL_RES* sql_result = mysql_store_result(m_connection);
 	int arrLength = mysql_num_rows(sql_result);
 
 	char* gotComment = new char [COMMENT_LENGTH];
-	strcpy(gotComment,"");
+	strcpy(gotComment,"");	
 
 	if(arrLength == 0)
 		return NULL; // 아무도 친구가 없을때 
 	MYSQL_ROW sql_row = mysql_fetch_row(sql_result);
 	if(sql_row == NULL) {
-		fprintf(stderr,"commentGet() : null error");
+		fprintf(stderr,"commentGet() : null error");		
 	}
 	else {
-		strcpy(gotComment , sql_row[0]);
-	}	
+		strcpy(gotComment , sql_row[0]);		
+	}		
+
+	LeaveCriticalSection(&dbLock);
 
 	return gotComment;
 }
 
 int gMysql::getRank( char* userId )
 {
+	EnterCriticalSection(&dbLock);
 
 	char query[255];
 	sprintf(query,RANK_GRADEMAX_SELECT,userId);
@@ -809,6 +919,7 @@ int gMysql::getRank( char* userId )
 	int query_stat = mysql_query(m_connection,query);
 	if(query_stat != 0) {
 		fprintf(stderr,"Mysql query error : %s\n",mysql_error(&m_conn));
+		LeaveCriticalSection(&dbLock);
 		return NULL;
 	}
 
@@ -826,6 +937,6 @@ int gMysql::getRank( char* userId )
 	else {
 		gotGradeMaxRank = atoi(sql_row[0]);
 	}	
-
+	LeaveCriticalSection(&dbLock);
 	return gotGradeMaxRank;
 }
