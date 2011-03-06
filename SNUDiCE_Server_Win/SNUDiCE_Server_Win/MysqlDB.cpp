@@ -204,7 +204,11 @@ char* gMysql::friendGet(char* userId) {
 	char* friendArr = new char [arrLength*17];
 	strcpy(friendArr,"");
 
-	if(arrLength == 0) return NULL; // 아무도 친구가 없을때 
+	if(arrLength == 0)
+	{
+		LeaveCriticalSection(&dbLock);
+		return NULL; // 아무도 친구가 없을때 
+	}
 
 	for(int i = 0 ; i < arrLength ; i++) {
 
@@ -252,7 +256,12 @@ char* gMysql::nicknameGet(char* userId)
 	char* gotNickname = new char [arrLength*17];
 	strcpy(gotNickname,"");
 
-	if(arrLength == 0) return NULL; // 아무도 친구가 없을때 
+	if(arrLength == 0)
+	{
+		LeaveCriticalSection(&dbLock);
+		return NULL;
+	}
+
 	MYSQL_ROW sql_row = mysql_fetch_row(sql_result);
 	if(sql_row == NULL) {
 		fprintf(stderr,"nicknameGet() : null error");
@@ -398,7 +407,11 @@ char* gMysql::blockGet(char* userId) {
 	char* blockArr = new char [arrLength*17];
 	strcpy(blockArr,"");
 
-	if(arrLength == 0) return NULL;
+	if(arrLength == 0)
+	{
+		LeaveCriticalSection(&dbLock);
+		return NULL;
+	}
 
 	for(int i = 0 ; i < arrLength ; i++) {
 
@@ -499,7 +512,11 @@ char* gMysql::roleGet( char* userId )
 	char* gotRole = new char [arrLength*17];
 	strcpy(gotRole,"");
 
-	if(arrLength == 0) return NULL; // 아무도 친구가 없을때 
+	if(arrLength == 0)
+	{
+		LeaveCriticalSection(&dbLock);
+		return NULL;
+	}
 	MYSQL_ROW sql_row = mysql_fetch_row(sql_result);
 	if(sql_row == NULL) {
 		fprintf(stderr,"roleGet() : null error");
@@ -534,7 +551,11 @@ char* gMysql::IDbyNicknameGet( char* nickname )
 	char* gotId = new char [arrLength*17];
 	strcpy(gotId,"");
 
-	if(arrLength == 0) return NULL; // 아무도 친구가 없을때 
+	if(arrLength == 0)
+	{
+		LeaveCriticalSection(&dbLock);
+		return NULL;
+	}
 	MYSQL_ROW sql_row = mysql_fetch_row(sql_result);
 	if(sql_row == NULL) {
 		fprintf(stderr,"nicknameGet() : null error");
@@ -894,7 +915,10 @@ char* gMysql::commentGet( char* userId )
 	strcpy(gotComment,"");	
 
 	if(arrLength == 0)
-		return NULL; // 아무도 친구가 없을때 
+	{
+		LeaveCriticalSection(&dbLock);
+		return NULL;
+	}
 	MYSQL_ROW sql_row = mysql_fetch_row(sql_result);
 	if(sql_row == NULL) {
 		fprintf(stderr,"commentGet() : null error");		
@@ -929,7 +953,11 @@ int gMysql::getRank( char* userId )
 
 	int gotGradeMaxRank = -1;
 
-	if(arrLength == 0) return NULL; // 아무도 친구가 없을때 
+	if(arrLength == 0)
+	{
+		LeaveCriticalSection(&dbLock);
+		return NULL;
+	}
 	MYSQL_ROW sql_row = mysql_fetch_row(sql_result);
 	if(sql_row == NULL) {
 		fprintf(stderr,"nicknameGet() : null error");
