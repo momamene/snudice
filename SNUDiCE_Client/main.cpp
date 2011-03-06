@@ -5,7 +5,7 @@
 
 //#define DEBUGMODE
 
-#define NOUSE_CRASHHANDLER
+//#define NOUSE_CRASHHANDLER
 
 #ifdef DEBUGMODE
 #using <System.dll>
@@ -121,8 +121,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmd
 	gMainWin	*main = gMainWin::GetIF();
 
 	
-	//if(strcmp(lpszCmdParam, "RunByUpdater") != 0)
-	//	return -1;
+	if(strcmp(lpszCmdParam, "RunByUpdater") != 0)
+		return -1;
 
 	if(!main->SetUp(hInstance, lpszCmdParam, nCmdShow))
 	{
