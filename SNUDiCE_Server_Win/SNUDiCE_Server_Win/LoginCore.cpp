@@ -117,7 +117,7 @@ void gLoginCore::pk_login_ask(PK_DEFAULT *pk, SOCKET sock)
 					strcpy(rep.player.szID,userNickname);
 					rep.player.classtype = CLASS_NONE;
 					rep.player.coreWhere = ECM_BATTLENET;
-					rep.player.nCoreFlag = 0;
+					rep.player.nCoreFlag = finded;
 					rep.player.sock = sock;
 					rep.player.bReady = false;
 					
