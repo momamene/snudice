@@ -55,7 +55,7 @@ bool gEdit::SetUp(RECT rcPos, char *img, int strsize, EDITTYPE type)
 
 	m_eType		= type;
 	m_rcPos		= rcPos;
-
+	
 	m_szEdit	= new char[strsize + 1];
 	memset(m_szEdit, 0, sizeof(m_szEdit));
 	m_nStrSize	= strsize + 1;

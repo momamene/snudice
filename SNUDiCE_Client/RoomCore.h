@@ -139,6 +139,7 @@ public:
 	gImage		m_ImgSelBack;
 	bool		m_bCharSel;				// 캐릭터 고르고 있냐
 	int			m_nSelUser;				// 선택된 유저
+	PK_GETPLAYERINFO_REP	m_Info;		// 플레이어 정보
 
 	// room - select
 	gImage		m_ImgCNameBack;
@@ -181,6 +182,7 @@ public:
 	void		pk_roomback_rep(PK_ROOMBACK_REP *rep);	//방나가고돌아오기수정
 	void		pk_roomrefresh_rep(PK_ROOMREFRESH_REP *rep);
 	void		pk_gamestart_rep(PK_GAMESTART_REP *rep);
+	void		pk_getplayerinfo_rep(PK_GETPLAYERINFO_REP *rep);
 
 	//방나가고돌아오기수정	back -0-;;; public 접근이 필요해..ㅜ.ㅡ;
 	void		SendRoomBack();

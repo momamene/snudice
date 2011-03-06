@@ -231,7 +231,12 @@
 #define SEL_TERM_READY_X			12
 #define SEL_TERM_READY_Y			60
 
-
+#define INFO_ROOM_POS_X				490
+#define INFO_ROOM_POS_Y				80
+#define INFO_ID_POS_X				500
+#define INFO_ID_POS_Y				110
+#define INFO_TERM_Y					20
+#define INFO_MAXTEXTLENGTH			20	// 한글기준
 
 static gRoomCore s_RoomCore;
 
@@ -603,6 +608,8 @@ void gRoomCore::pk_roommake_rep(PK_ROOMMAKER_REP *rep)
 	{
 		gUtil::DebugMsg("Success\n");
 		m_eRoom = ERM_ROOM;
+		m_nSelUser	= -1;
+		memset(&m_Info, 0, sizeof(PK_GETPLAYERINFO_REP));
 		gMainWin::GetIF()->m_eCoreMode = ECM_ROOM;
 		gPlayerContainer::GetIF()->SetMyRoom(&rep->room);
 		gPlayerContainer::GetIF()->SetPlayerList(rep->playerlist);
@@ -1297,7 +1304,16 @@ void gRoomCore::Draw_Room()
 
 	int			i;
 
+	char		szBuf[128];
+
 	ROOM	*room = &gPlayerContainer::GetIF()->m_MyRoom;
+
+	// 방이름
+	gUtil::BeginText();
+//	int			nRoomIdx = m_nPage * MAXROOMFORPAGE + m_nSelected;
+//	sprintf_s(szBuf, "방 : %s", room->szRoomName);
+	gUtil::TextOutLine(INFO_ROOM_POS_X, INFO_ROOM_POS_Y, room->szRoomName);
+	gUtil::EndText();
 
 	if(m_nSelUser != -1)
 	{
@@ -1312,6 +1328,71 @@ void gRoomCore::Draw_Room()
 			(m_nSelUser % 4) * (WAIT_TERM_CHARBACK_X + WAIT_SIZE_CHARBACK_W), (m_nSelUser / 4) * (WAIT_TERM_CHARBACK_Y + WAIT_SIZE_CHARBACK_H));
 
 		m_ImgCNameBack.Draw(rcDest.left - 2, rcDest.top - 2);
+
+		// 플레이어 정보
+		if(strlen(m_Info.szTarget) != 0)
+		{
+			int			nLineY = INFO_ID_POS_Y;
+
+			gUtil::BeginText();
+				gUtil::Text(INFO_ID_POS_X, nLineY, m_Info.szTarget);
+				nLineY += INFO_TERM_Y;
+
+				sprintf_s(szBuf, "게임 플레이 : %d", m_Info.nGamePlay);
+				gUtil::Text(INFO_ID_POS_X, nLineY, szBuf);
+				nLineY += INFO_TERM_Y;
+
+				sprintf_s(szBuf, "랭킹 : %d", m_Info.nRank);
+				gUtil::Text(INFO_ID_POS_X,nLineY,  szBuf);
+				nLineY += INFO_TERM_Y;
+
+				sprintf_s(szBuf, "최고 학점 : %.2f", m_Info.fMaxGrade);
+				gUtil::Text(INFO_ID_POS_X, nLineY, szBuf);
+				nLineY += INFO_TERM_Y;
+
+				sprintf_s(szBuf, "평균 학점 : %.2f", m_Info.fAvgGrade);
+				gUtil::Text(INFO_ID_POS_X, nLineY, szBuf);
+				nLineY += INFO_TERM_Y;
+
+				// comment
+				string		strTotal = m_Info.szComment;
+				string		strLine;
+				int			nLineCount = 0;
+				for(i = 0; i < (int)strTotal.length(); )
+				{
+					if(strTotal[i] < 0)
+					{
+						nLineCount += 2;
+						i+=2;
+					}
+					else
+					{
+						nLineCount ++;
+						i++;
+					}
+
+					if(nLineCount == INFO_MAXTEXTLENGTH)
+					{
+						strLine = strTotal.substr(0, nLineCount);
+						gUtil::Text(INFO_ID_POS_X, nLineY, (char*)strLine.c_str());
+						nLineY += INFO_TERM_Y;
+						strTotal = strTotal.substr(nLineCount, strTotal.size());
+						nLineCount = 0;
+						i = 0;
+					}
+					else if(nLineCount > INFO_MAXTEXTLENGTH)
+					{
+						nLineCount = INFO_MAXTEXTLENGTH - 1;
+						gUtil::Text(INFO_ID_POS_X, nLineY, (char*)strLine.c_str());
+						nLineY += INFO_TERM_Y;
+						strTotal = strTotal.substr(nLineCount, strTotal.size());
+						nLineCount = 0;
+						i = 0;
+					}
+				}
+				gUtil::Text(INFO_ID_POS_X, nLineY, (char*)strTotal.c_str());
+			gUtil::EndText();
+		}
 	}
 
 	// 뒤에 캐릭터정보 배경
@@ -1708,6 +1789,8 @@ void gRoomCore::pk_roomjoin_rep(PK_ROOMJOIN_REP *rep)
 				m_bEnteringPass = false;
 				SetFocus(gMainWin::GetIF()->m_hWnd);
 				m_eRoom = ERM_ROOM;
+				m_nSelUser	= -1;
+				memset(&m_Info, 0, sizeof(PK_GETPLAYERINFO_REP));
 				gPlayerContainer::GetIF()->SetMyRoom(&rep->joinroom);
 				gPlayerContainer::GetIF()->SetPlayerList(rep->playerlist);
 				gChat::GetIF()->MsgStackClear();
@@ -1804,6 +1887,15 @@ void gRoomCore::OnLButtonDown_Room()
 					{
 						m_bCharSel = true;
 						m_nSelChar = gPlayerContainer::GetIF()->m_MyPlayer.classtype;
+					}
+					if(m_nSelChar != i)
+					{
+						PK_GETPLAYERINFO_ASK		ask;
+
+						strcpy(ask.szID, gPlayerContainer::GetIF()->m_MyPlayer.szID);
+						strcpy(ask.szTarget, room->szRoomMaxPlayer[i]);
+
+						gServer::GetIF()->Send(PL_GETPLAYERINFO_ASK, sizeof(ask), &ask);
 					}
 					m_nSelUser = i;
 					break;
@@ -2031,4 +2123,9 @@ void gRoomCore::StartCount()
 void gRoomCore::Clear()
 {
 	m_bStartCount = false;
+}
+
+void gRoomCore::pk_getplayerinfo_rep(PK_GETPLAYERINFO_REP *rep)
+{
+	m_Info = *rep;
 }

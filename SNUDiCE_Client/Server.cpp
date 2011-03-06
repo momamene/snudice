@@ -140,6 +140,7 @@ void gServer::Receive(LPARAM lParam)
 			wsprintf(szBuf, "[Close] %s : %d\n",
 				inet_ntoa(s_serverAddr.sin_addr), ntohs(s_serverAddr.sin_port));
 			gUtil::DebugMsg(szBuf);
+			gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_DISCONNECT, STR_3);
 			m_bConnect = false;
 			break;
 	}
@@ -291,6 +292,9 @@ void gServer::Recv()
 			gUIGame::GetIF()->pk_getitem_rep((PK_GETITEM_REP*)m_pkDefault.strPacket);
 			break;
 
+		case PL_GETPLAYERINFO_REP:
+			gRoomCore::GetIF()->pk_getplayerinfo_rep((PK_GETPLAYERINFO_REP*)m_pkDefault.strPacket);
+			break;
 		
 	}
 }
