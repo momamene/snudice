@@ -1233,6 +1233,9 @@ void gGameCore::pk_nextturn_rep(PK_NEXTTURN_REP *rep)
 {
 	gPlayerContainer	*gPC = gPlayerContainer::GetIF();
 	gUIGame				*ui = gUIGame::GetIF();
+	gPlaySoundCore		*sound = gPlaySoundCore::GetIF();
+
+	sound->StopEffectSound(EFFECT_FILE_10);
 
 	m_nGameTurn = rep->nNowTurnGame;
 
@@ -1252,7 +1255,7 @@ void gGameCore::pk_nextturn_rep(PK_NEXTTURN_REP *rep)
 			}
 		}
 	}
-	gPlaySoundCore	*sound = gPlaySoundCore::GetIF();
+
 	bool	bMeInNokdu = gPC->IsNokdu(gPC->GetMyGPIndex());
 	// ³ìµÎ -> !³ìµÎ
 	if(!m_bBreak && !gUIGame::GetIF()->m_bCouple)

@@ -837,7 +837,7 @@ void gUIGame::Draw()
 						gPC->m_GPlayerList[ m_rankIdx[i] ].szID);
 
 					sprintf_s(szBuf, "%.1f", gPC->m_GPlayerList[ m_rankIdx[i] ].fAvGrade);
-					gUtil::TextOutLine(RESULT_POS_START_X + RESULT_TERM_X, RESULT_POS_START_Y + nLineCount * RESULT_TERM_Y, szBuf);
+					gUtil::TextOutLine(RESULT_POS_START_X + RESULT_TERM_X + 10, RESULT_POS_START_Y + nLineCount * RESULT_TERM_Y, szBuf);
 
 					wsprintf(szBuf, "%d", gPC->m_GPlayerList[ m_rankIdx[i] ].nRank);
 					gUtil::TextOutLine(RESULT_POS_START_X + RESULT_TERM_X * 2, RESULT_POS_START_Y + nLineCount * RESULT_TERM_Y, szBuf);
@@ -2303,7 +2303,7 @@ void gUIGame::pk_itemuse_rep(PK_ITEMUSE_REP* rep)
 				{
 					if(strlen(pc->m_GPlayerList[i].szID) != 0)
 					{
-						if(strcmp(pc->m_GPlayerList[i].szID, pc->m_MyGamePlayer.szID) == 0)
+						if(strcmp(pc->m_GPlayerList[i].szID, rep->szTarget) == 0)
 							continue;
 
 						m_target[j].idx = i;

@@ -326,7 +326,7 @@ void gChat::SendMsg()
 
 void gChat::pk_message_rep(PK_MESSAGE_REP* rep)
 {
-	AddStr(rep->szID, rep->szMsg);
+	AddStr(rep->szID, rep->szMsg, rep->msgclr);
 }
 
 void gChat::OnLbuttonDown(int x, int y)
