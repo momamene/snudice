@@ -127,8 +127,8 @@ function replyComplete()
 		                	</div>
 		                	<div>
 		            			<span>${articleInfo.text}</span>
-		            		</div>		                	
-		            	</div> 
+		            		</div>
+		            	</div>
 		            	
 						<div id="reply">
 							<div id="replyHead">
