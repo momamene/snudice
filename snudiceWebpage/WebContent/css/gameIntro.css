@@ -10,4 +10,48 @@
 
 /*------캐릭터 소개------*/
 
+#charBody { padding-top : 2%; }
+#charBody span
+{
+	padding : 3%;
+	padding-bottom : 5%;
+}
+
 /*--------카드----------*/
+
+#cardBody { padding : 5%; }
+#cardInfor { color : #993E00; }
+#cardStudy
+{
+	padding-top : 5%;
+	color : #66985C;
+}
+#cardStamina
+{
+	padding-top : 5%;
+	color : #1A5789;
+}
+#cardClass
+{
+	padding-top : 5%;
+	color : #ED7600;
+}
+#cardMove
+{
+	padding-top : 5%;
+	color : #D6BC00;
+}
+#cardLove
+{
+	padding-top : 5%;
+	color : #FF85D6;
+}
+
+#cardStudy span { padding-left : 2%; }
+#cardStamina span { padding-left : 2%; }
+#cardClass span { padding-left : 2%; }
+#cardMove span { padding-left : 2%; }
+#cardLove span { padding-left : 2%; }
+
+
+
