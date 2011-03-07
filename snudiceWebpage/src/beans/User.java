@@ -8,6 +8,8 @@ public class User {
 	private String comment;
 	private String activationCode; //가입 대기 중일 때 email 인증을 위해 사용
 	private String role; //가입 대기중일 때 사용
+	private String joinDate; //가입날짜
+	private String recentConnect; //최근접속(게임접속)
 	
 	public User() {}
 	
@@ -81,5 +83,21 @@ public class User {
 
 	public String getRole() {
 		return role;
+	}
+
+	public void setJoinDate(String joinDate) {
+		this.joinDate = joinDate;
+	}
+
+	public String getJoinDate() {
+		return joinDate;
+	}
+
+	public void setRecentConnect(String recentConnect) {
+		this.recentConnect = recentConnect;
+	}
+
+	public String getRecentConnect() {
+		return recentConnect;
 	}
 }

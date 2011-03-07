@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import utility.Util;
+
 import beans.User;
 import beans.UserRole;
 
@@ -89,6 +91,7 @@ public class DBAccount {
 	//새로운 user를 가입 대기상태로 만든다. 
 	public void insertNotActivatedUser(String userId, String password,String email,String nickname,String comment,String activationCode,String role) {
 		User newUser = new User(userId,password,email,nickname,comment,activationCode,role);
+		newUser.setJoinDate(Util.currDateTime());
 		try {
 			sqlMap.insert("insertNotActivatedUser",newUser);			
 		} catch (Exception e) {			
