@@ -40,13 +40,34 @@ var _role = "${role}";
 				<div class="left">
 					<%@ include file="/reuseModule/loginModule.jsp"%>
 				
-					<div id="mainLeftBottom">						
-									
-					</div>					
+					<div id="mainLeftBottom">
+						
+					</div>
 				</div>
 				
 				<div class="center">
-					캐릭터소개	
+					<div class="boardFrameTop"></div>
+						<div class="boardFrameBody">
+							<div id="charBody">
+								<span><img src="${root}/image/misc/char01.png"/></span>
+								<span><img src="${root}/image/misc/char02.png"/></span>
+								<span><img src="${root}/image/misc/char03.png"/></span>
+								<span><img src="${root}/image/misc/char04.png"/></span>
+								<span><img src="${root}/image/misc/char05.png"/></span>
+								<span><img src="${root}/image/misc/char06.png"/></span>
+								<span><img src="${root}/image/misc/char07.png"/></span>
+								<span><img src="${root}/image/misc/char08.png"/></span>
+								<span><img src="${root}/image/misc/char09.png"/></span>
+								<span><img src="${root}/image/misc/char10.png"/></span>
+								<span><img src="${root}/image/misc/char11.png"/></span>
+								<span><img src="${root}/image/misc/char12.png"/></span>
+								<span><img src="${root}/image/misc/char13.png"/></span>
+								<span><img src="${root}/image/misc/char14.png"/></span>
+								<span><img src="${root}/image/misc/char15.png"/></span>
+								<span><img src="${root}/image/misc/char16.png"/></span>
+							</div>
+						</div>
+					<div class="boardFrameBottom"></div>
 				</div>
 				
 				<div class="right"></div>
