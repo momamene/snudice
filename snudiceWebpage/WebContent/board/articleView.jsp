@@ -49,17 +49,23 @@ function focusToReply()
 
 //---------------event handler---------------
 //글을 지운다.
-var articleDeleteFunc = function() 
+function articleDeleteFunc() 
 {	
 	var url = "${root}/board/articleDelete.ajax";	
 	var method = "POST";
 	var param = "articleIndex="+encodeURIComponent("${param.articleIndex}");
 	param += "&boardName="+encodeURIComponent("${param.boardName}");
-	var callback = function()
+	var callback =	function()
 	{
-		window.location = "${root}/board/articleList.do?boardName=${param.boardName}&currPage=${param.currPage}";	
-	}
-	var async = false;
+		if(request.readyState == 4) //작업이 완료되었을 때
+		{
+			if(request.status == 200)
+			{
+				window.location = "${root}/board/articleList.do?boardName=${param.boardName}&currPage=${param.currPage}";	
+			}
+		}		
+	};
+	var async = true;
 	
 	sendRequest(url,method,param,callback,async);	
 }
