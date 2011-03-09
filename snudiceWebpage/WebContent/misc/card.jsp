@@ -50,8 +50,7 @@ var _role = "${role}";
 						<div class="boardFrameBody">
 							<div id="cardBody">
 								<div id="cardInfor">
-								<span>카드는 카드 타일에 도착하면 한장씩 얻게 되며, 네 장 이상은 가지고 있을 수 없습니다.</span>
-								<span>다양한 카드를 적재적소에 활용해 게임에서 승리하세요!</span>
+									<span>카드는 카드 타일에 도착하거나 자신의 턴에 일정 확률로 얻게 되며, 네 장 이상은 가지고 있을 수 없습니다. 다양한 카드를 적재적소에 활용해 게임에서 승리하세요!</span>
 								</div>
 								<div id="cardStudy">
 									<span>학습력 카드</span>

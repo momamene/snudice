@@ -23,7 +23,7 @@
 					<a href="${root}/misc/synopsis.do">시놉시스</a>
 				</div>
 				<div id="playGuide">
-					<a href="${root}/misc/manual.do">게임방법</a>
+					<a href="${root}/misc/manual.do?page=1">게임방법</a>
 				</div>
 				<div id="character">
 					<a href="${root}/misc/charIntro.do">캐릭터</a>							
