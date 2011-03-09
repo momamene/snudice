@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import utility.Util;
+
 import beans.User;
 
 import dbaccess.DB;
@@ -42,6 +44,7 @@ public class AccountActivate extends HttpServlet {
 				throw new RuntimeException();
 			
 			User user = db.dbAccount.getNotActivatedUser(userId, activationCode);
+			user.setRecentConnect(Util.currDateTime());
 			db.dbAccount.deleteNotActivatedUser(user.getUserId());
 			db.dbAccount.insertNewUser(user);
 			
