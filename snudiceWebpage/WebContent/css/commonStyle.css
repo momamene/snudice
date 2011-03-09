@@ -60,8 +60,7 @@ hr
 	background-repeat : no-repeat;	
 	height : 127px;
 	z-index : 1;
-	position : relative;	
-	margin-top : -270px;
+	position : relative;		
 	left : 50px;
 }
 
@@ -102,6 +101,7 @@ hr
 	height : 284px;	
 	z-index : 0;	
 	position : relative;
+	margin-bottom : -270px;
 }
 
 .backgroundDown
