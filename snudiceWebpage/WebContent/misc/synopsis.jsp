@@ -45,8 +45,13 @@ var _role = "${role}";
 					</div>					
 				</div>
 				
-				<div class="center">	
-					시놉시스
+				<div class="center">
+					<div class="boardFrameTop"></div>
+						<div class="boardFrameBody">
+							<img src="${root}/image/misc/System.png"/>
+						</div>
+					<div class="boardFrameBottom">
+					</div>
 				</div>
 				
 				<div class="right"></div>
