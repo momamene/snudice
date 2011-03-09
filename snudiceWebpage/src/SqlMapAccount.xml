@@ -47,8 +47,8 @@
 	</delete>
 		
 	<insert id="insertUser" parameterClass="beans.User">
-		INSERT INTO user (userId,password,email,nickname,comment,joinDate) 
-		VALUES(#userId:VARCHAR#,#password:VARCHAR#,#email:VARCHAR#,#nickname:VARCHAR#,#comment:VARCHAR#,#joinDate:DATETIME#)
+		INSERT INTO user (userId,password,email,nickname,comment,joinDate,recentConnect) 
+		VALUES(#userId:VARCHAR#,#password:VARCHAR#,#email:VARCHAR#,#nickname:VARCHAR#,#comment:VARCHAR#,#joinDate:DATETIME#,#recentConnect:DATETIME#)
 	</insert>
 	
 	<insert id="insertUserRole" parameterClass="beans.UserRole">
