@@ -10,11 +10,11 @@
 
 /*------캐릭터 소개------*/
 
+#charLine { padding-top : 3%; }
 #charBody { padding-top : 2%; }
-#charBody span
+#charBody tr td
 {
 	padding : 3%;
-	padding-bottom : 5%;
 }
 
 /*--------카드----------*/
@@ -53,5 +53,5 @@
 #cardMove span { padding-left : 2%; }
 #cardLove span { padding-left : 2%; }
 
-
+#cardLine { padding-top : 3%; }
 

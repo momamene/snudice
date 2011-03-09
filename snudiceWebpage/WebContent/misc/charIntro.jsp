@@ -48,24 +48,24 @@ var _role = "${role}";
 				<div class="center">
 					<div class="boardFrameTop"></div>
 						<div class="boardFrameBody">
-							<div id="charBody">
-								<span><img src="${root}/image/misc/char01.png"/></span>
-								<span><img src="${root}/image/misc/char02.png"/></span>
-								<span><img src="${root}/image/misc/char03.png"/></span>
-								<span><img src="${root}/image/misc/char04.png"/></span>
-								<span><img src="${root}/image/misc/char05.png"/></span>
-								<span><img src="${root}/image/misc/char06.png"/></span>
-								<span><img src="${root}/image/misc/char07.png"/></span>
-								<span><img src="${root}/image/misc/char08.png"/></span>
-								<span><img src="${root}/image/misc/char09.png"/></span>
-								<span><img src="${root}/image/misc/char10.png"/></span>
-								<span><img src="${root}/image/misc/char11.png"/></span>
-								<span><img src="${root}/image/misc/char12.png"/></span>
-								<span><img src="${root}/image/misc/char13.png"/></span>
-								<span><img src="${root}/image/misc/char14.png"/></span>
-								<span><img src="${root}/image/misc/char15.png"/></span>
-								<span><img src="${root}/image/misc/char16.png"/></span>
-							</div>
+							<table id="charBody">
+								<tr><td><img src="${root}/image/misc/char01.png"/></td></tr>
+								<tr><td><img src="${root}/image/misc/char02.png"/></td></tr>
+								<tr><td><img src="${root}/image/misc/char03.png"/></td></tr>
+								<tr><td><img src="${root}/image/misc/char04.png"/></td></tr>
+								<tr><td><img src="${root}/image/misc/char05.png"/></td></tr>
+								<tr><td><img src="${root}/image/misc/char06.png"/></td></tr>
+								<tr><td><img src="${root}/image/misc/char07.png"/></td></tr>
+								<tr><td><img src="${root}/image/misc/char08.png"/></td></tr>
+								<tr><td><img src="${root}/image/misc/char09.png"/></td></tr>
+								<tr><td><img src="${root}/image/misc/char10.png"/></td></tr>
+								<tr><td><img src="${root}/image/misc/char11.png"/></td></tr>
+								<tr><td><img src="${root}/image/misc/char12.png"/></td></tr>
+								<tr><td><img src="${root}/image/misc/char13.png"/></td></tr>
+								<tr><td><img src="${root}/image/misc/char14.png"/></td></tr>
+								<tr><td><img src="${root}/image/misc/char15.png"/></td></tr>
+								<tr><td><img src="${root}/image/misc/char16.png"/></td></tr>
+							</table>
 						</div>
 					<div class="boardFrameBottom"></div>
 				</div>
