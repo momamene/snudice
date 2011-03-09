@@ -2,8 +2,9 @@
 
 <!-- menu -->
 <div id="menu">
-	<div id="logoWrapper"></div>					
-	<div id="logo"></div>
+	<div id="logoWrapper">
+		<img id="logo" src="${root}/image/mainpage/logo.png"/>
+	</div>
 	<div id="menuWrapper">
 		<div id="menu1">
 			소식

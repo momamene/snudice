@@ -8,18 +8,6 @@
 	margin-bottom : 10px;
 }
 
-#logo
-{
-	background-image : url('/snudiceWebpage/image/mainpage/logo.png');
-	background-repeat : no-repeat;	
-	width : 172px;
-	height : 78px;	
-	position : relative;
-	top : 10px;
-	left : 70px;
-	z-index : 4;	
-}
-
 #logoWrapper
 {
 	background-image : url('/snudiceWebpage/image/mainpage/logoWrapper.png');
@@ -27,11 +15,27 @@
 	position : relative;
 	z-index : 4;
 	height : 100px;
-	width : 230px;
-	float : left;
+	width : 230px;	
 	left: 40px;
-	top : 2px;	
+	top : 2px;		
+	
+	float : left;
 }
+
+#logo
+{
+	margin-left : 25px;
+	margin-top : 10px;
+}
+
+#menuWrapper 
+{
+	float : left;
+	margin-top : 22px;
+}
+
+#menuWrapper .invisible { visibility : hidden; }
+#menuWrapper .visible { visibility : visible; }
 
 #menu1 { margin-left : 40px; }
 #menu2,#menu3,#menu4,#menu5 { margin-left : 10px; }
@@ -89,8 +93,7 @@
 	width : 132px;
 	height : 32px;
 	position : relative;
-	z-index : 2;
-	top : -56px;
+	z-index : 2;	
 	text-align : center;
 	padding-top : 5px;
 	font-weight: bold;	
@@ -102,8 +105,5 @@
 	top : 10px;
 	z-index : 4;
 }
-
-#menuWrapper .invisible { visibility : hidden; }
-#menuWrapper .visible { visibility : visible; }
 
 #notice,#update,#synopsis,#playGuide,#character,#card,#teamIntro,#freeBoard,#gameDownload,#wallPaper,#screenShot { cursor : pointer; }
