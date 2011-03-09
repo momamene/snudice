@@ -4,7 +4,7 @@
 #mainLeftTop.loggined
 {
 	background-image : url('/snudiceWebpage/image/mainpage/loginFormLoggined.png');	
-	background-repeat : repeat-y;
+	background-repeat : no-repeat;
 }
 
 #mainLeftTop
