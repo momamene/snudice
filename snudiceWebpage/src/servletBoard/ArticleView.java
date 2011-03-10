@@ -67,7 +67,13 @@ public class ArticleView extends HttpServlet {
 		else
 			request.setAttribute("myArticle", true);		
 		
-		request.setAttribute("articleInfo",article);		
+		request.setAttribute("articleInfo",article);	
+		
+		//글쓴이의 권한정보를 가져옴
+		String writerId = db.dbAccount.getUserIdWithNickname(article.getNickname());
+		String writerRole = db.dbAccount.getUserRole(writerId);
+		boolean isGM = ( writerRole.compareTo("admin")==0 || writerRole.compareTo("manager")==0 );
+		request.setAttribute("isGM",isGM);
 		
 		//댓글들을 가져옴
 		List<Reply> replyList = db.dbBoard.getReplyList(articleIndex);

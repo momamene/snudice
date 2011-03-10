@@ -128,6 +128,9 @@ function replyComplete()
 		                	</div>
 		                	<hr/>		                	
 		                	<div id="articleHeader2">
+		                		<c:if test="${isGM == true}">
+		                			<img src="${root}/image/board/gm.png"/>
+		                		</c:if>
 		                		<span id="articleNickName">	${articleInfo.nickname}</span>
 		                		<span id="articleReadCount">조회수 : ${articleInfo.readCount}</span>
 		                	</div>

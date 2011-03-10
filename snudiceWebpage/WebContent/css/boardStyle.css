@@ -49,7 +49,12 @@ table#articleListMain,table#articleListBottom
 
 td.articleListIndex { width:9%;}
 td.articleListTitle { width:45%;}
-td.articleListWriter { width:15%;}
+td.articleListWriter { width:15%; }
+td.articleListWriter img 
+{
+	position : relative;
+	top : 5px;
+}
 td.articleListDateTime { width:15%;}
 td.articleListReadCount { width:9%;}
 
@@ -103,6 +108,11 @@ form#articleSearchForm
 
 #articleHeader1{ margin-bottom : 10px;}
 #articleHeader2 { margin-bottom : 40px;}
+#articleHeader2 img
+{
+	position : relative;
+	top : 5px;
+}
 	
 span#articleTitle
 {	
