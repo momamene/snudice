@@ -78,7 +78,12 @@ function init()
 											</c:if>
 										</a>
 									</td>
-									<td class="articleListWriter nickname">${article.nickname}</td>
+									<td class="articleListWriter nickname">																
+										<c:if test="${isGMList[status.index]==true}">
+											<img src="${root}/image/board/gm.png"/>
+										</c:if>																				
+										${article.nickname}
+									</td>
 									<td class="articleListDateTime">${article.dateTime}</td> 
 									<td class="articleListReadCount">${article.readCount}</td>		
 								</tr>

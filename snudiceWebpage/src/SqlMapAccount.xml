@@ -91,6 +91,12 @@
 		WHERE userId=#userId:VARCHAR#
 	</select>
 	
+	<select id="getUserIdWithNickname" parameterClass="String" resultClass="String">
+		SELECT userId
+		FROM user
+		WHERE nickname=#nickname:VARCHAR#
+	</select>
+	
 	<select id="getIdWithEmail" parameterClass="String" resultClass="String">
 		SELECT userId
 		FROM user

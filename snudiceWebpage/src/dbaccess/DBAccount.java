@@ -168,6 +168,19 @@ public class DBAccount {
 		
 		return result.get(0);
 	}
+	
+	//nickname 으로부터 userId를 얻는다.
+	@SuppressWarnings("unchecked")
+	public String getUserIdWithNickname(String nickname) {
+		List<String> result = null;
+		try {			
+			result = (List<String>)sqlMap.queryForList("getUserIdWithNickname",nickname);
+		} catch (Exception e) {			
+			e.printStackTrace();
+		}
+		
+		return result.get(0);
+	}
 
 	//email 로 userId 를 얻는다.
 	@SuppressWarnings("unchecked")

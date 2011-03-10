@@ -77,9 +77,10 @@ public class ArticleList extends HttpServlet {
 		//리플 수를 저장
 		List<Integer> replyCountList = new ArrayList<Integer>();
 		
-		//글 목록을 가져온다.
-		StringBuffer sb = new StringBuffer();
+		//관리자(admin,member)여부를 저장
+		List<Boolean> isGMList = new ArrayList<Boolean>();
 		
+		//글 목록을 가져온다.		
 		List<Article> articleList = db.dbBoard.getArticleList(boardName,currPage, articlePerPage);		
 		for(Article article : articleList)		
 		{			
@@ -99,10 +100,17 @@ public class ArticleList extends HttpServlet {
 			
 			//리플수 저장
 			int replyCount = db.dbBoard.getReplyCount(article.getArticleIndex());
-			replyCountList.add(replyCount);			
+			replyCountList.add(replyCount);	
+			
+			//글쓴이의 권한 저장			
+			String writerId = db.dbAccount.getUserIdWithNickname(article.getNickname());
+			String writerRole = db.dbAccount.getUserRole(writerId);
+			boolean isGM = ( writerRole.compareTo("admin")==0 || writerRole.compareTo("manager")==0 );
+			isGMList.add(isGM);			
 		}
 		
 		request.setAttribute("replyCountList", replyCountList);
+		request.setAttribute("isGMList", isGMList);
 		
 		List<Integer> pageList= new ArrayList<Integer>();			
 		
