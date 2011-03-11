@@ -119,8 +119,8 @@ function replyComplete()
 				</div>	    		
 	    		<div class="center">      
 	    			<div class="boardName">${boardAliasName}</div>
-	    			<div class="boardFrameTop"></div>
-					<div class="boardFrameBody">
+	    			<div class="frameTop"></div>
+					<div class="frameBody">
 						<div id="articleViewWrapper">
 		            		<div id="articleHeader1">		            			
 		            			<span id="articleTitle">${articleInfo.title}</span>		            			            			
@@ -198,7 +198,7 @@ function replyComplete()
 			            	</a>
 						</div>					
 					</div>
-					<div class="boardFrameBottom"></div>						 	         		
+					<div class="frameBottom"></div>						 	         		
 	        	</div>
 				
 	        	<div class="right"></div>	

@@ -157,7 +157,7 @@ hr
 
 /*-----공통-----*/
 
-.boardFrameTop
+.frameTop
 {
 	background-image : url('/snudiceWebpage/image/board/boardFrameTop.png');
 	background-repeat : no-repeat;
@@ -165,14 +165,14 @@ hr
 	height : 26px;	
 }
 
-.boardFrameBody
+.frameBody
 {
 	background-image : url('/snudiceWebpage/image/board/boardFrameBody.png');
 	background-repeat : repeat-y;	
 	width : 702px;		
 }
 
-.boardFrameBottom
+.frameBottom
 {
 	background-image : url('/snudiceWebpage/image/board/boardFrameBottom.png');
 	background-repeat : no-repeat;

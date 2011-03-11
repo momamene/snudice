@@ -46,28 +46,28 @@ var _role = "${role}";
 				</div>
 				
 				<div class="center">
-					<div class="boardFrameTop"></div>
-						<div class="boardFrameBody">
-							<table id="charBody">
-								<tr><td><img src="${root}/image/misc/char01.png"/></td></tr>
-								<tr><td><img src="${root}/image/misc/char02.png"/></td></tr>
-								<tr><td><img src="${root}/image/misc/char03.png"/></td></tr>
-								<tr><td><img src="${root}/image/misc/char04.png"/></td></tr>
-								<tr><td><img src="${root}/image/misc/char05.png"/></td></tr>
-								<tr><td><img src="${root}/image/misc/char06.png"/></td></tr>
-								<tr><td><img src="${root}/image/misc/char07.png"/></td></tr>
-								<tr><td><img src="${root}/image/misc/char08.png"/></td></tr>
-								<tr><td><img src="${root}/image/misc/char09.png"/></td></tr>
-								<tr><td><img src="${root}/image/misc/char10.png"/></td></tr>
-								<tr><td><img src="${root}/image/misc/char11.png"/></td></tr>
-								<tr><td><img src="${root}/image/misc/char12.png"/></td></tr>
-								<tr><td><img src="${root}/image/misc/char13.png"/></td></tr>
-								<tr><td><img src="${root}/image/misc/char14.png"/></td></tr>
-								<tr><td><img src="${root}/image/misc/char15.png"/></td></tr>
-								<tr><td><img src="${root}/image/misc/char16.png"/></td></tr>
-							</table>
-						</div>
-					<div class="boardFrameBottom"></div>
+					<div class="frameTop"></div>
+					<div class="frameBody">
+						<table id="charBody">
+							<tr><td><img src="${root}/image/misc/char01.png"/></td></tr>
+							<tr><td><img src="${root}/image/misc/char02.png"/></td></tr>
+							<tr><td><img src="${root}/image/misc/char03.png"/></td></tr>
+							<tr><td><img src="${root}/image/misc/char04.png"/></td></tr>
+							<tr><td><img src="${root}/image/misc/char05.png"/></td></tr>
+							<tr><td><img src="${root}/image/misc/char06.png"/></td></tr>
+							<tr><td><img src="${root}/image/misc/char07.png"/></td></tr>
+							<tr><td><img src="${root}/image/misc/char08.png"/></td></tr>
+							<tr><td><img src="${root}/image/misc/char09.png"/></td></tr>
+							<tr><td><img src="${root}/image/misc/char10.png"/></td></tr>
+							<tr><td><img src="${root}/image/misc/char11.png"/></td></tr>
+							<tr><td><img src="${root}/image/misc/char12.png"/></td></tr>
+							<tr><td><img src="${root}/image/misc/char13.png"/></td></tr>
+							<tr><td><img src="${root}/image/misc/char14.png"/></td></tr>
+							<tr><td><img src="${root}/image/misc/char15.png"/></td></tr>
+							<tr><td><img src="${root}/image/misc/char16.png"/></td></tr>
+						</table>
+					</div>
+					<div class="frameBottom"></div>
 				</div>
 				
 				<div class="right"></div>

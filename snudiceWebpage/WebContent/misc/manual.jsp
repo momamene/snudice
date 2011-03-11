@@ -47,23 +47,25 @@ var _role = "${role}";
 				</div>
 				
 				<div class="center">	
-					<c:choose>
-						<c:when test="${param.page==1}">
-							1
-						</c:when>	
-						<c:when test="${param.page==2}">
-							2
-						</c:when>
-						<c:when test="${param.page==3}">
-							3
-						</c:when>
-						<c:when test="${param.page==4}">
-							4
-						</c:when>
-						<c:when test="${param.page==5}">
-							5
-						</c:when>					
-					</c:choose>
+					<div class="frameTop"></div>
+					<div class="frameBody">
+						<div>
+							<span>게임 참여</span>
+							<span>게임 시작</span>
+						</div>
+						
+						<c:choose>
+							<c:when test="${param.page==1}">
+								1
+							</c:when>	
+							<c:when test="${param.page==2}">
+								2
+							</c:when>				
+						</c:choose>
+					</div>
+					<div class="frameBottom"></div>
+					
+
 				</div>
 				
 				<div class="right"></div>
