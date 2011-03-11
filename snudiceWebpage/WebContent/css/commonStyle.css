@@ -52,7 +52,7 @@ hr
 /*----------------header-----------*/
 #headerImage
 {
-	background-image : url('/snudiceWebpage/image/mainpage/title.png');
+	background-image : url('/snudice/image/mainpage/title.png');
 	background-repeat : no-repeat;	
 	height : 127px;
 	z-index : 1;
@@ -93,7 +93,7 @@ hr
 
 .backgroundUp
 {
-	background-image : url('/snudiceWebpage/image/mainpage/backgroundUp.png');
+	background-image : url('/snudice/image/mainpage/backgroundUp.png');
 	background-repeat : no-repeat;
 	height : 284px;	
 	z-index : 0;	
@@ -103,7 +103,7 @@ hr
 
 .backgroundDown
 {
-	background-image : url('/snudiceWebpage/image/mainpage/backgroundDown.png');
+	background-image : url('/snudice/image/mainpage/backgroundDown.png');
 	background-repeat : no-repeat;	
 	width : 1025px;
 	height : 284px;
@@ -123,14 +123,14 @@ hr
 
 .containerTop
 {
-	background-image : url('/snudiceWebpage/image/mainpage/containerTop.png');
+	background-image : url('/snudice/image/mainpage/containerTop.png');
 	background-repeat : no-repeat;	
 	top : -76px;		
 }
 
 .containerBottom
 {
-	background-image : url('/snudiceWebpage/image/mainpage/containerBottom.png');
+	background-image : url('/snudice/image/mainpage/containerBottom.png');
 	background-repeat : no-repeat;
 	top : 3px;	
 }
@@ -147,7 +147,7 @@ hr
 	top : 3px;
 	z-index : 1;	
 	
-	background-image : url('/snudiceWebpage/image/mainpage/containerMiddle.png');
+	background-image : url('/snudice/image/mainpage/containerMiddle.png');
 	background-repeat : repeat-y;	
 }
 
@@ -156,7 +156,7 @@ hr
 
 .frameTop
 {
-	background-image : url('/snudiceWebpage/image/board/boardFrameTop.png');
+	background-image : url('/snudice/image/board/boardFrameTop.png');
 	background-repeat : no-repeat;
 	width : 702px;
 	height : 26px;	
@@ -164,14 +164,14 @@ hr
 
 .frameBody
 {
-	background-image : url('/snudiceWebpage/image/board/boardFrameBody.png');
+	background-image : url('/snudice/image/board/boardFrameBody.png');
 	background-repeat : repeat-y;	
 	width : 702px;		
 }
 
 .frameBottom
 {
-	background-image : url('/snudiceWebpage/image/board/boardFrameBottom.png');
+	background-image : url('/snudice/image/board/boardFrameBottom.png');
 	background-repeat : no-repeat;
 	width : 702px;
 	height : 22px;	

@@ -10,7 +10,7 @@
 
 #logoWrapper
 {
-	background-image : url('/snudiceWebpage/image/mainpage/logoWrapper.png');
+	background-image : url('/snudice/image/mainpage/logoWrapper.png');
 	background-repeat : no-repeat;
 	position : relative;
 	z-index : 4;
@@ -53,7 +53,7 @@
 	
 #menu1DropDown.visible
 {
-	background-image : url('/snudiceWebpage/image/mainpage/menu2Line.png');
+	background-image : url('/snudice/image/mainpage/menu2Line.png');
 	background-repeat : no-repeat;
 	margin-top : -36px;
 	padding-top : 36px;	
@@ -62,7 +62,7 @@
 
 #menu2DropDown.visible
 {
-	background-image : url('/snudiceWebpage/image/mainpage/menu4Line.png');
+	background-image : url('/snudice/image/mainpage/menu4Line.png');
 	background-repeat : no-repeat;
 	margin-top : -36px;
 	padding-top : 36px;	
@@ -71,7 +71,7 @@
 
 #menu3DropDown.visible
 {
-	background-image : url('/snudiceWebpage/image/mainpage/menu1Line.png');
+	background-image : url('/snudice/image/mainpage/menu1Line.png');
 	background-repeat : no-repeat;
 	margin-top : -36px;
 	padding-top : 36px;	
@@ -80,7 +80,7 @@
 
 #menu4DropDown.visible
 {
-	background-image : url('/snudiceWebpage/image/mainpage/menu1Line.png');
+	background-image : url('/snudice/image/mainpage/menu1Line.png');
 	background-repeat : no-repeat;
 	margin-top : -36px;
 	padding-top : 36px;	
@@ -89,7 +89,7 @@
 
 #menu5DropDown.visible
 {
-	background-image : url('/snudiceWebpage/image/mainpage/menu3Line.png');
+	background-image : url('/snudice/image/mainpage/menu3Line.png');
 	background-repeat : no-repeat;
 	margin-top : -36px;
 	padding-top : 36px;	
@@ -99,7 +99,7 @@
 
 #menu1,#menu2,#menu3,#menu4,#menu5
 {
-	background-image : url('/snudiceWebpage/image/mainpage/menuBackground.png');
+	background-image : url('/snudice/image/mainpage/menuBackground.png');
 	background-repeat : no-repeat;
 	float : left;
 	width : 132px;

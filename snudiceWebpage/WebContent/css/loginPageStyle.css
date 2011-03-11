@@ -8,7 +8,7 @@
 
 #gameStart 
 {
-	background-image : url('/snudiceWebpage/image/mainpage/start.png');
+	background-image : url('/snudice/image/mainpage/start.png');
 	background-repeat : no-repeat;
 	width : 109px;
 	height : 98px;
@@ -20,7 +20,7 @@
 
 #clientDownload 
 {
-	background-image : url('/snudiceWebpage/image/mainpage/download.png');
+	background-image : url('/snudice/image/mainpage/download.png');
 	background-repeat : no-repeat;
 	width : 109px;
 	height : 98px;
@@ -64,7 +64,7 @@ table.articleTable td
 
 #centerLU,#centerLD
 {
-	background-image : url('/snudiceWebpage/image/mainpage/mainCenterL.png');
+	background-image : url('/snudice/image/mainpage/mainCenterL.png');
 	background-repeat : no-repeat;
 }
 
@@ -78,7 +78,7 @@ table.articleTable td
 #centerR
 {
 	margin-left: 15px;
-	background-image : url('/snudiceWebpage/image/mainpage/mainCenterR.png');
+	background-image : url('/snudice/image/mainpage/mainCenterR.png');
 	background-repeat : no-repeat;
 	width : 240px;
 	height : 550px;		

@@ -20,7 +20,7 @@
   </context-param>
   <context-param>
     <param-name>root</param-name>
-    <param-value>/snudiceWebpage</param-value>
+    <param-value>/snudice</param-value>
   </context-param>
   <context-param>
     <param-name>footerMsg</param-name>
