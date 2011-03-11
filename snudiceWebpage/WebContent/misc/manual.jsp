@@ -46,10 +46,11 @@ var _role = "${role}";
 					</div>					
 				</div>
 				
-				<div class="center">	
+				<div class="center">
+					<div class="contentTitle">게임 방법</div>	
 					<div class="frameTop"></div>
 					<div class="frameBody">
-						<div>
+						<div id="manualSelect">
 							<span>게임 참여</span>
 							<span>게임 시작</span>
 						</div>

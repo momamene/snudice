@@ -45,8 +45,9 @@ var _role = "${role}";
 					</div>					
 				</div>
 				
-				<div class="center">				
-				팀소개소개	
+				<div class="center">
+					<div class="contentTitle">팀 소개</div>				
+					팀소개소개	
 				</div>
 				
 				<div class="right"></div>

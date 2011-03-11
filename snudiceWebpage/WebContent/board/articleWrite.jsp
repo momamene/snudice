@@ -47,7 +47,7 @@ function init()
 				</div>
 				
 				<div class="center">
-					<div class="boardName">${boardAliasName}</div>
+					<div class="contentTitle">${boardAliasName}</div>
 					<div class="frameTop"></div>					
 					
 					<div class="frameBody">
