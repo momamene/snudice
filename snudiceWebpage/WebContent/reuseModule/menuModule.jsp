@@ -21,7 +21,7 @@
 			게임소개
 			<div id="menu2DropDown" class="menuDropDownWrapper invisible">
 				<div id="synopsis">
-					<a href="${root}/misc/synopsis.do">시놉시스</a>
+					<a href="${root}/misc/gameSystem.do">게임시스템</a>
 				</div>
 				<div id="playGuide">
 					<a href="${root}/misc/manual.do?page=1">게임방법</a>
@@ -37,7 +37,9 @@
 		<div id="menu3">
 			PrjN
 			<div id="menu3DropDown" class="menuDropDownWrapper invisible">
-				<div id="teamIntro">팀소개</div>													
+				<div id="teamIntro">
+					<a href="${root}/misc/teamIntro.do">팀소개</a>
+				</div>													
 			</div>
 		</div>
 		<div id="menu4">

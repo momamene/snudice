@@ -10,16 +10,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class Synopsis
+ * Servlet implementation class TeamIntro
  */
-@WebServlet("/Synopsis")
-public class Synopsis extends HttpServlet {
+@WebServlet("/TeamIntro")
+public class TeamIntro extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Synopsis() {
+    public TeamIntro() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -28,7 +28,7 @@ public class Synopsis extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String nextPage = "/misc/synopsis.jsp";		
+		String nextPage = "/misc/teamIntro.jsp";		
 		RequestDispatcher view = request.getRequestDispatcher(nextPage);
 		view.forward(request, response); 
 	}
