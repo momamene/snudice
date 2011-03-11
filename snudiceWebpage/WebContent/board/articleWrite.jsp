@@ -48,9 +48,9 @@ function init()
 				
 				<div class="center">
 					<div class="boardName">${boardAliasName}</div>
-					<div class="boardFrameTop"></div>					
+					<div class="frameTop"></div>					
 					
-					<div class="boardFrameBody">
+					<div class="frameBody">
 						<form method = "post" action="${root}/board/articleWrite.do">
 							<input type="hidden" name="boardName" value="${param.boardName}"/>
 							<input type="hidden" name="currPage" value="${param.currPage}"/>
@@ -79,7 +79,7 @@ function init()
 						</form>
 					</div>
 					
-					<div class="boardFrameBottom"></div>
+					<div class="frameBottom"></div>
 				</div>
 				
 				<div class="right"></div>

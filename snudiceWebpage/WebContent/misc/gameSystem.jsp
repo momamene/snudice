@@ -46,14 +46,13 @@ var _role = "${role}";
 				</div>
 				
 				<div class="center">
-					<div class="boardFrameTop"></div>
-						<div class="boardFrameBody">
-							<div id="System">
-								<img src="${root}/image/misc/System.png"/>
-							</div>
+					<div class="frameTop"></div>
+					<div class="frameBody">
+						<div id="System">
+							<img src="${root}/image/misc/System.png"/>
 						</div>
-					<div class="boardFrameBottom">
 					</div>
+					<div class="frameBottom"></div>
 				</div>
 				
 				<div class="right"></div>

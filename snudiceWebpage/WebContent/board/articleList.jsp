@@ -51,8 +51,8 @@ function init()
 						
 				<div class = "center">
 					<div class="boardName">${boardAliasName}</div>				
-					<div class="boardFrameTop"></div>
-					<div class="boardFrameBody">
+					<div class="frameTop"></div>
+					<div class="frameBody">
 						<table id = "articleListMain">
 							<tr id="articleListHeader">
 								<td class="articleListIndex">번호</td>
@@ -157,7 +157,7 @@ function init()
 							</tr>	
 						</table>
 					</div>
-					<div id="articleSearch" class="boardFrameBottom">
+					<div id="articleSearch" class="frameBottom">
 						<form id="articleSearchForm" method="get" action="${root}/board/articleSearch.do">
 							<span>검색 : </span><input class="board" name="titleKeyword" type="text"/>
 							<input type="submit" value="검색"/>
