@@ -202,12 +202,12 @@
     <url-pattern>/misc/charIntro.do</url-pattern>
   </servlet-mapping>
   <servlet>
-    <servlet-name>Synopsis</servlet-name>
-    <servlet-class>servletMisc.Synopsis</servlet-class>
+    <servlet-name>gameSystem</servlet-name>
+    <servlet-class>servletMisc.GameSystem</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>Synopsis</servlet-name>
-    <url-pattern>/misc/synopsis.do</url-pattern>
+    <servlet-name>gameSystem</servlet-name>
+    <url-pattern>/misc/gameSystem.do</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>Card</servlet-name>
@@ -224,6 +224,14 @@
   <servlet-mapping>
     <servlet-name>Manual</servlet-name>
     <url-pattern>/misc/manual.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>teamIntro</servlet-name>
+    <servlet-class>servletMisc.TeamIntro</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>teamIntro</servlet-name>
+    <url-pattern>/misc/teamIntro.do</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>articleWriteFormInternalName</servlet-name>
