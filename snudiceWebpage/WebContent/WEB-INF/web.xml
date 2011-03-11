@@ -24,7 +24,7 @@
   </context-param>
   <context-param>
     <param-name>footerMsg</param-name>
-    <param-value>(c) ProjectN, since 2010.&lt;br/>본 웹페이지는 IE6 이하 버젼을 지원하지 않습니다.
+    <param-value>(c) ProjectN, since 2010.&lt;br/>contact us, yangck1027@naver.com / admin@projectn.co.kr&lt;br/>본 웹페이지는 IE6 이하 버젼을 지원하지 않습니다.
     </param-value>
   </context-param>
   <listener>
