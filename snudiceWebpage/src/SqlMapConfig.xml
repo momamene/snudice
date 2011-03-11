@@ -3,7 +3,7 @@
 	<transactionManager type="JDBC">
 		<dataSource type="SIMPLE">
 			<property name="JDBC.Driver" value="com.mysql.jdbc.Driver" ></property>
-			<property name="JDBC.ConnectionURL" value="jdbc:mysql://211.169.219.93:3306/snudice" /><property name="JDBC.Username" value="root" ></property><property
+			<property name="JDBC.ConnectionURL" value="jdbc:mysql://localhost:3306/snudice" /><property name="JDBC.Username" value="root" ></property><property
 				name="JDBC.Password" value="prjn1267650600228229401496703205376" ></property></dataSource>
 	</transactionManager>
 	<sqlMap resource="SqlMapAccount.xml" />

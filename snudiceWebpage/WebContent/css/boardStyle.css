@@ -1,5 +1,10 @@
 @CHARSET "UTF-8";
 
+td.articleListIndex,td.articleListReadCount,td.articleListDateTime,span#articleDateTime,span#articleReadCount,span#articleNickName,table#articleListMain td.nickname
+{
+	font-size : 90%;
+}
+
 hr 
 { 
 	background-color : #61A2BC;
@@ -56,7 +61,7 @@ td.articleListWriter img
 	position : relative;
 	top : 5px;
 }
-td.articleListDateTime { width:15%;}
+td.articleListDateTime { width:15%; }
 td.articleListReadCount { width:9%;}
 
 tr#articleListHeader 
@@ -79,8 +84,7 @@ tr.article td
 	border-bottom : 1px solid #61A2BC;
 	border-left : 0px;
 	border-right : 0px;
-	padding : 5px;
-	padding-bottom : 10px;
+	padding : 5px;	
 }
 
 td.pageNumber { width : 80%; }
@@ -96,6 +100,11 @@ form#articleSearchForm
 {
 	position : relative;
 	top : -20px;
+}
+
+table#articleListBottom tr.buttonTr td
+{
+	padding-bottom : 20px;
 }
 
 /*----------글 보기---------*/
@@ -122,8 +131,7 @@ span#articleTitle
 }
 
 span#articleDateTime
-{			
-	font-size : 90%;
+{		
 	float:right;
 }
 
@@ -136,6 +144,7 @@ span#articleNickName
 span#articleReadCount 
 { 	
 	float : right; 
+	font-size : 90%;
 }
 
 #reply
@@ -268,7 +277,7 @@ input.articleWriteWrapper
 {
 	position : relative;
 	left : 35%;	
-	height : 25px;
+	height : 23px;
 }
 
 a.articleListWrapper
@@ -282,5 +291,5 @@ input.articleModifyWrapper
 	position : relative;
 	left : 36%;	
 	width : 45px;
-	height : 24px;
+	height : 23px;
 }

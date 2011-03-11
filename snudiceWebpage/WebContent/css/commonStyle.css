@@ -10,11 +10,7 @@ a:link { text-decoration:none;}    /* unvisited link */
 a:visited {text-decoration:none;} /* visited link */
 a:hover {text-decoration:none;}   /* mouse over link */
 a:active {text-decoration:none;}  /* selected link */
-input
-{
-	height : 20px;
-	border-color: black; 
-}
+input {	height : 20px; }
 
 img,div,table,tr,td  {	border : 0px; }
 tr,td { padding : 0px; }
@@ -69,6 +65,7 @@ hr
 	clear : left; 
 	position : relative; 	
 	text-align : center;
+	font-size : 80%;
 }
 
 .left 

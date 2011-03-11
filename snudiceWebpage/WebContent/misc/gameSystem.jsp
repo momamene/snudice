@@ -50,7 +50,7 @@ var _role = "${role}";
 					<div class="frameTop"></div>
 					<div class="frameBody">
 						<div id="system">
-							<img src="${root}/image/misc/System.png"/>
+							<img src="${root}/image/misc/system.jpg"/>
 						</div>
 					</div>
 					<div class="frameBottom"></div>

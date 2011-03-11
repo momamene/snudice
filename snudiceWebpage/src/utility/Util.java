@@ -3,13 +3,17 @@ package utility;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Random;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import beans.Article;
+
 import constant.Const;
+import dbaccess.DB;
 
 public class Util {
 	//리셋된 password를 리턴. (Const.newPwDigits 자리수 만큼의 10진수)
@@ -128,5 +132,32 @@ public class Util {
 	//output은 03-03 17:39 의 형태가 된다.
 	public static String getSimpleDateTime(String dateTime) {
 		return dateTime.substring(5,dateTime.length()-5);		
+	}
+
+	//articleList, articleSearch 에서 보여지는 article 정보를 셋팅한다.
+	public static void articleInfoSet(DB db, List<Integer> replyCountList,List<Boolean> isGMList, Article article) {
+		//날짜 간략화
+		String simpleDateTime = Util.getSimpleDateTime(article.getDateTime());
+		article.setDateTime(simpleDateTime); 
+		
+		//제목 간략화(길면 자른다)
+		article.setRawStr(true);		
+		String articleTitle = article.getTitle();
+		if(Util.getByteCnt(articleTitle)>Const.articleTitleInListMaxLen)
+		{				
+			String shortTitle = Util.getCuttedString(articleTitle,Const.articleTitleInListMaxLen);
+			article.setTitle((shortTitle+"...").getBytes());	
+		}					
+		article.setRawStr(false);
+		
+		//리플수 저장
+		int replyCount = db.dbBoard.getReplyCount(article.getArticleIndex());
+		replyCountList.add(replyCount);	
+		
+		//글쓴이의 권한 저장			
+		String writerId = db.dbAccount.getUserIdWithNickname(article.getNickname());
+		String writerRole = db.dbAccount.getUserRole(writerId);
+		boolean isGM = ( writerRole.compareTo("admin")==0 || writerRole.compareTo("manager")==0 );
+		isGMList.add(isGM);		
 	}
 }

@@ -74,7 +74,7 @@ var _role = "${role}";
 						<div id="manualContent">						
 							<c:choose>
 								<c:when test="${param.page==1}">
-									<img src="${root}/image/misc/manualPage1.png"/>
+									<img src="${root}/image/misc/manualPage1.jpg"/>
 								</c:when>	
 								<c:when test="${param.page==2}">
 									<img src="${root}/image/misc/manualPage2.jpg"/>

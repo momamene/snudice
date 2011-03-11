@@ -1,12 +1,16 @@
 package ajax;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import constant.Const;
 
 import dbaccess.DB;
 
@@ -38,8 +42,17 @@ public class ReplyWrite extends HttpServlet {
 		//댓글 삽입
 		if((Boolean)request.getAttribute("canComment")==true)
 		{
+			PrintWriter pw = response.getWriter();
+			
 			DB db = DB.getInstance();
-			db.dbBoard.insertReply(articleIndex,nickname,replyText);
+			int replyCount = db.dbBoard.getReplyCount(articleIndex);
+			if(replyCount < Const.replyLimit)
+			{
+				db.dbBoard.insertReply(articleIndex,nickname,replyText);
+				pw.print("OK");
+			}
+			else
+				pw.print("replyLimit");
 		}
 	}
 }

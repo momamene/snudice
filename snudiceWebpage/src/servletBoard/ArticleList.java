@@ -82,32 +82,8 @@ public class ArticleList extends HttpServlet {
 		
 		//글 목록을 가져온다.		
 		List<Article> articleList = db.dbBoard.getArticleList(boardName,currPage, articlePerPage);		
-		for(Article article : articleList)		
-		{			
-			//날짜 간략화
-			String simpleDateTime = Util.getSimpleDateTime(article.getDateTime());
-			article.setDateTime(simpleDateTime);			
-			
-			//제목 간략화(길면 자른다)
-			article.setRawStr(true);		
-			String articleTitle = article.getTitle();
-			if(Util.getByteCnt(articleTitle)>Const.articleTitleInListMaxLen)
-			{				
-				String shortTitle = Util.getCuttedString(articleTitle,Const.articleTitleInListMaxLen);
-				article.setTitle((shortTitle+"...").getBytes());	
-			}					
-			article.setRawStr(false);
-			
-			//리플수 저장
-			int replyCount = db.dbBoard.getReplyCount(article.getArticleIndex());
-			replyCountList.add(replyCount);	
-			
-			//글쓴이의 권한 저장			
-			String writerId = db.dbAccount.getUserIdWithNickname(article.getNickname());
-			String writerRole = db.dbAccount.getUserRole(writerId);
-			boolean isGM = ( writerRole.compareTo("admin")==0 || writerRole.compareTo("manager")==0 );
-			isGMList.add(isGM);			
-		}
+		for(Article article : articleList)						
+			Util.articleInfoSet(db, replyCountList, isGMList, article);			
 		
 		request.setAttribute("replyCountList", replyCountList);
 		request.setAttribute("isGMList", isGMList);

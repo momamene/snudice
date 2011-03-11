@@ -55,7 +55,7 @@ var _role = "${role}";
 						<br/><br/><br/><br/><br/><br/>
 						<img src="${root}/image/misc/teamIntro3.jpg"/>
 						<br/><br/><br/>
-						<img src="${root}/image/misc/teamIntro4.png"/>
+						<img src="${root}/image/misc/teamIntro4.jpg"/>
 					</div>
 				</div>
 				
