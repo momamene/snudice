@@ -46,6 +46,7 @@ var _role = "${role}";
 				</div>
 				
 				<div class="center">
+					<div class="contentTitle">게임 시스템</div>
 					<div class="frameTop"></div>
 					<div class="frameBody">
 						<div id="System">

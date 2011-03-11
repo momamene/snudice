@@ -46,6 +46,7 @@ var _role = "${role}";
 				</div>
 				
 				<div class="center">
+					<div class="contentTitle">캐릭터 소개</div>
 					<div class="frameTop"></div>
 					<div class="frameBody">
 						<table id="charBody">

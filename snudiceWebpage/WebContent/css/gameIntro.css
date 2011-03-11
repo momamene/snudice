@@ -9,6 +9,14 @@
 
 /*------게임 메뉴얼------*/
 
+#manualSelect
+{
+	background-image : url('/snudiceWebpage/image/misc/manualSelectBackground.png');	
+	background-repeat : no-repeat;
+	width : 653px;
+	height : 52px;
+	margin-left : 25px;
+}
 
 /*------캐릭터 소개------*/
 
