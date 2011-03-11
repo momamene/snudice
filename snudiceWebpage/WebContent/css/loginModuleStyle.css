@@ -3,13 +3,13 @@
 #mainLeftTop,#mainLeftBottom { width : 229px; }
 #mainLeftTop.loggined
 {
-	background-image : url('/snudiceWebpage/image/mainpage/loginFormLoggined.png');	
+	background-image : url('/snudice/image/mainpage/loginFormLoggined.png');	
 	background-repeat : no-repeat;
 }
 
 #mainLeftTop
 {
-	background-image : url('/snudiceWebpage/image/mainpage/loginForm.png');	
+	background-image : url('/snudice/image/mainpage/loginForm.png');	
 	background-repeat : no-repeat;
 	height : 207px;
 	position : relative;
@@ -61,13 +61,13 @@
 
 #loginButton.mouseOut
 {
-	background-image : url('/snudiceWebpage/image/mainpage/login.png');	
+	background-image : url('/snudice/image/mainpage/login.png');	
 	background-repeat : no-repeat;	
 }
 
 #loginButton.mouseOver
 {
-	background-image : url('/snudiceWebpage/image/mainpage/loginMouseOver.png');
+	background-image : url('/snudice/image/mainpage/loginMouseOver.png');
 	background-repeat : no-repeat;
 	cursor : pointer;	
 }
@@ -138,19 +138,19 @@
 
 #logoutButton
 {	
-	background-image : url('/snudiceWebpage/image/mainpage/logout.png');
+	background-image : url('/snudice/image/mainpage/logout.png');
 	background-repeat : no-repeat;			
 }
 
 #infoModifyButton
 {
-	background-image : url('/snudiceWebpage/image/mainpage/infoModify.png');
+	background-image : url('/snudice/image/mainpage/infoModify.png');
 	background-repeat : no-repeat;	
 }
 
 #guestLogin 
 {
-	background-image : url('/snudiceWebpage/image/mainpage/guestLogin.png');
+	background-image : url('/snudice/image/mainpage/guestLogin.png');
 	background-repeat : no-repeat;
 	width : 93px;
 	height : 29px;
@@ -176,7 +176,7 @@
 #joinFormWrapper.display_none {	display : none; }
 #joinFormWrapper.display_block
 {	
-	background-image : url('/snudiceWebpage/image/mainpage/joinForm.png');
+	background-image : url('/snudice/image/mainpage/joinForm.png');
 	background-repeat : no-repeat;	
 	
 	position : absolute;
@@ -232,7 +232,7 @@ span.noticeMsg
 #idpwFindForm.display_none { display : none; }
 #idpwFindForm.display_block
 {
-	background-image : url('/snudiceWebpage/image/mainpage/idpwFindForm.png');
+	background-image : url('/snudice/image/mainpage/idpwFindForm.png');
 	background-repeat : no-repeat;	
 	
 	position : absolute;
@@ -280,7 +280,7 @@ span.noticeMsg
 #infoModifyForm.display_none { display : none; }
 #infoModifyForm.display_block
 {
-	background-image : url('/snudiceWebpage/image/mainpage/infoModifyForm.png');
+	background-image : url('/snudice/image/mainpage/infoModifyForm.png');
 	background-repeat : no-repeat;	
 	
 	position : absolute;

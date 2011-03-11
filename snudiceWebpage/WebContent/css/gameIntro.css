@@ -11,7 +11,7 @@
 
 #manualSelect
 {
-	background-image : url('/snudiceWebpage/image/misc/manualSelectBackground.png');	
+	background-image : url('/snudice/image/misc/manualSelectBackground.png');	
 	background-repeat : no-repeat;
 	width : 653px;
 	height : 52px;
@@ -33,13 +33,13 @@
 
 #manualPage1Button.selected
 {
-	background-image : url('/snudiceWebpage/image/misc/manualSelect.png');	
+	background-image : url('/snudice/image/misc/manualSelect.png');	
 	background-repeat : no-repeat;	
 }
 
 #manualPage2Button.selected
 {
-	background-image : url('/snudiceWebpage/image/misc/manualSelect.png');	
+	background-image : url('/snudice/image/misc/manualSelect.png');	
 	background-repeat : no-repeat;	
 }
 
