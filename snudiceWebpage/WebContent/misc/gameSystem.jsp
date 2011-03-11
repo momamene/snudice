@@ -27,7 +27,7 @@ window.onload = function() {
 var _userId = "${userId}";
 var _role = "${role}";
 </script>
-<title>시놉시스</title>
+<title>게임 시스템</title>
 </head>
 <body>
 	<div class="bodyWrapper">		

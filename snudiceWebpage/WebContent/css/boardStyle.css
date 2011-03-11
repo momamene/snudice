@@ -45,6 +45,7 @@ table#articleListMain,table#articleListBottom
 	text-align : center;
 	position : relative;
 	top : -20px;
+	font-size : 90%;
 }
 
 td.articleListIndex { width:9%;}
@@ -141,6 +142,7 @@ span#articleReadCount
 {
 	margin : 3%;
 	border : 0px;
+	font-size : 90%;
 }
 
 #replyHead
@@ -198,7 +200,7 @@ span.replyContent
 	margin-right : 3%;	
 }
 
-#articleDeleteButton { height : 24px; }
+#articleDeleteButton { height : 23px; }
 
 
 /*----------글 수정하기,글쓰기---------------*/

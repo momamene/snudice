@@ -39,6 +39,12 @@
 
 #menu1 { margin-left : 40px; }
 #menu2,#menu3,#menu4,#menu5 { margin-left : 10px; }
+#menu1DropDown,#menu2DropDown,#menu3DropDown,#menu4DropDown,#menu5DropDown
+{
+	text-align : left;
+	padding-left : 20px;
+}
+	
 #menu1DropDown.visible
 {
 	background-image : url('/snudiceWebpage/image/mainpage/menu2Line.png');
@@ -54,7 +60,7 @@
 	background-repeat : no-repeat;
 	margin-top : -36px;
 	padding-top : 36px;	
-	height : 132px;
+	height : 132px;	
 }
 
 #menu3DropDown.visible

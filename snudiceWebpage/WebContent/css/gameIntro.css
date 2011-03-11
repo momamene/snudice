@@ -96,3 +96,10 @@
 
 #cardLine { padding-top : 3%; }
 
+/*--- 팀소개 ----*/
+#teamIntroCenter 
+{ 
+	margin-left : 23px;
+	width : 700px; 
+}
+	
