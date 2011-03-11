@@ -188,5 +188,12 @@ hr
 	color : #60320B;
 }
 
+.contentSmallTitle
+{	
+	font-size : 100%;
+	font-weight : bold;
+	color : #60320B;	
+}
+
 tr.buttonTr { text-align : right; }
 

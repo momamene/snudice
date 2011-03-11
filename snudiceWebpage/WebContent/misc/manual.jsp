@@ -51,22 +51,38 @@ var _role = "${role}";
 					<div class="frameTop"></div>
 					<div class="frameBody">
 						<div id="manualSelect">
-							<span>게임 참여</span>
-							<span>게임 시작</span>
+							<c:choose>
+								<c:when test="${param.page==1}">
+									<c:set var="manualPage1ClassName" value="selected"/>
+									<c:set var="manualPage2ClassName" value="unSelected"/>
+								</c:when>
+								<c:when test="${param.page==2}">
+									<c:set var="manualPage1ClassName" value="unSelected"/>
+									<c:set var="manualPage2ClassName" value="selected"/>
+								</c:when>
+							</c:choose>	
+							<div id="manualPageButtonWrapper">
+								<div id="manualPage1Button" class="${manualPage1ClassName}">
+									<a class="contentSmallTitle" href="${root}/misc/manual.do?page=1">게임 참여</a>
+								</div>
+								<div id="manualPage2Button" class="${manualPage2ClassName}">
+									<a class="contentSmallTitle" href="${root}/misc/manual.do?page=2">게임 시작</a>
+								</div>
+							</div>							
 						</div>
 						
-						<c:choose>
-							<c:when test="${param.page==1}">
-								1
-							</c:when>	
-							<c:when test="${param.page==2}">
-								2
-							</c:when>				
-						</c:choose>
+						<div id="manualContent">						
+							<c:choose>
+								<c:when test="${param.page==1}">
+									<img src="${root}/image/misc/manualPage1.png"/>
+								</c:when>	
+								<c:when test="${param.page==2}">
+									<img src="${root}/image/misc/manualPage2.png"/>
+								</c:when>				
+							</c:choose>
+						</div>
 					</div>
 					<div class="frameBottom"></div>
-					
-
 				</div>
 				
 				<div class="right"></div>

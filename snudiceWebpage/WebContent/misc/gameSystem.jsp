@@ -49,7 +49,7 @@ var _role = "${role}";
 					<div class="contentTitle">게임 시스템</div>
 					<div class="frameTop"></div>
 					<div class="frameBody">
-						<div id="System">
+						<div id="system">
 							<img src="${root}/image/misc/System.png"/>
 						</div>
 					</div>
