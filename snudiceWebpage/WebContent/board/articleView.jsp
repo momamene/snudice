@@ -75,6 +75,11 @@ function replySubmit()
 {	
 	var writeTextTextarea = document.getElementById("replyWriteText");
 	var writeText = writeTextTextarea.value;
+	if(writeText=="")
+	{
+		alert('댓글 내용을 입력해주세요');
+		return;
+	}
 
 	writeTextTextarea.value = "";
 	
@@ -95,7 +100,12 @@ function replyComplete()
 	{
 		if(request.status == 200)
 		{
-			window.location = "${root}/board/articleView.do?boardName=${param.boardName}&articleIndex=${param.articleIndex}&currPage=${param.currPage}&replySubmit=yes";
+			if(request.responseText=="OK")
+			{
+				window.location = "${root}/board/articleView.do?boardName=${param.boardName}&articleIndex=${param.articleIndex}&currPage=${param.currPage}&replySubmit=yes";
+			}
+			else if(request.responseText=="replyLimit")
+				alert('댓글 제한 개수를 초과하였습니다');				
 		}
 	}
 }

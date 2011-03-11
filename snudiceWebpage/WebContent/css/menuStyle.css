@@ -43,6 +43,12 @@
 {
 	text-align : left;
 	padding-left : 20px;
+	font-size : 90%;
+}
+
+#menu1DropDown div,#menu2DropDown div,#menu3DropDown div,#menu4DropDown div,#menu5DropDown div
+{
+	margin-bottom : 3px;
 }
 	
 #menu1DropDown.visible

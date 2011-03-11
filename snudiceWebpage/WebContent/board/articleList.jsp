@@ -95,7 +95,7 @@ function init()
 							<tr class="buttonTr">
 								<td colspan="3">
 									<a href="${root}/board/articleList.do?boardName=${param.boardName}&currPage=0">
-										<img src="${root}/image/board/toFirstPage.png"/>
+										<img src="${root}/image/board/toFirstPage.png"/>																												
 									</a>
 									<c:if test="${canWrite == true}">
 										<a href="${root}/board/articleWriteForm.do?boardName=${param.boardName}&currPage=${param.currPage}">
@@ -159,7 +159,7 @@ function init()
 					</div>
 					<div id="articleSearch" class="frameBottom">
 						<form id="articleSearchForm" method="get" action="${root}/board/articleSearch.do">
-							<span>검색 : </span><input class="board" name="titleKeyword" type="text"/>
+							<input class="board" name="titleKeyword" type="text"/>
 							<input type="submit" value="검색"/>
 							<input type="hidden" name="boardName" value="${param.boardName}"/>
 							<input type="hidden" name="currPage" value="0"/>							

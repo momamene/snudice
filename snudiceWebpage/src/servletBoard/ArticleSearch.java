@@ -57,30 +57,16 @@ public class ArticleSearch extends HttpServlet {
 		//리플 수를 저장
 		List<Integer> replyCountList = new ArrayList<Integer>();
 		
+		//관리자(admin,member)여부를 저장
+		List<Boolean> isGMList = new ArrayList<Boolean>();
+		
 		//글 목록을 가져온다.
 		List<Article> articleList = db.dbBoard.getArticleList(boardName,currPage,articlePerPage,titleKeyword);
-		for(Article article : articleList)		
-		{			
-			//날짜 간략화
-			String simpleDateTime = Util.getSimpleDateTime(article.getDateTime());
-			article.setDateTime(simpleDateTime); 
-			
-			//제목 간략화(길면 자른다)
-			article.setRawStr(true);		
-			String articleTitle = article.getTitle();
-			if(Util.getByteCnt(articleTitle)>Const.articleTitleInListMaxLen)
-			{				
-				String shortTitle = Util.getCuttedString(articleTitle,Const.articleTitleInListMaxLen);
-				article.setTitle((shortTitle+"...").getBytes());	
-			}					
-			article.setRawStr(false);
-			
-			//리플수 저장
-			int replyCount = db.dbBoard.getReplyCount(article.getArticleIndex());
-			replyCountList.add(replyCount);			
-		}
-		
-		request.setAttribute("replyCountList", replyCountList);		
+		for(Article article : articleList)					
+			Util.articleInfoSet(db, replyCountList, isGMList, article);	
+				
+		request.setAttribute("replyCountList", replyCountList);
+		request.setAttribute("isGMList", isGMList);
 		
 		List<Integer> pageList= new ArrayList<Integer>();			
 		
