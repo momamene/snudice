@@ -328,6 +328,7 @@ void gLoginCore::pk_login_rep(PK_LOGIN_REP *rep)
 			gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_5);
 			break;
 		case ELE_USEROVER:
+			gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_36, STR_36_2);
 			break;
 		case ELE_NOID:
 			gPopUp::GetIF()->SetPopUp(ECLK_OK, EPOP_OK, STR_6);

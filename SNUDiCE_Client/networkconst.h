@@ -20,7 +20,7 @@
 
 #define PK_HEADER_SIZE			4
 
-#define SNUDICE_VERSION			"0.9382"
+#define SNUDICE_VERSION			"0.9400"
 
 #define ENDROUND				30
 
@@ -152,7 +152,7 @@ struct PK_DEFAULT
 
 #define MSGLENGTH				128			// 채팅할때 메시지 길이제한
 #define IDLENGTH				16			// ID 길이 제한
-#define CHANNELUSERMAX			10			// 한 채널에 있는 사람 수 최대
+#define CHANNELUSERMAX			15			// 한 채널에 있는 사람 수 최대
 #define CHANNELMAX				6			// 채널 개수
 
 struct USER
@@ -680,7 +680,7 @@ struct PK_GOLOGIN_ASK
 struct PK_EXIT_REP
 {
 	char		szID[IDLENGTH];
-	int			flag;							// 남은 사람 수 //아직까지는 그닥 있어야 할 이유는 없다.
+	int			flag;							// 1이면, 누가 나갔습니다. 출력 X
 };
 
 /*//WHISPER 구현

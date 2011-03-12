@@ -134,16 +134,16 @@ void gDice::DiceThrow()
 			m_ImgCubeWin.m_nWidth, m_ImgCubeWin.m_nHeight);
 
 		if(m_hedron==1 && m_cube==1) {
-			m_ImgHedWin.Draw(m_winPos1, rcSour);
-			m_ImgCubeWin.Draw(m_winPos2, rcSour);
+			m_ImgHedWin.Draw(m_winPos1.left, m_winPos1.top);
+			m_ImgCubeWin.Draw(m_winPos2.left, m_winPos2.top);
 		}
 		else if(m_hedron==2) {
-			m_ImgHedWin.Draw(m_winPos1, rcSour);
-			m_ImgHedWin.Draw(m_winPos2, rcSour);
+			m_ImgHedWin.Draw(m_winPos1.left, m_winPos1.top);
+			m_ImgHedWin.Draw(m_winPos2.left, m_winPos2.top);
 		}
 		else {
-			m_ImgCubeWin.Draw(m_winPos1, rcSour);
-			m_ImgCubeWin.Draw(m_winPos2, rcSour);
+			m_ImgCubeWin.Draw(m_winPos1.left, m_winPos1.top);
+			m_ImgCubeWin.Draw(m_winPos2.left, m_winPos2.top);
 		}
 	}
 

@@ -52,7 +52,7 @@ public:
 	void		DiceStart(int, int, int, int, int);
 	void		DiceThrow();
 
-private:
+//private:
 	gImage		m_ImgHed[4];
 	gImage		m_ImgHedWin;
 	gImage		m_ImgCubeWin;

@@ -24,9 +24,10 @@
 #include "resource.h"
 #include "PlaySoundCore.h"
 
-#define LOGO1_FILE			".\\Data\\Login\\logo1.img"
+//#define LOGO1_FILE			".\\Data\\Login\\logo1.img"		// 스게 + 동아리 로고
+#define LOGO1_FILE			".\\Data\\Login\\logo3.img"			// 동아리 홍보 로고
 #define LOGO2_FILE			".\\Data\\Login\\logo2.img"
-#define LOGO_SHOWTIME		2000
+#define LOGO_SHOWTIME		3000
 
 static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 

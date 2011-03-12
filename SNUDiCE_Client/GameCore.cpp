@@ -104,7 +104,9 @@ void gGameCore::MainLoop()
 				gPopUp::GetIF()->m_ePop = EPOP_NONE;
 			}
 		}
-		if(strcmp(gPopUp::GetIF()->m_szLine1, STR_20) == 0)
+		if(strcmp(gPopUp::GetIF()->m_szLine1, STR_20) == 0
+			|| strcmp(gPopUp::GetIF()->m_szLine1, STR_37) == 0
+			|| strcmp(gPopUp::GetIF()->m_szLine1, STR_38) == 0)
 		{
 
 		}
@@ -154,6 +156,44 @@ void gGameCore::MainLoop()
 						}
 						break;
 				}
+				break;
+			case EPOP_EXITGAME:
+				switch(gPopUp::GetIF()->m_eBtnClk)
+				{
+					case ECLK_OK:
+						{
+							gMainWin::GetIF()->Exit();
+							return;
+						}
+						break;
+					case ECLK_CANCEL:
+						{
+
+						}
+						break;
+				}
+			case EPOP_OUTGAME:
+				switch(gPopUp::GetIF()->m_eBtnClk)
+				{
+					case ECLK_OK:
+						{
+							PK_CHANNELCHANGE_ASK		ask;
+
+							strcpy(ask.szID, gPlayerContainer::GetIF()->m_MyGamePlayer.szID);
+							ask.nChannel = gPlayerContainer::GetIF()->m_MyChannel.nChannelNum;
+
+							gServer::GetIF()->Send(PL_CHANNELCHANGE_ASK, sizeof(ask), &ask);
+							gMainWin::GetIF()->m_eCoreMode = ECM_BATTLENET;
+							return;
+						}
+						break;
+					case ECLK_CANCEL:
+						{
+
+						}
+						break;
+				}
+				break;
 		}
 		gPopUp::GetIF()->m_bReturn = false;
 	}
@@ -1423,18 +1463,30 @@ void gGameCore::pk_exit_rep(PK_EXIT_REP *rep)
 	gPlayerContainer	*pc = gPlayerContainer::GetIF();
 	gChat				*ct = gChat::GetIF();
 
-	int		id = pc->GetGPIndex(rep->szID), i;
-	bool	make_next_turn = true;
+	int		id = pc->GetGPIndex(rep->szID);
+//	int		i;
+	int		coupleIdx = pc->GetCoupleIndex(id);
 
-	for(i=0;i<ROOMMAXPLAYER; i++)
-		if(pc->GetCoupleIndex(i) == id) {
-			make_next_turn = false;
-			if(id==m_nTurn) m_nTurn = i;
-			break;
-		}
+//	bool	make_next_turn = true;
+
+	// 주사위 굴리는 중
+	if(gDice::GetIF()->m_start && coupleIdx != -1)
+	{
+		gDice::GetIF()->m_start = false;
+		gDice::GetIF()->m_frametime.frameEnd();
+	}
+
+// 	for(i=0;i<ROOMMAXPLAYER; i++)
+// 		if(pc->GetCoupleIndex(i) == id) {
+// 			make_next_turn = false;
+// 			if(id==m_nTurn) m_nTurn = i;
+// 			break;
+// 		}
+
 	//커플상태인 두 사람중 하나가 나갔다면 m_nTurn은 커플에게 강제적으로 넘어간다.
 	//그리고 커플은 강제적으로 깨져야 한다. 여기에는 정상적으로 커플을 깨는 frame이 삽입되지 않는다.
-	if(make_next_turn && id==m_nTurn) {
+//	if(make_next_turn && id == m_nTurn) {
+	if(id == m_nTurn && coupleIdx == -1) {
 		if(m_spacor > 0) {
 			End(true);
 			gDice::GetIF()->m_start = false;
@@ -1446,11 +1498,13 @@ void gGameCore::pk_exit_rep(PK_EXIT_REP *rep)
 		m_bMoving = false;
 		m_bWarping	= false;
 	}
-	else if(make_next_turn==false && pc->GetMyGPIndex() == i) {
+//	else if(make_next_turn==false && pc->GetMyGPIndex() == i) {
+	else if(coupleIdx != -1) {
 		gUIGame::GetIF()->SetbCouple(false);
 	}
 
-	ct->AddStr(rep->szID, "님이 나가셨습니다.");
+	if(strcmp(pc->m_MyPlayer.szID, rep->szID) != 0)
+		ct->AddStr(rep->szID, "님이 나가셨습니다.");
 	pc->DeleteGamePlayer(id);
 }
 

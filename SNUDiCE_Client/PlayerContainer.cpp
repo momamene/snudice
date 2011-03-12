@@ -293,7 +293,16 @@ void gPlayerContainer::SetMyGamePlayer(GAMEPLAYER* gp)
 
 void gPlayerContainer::SetGPList(GAMEPLAYER *list)
 {
-	memcpy(&m_GPlayerList, list, sizeof(GAMEPLAYER) * ROOMMAXPLAYER);
+	// 게임 끝났을 때, 정보 표시중에 gameplayer reset하는 패킷이 온 경우
+	if(gMainWin::GetIF()->m_eCoreMode == ECM_GAME
+		&& gUIGame::GetIF()->m_drawmode == DM_RESULT)
+	{
+		memcpy(gUIGame::GetIF()->m_gpTemp, list, sizeof(GAMEPLAYER) * ROOMMAXPLAYER);
+		gUIGame::GetIF()->m_bResetGPListInResult = true;
+		return;
+	}
+
+	memcpy(m_GPlayerList, list, sizeof(GAMEPLAYER) * ROOMMAXPLAYER);
 
 	int			i;
 
@@ -308,7 +317,6 @@ void gPlayerContainer::SetGPList(GAMEPLAYER *list)
 
 	if(gMainWin::GetIF()->m_eCoreMode == ECM_GAME)
 		gUIGame::GetIF()->SetRankList();
-
 }
 
 void gPlayerContainer::MainLoop()
