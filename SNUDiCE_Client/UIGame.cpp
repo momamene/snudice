@@ -600,6 +600,7 @@ bool gUIGame::SetUp()
 	m_bItemUsed = false;
 	m_bSendRoomBack = false;
 	m_bDrawGetItem = false;
+	m_bResetGPListInResult = false;
 
 	return true;
 }
@@ -1359,6 +1360,9 @@ bool gUIGame::OnLButtonDown()
 	gMap				*map	= gMap::GetIF();
 
 	
+	if(m_drawmode == DM_RESULT)
+		return false;
+
 	if(gUtil::PointInRect(mouse->m_nPosX, mouse->m_nPosY, m_rcPos[UIT_MINIMAPBACK]))
 	{
 		int		sx, sy;
@@ -1850,18 +1854,20 @@ bool gUIGame::OnLButtonDown()
 				}
 				if(m_BtnUI[UIBTN_EXIT].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 				{
-					gMainWin::GetIF()->Exit();
+					//gMainWin::GetIF()->Exit();
+					gPopUp::GetIF()->SetPopUp(ECLK_CANCEL, EPOP_EXITGAME, STR_38);
 					break;
 				}
 				if(m_BtnUI[UIBTN_OUT].PointInButton(mouse->m_nPosX, mouse->m_nPosY))
 				{
-					PK_CHANNELCHANGE_ASK		ask;
-
-					strcpy(ask.szID, gPC->m_MyGamePlayer.szID);
-					ask.nChannel = gPC->m_MyChannel.nChannelNum;
-
-					gServer::GetIF()->Send(PL_CHANNELCHANGE_ASK, sizeof(ask), &ask);
-					gMainWin::GetIF()->m_eCoreMode = ECM_BATTLENET;
+					gPopUp::GetIF()->SetPopUp(ECLK_CANCEL, EPOP_OUTGAME, STR_37);
+// 					PK_CHANNELCHANGE_ASK		ask;
+// 
+// 					strcpy(ask.szID, gPC->m_MyGamePlayer.szID);
+// 					ask.nChannel = gPC->m_MyChannel.nChannelNum;
+// 
+// 					gServer::GetIF()->Send(PL_CHANNELCHANGE_ASK, sizeof(ask), &ask);
+// 					gMainWin::GetIF()->m_eCoreMode = ECM_BATTLENET;
 					break;
 				}
 			}
@@ -2152,7 +2158,10 @@ void gUIGame::SetRankList()
 	int			i;
 	int			nPlayerNum = gPC->GetGPNum();
 
-	while(true)
+	// data reset 패킷이 먼저 오는 경우,
+	// 모든 data가 무한루프가 도는 문제 발생. 그래서 nRank가 어느정도 이상으로 넘어가면,
+	// 무한루프를 감지하고 빠져나옴
+	while(nRank < 20)
 	{
 		for(i = 0; i < ROOMMAXPLAYER; i++)
 		{
@@ -2166,6 +2175,12 @@ void gUIGame::SetRankList()
  				return;
 		}
 		nRank++;
+	}
+	// data reset된 경우
+	if(nRank >= 20)
+	{
+		if(m_drawmode == DM_RESULT)
+			m_timer.m_start -= RESULT_SHOWTIME;
 	}
 
 }
@@ -3113,6 +3128,7 @@ void gUIGame::Clear()
 	m_bShowTimeCount = true;
 	m_bItemUsed = false;
 	m_bSendRoomBack = false;
+	m_bResetGPListInResult = false;
 }
 
 void gUIGame::GameEnd()

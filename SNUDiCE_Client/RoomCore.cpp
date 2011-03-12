@@ -1777,6 +1777,12 @@ void gRoomCore::pk_roomback_rep(PK_ROOMBACK_REP *rep)
 	gMainWin::GetIF()->m_eCoreMode = ECM_ROOM;
 	gPopUp::GetIF()->m_bPopup = false;
 	gRoomCore::GetIF()->Clear();
+	
+	if(gUIGame::GetIF()->m_bResetGPListInResult)
+	{
+		gUIGame::GetIF()->m_bResetGPListInResult = false;
+		memcpy(gPlayerContainer::GetIF()->m_GPlayerList, gUIGame::GetIF()->m_gpTemp, sizeof(GAMEPLAYER) * ROOMMAXPLAYER);
+	}
 }
 
 
@@ -2038,6 +2044,8 @@ void gRoomCore::pk_gamestart_rep(PK_GAMESTART_REP *rep)
 			gSubmitCore::GetIF()->SetSubject((BYTE*)rep->subject);
 			gSubmitCore::GetIF()->m_nTimeCount = GetTickCount();
 			gSubmitCore::GetIF()->m_bSendTick = false;
+			gSubmitCore::GetIF()->m_bChange = false;
+			gSubmitCore::GetIF()->m_bReady = false;
 			break;
 	}
 }

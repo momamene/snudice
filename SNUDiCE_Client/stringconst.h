@@ -57,3 +57,9 @@
 #define STR_33			"이동할 장소를 선택하세요!"
 #define STR_34			"%d/%d 턴"
 #define STR_35			"버스로 이동중입니다."
+
+#define STR_36			"접속자가 너무 많습니다."
+#define STR_36_2		"잠시만 기다려주십시오..."
+
+#define STR_37			"배틀넷으로 나가시겠습니까?"
+#define STR_38			"게임을 종료하시겠습니까?"

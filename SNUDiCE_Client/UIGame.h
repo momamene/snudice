@@ -182,6 +182,10 @@ public:
 
 	char		m_szStatusMsg[128];
 
+	// 게임 끝났을 때, 다 0으로 정보가 와서, 담아두기 위한것.
+	GAMEPLAYER	m_gpTemp[ROOMMAXPLAYER];
+	bool		m_bResetGPListInResult;
+
 	// for diceguage bar
 	bool		m_bGuageByMouse;			// 마우스로 주사위 굴리는거냐
 private:
