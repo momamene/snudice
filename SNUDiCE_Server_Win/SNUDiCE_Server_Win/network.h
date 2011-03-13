@@ -12,8 +12,8 @@
 #define WM_SOCKET				WM_USER + 1
 
 #define	WINSOCK_VERSION_2_2		MAKEWORD(2, 2)
-//#define SERVER_IP				"211.169.219.93"		// 승엽
-#define SERVER_IP				"211.169.219.86"		// 현탁
+#define SERVER_IP				"211.169.219.93"		// 승엽
+//#define SERVER_IP				"211.169.219.86"		// 현탁
 //#define SERVER_IP				"211.169.219.87"		// 창규
 #define SERVER_PORT				9000
 #define BUFFERSIZE				2048
@@ -152,7 +152,7 @@ struct PK_DEFAULT
 
 #define MSGLENGTH				128			// 채팅할때 메시지 길이제한
 #define IDLENGTH				16			// ID 길이 제한
-#define CHANNELUSERMAX			10			// 한 채널에 있는 사람 수 최대
+#define CHANNELUSERMAX			15			// 한 채널에 있는 사람 수 최대
 #define CHANNELMAX				6			// 채널 개수
 
 struct USER
