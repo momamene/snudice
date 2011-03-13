@@ -37,7 +37,7 @@ enum CoupleState {
 
 
 enum GAMESTATE {	//	이 상태에서 나가면 쉣
-	GS_COUPLESTAND = -2,
+	GS_COUPLESTAND = -1,
 	GS_STAND ,
 	
 	GS_BUS,
@@ -173,6 +173,8 @@ public:
 	void				debuger_card(int nIndex,char* szID);
 	void				debuger_turn(char* szID);
 
+	void				deleteOfGame(int nRoomIndex, int nInRoomIndex);
+	void				deleteRemainProcess( int nRoomIndex, int nInRoomIndex );
 private:
 	PK_BECOUPLE_REP		temp_becouple_rep;	//레알 하드코딩 ㅇㅇ // 커플성사될때 warpend 기다릴때까지 잡는 값....
 	int					isWhoCouple;		//커플숫자카운트
@@ -211,5 +213,4 @@ private:
 			// 리턴값 : 지나가다 만날 때 커플신청이면 true
 
 	void				TileProcess(int nRoomIndex, int nInRoomIndex , int nDestPos);
-
 };

@@ -231,7 +231,7 @@ void gGamePlayerContainer::pk_movestart_rep (int nRoomIndex , int nInRoomIndex ,
 		movePlayer(nRoomIndex,nInRoomIndex,des,MPS_MOVE);
 		rep.nDist = rep.nDist - m_rmWalk[nRoomIndex];
 
-		setState(GS_STAND , m_GamePlayer[nRoomIndex][nInRoomIndex].szID);
+		setState(GS_WALK , m_GamePlayer[nRoomIndex][nInRoomIndex].szID);
 
 		gPC->SendSelect(PL_MOVESTART_REP,sizeof(PK_MOVESTART_REP),&rep,ECM_GAME,nRoomIndex);
 	}
@@ -244,7 +244,7 @@ void gGamePlayerContainer::pk_movestart_rep (int nRoomIndex , int nInRoomIndex ,
 		int partnerIndex = m_favor[nRoomIndex][nInRoomIndex].lvTargetIndex;
 		movePlayer(nRoomIndex,partnerIndex,des,MPS_MOVE);
 
-		setState(GS_COUPLESTAND , m_GamePlayer[nRoomIndex][nInRoomIndex].szID);
+		setState(GS_COUPLEWALK , m_GamePlayer[nRoomIndex][nInRoomIndex].szID);
 
 		gPC->SendSelect(PL_MOVESTARTCOUPLE_REP,sizeof(PK_MOVESTARTCOUPLE_REP),&rep,ECM_GAME,nRoomIndex);
 
@@ -702,7 +702,6 @@ void gGamePlayerContainer::pk_gameend_rep(int nRoomIndex)
 	memset(m_isNokdu[nRoomIndex], 0, sizeof(bool) * ROOMMAXPLAYER);
 	memset(m_favor[nRoomIndex], 0, sizeof(sFavor) * ROOMMAXPLAYER);
 	memset(m_bSyncronize[nRoomIndex], 0, sizeof(bool) * ROOMMAXPLAYER);
-	
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -2004,7 +2003,7 @@ void gGamePlayerContainer::pk_exit_ask(char *clientID, SOCKET sock)
 	rep.flag = 0;
 	strcpy(rep.szID , clientID);
 
-	//임시
+
 	gMysql::GetIF()->dropCountAdd(clientID);
 
 	//남은사람 체크 , 변수만들기 귀찮아서 걍 for문
@@ -2012,44 +2011,19 @@ void gGamePlayerContainer::pk_exit_ask(char *clientID, SOCKET sock)
 	switch(gPC->GetMode(clientID))	{
 		case ECM_GAME :	//겜중일때
 			//나간놈 Out 시키고 정보 초기화
-			m_isGamePlayer[nRoomIndex][nInRoomIndex] = false;
-
-			strcpy(m_GamePlayer[nRoomIndex][nInRoomIndex].szID , "");
-#ifdef CRITICAL_SECTION_GOGO
-			EnterCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
-#endif
-
-
+			deleteOfGame(nRoomIndex , nInRoomIndex);
 			for (int i = 0 ; i < ROOMMAXPLAYER ; i++)	{
 				rep.flag += m_isGamePlayer[nRoomIndex][i];
 			}
-
+			
+			gPC->SendSelect(PL_EXIT_REP,sizeof(PK_EXIT_REP),&rep, ECM_GAME , nRoomIndex);
+			deleteRemainProcess(nRoomIndex , nInRoomIndex);
 			if (rep.flag == 1)	{
 				pk_gameend_rep(nRoomIndex);
 				return;
 			}	else if (rep.flag == 0)	{
 				gRC->ExitTheRoom(clientID);
 			}
-
-#ifdef CRITICAL_SECTION_GOGO
-			LeaveCriticalSection(&gMainWin::GetIF()->crit[nRoomIndex]);
-#endif
-			if (m_nTurn[nRoomIndex] == nInRoomIndex)	{
-				//하필 나갈때가 내 턴이었을 때
-				if (m_GamePlayer[nRoomIndex][nInRoomIndex].nLove != -1)	{	//커플이면 깨기
-					//					pk_becouple_rep(nRoomIndex, gPC->GetPlayerFromID(clientID) ,  gPC->GetPlayerFromID(m_GamePlayer[nRoomIndex][nInRoomIndex].szCouple) , false);
-				}	else	{
-					pk_nextturn_rep(nRoomIndex);	//걍 담턴 ㄱㄱ;
-				}
-			}
-			switch(m_GameState[nRoomIndex][nInRoomIndex])	{
-		case GS_RESULT :
-			break;
-		case GS_COUPLESTAND : case GS_COUPLEWALK : case GS_COUPLEBUS : case GS_COUPLEASK : 
-			pk_becouple_rep(nRoomIndex, gPC->GetPlayerFromID(clientID) ,  gPC->GetPlayerFromID(m_GamePlayer[nRoomIndex][nInRoomIndex].szCouple) , false);
-			break;
-			}
-			gPC->SendSelect(PL_EXIT_REP,sizeof(PK_EXIT_REP),&rep, ECM_GAME , nRoomIndex);
 
 
 			break;
@@ -2163,6 +2137,7 @@ void gGamePlayerContainer::pk_anscouple_ask(PK_DEFAULT *pk,SOCKET sock)	//수정 ,
 
 
 			m_rmWalk[nRoomIndex] = 0;
+			setState(GS_WALK , m_GamePlayer[nRoomIndex][gotPlayerIndex].szID);
 
 			gPC->SendSelect(PL_MOVESTART_REP,sizeof(PK_MOVESTART_REP),&rep,ECM_GAME,nRoomIndex);
 		}	else	{	//도착지점에 날 찬 녀석이 있는 경우!~
@@ -2407,6 +2382,7 @@ void gGamePlayerContainer::setState(GAMESTATE eState, char *szID)
 	int nInRoomIndex = gRoomCore::GetIF()->FindPlayerIndexInTheRoom(szID,nRoomIndex);
 	
 	char buf[1024];
+	m_GameState[nRoomIndex][nInRoomIndex] = eState;
 	switch( eState )	{
 		case GS_STAND		: 			strcpy(buf , "GS_STAND      ");			break;
 		case GS_COUPLESTAND	: 			strcpy(buf , "GS_COUPLESTAND");			break;
@@ -2465,4 +2441,31 @@ void gGamePlayerContainer::gameplayCount( int nRoomIndex )
 			gMS->gameplayCountAdd(m_GamePlayer[nRoomIndex][i].szID);
 		}
 	}
+}
+
+void gGamePlayerContainer::deleteRemainProcess( int nRoomIndex, int nInRoomIndex )
+{
+	switch(m_GameState[nRoomIndex][nInRoomIndex])	{
+		case GS_COUPLESTAND : case GS_COUPLEWALK : case GS_COUPLEBUS : case GS_COUPLEASK :	{ 
+			gPlayerContainer* gPC = gPlayerContainer::GetIF();
+			pk_becouple_rep(nRoomIndex, gPC->GetPlayerFromID(m_GamePlayer[nRoomIndex][nInRoomIndex].szID) , gPC->GetPlayerFromID( m_GamePlayer[nRoomIndex][nInRoomIndex].szCouple ) , false);
+			pk_gameplayerinfo_rep(nRoomIndex);
+			break;
+							  }
+		default:
+			if (m_nTurn[nRoomIndex] == nInRoomIndex)	{
+				pk_nextturn_rep(nRoomIndex);
+			}
+			break;
+	}
+
+}
+
+void gGamePlayerContainer::deleteOfGame( int nRoomIndex, int nInRoomIndex )
+{
+	memset(&m_GamePlayer[nRoomIndex][nInRoomIndex], 0, sizeof(GAMEPLAYER));
+	memset(&m_isGamePlayer[nRoomIndex][nInRoomIndex], 0, sizeof(bool));
+	memset(&m_isNokdu[nRoomIndex][nInRoomIndex], 0, sizeof(bool));
+	memset(&m_favor[nRoomIndex][nInRoomIndex], 0, sizeof(sFavor));
+	memset(&m_bSyncronize[nRoomIndex][nInRoomIndex], 0, sizeof(bool));
 }

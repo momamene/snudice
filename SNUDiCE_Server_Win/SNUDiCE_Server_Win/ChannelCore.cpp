@@ -2,6 +2,7 @@
 #include "RoomCore.h"
 #include "ChannelContainer.h"
 #include "PlayerContainer.h"
+#include "GamePlayerContainer.h"
 #include "MainWin.h"
 #include "const.h"
 
@@ -79,6 +80,7 @@ void gChannelCore::pk_channelchange_ask (PK_DEFAULT *pk, SOCKET sock)
 	gRoomCore *gRC = gRoomCore::GetIF();
 
 	int channelBefore = gChannelContainer::GetIF()->FindPlayer(ask.szID);
+
 	switch(gPC->GetMode(ask.szID))	{
 		case ECM_ROOMJOIN : 
 			rep.error = ECE_SUCCESS;
@@ -109,7 +111,9 @@ void gChannelCore::pk_channelchange_ask (PK_DEFAULT *pk, SOCKET sock)
 			break;
 		case ECM_ROOMMAKE :	
 			break;
-		case ECM_ROOM : case ECM_GAME :
+		case ECM_GAME :
+			gGamePlayerContainer::GetIF()->pk_exit_ask(ask.szID , sock);
+		case ECM_ROOM :	{
 			gRC->ExitTheRoom(ask.szID);
 			gPC->PutMode(ask.szID,ECM_BATTLENET);
 			gPC->PutBoolReady(ask.szID,false);
@@ -119,7 +123,7 @@ void gChannelCore::pk_channelchange_ask (PK_DEFAULT *pk, SOCKET sock)
 			
 			while(gChannelContainer::GetIF()->RoomClientNum(repChannel)>=CHANNELUSERMAX)	{
 				repChannel ++ ;
-				if (repChannel > CHANNELMAX)	//수정, 만약 사람꽉차면 뻑나겠지,, 하지만 그럴일이....ㅜ.ㅡ;;
+				if (repChannel > CHANNELMAX)
 					repChannel = 0 ;
 			}
 			
@@ -129,6 +133,8 @@ void gChannelCore::pk_channelchange_ask (PK_DEFAULT *pk, SOCKET sock)
 			gRC->SendRoomListCauseChange(repChannel);
 			pk_channelrefresh_rep (repChannel);
 			break;
+		}
+
 	}
 
 	gMainWin::GetIF()->Send(PL_CHANNELCHANGE_REP, sizeof(rep), &rep, sock);

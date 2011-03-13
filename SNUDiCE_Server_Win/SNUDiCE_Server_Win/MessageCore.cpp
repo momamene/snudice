@@ -280,7 +280,7 @@ void gMessageCore::pk_friendlist_ask(PK_DEFAULT *pk, SOCKET sock)
 	PK_MESSAGE_REP rep;
 	
 	if (!userFriendList)	{
-		msg_failMessage(ask.szMyID , "친구가 없군요 ㅜㅜ");
+		msg_failMessage(ask.szMyID , "친구가 없습니다...");
 		return;
 	}
 	ss << userFriendList;
