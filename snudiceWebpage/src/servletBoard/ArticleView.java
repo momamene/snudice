@@ -1,6 +1,7 @@
 package servletBoard;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -77,12 +78,18 @@ public class ArticleView extends HttpServlet {
 		
 		//댓글들을 가져옴
 		List<Reply> replyList = db.dbBoard.getReplyList(articleIndex);
+		List<Boolean> replierIsGMList = new ArrayList<Boolean>();
 		for(Reply reply : replyList)
 		{
+			String replyId = db.dbAccount.getUserIdWithNickname(reply.getNickname());
+			String replierRole = db.dbAccount.getUserRole(replyId);
+			boolean replierIsGM = ( replierRole.compareTo("admin")==0 || replierRole.compareTo("manager")==0 );
+			replierIsGMList.add(replierIsGM);	
 			reply.setNickname(Util.encodeHtml(reply.getNickname()));
-			reply.setReplyText(Util.encodeHtml(reply.getReplyText()));
+			reply.setReplyText(Util.encodeHtml(reply.getReplyText()));			
 		}
 		request.setAttribute("replyList", replyList);
+		request.setAttribute("replierIsGMList", replierIsGMList);
 		request.setAttribute("replyCount", replyList.size());
 		
 		String nextPage = "/board/articleView.jsp?boardName="+boardName+"&currPage="+currPage;	

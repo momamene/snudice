@@ -80,7 +80,7 @@ function init()
 									</td>
 									<td class="articleListWriter nickname">																
 										<c:if test="${isGMList[status.index]==true}">
-											<img src="${root}/image/board/gm.png"/>
+											<img class="gmImage" src="${root}/image/board/gm.png"/>
 										</c:if>																				
 										${article.nickname}
 									</td>

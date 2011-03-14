@@ -164,6 +164,9 @@ function replyComplete()
 								<c:forEach var="reply" items="${replyList}" varStatus="status">			
 									<div>
 										<span>[${status.count}] </span> 
+										<c:if test="${replierIsGMList[status.index]==true}">
+											<img class="gmImage" src="${root}/image/board/gm.png"/>
+										</c:if>
 										<span class="replyNickName">${reply.nickname}</span>
 										<span class="replyDateTime">${reply.dateTime}</span>
 										<br/>
