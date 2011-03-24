@@ -58,7 +58,7 @@ public class AccountActivate extends HttpServlet {
 		}
 		catch(RuntimeException re)
 		{
-			String nextPage = "error.jsp";	
+			String nextPage = "/error.jsp";	
 			RequestDispatcher view = request.getRequestDispatcher(nextPage);
 			view.forward(request, response);			
 		}		

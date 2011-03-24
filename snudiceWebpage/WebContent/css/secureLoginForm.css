@@ -12,5 +12,9 @@
 .footer { top:-60px; }
 .backgroundDown { z-index : -1; }
 .backgroundUp {	z-index : -1; }
-#loginMsg {	top: 25px; }
+#loginMsg 
+{	
+	top:-18px;
+	width : 229px; 
+}
 #mainLeftTop { height : 160px; }
