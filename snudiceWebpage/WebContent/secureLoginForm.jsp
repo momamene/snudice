@@ -22,7 +22,7 @@ function init()
 	initHeader();	
 	
 	//로그인 버튼
-	var loginButton = document.getElementById("loginButton");
+	var loginButton = document.getElementById("loginButton");	
 	loginButton.onclick = loginFunc;
 	loginButton.onmouseover = mousOverFunc;
 	loginButton.onmouseout = mouseOutFunc;
@@ -46,36 +46,17 @@ function guestLoginFunc()
 {
 	var userId = document.getElementById("userId");
 	userId.value = "guest";
-	var password = document.getElementById("password");
-	password.value = "guest";
-	loginFunc();
+	var password = document.getElementById("password");	
+	password.value = MD5("guest");
+	var secureloginForm = document.getElementById("secureloginForm");
+	secureloginForm.submit();
 }
 
 function loginFunc()
 {
-	var userId = document.getElementById("userId");
-	var password = document.getElementById("password");
-	var loginMsg = document.getElementById("loginMsg");	
-
-	//validation
-	if(userId.value=="")
-	{
-		loginMsg.innerHTML = "id를 입력해 주세요";
-		userId.focus();
-		return;
-	}
-	if(password.value=="")
-	{
-		loginMsg.innerHTML = "password를 입력해 주세요";
-		password.focus();
-		return;
-	}	
-
-	loginMsg.innerHTML = "로그인 중입니다..";
-	
+	var loginMsg = document.getElementById("loginMsg");
+	loginMsg.innerHTML = "로그인 중입니다..";	
 	password.value = MD5(password.value);
-	var secureloginForm = document.getElementById("secureloginForm");
-	secureloginForm.submit();
 }
 
 //마우스를 올려놓는 경우
@@ -113,16 +94,17 @@ function mouseOutFunc()
 							<div id="idpw">	
 								ID<input id="userId" type="text" name="j_username"><br/>		
 								PW<input id="password" type="password" name="j_password"><br/>	
-							</div>							
-							<div id="loginButton" class="mouseOut"></div>
-						</form>							
-					</div>												
-					<div id="loginMsg" class="msg">
-						<c:if test="${not empty param.fail}">
-							로그인 실패!							
-						</c:if>
-					</div>					
-				</div>				
+							</div>
+							<input id="loginButton" class="mouseOut" type="image" src="${root}/image/mainpage/login.png"/>						
+						</form>						
+					</div>							
+				</div>		
+				<c:if test="${not empty param.fail}">
+					<c:set var="loginMsgVar" value="로그인 실패!"/>							
+				</c:if>									
+				<div id="loginMsg" class="msg">
+					<span>${loginMsgVar}</span>
+				</div>		
 			</div>
 			
 			<div class="right"></div>

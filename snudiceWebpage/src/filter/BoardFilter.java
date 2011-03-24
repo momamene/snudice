@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -47,8 +48,16 @@ public class BoardFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest)request;
 		HttpSession session = req.getSession();
 		String role = (String)session.getAttribute("role");
-		String boardName = req.getParameter("boardName");		
+		String boardName = req.getParameter("boardName");
 		
+		if(role==null || boardName==null)
+		{
+			String nextPage = "/error.jsp";	
+			RequestDispatcher view = request.getRequestDispatcher(nextPage);
+			view.forward(request, response);	
+			return;
+		}
+			
 		DB db = DB.getInstance();			
 		
 		//게시판 alias name 설정
