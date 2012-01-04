@@ -12,7 +12,8 @@
 #define WM_SOCKET				WM_USER + 1
 
 #define	WINSOCK_VERSION_2_2		MAKEWORD(2, 2)
-#define SERVER_IP				"211.169.219.93"		// ½Â¿±
+#define SERVER_IP				"172.16.60.8"		// ½Â¿±
+//#define SERVER_IP				"127.0.0.1"		// ½Â¿±
 //#define SERVER_IP				"211.169.219.86"		// ÇöÅ¹
 //#define SERVER_IP				"211.169.219.87"		// Ã¢±Ô
 #define SERVER_PORT				9000
