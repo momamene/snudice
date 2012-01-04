@@ -4,7 +4,7 @@
 #include "PlayerContainer.h"
 #include "GamePlayerContainer.h"
 #include "MainWin.h"
-//#include "const.h"
+#include "const.h"
 
 static gChannelCore s_ChannelCore;
 
